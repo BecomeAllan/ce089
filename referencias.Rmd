@@ -7,24 +7,30 @@ output:
 
 ## Referências básicas
 
-- GENTLE, J.; HÄRDLE, W.; MORI, Y. **Handbook of computational
-statistics: concepts and methods**. 2nd ed. Springer Berlin Heidelberg,
-2012.
-- MANLY, B. **Randomization, bootstrap and Monte Carlo methods in
-biology**, third edition. 2nd ed. Taylor & Francis, 2006.
-- FERREIRA, D. F. **Estatística computacional em Java**. Editora UFLA,
-2013.
-- EFRON, B.; HASTIE, T. **Computer age statistical inference:
-algorithms, evidence, and data science**. 1st ed. Cambridge University
+- Gentle, JE. **Computational Statistics**. Springer, 2009.
+- Gentle, JE; Härdle, WK; Mori, Y. **Handbook of computational
+statistics: concepts and methods**. Springer, 2012.
+- Härdle, WK.; Okhrin, O; Okhrin, Y. **Basic elements of computational
+  statistics**. Springer, 2017.
+- Rizzo, M. L. **Statistical computing with R**. CRC Press, 2019.
+- Efron, B.; Hastie, T. **Computer age statistical inference:
+algorithms, evidence, and data science**. Cambridge University
 Press, 2016.
-- EUBANK, R. L.; KUPRESANIN, A. **Statistical Computing in C++ and R**.
-Chapman & Hall/CRC The R Series, 2011.
-- EVERITT, B. S. **Introduction to Optimization Methods and their
-Application in Statistics**. Dordrecht: Springer Netherlands, 1987.
-Print.
 
 ## Referências complementares
 
+- Eubank, RL; Kupresanin, A. **Statistical Computing in C++ and R**.
+Chapman and Hall, 2011.
+- Everitt, BS. **Introduction to optimization methods and their
+application in statistics**. Chapman and Hall, 1987.
+- Ferreira, DF. **Estatística computacional em Java**. Editora
+UFLA, 2013.
+- Manly, B. **Randomization, bootstrap and Monte Carlo methods in
+biology**. Chapman and Hall, 1997.
+- Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
+Springer, 2010.
+- Robert, CP; Casella, G. **Monte Carlo statistical methods**.
+Springer, 2004.
 
 ## Referências *online*
 
