@@ -7,11 +7,48 @@ output:
 
 ## Referências básicas
 
+- GENTLE, J.; HÄRDLE, W.; MORI, Y. **Handbook of computational
+statistics: concepts and methods**. 2nd ed. Springer Berlin Heidelberg,
+2012.
+- MANLY, B. **Randomization, bootstrap and Monte Carlo methods in
+biology**, third edition. 2nd ed. Taylor & Francis, 2006.
+- FERREIRA, D. F. **Estatística computacional em Java**. Editora UFLA,
+2013.
+- EFRON, B.; HASTIE, T. **Computer age statistical inference:
+algorithms, evidence, and data science**. 1st ed. Cambridge University
+Press, 2016.
+- EUBANK, R. L.; KUPRESANIN, A. **Statistical Computing in C++ and R**.
+Chapman & Hall/CRC The R Series, 2011.
+- EVERITT, B. S. **Introduction to Optimization Methods and their
+Application in Statistics**. Dordrecht: Springer Netherlands, 1987.
+Print.
 
 ## Referências complementares
 
 
 ## Referências *online*
 
+- <http://www.dex.ufla.br/~danielff/ensino/estatisticacomputacional.html>;
+- <https://ecivilufes.files.wordpress.com/2011/03/algoritimos.pdf>;
+- <http://www.impa.br/opencms/pt/biblioteca/pm/PM_21.pdf>;
+- <http://www.icmc.usp.br/~ehlers/slides-comp.pdf>;
+- <https://sites.google.com/site/thaisf/Home/cursos/estatcompg>
+- Estatística Computational, Ralph dos Santos Silva:
+  [1](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_01.pdf),
+  [2](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_02.pdf),
+  [3](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_03.pdf),
+  [4](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_04.pdf),
+  [5](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_05.pdf),
+  [6](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_06.pdf),
+  [7](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_07.pdf),
+  [8](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_08.pdf),
+  [9](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_09.pdf),
+  [10](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_010.pdf),
+  [11](http://www.im.ufrj.br/ralph/estatisticacomputacional/aula_011.pdf);
+- [Método da aceitação e rejeição](http://www.columbia.edu/~ks20/4703-Sigman/4703-07-Notes-ARM.pdf) -
+Karl Sigman.
+- <http://www.cs.cmu.edu/~tcortina/15-105sp09/Unit02PtC.pdf>;
+- [Bootstrap inference - Francisco Cribari-Neto](http://conteudo.icmc.usp.br/CMS/Arquivos/arquivos_enviados/SECAO-POSGRAD_87_bootstrap-slides.pdf).
+- [Can You Behave Randomly?](http://faculty.rhodes.edu/wetzel/random/intro.html) - Robert R. Coveyou.
 
 ## Leituras complementares
