@@ -38,16 +38,37 @@ source("setup_knitr.R")
 
 # Programa/objetivos da disciplina
 
-O objetivo desta disciplina é capacitar os alunos em conceitos básicos
-de técnicas de pesquisa que permitam a análise crítica de estudos
-científicos.
+1. Revisão e conceitos avançados da linguagem R
+   - Objetos, classes e métodos
+   - Algoritmos e programação funcional
+   - Vetorização
+   - *Error/exception handling*
+   - *Benchmarking* e *profiling*
+   - R e C++
+   - Documentos dinâmicos
+2. Métodos para geração de números aleatórios
+   - Geração de números uniformes
+   - Método da transformação integral da probabilidade
+   - Método da aceitação e rejeição
+   - Métodos baseados em relações entre variáveis aleatórias
+   <!-- - Métodos baseados em Cadeias de Markov. -->
+3. Métodos estatísticos computacionalmente intensivos
+   - Integração de Monte Carlo
+   - Métodos de Monte Carlo em inferência estatística
+   - Métodos de reamostragem: *Boostrap* e *jackknife*
+   - Aplicação de métodos de reamostragem
+   - Testes de permutação
+   - Métodos de Monte Carlo via Cadeias de Markov (MCMC)
+4. Otimização
+   - Métodos numéricos no R
+   - Métodos de otimização
 
 # Ementa
 
-Ética e Meio Ambiente. Relações Ciência, Tecnologia e Sociedade. Métodos
-de Pesquisa. Elaboração de Projeto e Relatório de Pesquisa. Referências
-Bibliográficas. Prática de Pesquisa.
-
+Métodos Computacionalmente Intensivos: Monte Carlo e Bootstrap;
+Estruturas complexas de dados; Linguagens e interfaces entre ambientes
+de análise de dados; Implementação computacional de métodos
+estatísticos; Algoritmos computacionalmente intensivos.
 
 <!-- links -->
 
