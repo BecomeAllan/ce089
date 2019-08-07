@@ -19,14 +19,16 @@ Press, 2016.
 
 ## Referências complementares
 
-- Eubank, RL; Kupresanin, A. **Statistical Computing in C++ and R**.
-Chapman and Hall, 2011.
+- Eubank, RL; Kupresanin, A. **Statistical computing in C++ and R**.
+Chapman & Hall, 2011.
 - Everitt, BS. **Introduction to optimization methods and their
-application in statistics**. Chapman and Hall, 1987.
+application in statistics**. Chapman & Hall, 1987.
 - Ferreira, DF. **Estatística computacional em Java**. Editora
 UFLA, 2013.
+- Gilks, WR; Richardson, S; Spiegelhalter, DJ (Eds.). **Markov chain
+  Monte Carlo in practice**. Chapman & Hall, 1996.
 - Manly, B. **Randomization, bootstrap and Monte Carlo methods in
-biology**. Chapman and Hall, 1997.
+biology**. Chapman & Hall, 1997.
 - Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
 Springer, 2010.
 - Robert, CP; Casella, G. **Monte Carlo statistical methods**.
