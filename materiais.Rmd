@@ -5,4 +5,7 @@ output:
     toc: false
 ---
 
-Em breve.
+- [Estatística computacional com R](http://cursos.leg.ufpr.br/ecr/)
+  (apostila da disciplina de Estatística Computacional I).
+- Materiais da [oferta anterior](http://leg.ufpr.br/~walmes/ensino/EC2/)
+  (Prof. Walmes).
