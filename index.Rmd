@@ -33,6 +33,9 @@ source("setup_knitr.R")
   - (20%) Avaliações esporádicas
   - (20%) Apresentação de trabalho
 - **Oferta anterior:** [2018/2](http://leg.ufpr.br/~walmes/ensino/EC2/)
+- **Moodle:** [Página no
+  Moodle](https://moodle.c3sl.ufpr.br/course/view.php?id=282) da
+  dsiciplina
 - **Datas importantes:** De acordo com a [Resolução 64/18 - CEPE][]:
     - **05/08**: Início do semestre letivo
     - **04/12**: Final do semestre letivo
