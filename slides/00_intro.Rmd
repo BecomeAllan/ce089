@@ -1,0 +1,218 @@
+---
+title: "Estatística Computacional II"
+author: Fernando Mayer
+date: 2019-08-09
+output:
+  xaringan::moon_reader:
+    css: ["default", "fc", "fc-fonts"]
+---
+
+# Estatística computacional
+
+.pull-left-50[
+## Statistical computing
+### Computação estatística
+
+- Fundamentos da linguagem R.
+- Programação imperativa e funcional.
+- Leitura e manipulação de dados.
+- Análise descritiva e gráficos.
+- Distribuições de probabilidade.
+- Testes de hipótese.
+- Relatórios dinâmicos
+]
+
+.pull-right-50[
+## Computational statistics
+### Estatística computacional
+
+- Revisão de programação imperativa e funcional.
+- Representação de algorítmos.
+- Geração de números aleatórios.
+- Métodos computacionalmente intensivos.
+- Planejamento e execução de estudos de simulação.
+- Métodos de otimização.
+]
+
+---
+
+# Estatística computacional
+
+.pull-left-50[
+### Estatística Computacional I
+
+- R: essencial
+    - Funções e argumentos
+    - Objetos e suas classes
+    - Manipulação de dados: indexação e seleção condicional
+- R: dados
+    - Importação e exportação de dados
+- R: análise exploratória de dados
+    - Funções para resumo de dados
+    - Gráficos exploratórios
+- R: estatística
+    - Geração de números aleatórios
+- R: programação
+    - Estruturas de controle e repetição
+    - A família de funções `apply()`
+- Linguagens de marcação
+- Documentos dinâmicos com knitr e rmarkdown
+
+]
+
+.pull-right-50[
+### Estatística Computacional II
+
+- Revisão e conceitos avançados do R
+   - Objetos, classes e métodos
+   - Vetorização
+   - *Error/exception handling*
+   - *Benchmarking* e *profiling*
+   - R e C++
+   - Documentos dinâmicos
+- Métodos para geração de números aleatórios
+   - Geração de números uniformes
+   - Métodos para geração de VAs
+- Métodos estatísticos computacionalmente intensivos
+   - Métodos de Monte Carlo em inferência estatística
+   - Métodos de reamostragem: *Boostrap* e *jackknife*
+   - Métodos de Monte Carlo via Cadeias de Markov (MCMC)
+- Otimização
+]
+
+---
+
+# Estatística computacional II
+
+## Conteúdo programado
+
+### Revisão e conceitos avançados da linguagem R
+
+- Objetos, classes e métodos
+- Algoritmos e programação funcional
+- Vetorização
+- *Error/exception handling*
+- *Benchmarking* e *profiling*
+- R e C++
+- Documentos dinâmicos
+
+---
+
+# Estatística computacional II
+
+## Conteúdo programado
+
+### Métodos para geração de números aleatórios
+
+- Geração de números uniformes
+- Método da transformação integral da probabilidade
+- Método da aceitação e rejeição
+- Métodos baseados em relações entre variáveis aleatórias
+
+---
+
+# Estatística computacional II
+
+## Conteúdo programado
+
+### Métodos estatísticos computacionalmente intensivos
+
+- Integração de Monte Carlo
+- Métodos de Monte Carlo em inferência estatística
+- Métodos de reamostragem: *Boostrap* e *jackknife*
+- Aplicação de métodos de reamostragem
+- Testes de permutação
+- Métodos de Monte Carlo via Cadeias de Markov (MCMC)
+
+---
+
+# Estatística computacional II
+
+## Conteúdo programado
+
+### Otimização
+
+- Métodos numéricos no R
+- Métodos de otimização
+
+---
+
+# Estatística computacional II
+
+## Principais habilitações
+
+.pull-left-50[
+- Compreender, documentar e implementar algorítmos.
+- Avaliar as propriedades de:
+  - Estatísticas e delineamentos.
+  - Estimadores pontuais e intervalares.
+  - Testes de hipótese e regras de decisão.
+- Avaliar o desempenho de implementações.
+  - Técnicas de *debugging*.
+  - Métodos de *benchmarking*.
+]
+.pull-right-50[
+- Planejar e executar estudos de simulação.
+- Desenvolver algorítmos para geração de números aleatórios.
+- Simular de modelos estatísticos.
+- Fazer e compreender inferência via métodos computacionalmente
+intensivos.
+- Implementar e aplicar métodos de otimização.
+- Desenvolver pacotes.
+]
+
+---
+
+# Estatística computacional II
+
+## Informações gerais
+
+- **Horários e Locais:**
+  - Terça, 20:40 - 22:10h, **Sala DEST Multimídia**
+  - Sexta, 19:00 - 20:30h, **Sala DEST Multimídia**
+- **Horários de atendimento dos professores:**
+    - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários
+      podem ser agendados previamente por email.
+- **Frequência**: de acordo com as normas da Universidade, mínimo de 75%
+- **Avaliação**:
+  - (60%) Duas provas escritas (30% cada uma)
+  - (20%) Avaliações esporádicas
+  - (20%) Apresentação de trabalho
+- **Oferta anterior:** [2018/2](http://leg.ufpr.br/~walmes/ensino/EC2/)
+
+---
+
+# Estatística computacional II
+
+## Referências básicas
+
+- Gentle, JE. **Computational Statistics**. Springer, 2009.
+- Gentle, JE; Härdle, WK; Mori, Y. **Handbook of computational
+statistics: concepts and methods**. Springer, 2012.
+- Härdle, WK.; Okhrin, O; Okhrin, Y. **Basic elements of computational
+  statistics**. Springer, 2017.
+- Rizzo, M. L. **Statistical computing with R**. CRC Press, 2019.
+- Efron, B.; Hastie, T. **Computer age statistical inference:
+algorithms, evidence, and data science**. Cambridge University
+Press, 2016.
+
+---
+
+# Estatística computacional II
+
+## Referências complementares
+
+- Eubank, RL; Kupresanin, A. **Statistical computing in C++ and R**.
+Chapman & Hall, 2011.
+- Everitt, BS. **Introduction to optimization methods and their
+application in statistics**. Chapman & Hall, 1987.
+- Ferreira, DF. **Estatística computacional em Java**. Editora
+UFLA, 2013.
+- Gilks, WR; Richardson, S; Spiegelhalter, DJ (Eds.). **Markov chain
+  Monte Carlo in practice**. Chapman & Hall, 1996.
+- Manly, B. **Randomization, bootstrap and Monte Carlo methods in
+biology**. Chapman & Hall, 1997.
+- Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
+Springer, 2010.
+- Robert, CP; Casella, G. **Monte Carlo statistical methods**.
+Springer, 2004.
