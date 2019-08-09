@@ -5,6 +5,7 @@ date: 2019-08-09
 output:
   xaringan::moon_reader:
     css: ["default", "fc", "fc-fonts"]
+    self_contained: TRUE
 ---
 
 # Estatística computacional
