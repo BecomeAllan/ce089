@@ -26,7 +26,8 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 ```
 
 - **06/08 (Ter)**: Apresentação da disciplina.
-- **09/08 (Sex)**:
+- **09/08 (Sex)**: Introdução à Estatística Computacional II.
+  [Slides](slides/00_intro.html).
 - **13/08 (Ter)**:
 - **16/08 (Sex)**:
 - **20/08 (Ter)**:

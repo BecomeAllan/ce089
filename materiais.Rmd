@@ -14,5 +14,5 @@ output:
 
 ## Slides
 
-- Introdução à Estatśitica Computacional II.
-  [HTML](slides/00_intro.html)
+- Introdução à Estatística Computacional II.
+  [HTML](slides/00_intro.html).
