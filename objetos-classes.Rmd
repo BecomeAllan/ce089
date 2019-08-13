@@ -3,6 +3,9 @@ title: "Funções, objetos e classes"
 author: "Fernando P. Mayer"
 date: 2019-04-13
 bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
 ---
 
 ```{r, cache=FALSE, include=FALSE}

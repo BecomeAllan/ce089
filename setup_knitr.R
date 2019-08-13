@@ -3,7 +3,7 @@ library(knitr)
 opts_chunk$set(
     ## cache = TRUE,
     tidy = FALSE,
-    comment = NA,
+    comment = "#",
     collapse = TRUE, ## colapsa chunks em R Markdown
     ## fig.width = 10,
     ## fig.height = 8,
