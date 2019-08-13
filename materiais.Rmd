@@ -5,6 +5,10 @@ output:
     toc: false
 ---
 
+## Materiais da diciplina
+
+- [Funções, objetos e classes](objetos-classes.html).
+
 ## Materiais gerais
 
 - [Estatística computacional com R](http://cursos.leg.ufpr.br/ecr/)
