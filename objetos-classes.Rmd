@@ -145,7 +145,7 @@ Ao instalar o R, os seguintes pacotes já vêm instalados (fazem parte do
 chamado "R core"):
 
 ```{r, echo=FALSE}
-rownames(installed.packages(lib.loc = .libPaths()[2]))
+rownames(installed.packages(lib.loc = paste0(R.home(), "/library")))
 ```
 
 No entanto, nem todos são carregados na inicialização do R. Por padrão,
@@ -153,7 +153,7 @@ apenas os seguintes pacotes são carregados automaticamente:
 
 ```{r, echo=FALSE}
 gsub("package:", "",
-     grep("^package", search(), value = TRUE)[-c(1,2)])[-1]
+     grep("^package", search(), value = TRUE)[-c(1,2)])
 ```
 
 Para listar os pacotes carregados, use a função
