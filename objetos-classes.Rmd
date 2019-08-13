@@ -1,7 +1,6 @@
 ---
 title: "Funções, objetos e classes"
 author: "Fernando P. Mayer"
-date: 2019-04-13
 bibliography: ref.bib
 output:
   html_document:
@@ -153,7 +152,8 @@ No entanto, nem todos são carregados na inicialização do R. Por padrão,
 apenas os seguintes pacotes são carregados automaticamente:
 
 ```{r, echo=FALSE}
-gsub("package:", "", grep("^package", search(), value = TRUE)[-c(1,2)])
+gsub("package:", "",
+     grep("^package", search(), value = TRUE)[-c(1,2)])[-1]
 ```
 
 Para listar os pacotes carregados, use a função
@@ -163,7 +163,7 @@ search()
 ```
 
 Note que o primeiro elemento, `.GlobalEnv`, será sempre carregado pois
-ele é o *ambiente* queirá armazenar (e deixar disponível) os objetos
+ele é o *ambiente* que irá armazenar (e deixar disponível) os objetos
 criados pelo usuário. Para carregar um pacote instalado, usamos a função
 `library()`, por exemplo
 
