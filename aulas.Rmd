@@ -28,9 +28,12 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 - **06/08 (Ter)**: Apresentação da disciplina.
 - **09/08 (Sex)**: Introdução à Estatística Computacional II.
   [Slides](slides/00_intro.html).
-- **13/08 (Ter)**:
-- **16/08 (Sex)**:
-- **20/08 (Ter)**:
+- **13/08 (Ter)**: Funções, objetos e classes. Parte I.
+[HTML](objetos-classes.html).
+- **16/08 (Sex)**: Funções, objetos e classes. Parte II.
+[HTML](objetos-classes.html).
+- **20/08 (Ter)**: Não haverá aula (professor em viagem). Fazer
+  atividade disponível no [Moodle][].
 - **23/08 (Sex)**:
 - **27/08 (Ter)**:
 - **30/08 (Sex)**:
@@ -62,3 +65,5 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 - **29/11 (Sex)**:
 - **03/12 (Ter)**:
 - **09/08 (Sex)**:
+
+[Moodle]: https://moodle.c3sl.ufpr.br/course/view.php?id=282
