@@ -8,6 +8,7 @@ output:
 ## Materiais da diciplina
 
 - [Funções, objetos e classes](objetos-classes.html).
+- [Indexação e seleção condicional](indexacao-selecao.html).
 
 ## Materiais gerais
 
