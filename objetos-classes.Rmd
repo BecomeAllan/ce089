@@ -1492,6 +1492,11 @@ programação orientada a objetos no R pode ser consultada em
 <div id="refs">
 </div>
 
+# Respostas dos exercícios
+
+A resolução dos exercícios desta página está disponível neste
+[script](scripts/objetos-classes-exercicios.R).
+
 # Informação de Sessão
 
 ```{r, echo = FALSE, results = "hold"}
