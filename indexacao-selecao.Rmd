@@ -30,7 +30,7 @@ usando:
 Existem três tipos de operadores que podem ser usados para indexar (e
 selecionar) **sub-conjuntos** (*subsets*) de objetos no R:
 
-- O operador `[ ]` sempre retorna um objeto da mesma classe que o
+- O operador `[ ]` sempre retorna um objeto da **mesma classe** que o
   original. Pode ser usado para selecionar múltiplos elementos de um
   objeto
 - O operador`[[ ]]` é usado para extrair elementos de uma **lista** ou
@@ -665,7 +665,7 @@ which(dados > 15 & dados <= 35)
 ## Elementos de dados onde cara igual a "c"
 dados[cara == "c"]
 which(cara == "c")
-## Elementos de dadaos onde cara igual a "a" ou "c"
+## Elementos de dados onde cara igual a "a" ou "c"
 dados[cara %in% c("a", "c")]
 which(cara %in% c("a", "c"))
 ```
