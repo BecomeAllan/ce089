@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fernando P. Mayer" />
+
+
+<title>Indexação e seleção condicional</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-66454501-13"></script>
+<script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-66454501-13');
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CE089</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="aulas.html">Aulas</a>
+</li>
+<li>
+  <a href="referencias.html">Referências</a>
+</li>
+<li>
+  <a href="notas.html">Notas</a>
+</li>
+<li>
+  <a href="materiais.html">Materiais</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leg-ufpr/ce089">
+    <span class="fa fa-github fa-lg"></span>
+     
+    GitHub
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Indexação e seleção condicional</h1>
+<h4 class="author">Fernando P. Mayer</h4>
+
+</div>
+
+
+<div id="indexacao" class="section level1">
+<h1><span class="header-section-number">1</span> Indexação</h1>
+<p>Existem 6 maneiras diferentes de indexar valores no R. Podemos indexar usando:</p>
+<ul>
+<li>Inteiros positivos</li>
+<li>Inteiros negativos</li>
+<li>Zero</li>
+<li>Espaço em branco</li>
+<li>Nomes</li>
+<li>Valores lógicos</li>
+</ul>
+<p>Existem três tipos de operadores que podem ser usados para indexar (e selecionar) <strong>sub-conjuntos</strong> (<em>subsets</em>) de objetos no R:</p>
+<ul>
+<li>O operador <code>[ ]</code> sempre retorna um objeto da mesma classe que o original. Pode ser usado para selecionar múltiplos elementos de um objeto</li>
+<li>O operador<code>[[ ]]</code> é usado para extrair elementos de uma <strong>lista</strong> ou <strong>data frame</strong>. Pode ser usado para extrair um único elemento, e a classe do objeto retornado não precisa necessariamente ser uma lista ou data frame.</li>
+<li>O operador <code>$</code> é usado para extrair elementos <strong>nomeados</strong> de uma lista ou data frame. É similar ao operador <code>[[ ]]</code>.</li>
+</ul>
+<div id="indexacao-de-vetores" class="section level2">
+<h2><span class="header-section-number">1.1</span> Indexação de vetores</h2>
+<p>Observe o seguinte vetor de contagens</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">cont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="ot">NA</span>, <span class="dv">9</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">9</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2">cont</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co"># [1]  8  4 NA  9  6  1  7  9</span></a></code></pre></div>
+<p>Para acessar o valor que está na posição 4, faça:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">cont[<span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co"># [1] 9</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>Os colchetes <code>[ ]</code> são utilizados para <strong>extração</strong> (seleção de um intervalo de dados) ou <strong>substituição</strong> de elementos. O valor dentro dos colchetes é chamado de <strong>índice</strong>.</p>
+</div>
+<p>Para acessar os valores nas posições 1, 4 e 8 é necessário o uso da função <code>c()</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">cont[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)]</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co"># [1] 8 9 9</span></a></code></pre></div>
+<p>Ou:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">ind &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">cont[ind]</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co"># [1] 8 9 9</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>Note que os índices no R começam em 1, e não em 0, como algumas outras linguagens.</p>
+</div>
+<p>Para selecionar todos os valores, <strong>excluindo</strong> aquele da posição 4, usamos um índice negativo</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">cont[<span class="op">-</span><span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co"># [1]  8  4 NA  6  1  7  9</span></a></code></pre></div>
+<p>Da mesma forma se quiséssemos todos os valores, menos aqueles das posições 1, 4 e 8:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">cont[<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)]</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co"># [1]  4 NA  6  1  7</span></a></code></pre></div>
+<p>Também é possível selecionar uma sequência de elementos (com qualquer uma das funções de gerar sequências que já vimos antes):</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Seleciona os elementos de 1 a 5</span></a>
+<a class="sourceLine" id="cb7-2" title="2">cont[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co"># [1]  8  4 NA  9  6</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">## Seleciona os elementos nas posições ímpar</span></a>
+<a class="sourceLine" id="cb7-5" title="5">cont[<span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dt">by =</span> <span class="dv">2</span>)]</a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co"># [1]  8 NA  6  7</span></a></code></pre></div>
+<p>Mas note que para selecionar todos menos aqueles de uma sequência, precisamos colocá-la entre parênteses</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">cont[<span class="op">-</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co"># Error in cont[-1:5]: only 0&#39;s may be mixed with negative subscripts</span></a>
+<a class="sourceLine" id="cb8-3" title="3">cont[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)]</a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co"># [1] 1 7 9</span></a></code></pre></div>
+</div>
+<div id="exercicios-1" class="section level2">
+<h2><span class="header-section-number">1.2</span> Exercícios 1</h2>
+<ol style="list-style-type: decimal">
+<li>Crie um vetor com os valores: <code>88, 5, 12, 13</code></li>
+<li>Selecione o elemento na posição 3</li>
+<li>Selecione o valor 88</li>
+<li>Selecione os valores 13 e 5 (nessa ordem)</li>
+<li>Selecione todos os valores, menos o 88 e o 13</li>
+<li>Insira o valor 168 <strong>entre</strong> os valores 12 e 13, criando um novo objeto</li>
+</ol>
+<p>Para selecionar todos os elementos que sejam <code>NA</code>, ou todos menos os <code>NA</code>s, precisamos usar a função <code>is.na()</code></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Para selecionar os NAs</span></a>
+<a class="sourceLine" id="cb9-2" title="2">cont[<span class="kw">is.na</span>(cont)]</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co"># [1] NA</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">## Para selecionar todos menos os NAs</span></a>
+<a class="sourceLine" id="cb9-5" title="5">cont[<span class="op">!</span><span class="kw">is.na</span>(cont)]</a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co"># [1] 8 4 9 6 1 7 9</span></a></code></pre></div>
+<p>Para substituir os <code>NA</code>s por algum valor (<em>e.g.</em> 0):</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">cont[<span class="kw">is.na</span>(cont)] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-2" title="2">cont</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co"># [1] 8 4 0 9 6 1 7 9</span></a></code></pre></div>
+<p>E para especificar <code>NA</code> para algum valor</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">is.na</span>(cont) &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb11-2" title="2">cont</a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="co"># [1]  8  4 NA  9  6  1  7  9</span></a>
+<a class="sourceLine" id="cb11-4" title="4"><span class="co">## Mais seguro do que</span></a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="co"># cont[3] &lt;- NA</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>Note que se utilizarmos o operador de atribuição <code>&lt;-</code> em conjunto com uma indexação, estaremos <strong>substituindo</strong> os valores selecionados pelos valores do lado direito do operador de atribuição.</p>
+</div>
+<p>Podemos também utilizar mais duas formas de indexação no R: espaços em branco e zero:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">cont[<span class="dv">0</span>]</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co"># numeric(0)</span></a>
+<a class="sourceLine" id="cb12-3" title="3">cont[]</a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co"># [1]  8  4 NA  9  6  1  7  9</span></a></code></pre></div>
+<p>Note que o índice zero não existe no R, mas ao utilizá-lo é retornado um vetor “vazio”, ou um vetor de comprimento zero. Essa forma de indexação é raramente utilizada no R.</p>
+<p>Ao deixar um espaço em branco, estamos simplesmente informando que queremos todos os valores daquele vetor. Essa forma de indexação será particularmente útil para objetos que possuem duas ou mais dimensões, como matrizes e data frames.</p>
+<div id="vetores-nomeados" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Vetores nomeados</h3>
+<p>Quando vetores possuem seus componentes <strong>nomeados</strong>, a indexação pode ser realizada pelos nomes destes componentes.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">## Atribui as letras &quot;a&quot;, &quot;b&quot;, ..., &quot;h&quot; para os componentes de cont</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">names</span>(cont) &lt;-<span class="st"> </span>letters[<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(cont)]</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">## Acessando o quarto elemento</span></a>
+<a class="sourceLine" id="cb13-4" title="4">cont[<span class="st">&quot;d&quot;</span>]</a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="co"># d </span></a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="co"># 9</span></a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="co">## Acessando o sexto e o primeiro elemento</span></a>
+<a class="sourceLine" id="cb13-8" title="8">cont[<span class="kw">c</span>(<span class="st">&quot;f&quot;</span>, <span class="st">&quot;a&quot;</span>)]</a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co"># f a </span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="co"># 1 8</span></a></code></pre></div>
+<p>Dica: veja <code>?letters</code></p>
+</div>
+</div>
+<div id="indexacao-de-matrizes" class="section level2">
+<h2><span class="header-section-number">1.3</span> Indexação de matrizes</h2>
+<p>Considere a seguinte matriz</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">nrow =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb14-2" title="2">mat</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#      [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co"># [1,]    1    4    7</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co"># [2,]    2    5    8</span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co"># [3,]    3    6    9</span></a></code></pre></div>
+<p>Acesse o valor que está na linha 2 da coluna 3:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">mat[<span class="dv">2</span>, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co"># [1] 8</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>A indexação de matrizes sempre segue a ordem <code>[linha, coluna]</code></p>
+</div>
+<p>Para acessar todas as linhas da coluna 1, deixamos o espaço em branco (que também é uma forma de seleção, como vimos) na posição das linhas e especificamos a coluna desejada</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">mat[, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="co"># [1] 1 2 3</span></a></code></pre></div>
+<p>Para acessar todas as colunas da linha 1, usamos a mesma lógica</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">mat[<span class="dv">1</span>, ]</a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="co"># [1] 1 4 7</span></a></code></pre></div>
+<p>Note que o resultado destas extrações trazem os valores internos das matrizes, mas com a dimensão reduzida (nestes casos para uma dimensão). Se o objetivo for, por exemplo, extrair uma parte da matriz, mas mantendo as duas dimensões, então precisamos usar o argumento <code>drop</code> da “função” <code>[</code> (sim, também é uma função; veja <code>"?["</code>). Veja as diferenças:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">mat[<span class="dv">3</span>, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="co"># [1] 6</span></a>
+<a class="sourceLine" id="cb18-3" title="3">mat[<span class="dv">3</span>, <span class="dv">2</span>, drop =<span class="st"> </span><span class="ot">FALSE</span>]</a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="co">#      [,1]</span></a>
+<a class="sourceLine" id="cb18-5" title="5"><span class="co"># [1,]    6</span></a>
+<a class="sourceLine" id="cb18-6" title="6">mat[<span class="dv">1</span>, ]</a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="co"># [1] 1 4 7</span></a>
+<a class="sourceLine" id="cb18-8" title="8">mat[<span class="dv">1</span>, , drop =<span class="st"> </span><span class="ot">FALSE</span>]</a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="co">#      [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb18-10" title="10"><span class="co"># [1,]    1    4    7</span></a></code></pre></div>
+<p>Para acessar as linhas 1 e 3 das colunas 2 e 3:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">mat[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)]</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="co">#      [,1] [,2]</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co"># [1,]    4    7</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co"># [2,]    6    9</span></a></code></pre></div>
+<p>E note que aqui a dimensão já é 2 pois naturalmente o resultado preisa ser representado em duas dimensões.</p>
+<div id="matrizes-nomeadas" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Matrizes nomeadas</h3>
+<p>Se as matrizes tiverem linhas e/ou colunas nomeados, a indexação também pode ser feita com os nomes.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">##----------------------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="co">## Nomes das colunas</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="kw">colnames</span>(mat) &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co">## Todas as linhas da coluna B</span></a>
+<a class="sourceLine" id="cb20-5" title="5">mat[, <span class="st">&quot;B&quot;</span>]</a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="co"># [1] 4 5 6</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="co">## Elemento da linha 1 e coluna C</span></a>
+<a class="sourceLine" id="cb20-8" title="8">mat[<span class="dv">1</span>, <span class="st">&quot;C&quot;</span>]</a>
+<a class="sourceLine" id="cb20-9" title="9"><span class="co"># C </span></a>
+<a class="sourceLine" id="cb20-10" title="10"><span class="co"># 7</span></a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="co">##----------------------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb20-12" title="12"><span class="co">## Nomes das linhas</span></a>
+<a class="sourceLine" id="cb20-13" title="13"><span class="kw">rownames</span>(mat) &lt;-<span class="st"> </span>LETTERS[<span class="dv">24</span><span class="op">:</span><span class="dv">26</span>]</a>
+<a class="sourceLine" id="cb20-14" title="14"><span class="co">## Todas as colunas da linha X</span></a>
+<a class="sourceLine" id="cb20-15" title="15">mat[<span class="st">&quot;X&quot;</span>, ]</a>
+<a class="sourceLine" id="cb20-16" title="16"><span class="co"># A B C </span></a>
+<a class="sourceLine" id="cb20-17" title="17"><span class="co"># 1 4 7</span></a>
+<a class="sourceLine" id="cb20-18" title="18"><span class="co">## Elemento da linha Y e coluna A</span></a>
+<a class="sourceLine" id="cb20-19" title="19">mat[<span class="st">&quot;Y&quot;</span>, <span class="st">&quot;A&quot;</span>]</a>
+<a class="sourceLine" id="cb20-20" title="20"><span class="co"># [1] 2</span></a></code></pre></div>
+</div>
+</div>
+<div id="indexacao-de-listas" class="section level2">
+<h2><span class="header-section-number">1.4</span> Indexação de listas</h2>
+<p>Considere a seguinte lista:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">lis &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>), mat, <span class="dv">5</span><span class="op">:</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-2" title="2">lis</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co"># [[1]]</span></a>
+<a class="sourceLine" id="cb21-4" title="4"><span class="co"># [1] 3 8 7 4</span></a>
+<a class="sourceLine" id="cb21-5" title="5"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-6" title="6"><span class="co"># [[2]]</span></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="co">#   A B C</span></a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="co"># X 1 4 7</span></a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="co"># Y 2 5 8</span></a>
+<a class="sourceLine" id="cb21-10" title="10"><span class="co"># Z 3 6 9</span></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="co"># [[3]]</span></a>
+<a class="sourceLine" id="cb21-13" title="13"><span class="co"># [1] 5 4 3 2 1 0</span></a></code></pre></div>
+<p>Podemos acessar um componente da lista da maneira usual</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">lis[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="co"># [[1]]</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co"># [1] 3 8 7 4</span></a></code></pre></div>
+<p>Mas note que esse objeto continua sendo uma lista</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">class</span>(lis[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="co"># [1] &quot;list&quot;</span></a></code></pre></div>
+<p>Geralmente o que queremos é acessar os elementos que estão <strong>contidos</strong> nos componentes da lista, e para isso precisamos usar <code>[[</code> no lugar de <code>[</code>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">lis[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="co"># [1] 3 8 7 4</span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="kw">class</span>(lis[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb24-4" title="4"><span class="co"># [1] &quot;numeric&quot;</span></a></code></pre></div>
+<p>Isso é importante, por exemplo, se quisessemos aplicar uma função qualquer a um componente da lista. No primeiro caso isso não é possível pois o conteúdo continua dentro de uma lista, enquanto que no segundo caso os valores retornados são os próprios números:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">mean</span>(lis[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="co"># Warning in mean.default(lis[1]): argument is not numeric or logical:</span></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="co"># returning NA</span></a>
+<a class="sourceLine" id="cb25-4" title="4"><span class="co"># [1] NA</span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="kw">mean</span>(lis[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb25-6" title="6"><span class="co"># [1] 5.5</span></a></code></pre></div>
+<p>Para acessar o segundo <strong>componente</strong> da lista:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">lis[[<span class="dv">2</span>]]</a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="co">#   A B C</span></a>
+<a class="sourceLine" id="cb26-3" title="3"><span class="co"># X 1 4 7</span></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="co"># Y 2 5 8</span></a>
+<a class="sourceLine" id="cb26-5" title="5"><span class="co"># Z 3 6 9</span></a></code></pre></div>
+<p>Para acessar o terceiro valor do primeiro componente:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">lis[[<span class="dv">1</span>]][<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="co"># [1] 7</span></a></code></pre></div>
+<p>Note que o segundo elemento da lista é uma matriz, portanto a indexação da matriz <em>dentro da lista</em> também segue o mesmo padrão</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">lis[[<span class="dv">2</span>]][<span class="dv">2</span>, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="co"># [1] 8</span></a></code></pre></div>
+<p>Se a lista tiver componentes <strong>nomeados</strong>, eles podem ser acessados com o operador <code>$</code>:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">lis &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">vetor1 =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>), <span class="dt">mat =</span> mat, <span class="dt">vetor2 =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="co">## Ou</span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="co">## names(lis) &lt;- c(&quot;vetor1&quot;, &quot;mat&quot;, &quot;vetor2&quot;)</span></a>
+<a class="sourceLine" id="cb29-4" title="4">lis</a>
+<a class="sourceLine" id="cb29-5" title="5"><span class="co"># $vetor1</span></a>
+<a class="sourceLine" id="cb29-6" title="6"><span class="co"># [1] 3 8 7 4</span></a>
+<a class="sourceLine" id="cb29-7" title="7"><span class="co"># </span></a>
+<a class="sourceLine" id="cb29-8" title="8"><span class="co"># $mat</span></a>
+<a class="sourceLine" id="cb29-9" title="9"><span class="co">#   A B C</span></a>
+<a class="sourceLine" id="cb29-10" title="10"><span class="co"># X 1 4 7</span></a>
+<a class="sourceLine" id="cb29-11" title="11"><span class="co"># Y 2 5 8</span></a>
+<a class="sourceLine" id="cb29-12" title="12"><span class="co"># Z 3 6 9</span></a>
+<a class="sourceLine" id="cb29-13" title="13"><span class="co"># </span></a>
+<a class="sourceLine" id="cb29-14" title="14"><span class="co"># $vetor2</span></a>
+<a class="sourceLine" id="cb29-15" title="15"><span class="co"># [1] 5 4 3 2 1 0</span></a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co">## Acesando o segundo componente</span></a>
+<a class="sourceLine" id="cb30-2" title="2">lis<span class="op">$</span>mat</a>
+<a class="sourceLine" id="cb30-3" title="3"><span class="co">#   A B C</span></a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="co"># X 1 4 7</span></a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="co"># Y 2 5 8</span></a>
+<a class="sourceLine" id="cb30-6" title="6"><span class="co"># Z 3 6 9</span></a>
+<a class="sourceLine" id="cb30-7" title="7"><span class="co">## Linha 2 e coluna 3</span></a>
+<a class="sourceLine" id="cb30-8" title="8">lis<span class="op">$</span>mat[<span class="dv">2</span>, <span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb30-9" title="9"><span class="co"># [1] 8</span></a>
+<a class="sourceLine" id="cb30-10" title="10"><span class="co">## Terceiro elemento do primeiro componente</span></a>
+<a class="sourceLine" id="cb30-11" title="11">lis<span class="op">$</span>vetor1[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb30-12" title="12"><span class="co"># [1] 7</span></a></code></pre></div>
+<p>Ou então</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">lis[[<span class="st">&quot;mat&quot;</span>]]</a>
+<a class="sourceLine" id="cb31-2" title="2"><span class="co">#   A B C</span></a>
+<a class="sourceLine" id="cb31-3" title="3"><span class="co"># X 1 4 7</span></a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="co"># Y 2 5 8</span></a>
+<a class="sourceLine" id="cb31-5" title="5"><span class="co"># Z 3 6 9</span></a>
+<a class="sourceLine" id="cb31-6" title="6">lis[[<span class="st">&quot;vetor1&quot;</span>]][<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb31-7" title="7"><span class="co"># [1] 7</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>O símbolo <code>$</code> é utilizado para acessar componentes <strong>nomeados</strong> de listas ou data frames.</p>
+</div>
+</div>
+<div id="indexacao-de-data-frames" class="section level2">
+<h2><span class="header-section-number">1.5</span> Indexação de data frames</h2>
+<p>Considere o seguinte data frame</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">A =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">B =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="ot">NA</span>, <span class="dv">5</span>, <span class="dv">8</span>))</a>
+<a class="sourceLine" id="cb32-2" title="2">da</a>
+<a class="sourceLine" id="cb32-3" title="3"><span class="co">#   A  B</span></a>
+<a class="sourceLine" id="cb32-4" title="4"><span class="co"># 1 4  2</span></a>
+<a class="sourceLine" id="cb32-5" title="5"><span class="co"># 2 3 NA</span></a>
+<a class="sourceLine" id="cb32-6" title="6"><span class="co"># 3 2  5</span></a>
+<a class="sourceLine" id="cb32-7" title="7"><span class="co"># 4 1  8</span></a></code></pre></div>
+<p>Para acessar o segundo elemento da primeira coluna (segue a mesma lógica da indexação de matrizes pois também possui duas dimensões):</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">da[<span class="dv">2</span>, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="co"># [1] 3</span></a></code></pre></div>
+<p>Acesse todas as linhas da coluna B:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">da[, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="co"># [1]  2 NA  5  8</span></a></code></pre></div>
+<p>Ou usando o nome da coluna:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">da[,<span class="st">&quot;B&quot;</span>]</a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="co"># [1]  2 NA  5  8</span></a></code></pre></div>
+<p>Todas as colunas da linha 1:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">da[<span class="dv">1</span>, ]</a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="co">#   A B</span></a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="co"># 1 4 2</span></a></code></pre></div>
+<p>Ou usando o “nome” da linha:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">da[<span class="st">&quot;1&quot;</span>, ]</a>
+<a class="sourceLine" id="cb37-2" title="2"><span class="co">#   A B</span></a>
+<a class="sourceLine" id="cb37-3" title="3"><span class="co"># 1 4 2</span></a></code></pre></div>
+<p>Note que o argumento <code>drop=</code> também é válido se quiser manter a dimensão do objeto</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">da[, <span class="st">&quot;B&quot;</span>]</a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="co"># [1]  2 NA  5  8</span></a>
+<a class="sourceLine" id="cb38-3" title="3">da[, <span class="st">&quot;B&quot;</span>, drop =<span class="st"> </span><span class="ot">FALSE</span>]</a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="co">#    B</span></a>
+<a class="sourceLine" id="cb38-5" title="5"><span class="co"># 1  2</span></a>
+<a class="sourceLine" id="cb38-6" title="6"><span class="co"># 2 NA</span></a>
+<a class="sourceLine" id="cb38-7" title="7"><span class="co"># 3  5</span></a>
+<a class="sourceLine" id="cb38-8" title="8"><span class="co"># 4  8</span></a></code></pre></div>
+<p>Como o data frame é um caso particular de uma lista (onde todos os componentes tem o mesmo comprimento), as colunas de um data frame também podem ser acessadas com <code>$</code>:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">da<span class="op">$</span>A</a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="co"># [1] 4 3 2 1</span></a></code></pre></div>
+<p>Para acessar o terceiro elemento da coluna B:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">da<span class="op">$</span>B[<span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb40-2" title="2"><span class="co"># [1] 5</span></a></code></pre></div>
+<p>Para acessar os elementos nas posições 2 e 4 da coluna B:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">da<span class="op">$</span>B[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)]</a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="co"># [1] NA  8</span></a></code></pre></div>
+<p>Assim como nas listas, podemos indexar um data frame usando apenas um índice, que nesse caso retorna a coluna (componente) do data frame:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">da[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb42-2" title="2"><span class="co">#   A</span></a>
+<a class="sourceLine" id="cb42-3" title="3"><span class="co"># 1 4</span></a>
+<a class="sourceLine" id="cb42-4" title="4"><span class="co"># 2 3</span></a>
+<a class="sourceLine" id="cb42-5" title="5"><span class="co"># 3 2</span></a>
+<a class="sourceLine" id="cb42-6" title="6"><span class="co"># 4 1</span></a>
+<a class="sourceLine" id="cb42-7" title="7"><span class="kw">class</span>(da[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb42-8" title="8"><span class="co"># [1] &quot;data.frame&quot;</span></a></code></pre></div>
+<p>Note que dessa forma a classe é mantida. Também podemos indexar os data frames usando <code>[[</code> da mesma forma como em listas</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">da[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb43-2" title="2"><span class="co"># [1] 4 3 2 1</span></a>
+<a class="sourceLine" id="cb43-3" title="3">da[[<span class="st">&quot;A&quot;</span>]]</a>
+<a class="sourceLine" id="cb43-4" title="4"><span class="co"># [1] 4 3 2 1</span></a>
+<a class="sourceLine" id="cb43-5" title="5">da[[<span class="st">&quot;A&quot;</span>]][<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb43-6" title="6"><span class="co"># [1] 3 2</span></a></code></pre></div>
+<p>Para lidar com <code>NA</code>s em data frames, podemos também usar a função <code>is.na()</code></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">da[<span class="kw">is.na</span>(da), ] <span class="co"># nao retorna o resultado esperado</span></a>
+<a class="sourceLine" id="cb44-2" title="2"><span class="co">#     A  B</span></a>
+<a class="sourceLine" id="cb44-3" title="3"><span class="co"># NA NA NA</span></a>
+<a class="sourceLine" id="cb44-4" title="4"><span class="co">## Deve ser feito por coluna</span></a>
+<a class="sourceLine" id="cb44-5" title="5">da[<span class="kw">is.na</span>(da<span class="op">$</span>A), ]</a>
+<a class="sourceLine" id="cb44-6" title="6"><span class="co"># [1] A B</span></a>
+<a class="sourceLine" id="cb44-7" title="7"><span class="co"># &lt;0 rows&gt; (or 0-length row.names)</span></a>
+<a class="sourceLine" id="cb44-8" title="8">da[<span class="kw">is.na</span>(da<span class="op">$</span>B), ]</a>
+<a class="sourceLine" id="cb44-9" title="9"><span class="co">#   A  B</span></a>
+<a class="sourceLine" id="cb44-10" title="10"><span class="co"># 2 3 NA</span></a>
+<a class="sourceLine" id="cb44-11" title="11"><span class="co">## De maneira geral</span></a>
+<a class="sourceLine" id="cb44-12" title="12"><span class="kw">is.na</span>(da)</a>
+<a class="sourceLine" id="cb44-13" title="13"><span class="co">#          A     B</span></a>
+<a class="sourceLine" id="cb44-14" title="14"><span class="co"># [1,] FALSE FALSE</span></a>
+<a class="sourceLine" id="cb44-15" title="15"><span class="co"># [2,] FALSE  TRUE</span></a>
+<a class="sourceLine" id="cb44-16" title="16"><span class="co"># [3,] FALSE FALSE</span></a>
+<a class="sourceLine" id="cb44-17" title="17"><span class="co"># [4,] FALSE FALSE</span></a>
+<a class="sourceLine" id="cb44-18" title="18"><span class="kw">is.na</span>(da<span class="op">$</span>A)</a>
+<a class="sourceLine" id="cb44-19" title="19"><span class="co"># [1] FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb44-20" title="20"><span class="kw">is.na</span>(da<span class="op">$</span>B)</a>
+<a class="sourceLine" id="cb44-21" title="21"><span class="co"># [1] FALSE  TRUE FALSE FALSE</span></a></code></pre></div>
+<p>Para remover as linhas que possuem <code>NA</code>, note que será necessário remover todas as colunas daquela linha, pois data frames não podem ter colunas de comprimentos diferentes</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">da[<span class="op">!</span><span class="kw">is.na</span>(da<span class="op">$</span>B), ]</a>
+<a class="sourceLine" id="cb45-2" title="2"><span class="co">#   A B</span></a>
+<a class="sourceLine" id="cb45-3" title="3"><span class="co"># 1 4 2</span></a>
+<a class="sourceLine" id="cb45-4" title="4"><span class="co"># 3 2 5</span></a>
+<a class="sourceLine" id="cb45-5" title="5"><span class="co"># 4 1 8</span></a></code></pre></div>
+<p>A função <code>complete.cases()</code> facilita esse processo. Veja o resultado</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">complete.cases</span>(da)</a>
+<a class="sourceLine" id="cb46-2" title="2"><span class="co"># [1]  TRUE FALSE  TRUE  TRUE</span></a>
+<a class="sourceLine" id="cb46-3" title="3">da[<span class="kw">complete.cases</span>(da), ]</a>
+<a class="sourceLine" id="cb46-4" title="4"><span class="co">#   A B</span></a>
+<a class="sourceLine" id="cb46-5" title="5"><span class="co"># 1 4 2</span></a>
+<a class="sourceLine" id="cb46-6" title="6"><span class="co"># 3 2 5</span></a>
+<a class="sourceLine" id="cb46-7" title="7"><span class="co"># 4 1 8</span></a></code></pre></div>
+<div id="a-funcao-with" class="section level3">
+<h3><span class="header-section-number">1.5.1</span> A função <code>with()</code></h3>
+<p>Para evitar fazer muitas indexações de um mesmo data frame, por exemplo, podemos utilizar a função <code>with()</code></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="kw">with</span>(da, A)</a>
+<a class="sourceLine" id="cb47-2" title="2"><span class="co"># [1] 4 3 2 1</span></a></code></pre></div>
+<p>é o mesmo que</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">da<span class="op">$</span>A</a>
+<a class="sourceLine" id="cb48-2" title="2"><span class="co"># [1] 4 3 2 1</span></a></code></pre></div>
+<p>Também é útil para acessar elementos específicos dentro de data frames. Por exemplo, o terceiro elemento da coluna B</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="kw">with</span>(da, B[<span class="dv">3</span>])</a>
+<a class="sourceLine" id="cb49-2" title="2"><span class="co"># [1] 5</span></a></code></pre></div>
+<p>E também para aplicar funções nas colunas do data frame</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="kw">with</span>(da, <span class="kw">mean</span>(A))</a>
+<a class="sourceLine" id="cb50-2" title="2"><span class="co"># [1] 2.5</span></a></code></pre></div>
+</div>
+</div>
+<div id="exercicios-2" class="section level2">
+<h2><span class="header-section-number">1.6</span> Exercícios 2</h2>
+<ol style="list-style-type: decimal">
+<li>Crie a seguinte matriz <span class="math display">\[\left[ \begin{array}{ccc}
+         4 &amp; 16 &amp; 2 \\
+         10 &amp; 5 &amp; 11 \\
+         9 &amp; 9 &amp; 5 \\
+         2 &amp; 0 &amp; NA
+         \end{array} \right]\]</span></li>
+<li>Acesse o elemento na quarta linha e na segunda coluna</li>
+<li>Acesse todos os elementos, com exceção da segunda coluna e da terceira linha</li>
+<li>Crie uma lista (nomeada) com 3 componentes: um vetor numérico de comprimento 10, um vetor de caracteres de comprimento 7, e a matriz do exercício anterior</li>
+<li>Acesse os elementos nas posições de 5 a 3 do primeiro componente da lista</li>
+<li>Acesse os caracteres de todas as posições, menos na 2 e 6</li>
+<li>Acesse todas as linhas da coluna 3 da matriz dentro desta lista</li>
+<li>“Crie” um novo componente nessa lista (usando <code>$</code>), contendo 30 valores aleatórios de uma distribuição normal <span class="math inline">\(\text{N}(12, 4)\)</span> (veja <code>?rnorm</code>)</li>
+<li>Crie um data frame que contenha duas colunas: a primeira com as letras de “A” até “J”, e outra com o resultado de uma chamada da função <code>runif(7, 1, 5)</code></li>
+<li>Extraia as duas primeiras linhas desse data frame</li>
+<li>Extraia as duas últimas linhas desse data frame</li>
+<li>Qual é o valor que está na linha 6 e coluna 1?</li>
+<li>Qual é o valor que está na linha 4 da coluna 2?</li>
+<li>Como você faria para contar quantos valores perdidos (<code>NA</code>s) existem nesse data frame?</li>
+<li>Elimine os <code>NA</code>s deste data frame.</li>
+<li>Crie uma nova coluna neste data frame, com valores numéricos (quaisquer)</li>
+<li>Crie mais um componente na lista anterior, que será também uma lista com dois componentes: <code>A</code> com os valores <code>1:5</code>, e <code>B</code> com as letras de “a” a “f”</li>
+<li>Acesse o número 4 de <code>A</code></li>
+<li>Acesse a letra “c” de <code>B</code></li>
+</ol>
+</div>
+</div>
+<div id="selecao-condicional" class="section level1">
+<h1><span class="header-section-number">2</span> Seleção condicional</h1>
+<div id="selecao-condicional-em-vetores" class="section level2">
+<h2><span class="header-section-number">2.1</span> Seleção condicional em vetores</h2>
+<div class="alert alert-warning">
+<p>A <strong>seleção condicional</strong> serve para extrair dados que satisfaçam algum critério, usando <strong>expressões condicionais</strong> e <strong>operadores lógicos</strong>.</p>
+</div>
+<p>Considere o seguinte vetor</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">dados &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">42</span>, <span class="dv">28</span>, <span class="dv">79</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">14</span>)</a></code></pre></div>
+<p>Selecione apenas os valores maiores do que 15:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">dados[dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>]</a>
+<a class="sourceLine" id="cb52-2" title="2"><span class="co"># [1] 42 28 79</span></a></code></pre></div>
+<p>Selecione os valores maiores que 15 E menores ou iguais a 35:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">dados[dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">&amp;</span><span class="st"> </span>dados <span class="op">&lt;=</span><span class="st"> </span><span class="dv">35</span>]</a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="co"># [1] 28</span></a></code></pre></div>
+<p>Para entender como funciona a seleção condicional, observe apenas o resultado da condição dentro do colchetes:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1"><span class="co">## Usando &amp; (e)</span></a>
+<a class="sourceLine" id="cb54-2" title="2">dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">&amp;</span><span class="st"> </span>dados <span class="op">&lt;=</span><span class="st"> </span><span class="dv">35</span></a>
+<a class="sourceLine" id="cb54-3" title="3"><span class="co"># [1] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb54-4" title="4"><span class="co">## Usando | (ou)</span></a>
+<a class="sourceLine" id="cb54-5" title="5">dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">|</span><span class="st"> </span>dados <span class="op">&lt;=</span><span class="st"> </span><span class="dv">35</span></a>
+<a class="sourceLine" id="cb54-6" title="6"><span class="co"># [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></a></code></pre></div>
+<p>Os valores selecionados serão aqueles em que a condição for <code>TRUE</code>, no primeiro caso apenas o quarto elemento do vetor <code>dados</code>.</p>
+<p>A seleção condicional também é muito útil para selecionar elementos de um vetor, baseado em uma condição de outro vetor.</p>
+<p>Considere o seguinte vetor de caracteres</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">cara &lt;-<span class="st"> </span>letters[<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(dados)]</a></code></pre></div>
+<p>Considere que de alguma forma, os objetos <code>dados</code> e <code>cara</code> possuem alguma relação. Sendo assim, podemos selecionar elementos de <code>dados</code>, baseados em alguma condição de <code>cara</code></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="co">## Elemento de dados onde cara é igual a &quot;c&quot;</span></a>
+<a class="sourceLine" id="cb56-2" title="2">dados[cara <span class="op">==</span><span class="st"> &quot;c&quot;</span>]</a>
+<a class="sourceLine" id="cb56-3" title="3"><span class="co"># [1] 42</span></a></code></pre></div>
+<p>Se quisermos selecionar mais de um elemento de <code>dados</code>, baseado em uma condição de <code>cara</code>?</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="co">## Elementos de dados onde cara é igual a &quot;a&quot; e &quot;c&quot;</span></a>
+<a class="sourceLine" id="cb57-2" title="2">cara <span class="op">==</span><span class="st"> &quot;a&quot;</span> <span class="op">&amp;</span><span class="st"> </span>cara <span class="op">==</span><span class="st"> &quot;c&quot;</span> <span class="co"># porque não funciona?</span></a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="co"># [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb57-4" title="4">cara <span class="op">==</span><span class="st"> &quot;a&quot;</span> <span class="op">|</span><span class="st"> </span>cara <span class="op">==</span><span class="st"> &quot;c&quot;</span></a>
+<a class="sourceLine" id="cb57-5" title="5"><span class="co"># [1]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb57-6" title="6">dados[cara <span class="op">==</span><span class="st"> &quot;a&quot;</span> <span class="op">|</span><span class="st"> </span>cara <span class="op">==</span><span class="st"> &quot;c&quot;</span>]</a>
+<a class="sourceLine" id="cb57-7" title="7"><span class="co"># [1]  5 42</span></a></code></pre></div>
+<p>Uma solução melhor seria se pudessemos usar</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">dados[cara <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)]</a>
+<a class="sourceLine" id="cb58-2" title="2"><span class="co"># [1] 5</span></a></code></pre></div>
+<p>mas nesse caso só temos o primeiro elemento. Um operador muito útil nestes casos é o <code>%in%</code></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">dados[cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)]</a>
+<a class="sourceLine" id="cb59-2" title="2"><span class="co"># [1]  5 42</span></a>
+<a class="sourceLine" id="cb59-3" title="3">cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)</a>
+<a class="sourceLine" id="cb59-4" title="4"><span class="co"># [1]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE</span></a></code></pre></div>
+<p>Veja a diferença</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">cara <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)</a>
+<a class="sourceLine" id="cb60-2" title="2"><span class="co"># [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb60-3" title="3">cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)</a>
+<a class="sourceLine" id="cb60-4" title="4"><span class="co"># [1]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE</span></a></code></pre></div>
+<p>Também é possível fazer a seleção de <code>cara</code>, baseado em uma condição em <code>dados</code></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="co">## Elemento de cara onde dados é igual a 15</span></a>
+<a class="sourceLine" id="cb61-2" title="2">cara[dados <span class="op">==</span><span class="st"> </span><span class="dv">15</span>]</a>
+<a class="sourceLine" id="cb61-3" title="3"><span class="co"># [1] &quot;b&quot;</span></a>
+<a class="sourceLine" id="cb61-4" title="4"><span class="co">## Elemento de cara onde dados for maior do que 30</span></a>
+<a class="sourceLine" id="cb61-5" title="5">cara[dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span>]</a>
+<a class="sourceLine" id="cb61-6" title="6"><span class="co"># [1] &quot;c&quot; &quot;e&quot;</span></a>
+<a class="sourceLine" id="cb61-7" title="7"><span class="co">## Elemento de cara onde dados for igual a 4 ou 14</span></a>
+<a class="sourceLine" id="cb61-8" title="8">cara[dados <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">14</span>)]</a>
+<a class="sourceLine" id="cb61-9" title="9"><span class="co"># [1] &quot;f&quot; &quot;h&quot;</span></a></code></pre></div>
+</div>
+<div id="a-funcao-which" class="section level2">
+<h2><span class="header-section-number">2.2</span> A função <code>which()</code></h2>
+<p>Até agora vimos seleções condicionais que nos retornavam o resultado de uma expressão condicional em vetores. No entanto, muitas vezes estamos interessados em saber a <strong>posição</strong> do resultado de uma expressão condicional, ao invés do resultado em si.</p>
+<p>A fução <code>which()</code> retorna as posições dos elementos que retornarem <code>TRUE</code> em uma expressão condicional.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="co">## Elementos maiores de 15</span></a>
+<a class="sourceLine" id="cb62-2" title="2">dados[dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>]</a>
+<a class="sourceLine" id="cb62-3" title="3"><span class="co"># [1] 42 28 79</span></a>
+<a class="sourceLine" id="cb62-4" title="4"><span class="kw">which</span>(dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb62-5" title="5"><span class="co"># [1] 3 4 5</span></a>
+<a class="sourceLine" id="cb62-6" title="6"><span class="co">## Elementos maiores de 15 e menores ou iguais a 35</span></a>
+<a class="sourceLine" id="cb62-7" title="7">dados[dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">&amp;</span><span class="st"> </span>dados <span class="op">&lt;=</span><span class="st"> </span><span class="dv">35</span>]</a>
+<a class="sourceLine" id="cb62-8" title="8"><span class="co"># [1] 28</span></a>
+<a class="sourceLine" id="cb62-9" title="9"><span class="kw">which</span>(dados <span class="op">&gt;</span><span class="st"> </span><span class="dv">15</span> <span class="op">&amp;</span><span class="st"> </span>dados <span class="op">&lt;=</span><span class="st"> </span><span class="dv">35</span>)</a>
+<a class="sourceLine" id="cb62-10" title="10"><span class="co"># [1] 4</span></a>
+<a class="sourceLine" id="cb62-11" title="11"><span class="co">## Elementos de dados onde cara igual a &quot;c&quot;</span></a>
+<a class="sourceLine" id="cb62-12" title="12">dados[cara <span class="op">==</span><span class="st"> &quot;c&quot;</span>]</a>
+<a class="sourceLine" id="cb62-13" title="13"><span class="co"># [1] 42</span></a>
+<a class="sourceLine" id="cb62-14" title="14"><span class="kw">which</span>(cara <span class="op">==</span><span class="st"> &quot;c&quot;</span>)</a>
+<a class="sourceLine" id="cb62-15" title="15"><span class="co"># [1] 3</span></a>
+<a class="sourceLine" id="cb62-16" title="16"><span class="co">## Elementos de dadaos onde cara igual a &quot;a&quot; ou &quot;c&quot;</span></a>
+<a class="sourceLine" id="cb62-17" title="17">dados[cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>)]</a>
+<a class="sourceLine" id="cb62-18" title="18"><span class="co"># [1]  5 42</span></a>
+<a class="sourceLine" id="cb62-19" title="19"><span class="kw">which</span>(cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>))</a>
+<a class="sourceLine" id="cb62-20" title="20"><span class="co"># [1] 1 3</span></a></code></pre></div>
+</div>
+<div id="exercicios-3" class="section level2">
+<h2><span class="header-section-number">2.3</span> Exercícios 3</h2>
+<ol style="list-style-type: decimal">
+<li>Crie um vetor (<code>x</code>) com os valores 3, 8, 10, 4, 9, 7, 1, 9, 2, 4.</li>
+<li>Selecione os elementos maiores ou iguais a 5</li>
+<li>Selecione todos os elementos menos o 4</li>
+<li>Selecione os elementos maiores que 4 e menores que 8</li>
+<li>Crie um vetor (<code>a</code>) com as letras de A até J</li>
+<li>Selecione os elementos de x onde a for igual a “F”</li>
+<li>Selecione os elementos de x onde a for igual a “B”, “D”, e “H”</li>
+<li>Qual a posição do número 10 em x?</li>
+<li>Quais as posições dos valores maiores ou iguais a 8 e menores ou iguais a 10 em x?</li>
+<li>Quais as posições das letras “A”, “B”, “D” em a?</li>
+</ol>
+</div>
+<div id="selecao-condicional-em-data-frames" class="section level2">
+<h2><span class="header-section-number">2.4</span> Seleção condicional em data frames</h2>
+<p>Considere o seguinte data frame</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">dados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">ano =</span> <span class="kw">c</span>(<span class="dv">2001</span>, <span class="dv">2002</span>, <span class="dv">2003</span>, <span class="dv">2004</span>, <span class="dv">2005</span>),</a>
+<a class="sourceLine" id="cb63-2" title="2">                    <span class="dt">captura =</span> <span class="kw">c</span>(<span class="dv">26</span>, <span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">32</span>, <span class="ot">NA</span>),</a>
+<a class="sourceLine" id="cb63-3" title="3">                    <span class="dt">porto =</span> <span class="kw">c</span>(<span class="st">&quot;SP&quot;</span>, <span class="st">&quot;RS&quot;</span>, <span class="st">&quot;SC&quot;</span>, <span class="st">&quot;SC&quot;</span>, <span class="st">&quot;RN&quot;</span>))</a></code></pre></div>
+<p>Extraia deste objeto apenas a linha correspondente ao ano 2004:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">dados[dados<span class="op">$</span>ano <span class="op">==</span><span class="st"> </span><span class="dv">2004</span>, ]</a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb64-3" title="3"><span class="co"># 4 2004      32    SC</span></a></code></pre></div>
+<p>Mostre as linhas apenas do porto “SC”:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">dados[dados<span class="op">$</span>porto <span class="op">==</span><span class="st"> &quot;SC&quot;</span>, ]</a>
+<a class="sourceLine" id="cb65-2" title="2"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb65-3" title="3"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb65-4" title="4"><span class="co"># 4 2004      32    SC</span></a></code></pre></div>
+<p>Observe as linhas onde a captura seja maior que 20, selecionando apenas a coluna <code>captura</code>:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="st">&quot;captura&quot;</span>]</a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="co"># [1] 26 25 32 NA</span></a></code></pre></div>
+<p>Também exclua as linhas com <code>NA</code>s (agora com todas as colunas):</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(dados<span class="op">$</span>captura), ]</a>
+<a class="sourceLine" id="cb67-2" title="2"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb67-3" title="3"><span class="co"># 1 2001      26    SP</span></a>
+<a class="sourceLine" id="cb67-4" title="4"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb67-5" title="5"><span class="co"># 4 2004      32    SC</span></a>
+<a class="sourceLine" id="cb67-6" title="6">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span> <span class="op">&amp;</span><span class="st"> </span><span class="kw">complete.cases</span>(dados), ]</a>
+<a class="sourceLine" id="cb67-7" title="7"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb67-8" title="8"><span class="co"># 1 2001      26    SP</span></a>
+<a class="sourceLine" id="cb67-9" title="9"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb67-10" title="10"><span class="co"># 4 2004      32    SC</span></a></code></pre></div>
+<p>A condição pode ser feita com diferentes colunas:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">25</span> <span class="op">&amp;</span><span class="st"> </span>dados<span class="op">$</span>porto <span class="op">==</span><span class="st"> &quot;SP&quot;</span>, ]</a>
+<a class="sourceLine" id="cb68-2" title="2"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb68-3" title="3"><span class="co"># 1 2001      26    SP</span></a></code></pre></div>
+<p>A função <code>subset()</code> serve para os mesmos propósitos, e facilita todo o processo de seleção condicional:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">dados[dados<span class="op">$</span>porto <span class="op">==</span><span class="st"> &quot;SC&quot;</span>, ]</a>
+<a class="sourceLine" id="cb69-2" title="2"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb69-3" title="3"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb69-4" title="4"><span class="co"># 4 2004      32    SC</span></a>
+<a class="sourceLine" id="cb69-5" title="5"><span class="kw">subset</span>(dados, porto <span class="op">==</span><span class="st"> &quot;SC&quot;</span>)</a>
+<a class="sourceLine" id="cb69-6" title="6"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb69-7" title="7"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb69-8" title="8"><span class="co"># 4 2004      32    SC</span></a>
+<a class="sourceLine" id="cb69-9" title="9">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, ]</a>
+<a class="sourceLine" id="cb69-10" title="10"><span class="co">#     ano captura porto</span></a>
+<a class="sourceLine" id="cb69-11" title="11"><span class="co"># 1  2001      26    SP</span></a>
+<a class="sourceLine" id="cb69-12" title="12"><span class="co"># 3  2003      25    SC</span></a>
+<a class="sourceLine" id="cb69-13" title="13"><span class="co"># 4  2004      32    SC</span></a>
+<a class="sourceLine" id="cb69-14" title="14"><span class="co"># NA   NA      NA  &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb69-15" title="15"><span class="kw">subset</span>(dados, captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb69-16" title="16"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb69-17" title="17"><span class="co"># 1 2001      26    SP</span></a>
+<a class="sourceLine" id="cb69-18" title="18"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb69-19" title="19"><span class="co"># 4 2004      32    SC</span></a>
+<a class="sourceLine" id="cb69-20" title="20">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(dados<span class="op">$</span>captura), ]</a>
+<a class="sourceLine" id="cb69-21" title="21"><span class="co">#    ano captura porto</span></a>
+<a class="sourceLine" id="cb69-22" title="22"><span class="co"># 1 2001      26    SP</span></a>
+<a class="sourceLine" id="cb69-23" title="23"><span class="co"># 3 2003      25    SC</span></a>
+<a class="sourceLine" id="cb69-24" title="24"><span class="co"># 4 2004      32    SC</span></a>
+<a class="sourceLine" id="cb69-25" title="25">dados[dados<span class="op">$</span>captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="st">&quot;captura&quot;</span>]</a>
+<a class="sourceLine" id="cb69-26" title="26"><span class="co"># [1] 26 25 32 NA</span></a>
+<a class="sourceLine" id="cb69-27" title="27"><span class="kw">subset</span>(dados, captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">select =</span> captura)</a>
+<a class="sourceLine" id="cb69-28" title="28"><span class="co">#   captura</span></a>
+<a class="sourceLine" id="cb69-29" title="29"><span class="co"># 1      26</span></a>
+<a class="sourceLine" id="cb69-30" title="30"><span class="co"># 3      25</span></a>
+<a class="sourceLine" id="cb69-31" title="31"><span class="co"># 4      32</span></a>
+<a class="sourceLine" id="cb69-32" title="32"><span class="kw">subset</span>(dados, captura <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">select =</span> captura,  <span class="dt">drop =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb69-33" title="33"><span class="co"># [1] 26 25 32</span></a></code></pre></div>
+<p>A grande vantagem é que a função <code>subset()</code> já lida com os <code>NA</code>s (se isso for o que você precisa).</p>
+</div>
+<div id="exercicios-4" class="section level2">
+<h2><span class="header-section-number">2.5</span> Exercícios 4</h2>
+<ol style="list-style-type: decimal">
+<li>Você contou 42 caranguejos na Joaquina, 34 no Campeche, 59 na Armação, e 18 na Praia Mole. Crie um data frame para armazenar estas informações (número de caranguejos observados e local).</li>
+<li>Com o data frame criado no exercício anterior, mostre qual a praia onde foram coletadas menos de 30 caranguejos (usando seleção condicional!).</li>
+<li>Crie uma nova coluna (região) neste data frame indicando que Joaquina e Praia Mole estão localizadas no leste da ilha (leste), e Campeche e Armação estão no sul (sul).</li>
+<li>Selecione as praias de região leste que possuem menos de 20 caranguejos contados.</li>
+<li>Você está interessado em saber em qual das duas praias do sul, o número de caranguejos contados foi maior do que 40. Usando a seleção condicional, mostre essa informação na tela.</li>
+<li>Qual região possui praias com mais de 50 caranguejos contados?</li>
+</ol>
+</div>
+</div>
+
+<center>
+  <hr width="100%" size="3px">
+  <p> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR">
+      <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" alt="Licença Creative Commons 4.0"> </a>
+  </p>
+  <p> <font size="2"> Este conteúdo
+      está disponível por meio da Licença Creative Commons 4.0 </font>
+  </p>
+</center>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
