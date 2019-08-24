@@ -34,7 +34,8 @@ argumentos e tipos primitivos de objetos. [HTML](objetos-classes.html).
 atributos e funções genéricas (métodos). [HTML](objetos-classes.html).
 - **20/08 (Ter)**: Não haverá aula (professor em viagem). Fazer
   atividade disponível no [Moodle][].
-- **23/08 (Sex)**:
+- **23/08 (Sex)**: Indexação e seleção condicional.
+  [HTML](indexacao-selecao.html).
 - **27/08 (Ter)**:
 - **30/08 (Sex)**:
 - **03/09 (Ter)**:
