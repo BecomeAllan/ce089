@@ -470,21 +470,21 @@ st2
 ```
 
 ```{r, eval=FALSE, include=FALSE}
-profvis({
+profvis::profvis({
 y1 <- numeric(length(x))
 for(i in 1:length(x)){
     y1[i] <- x[i]^2
 }
 })
 
-profvis({
+profvis::profvis({
     y1 <- numeric(0)
     for(i in 1:length(x)){
         y1[i] <- x[i]^2
     }
 })
 
-profvis(y2 <- x^2)
+profvis::profvis(y2 <- x^2)
 ```
 
 Olhando o resultado de `elapsed`, que é o tempo total de execução de uma
