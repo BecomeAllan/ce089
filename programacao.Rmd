@@ -469,6 +469,24 @@ st2 <- system.time(
 st2
 ```
 
+```{r, eval=FALSE, include=FALSE}
+profvis({
+y1 <- numeric(length(x))
+for(i in 1:length(x)){
+    y1[i] <- x[i]^2
+}
+})
+
+profvis({
+    y1 <- numeric(0)
+    for(i in 1:length(x)){
+        y1[i] <- x[i]^2
+    }
+})
+
+profvis(y2 <- x^2)
+```
+
 Olhando o resultado de `elapsed`, que é o tempo total de execução de uma
 função medido por `system.time()`, notamos que usando a regra da
 reciclagem, o cálculo é aproximadamente `r st1[3]`/`r st2[3]` =
