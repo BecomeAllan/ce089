@@ -36,7 +36,8 @@ atributos e funções genéricas (métodos). [HTML](objetos-classes.html).
   atividade disponível no [Moodle][].
 - **23/08 (Sex)**: Indexação e seleção condicional.
   [HTML](indexacao-selecao.html).
-- **27/08 (Ter)**:
+- **27/08 (Ter)**: Programando com dados: estruturas de repetição,
+  seleção e vetorização. [HTML](programacao.html).
 - **30/08 (Sex)**:
 - **03/09 (Ter)**:
 - **06/09 (Sex)**:
