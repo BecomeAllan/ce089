@@ -19,6 +19,8 @@ Press, 2016.
 
 ## Referências complementares
 
+- Burns, P. [The R
+  Inferno](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf). 2011.
 - Eubank, RL; Kupresanin, A. **Statistical computing in C++ and R**.
 Chapman & Hall, 2011.
 - Everitt, BS. **Introduction to optimization methods and their
@@ -27,12 +29,19 @@ application in statistics**. Chapman & Hall, 1987.
 UFLA, 2013.
 - Gilks, WR; Richardson, S; Spiegelhalter, DJ (Eds.). **Markov chain
   Monte Carlo in practice**. Chapman & Hall, 1996.
+- Gillespie, C.; Lovelace, R. [Efficient R
+programming](https://csgillespie.github.io/efficientR/). Chapman &
+Hall, 2017.
 - Manly, B. **Randomization, bootstrap and Monte Carlo methods in
 biology**. Chapman & Hall, 1997.
 - Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
 Springer, 2010.
 - Robert, CP; Casella, G. **Monte Carlo statistical methods**.
 Springer, 2004.
+- Wickham, H. [Advanced R](https://adv-r.hadley.nz/). Chapman &
+  Hall, 2019.
+
+
 
 ## Referências *online*
 
