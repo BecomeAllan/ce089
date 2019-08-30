@@ -1,0 +1,129 @@
+---
+title: "Técnicas de programação"
+author: Fernando Mayer
+date: 2019-08-29
+bibliography: ../ref.bib
+output:
+  xaringan::moon_reader:
+    # css: ["default", "fc", "fc-fonts", "fira.css"]
+    css: ["default", "fc", "fc-fonts"]
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: TRUE
+---
+
+
+```{r, cache=FALSE, include=FALSE}
+source("../setup_knitr.R")
+```
+
+# Introdução
+
+- "O R não é uma linguagem rápida". Não é por acaso:
+  - Foi desenvolvido para análise de dados interativa
+  - Não foi pensado em ser o mais eficiente possível
+  - Para a maioria das tarefas, é rápido o bastante
+
+- Por isso, é importante:
+  - Identificar os "gargalos" no código, que podem ser otimizados
+  - Identificar expressões que causam erros, e como lidar com estes
+    erros
+
+- Técnicas gerais de programação:
+  - Identificar e arrumar problemas de performance
+  - Identificar e arrumar erros (*bugs*)
+
+---
+# Introdução
+
+As técnicas que precisamos conhecer são:
+
+- **Benchmarking** é o processo de avaliar a performance de operações
+específicas repetidamente.
+- **Profiling** é o processo de fazer o benchmark para cada instrução de
+uma função/rotina.
+- **Debugging** é o processo de buscar e resolver erros. Técnicas de
+debugging permitem avaliar a função passo a passo quando chamada.
+- **Error handling** (*tratamento de erro*) é o processo de "prever"
+possíveis erros e fazer alguma ação quando ocorrerem.
+
+.pull-left[
+## Performance de código
+
+- Benchmarking
+- Profiling
+]
+
+.pull-right[
+## Tratamento de erros
+
+- Debugging
+- Error handling
+]
+
+---
+class: center, middle, inverse
+# Performance de código
+
+---
+## Benchmarking
+
+```{r}
+library(microbenchmark)
+(df <- data.frame(v = 1:4, name = letters[1:4]))
+microbenchmark(df[3, 2], df[3, "name"], df$name[3])
+```
+
+```{r}
+x <- runif(1e6)
+microbenchmark(sqrt(x), x^0.5)
+```
+
+---
+## Profiling
+
+
+```{r}
+Rprof()
+y <- sqrt(x)
+Rprof(NULL)
+summaryRprof()
+```
+
+---
+## Profiling
+
+---
+class: center, middle, inverse
+# Tratamento de erros
+
+---
+## Tipos de erros
+
+- Error
+- Warning
+- Message
+- Condition
+
+---
+## Ignorando erros
+
+---
+## Encontrando erros
+
+---
+## Teste
+
+```{r}
+baskara <- function(a, b, c) {
+    delta <- b^2 - 4 * a * c
+    denom <- 2 * a
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom #<<
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+baskara(-3, 2, 1)
+baskara(0, 2, 1)
+```
