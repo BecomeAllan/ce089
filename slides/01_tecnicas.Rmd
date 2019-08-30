@@ -11,6 +11,7 @@ output:
     nature:
       highlightStyle: github
       highlightLines: TRUE
+      countIncrementalSlides: FALSE
 ---
 
 
@@ -67,13 +68,33 @@ class: center, middle, inverse
 # Performance de código
 
 ---
-## Benchmarking
+# Benchmarking
+
+Funções úteis:
+
+- `base::system.time()`: apenas uma execução
+- `microbenchmark::microbenchmark()`: avalia a expressão várias vezes
+
+Usando `system.time()`
+
+```{r}
+(df <- data.frame(v = 1:4, name = letters[1:4]))
+system.time(df[3, 2])
+system.time(df[3, "name"])
+system.time(df$name[3])
+```
+
+---
+# Benchmarking
+
+Usando `microbenchmark()`
 
 ```{r}
 library(microbenchmark)
-(df <- data.frame(v = 1:4, name = letters[1:4]))
 microbenchmark(df[3, 2], df[3, "name"], df$name[3])
 ```
+
+Outro exemplo:
 
 ```{r}
 x <- runif(1e6)
@@ -81,49 +102,376 @@ microbenchmark(sqrt(x), x^0.5)
 ```
 
 ---
-## Profiling
+# Benchmarking
 
+Voltando ao exemplo da aula anterior:
 
 ```{r}
+## Vetor com uma sequência de 1 a 1.000.000
+x <- 1:1000000
+
+## Cria um objeto de armazenamento com o mesmo tamanho do resultado
+st1 <- system.time({
+    out1 <- numeric(length(x))
+    for(i in 1:length(x)){
+        out1[i] <- x[i]^2
+    }
+})
+st1
+
+## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
+st2 <- system.time({
+    out2 <- numeric(0)
+    for(i in 1:length(x)){
+        out2[i] <- x[i]^2
+    }
+})
+st2
+```
+
+---
+# Benchmarking
+
+Voltando ao exemplo da aula anterior (com `microbenchmark()`):
+
+```{r}
+## Vetor com uma sequência de 1 a 1.000.000
+x <- 1:1000000
+## Cria um objeto de armazenamento com o mesmo tamanho do resultado
+st1 <- function(x) {
+    out1 <- numeric(length(x))
+    for(i in 1:length(x)){
+        out1[i] <- x[i]^2
+    }
+    return(x)
+}
+## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
+st2 <- function(x) {
+    out2 <- numeric(0)
+    for(i in 1:length(x)){
+        out2[i] <- x[i]^2
+    }
+    return(x)
+}
+microbenchmark(st1, st2, times = 1000)
+```
+
+---
+# Profiling
+
+Ferramentas:
+
+- `base::Rprof()`: resultados básicos
+- `profvis::profvis()`: mais detalhes em uma interface
+
+Exemplo com `Rprof()`
+
+```{r, eval=FALSE}
 Rprof()
-y <- sqrt(x)
+out1 <- numeric(length(x))
+for(i in 1:length(x)){
+    out1[i] <- x[i]^2
+}
+Rprof(NULL)
+summaryRprof()
+
+Rprof()
+out2 <- numeric(0)
+for(i in 1:length(x)){
+    out2[i] <- x[i]^2
+}
 Rprof(NULL)
 summaryRprof()
 ```
 
 ---
-## Profiling
+# Profiling
+
+Exemplo com `profvis()`
+
+```{r, eval=FALSE}
+profvis({
+    out1 <- numeric(length(x))
+    for(i in 1:length(x)){
+        out1[i] <- x[i]^2
+    }
+})
+
+profvis({
+    out2 <- numeric(0)
+    for(i in 1:length(x)){
+        out2[i] <- x[i]^2
+    }
+})
+```
+
+---
+# Profiling
+
+Simula de um modelo linear:
+
+```{r, eval=FALSE}
+## Simulação
+set.seed(123)
+n <- 1000
+b0 <- 10
+b1 <- 0.5
+x <- rnorm(n, mean = 150, sd = 15)
+sigma2 <- 20
+y <- b0 + b1*x + rnorm(n, mean = 0, sd = sqrt(sigma2))
+plot(x, y)
+```
+
+---
+# Profiling
+
+Bootstrap:
+
+```{r, eval=FALSE}
+## Número de amostras
+r <- 1e4
+## Número de elementos em cada amostra
+m <- 100
+
+profvis( #<<
+## Vetores para armazenar os resultados
+b0.boot <- numeric(r)
+b1.boot <- numeric(r)
+s2.boot <- numeric(r)
+set.seed(123)
+for(i in 1:r){
+    select <- sample(1:length(y), size = m, replace = TRUE)
+    x.boot <- x[select]
+    y.boot <- y[select]
+    mm <- lm(y.boot ~ x.boot)
+    b0.boot[i] <- coef(mm)[1]
+    b1.boot[i] <- coef(mm)[2]
+    s2.boot[i] <- summary(mm)$sigma^2
+}) #<<
+
+par(mfrow = c(1, 3))
+hist(b0.boot)
+hist(b1.boot)
+hist(s2.boot)
+par(mfrow = c(1, 1))
+```
 
 ---
 class: center, middle, inverse
 # Tratamento de erros
 
 ---
-## Tipos de erros
+# Tipos de erros
 
-- Error
-- Warning
-- Message
-- Condition
+- **Error**: único capaz de parar e execução da função, e não cria
+  objetos
+- **Warning**: avisa que algo pode estar errado, mas executa a função e
+  retorna valores
+- **Message**: apenas alguma mensagem que possa ser útil, mas não
+  interfere nos resultados
+
+```{r, error=TRUE}
+stop("Isso é um erro")
+warning("Isso é um warning")
+message("Isso é uma mensagem")
+```
+
+**Obs.:** evite usar `cat()` e `print()` ao criar funções.
 
 ---
-## Ignorando erros
+# Encontrando erros
 
----
-## Encontrando erros
+Considere a fórmula de Baskara para encontrar as raízes de uma equação
+de segundo grau:
+$$
+x = \frac{-\text{b} \pm \sqrt{\text{b}^2 - 4\text{a}\text{c}}}{2\text{a}}
+$$
 
----
-## Teste
+Uma implementação simples no R seria:
 
 ```{r}
 baskara <- function(a, b, c) {
-    delta <- b^2 - 4 * a * c
     denom <- 2 * a
+    delta <- b^2 - 4 * a * c
     sqrt_delta <- sqrt(delta)
-    x1 <- (-b - sqrt_delta)/denom #<<
+    x1 <- (-b - sqrt_delta)/denom
     x2 <- (-b + sqrt_delta)/denom
     return(c(x1, x2))
 }
+```
+
+---
+# Encontrando erros
+
+Alguns resultados:
+
+```{r}
 baskara(-3, 2, 1)
 baskara(0, 2, 1)
+baskara(3, 2, 1)
+```
+
+Usando `traceback()` para tentar identificar onde está o erro:
+
+```{r, eval=FALSE}
+traceback()
+```
+
+Não é informativo, pois não existe um erro definido formalmente na
+função.
+
+---
+# Encontrando erros
+
+Quais os possíveis problemas (numéricos)?
+
+1. Quando $a = 0$
+2. Quando $\sqrt{\Delta} < 0$
+
+--
+
+Resolvendo o primeiro problema:
+
+```{r}
+baskara <- function(a, b, c) {
+    if(a == 0) stop("a nao pode ser zero") #<<
+    denom <- 2 * a
+    delta <- b^2 - 4 * a * c
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+```
+
+```{r, error=TRUE, eval=-2}
+baskara(0, 2, 1)
+traceback() #<<
+```
+
+---
+# Encontrando erros
+
+Resolvendo o segundo problema:
+
+```{r}
+baskara <- function(a, b, c) {
+    if(a == 0) stop("a nao pode ser zero")
+    denom <- 2 * a
+    delta <- b^2 - 4 * a * c
+    if(delta < 0) stop("raiz negativa") #<<
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+```
+
+```{r, error=TRUE, eval=-2}
+baskara(3, 2, 1)
+traceback() #<<
+```
+
+---
+# Encontrando erros
+
+Usando `browser()`
+
+```{r, eval=FALSE}
+baskara <- function(a, b, c) {
+    denom <- 2 * a
+    delta <- b^2 - 4 * a * c
+    browser() #<<
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+```
+
+```{r, eval=FALSE}
+baskara(3, 2, 1)
+```
+
+(Veja no script).
+
+---
+# Encontrando erros
+
+Usando `debug()`:
+
+```{r, eval=FALSE}
+baskara <- function(a, b, c) {
+    denom <- 2 * a
+    delta <- b^2 - 4 * a * c
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+```
+
+```{r, eval=FALSE}
+## Para iniciar o debug, use:
+debug(baskara)
+## Para entrar em modo de debug, chame a função com argumentos:
+baskara(3, 2, 1)
+## Para sair do modo debug da função, faça:
+undebug(baskara)
+## Ou, para entrar em modo de debug apenas uma vez e sair, use:
+debugonce(baskara)
+```
+
+---
+# Ignorando erros
+
+Existem duas funções para ignorar erros:
+
+- `try()`: ignora o erro, mas cria um objeto com a classe `try-error`
+- `tryCatch()`: define alguma ação quando ocorrer um erro
+
+Voltando ao exemplo da função `baskara()` com as funções `stop()`:
+
+```{r}
+baskara <- function(a, b, c) {
+    if(a == 0) stop("a nao pode ser zero")
+    denom <- 2 * a
+    delta <- b^2 - 4 * a * c
+    if(delta < 0) stop("raiz negativa")
+    sqrt_delta <- sqrt(delta)
+    x1 <- (-b - sqrt_delta)/denom
+    x2 <- (-b + sqrt_delta)/denom
+    return(c(x1, x2))
+}
+```
+
+---
+# Ignorando erros
+
+Usando `try()`:
+
+```{r, error=TRUE}
+baskara(0, 2, 1)
+try(baskara(0, 2, 1))
+er <- try(baskara(0, 2, 1))
+er
+class(er)
+```
+
+Não existe uma forma pronta de lidar com essa classe, mas você pode
+definir o que deve acontecer:
+
+```{r}
+if(class(er) == "try-error") c(NA, NA)
+```
+
+---
+# Ignorando erros
+
+Com `tryCatch()` podemos definir previamente o resultado quando ocorrer
+um erro:
+
+```{r}
+tryCatch(baskara(0, 2, 1),
+         error = function(cmd) c(NA, NA))
 ```
