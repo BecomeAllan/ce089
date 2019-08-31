@@ -7,9 +7,22 @@ output:
 
 ## Materiais da diciplina
 
+### Páginas
+
 - [Funções, objetos e classes](objetos-classes.html).
 - [Indexação e seleção condicional](indexacao-selecao.html).
 - [Programando com dados](programacao.html).
+
+### Slides
+
+- Introdução à Estatística Computacional II.
+  [HTML](slides/00_intro.html).
+- Técnicas de programação. [HTML](slides/01_tecnicas.html).
+
+### Scripts
+
+- Técnicas de programação. [R](slides/01_tecnicas.R).
+
 
 ## Materiais gerais
 
@@ -17,8 +30,3 @@ output:
   (apostila da disciplina de Estatística Computacional I).
 - Materiais da [oferta anterior](http://leg.ufpr.br/~walmes/ensino/EC2/)
   (Prof. Walmes).
-
-## Slides
-
-- Introdução à Estatística Computacional II.
-  [HTML](slides/00_intro.html).

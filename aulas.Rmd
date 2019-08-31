@@ -38,8 +38,10 @@ atributos e funções genéricas (métodos). [HTML](objetos-classes.html).
   [HTML](indexacao-selecao.html).
 - **27/08 (Ter)**: Programando com dados: estruturas de repetição,
   seleção e vetorização. [HTML](programacao.html).
-- **30/08 (Sex)**:
-- **03/09 (Ter)**:
+- **30/08 (Sex)**: Técnicas de programação: benchmarking, profiling,
+debugging e error handling. [Slides](slides/01_tecnicas.html).
+[Script](slides/01_tecnicas.R) com os códigos dos slides.
+- **03/09 (Ter)**: Atividade disponível no [Moodle][].
 - **06/09 (Sex)**:
 - **10/09 (Ter)**:
 - **13/09 (Sex)**:
