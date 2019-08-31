@@ -84,6 +84,9 @@ system.time(df[3, "name"])
 system.time(df$name[3])
 ```
 
+- Cada expressão precisa ser executada em uma linha
+- Cada expressão é executada uma única vez
+
 ---
 # Benchmarking
 
@@ -100,6 +103,10 @@ Outro exemplo:
 x <- runif(1e6)
 microbenchmark(sqrt(x), x^0.5)
 ```
+
+- Várias expressões podem ser passadas na mesma chamada da função
+- Cada expressão é avaliada 100 vezes (por padrão), obtendo assim um
+  sumário dos tempos de execução (veja o argumento `times`)
 
 ---
 # Benchmarking
@@ -137,7 +144,7 @@ Voltando ao exemplo da aula anterior (com `microbenchmark()`):
 ```{r}
 ## Vetor com uma sequência de 1 a 1.000.000
 x <- 1:1000000
-## Cria um objeto de armazenamento com o mesmo tamanho do resultado
+## Cria uma função para o primeiro caso
 st1 <- function(x) {
     out1 <- numeric(length(x))
     for(i in 1:length(x)){
@@ -145,7 +152,7 @@ st1 <- function(x) {
     }
     return(x)
 }
-## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
+## Cria uma função para o segundo caso
 st2 <- function(x) {
     out2 <- numeric(0)
     for(i in 1:length(x)){
@@ -156,25 +163,33 @@ st2 <- function(x) {
 microbenchmark(st1, st2, times = 1000)
 ```
 
+- A diferença é que aqui fica mais fácil passarmos uma função, ao invés
+  das expressões
+
 ---
 # Profiling
 
 Ferramentas:
 
 - `base::Rprof()`: resultados básicos
+  - A função `Rprof()` cria um arquivo chamado `Rprof.out`, que armazena
+    cada passo interno da execução das expressões
+  - Um resumo pode ser visto com a função `summaryRprof()`
 - `profvis::profvis()`: mais detalhes em uma interface
 
-Exemplo com `Rprof()`
+Exemplo com `Rprof()`:
 
 ```{r, eval=FALSE}
-Rprof()
+## Caso 1
+Rprof() ## Abre a conexão
 out1 <- numeric(length(x))
 for(i in 1:length(x)){
     out1[i] <- x[i]^2
 }
-Rprof(NULL)
-summaryRprof()
+Rprof(NULL) ## Fecha a conexão
+summaryRprof() ## Resumo do profiling
 
+## Caso 2
 Rprof()
 out2 <- numeric(0)
 for(i in 1:length(x)){
@@ -189,7 +204,12 @@ summaryRprof()
 
 Exemplo com `profvis()`
 
+- Após e execução da expressão, uma interface gráfica é aberta com
+  informações de tempo de execução e uso de memória *para cada linha*
+
 ```{r, eval=FALSE}
+library(profvis)
+## Caso 1
 profvis({
     out1 <- numeric(length(x))
     for(i in 1:length(x)){
@@ -197,6 +217,7 @@ profvis({
     }
 })
 
+## Caso 2
 profvis({
     out2 <- numeric(0)
     for(i in 1:length(x)){
@@ -208,14 +229,31 @@ profvis({
 ---
 # Profiling
 
-Simula de um modelo linear:
+## Exemplo prático
 
-```{r, eval=FALSE}
-## Simulação
+Simula de um modelo linear:
+$$
+Y_i = \beta_0 + \beta_1 X_i + \epsilon_i, \quad i = 1, \ldots, n
+$$
+Onde:
+$$
+\begin{aligned}
+X_i &\sim N(150, 15^2) \\
+\epsilon_i &\sim N(0, \sigma^2) \\
+\beta_0 &= 10 \\
+\beta_1 &= 0.5 \\
+\sigma^2 &= 20
+\end{aligned}
+$$
+
+---
+# Profiling
+
+Simulação dos dados:
+
+```{r, out.width='50%'}
 set.seed(123)
-n <- 1000
-b0 <- 10
-b1 <- 0.5
+n <- 1000; b0 <- 10; b1 <- 0.5
 x <- rnorm(n, mean = 150, sd = 15)
 sigma2 <- 20
 y <- b0 + b1*x + rnorm(n, mean = 0, sd = sqrt(sigma2))
@@ -225,15 +263,44 @@ plot(x, y)
 ---
 # Profiling
 
-Bootstrap:
+Um modelo linear ajustado aos dados resulta em:
+
+```{r}
+## Modelo
+m <- lm(y ~ x)
+## b0 e b1
+coef(m)
+## sigma^2
+summary(m)$sigma^2
+```
+
+Uma forma alternativa de se obter estimativas pontuais e variâncias de
+parâmetros é através da técnica de **bootstrap**. A ideia é muito simples:
+
+1. A partir do conjunto de dados coletados, gere uma amostra aleatória
+(com  reposição) de tamanho $m < n$.
+2. Ajuste o modelo para esse subconjunto dos dados e obtenha as
+estimativas dos parâmetros.
+3. Repita esse procedimento $r$ vezes (onde $r$ deve ser algo entre 1000
+e 100000, por exemplo).
+4. Verifique a distribuição das $r$ estimativas: a média será a
+estimativa pontual, e a variância será uma estimativa da variância.
+
+- **Obs.:** todos os detalhes deste método serão abordados em breve na
+  disciplina. Por enquanto, o importante é apenas a implementação
+  computacional.
+
+---
+# Profiling
+
+Implementando o bootstrap e já aplicando a função `profvis()`:
 
 ```{r, eval=FALSE}
 ## Número de amostras
 r <- 1e4
 ## Número de elementos em cada amostra
 m <- 100
-
-profvis( #<<
+profvis({ #<<
 ## Vetores para armazenar os resultados
 b0.boot <- numeric(r)
 b1.boot <- numeric(r)
@@ -247,8 +314,9 @@ for(i in 1:r){
     b0.boot[i] <- coef(mm)[1]
     b1.boot[i] <- coef(mm)[2]
     s2.boot[i] <- summary(mm)$sigma^2
+}
 }) #<<
-
+## Por curiosidade, veja:
 par(mfrow = c(1, 3))
 hist(b0.boot)
 hist(b1.boot)
@@ -276,7 +344,8 @@ warning("Isso é um warning")
 message("Isso é uma mensagem")
 ```
 
-**Obs.:** evite usar `cat()` e `print()` ao criar funções.
+**Obs.:** evite usar `cat()` e `print()` para informar erros ou
+mensagens em funções.
 
 ---
 # Encontrando erros
@@ -287,7 +356,7 @@ $$
 x = \frac{-\text{b} \pm \sqrt{\text{b}^2 - 4\text{a}\text{c}}}{2\text{a}}
 $$
 
-Uma implementação simples no R seria:
+Uma implementação *naive* ("ingênua") no R seria:
 
 ```{r}
 baskara <- function(a, b, c) {
@@ -299,6 +368,10 @@ baskara <- function(a, b, c) {
     return(c(x1, x2))
 }
 ```
+
+- Por quê "ingênua"?
+  1. É possível fazer tudo isso em uma linha
+  2. Não existem mecanismos para lidar com possíveis erros
 
 ---
 # Encontrando erros
@@ -315,6 +388,7 @@ Usando `traceback()` para tentar identificar onde está o erro:
 
 ```{r, eval=FALSE}
 traceback()
+# No traceback available
 ```
 
 Não é informativo, pois não existe um erro definido formalmente na
@@ -334,7 +408,7 @@ Resolvendo o primeiro problema:
 
 ```{r}
 baskara <- function(a, b, c) {
-    if(a == 0) stop("a nao pode ser zero") #<<
+    if(a == 0) stop("Argumento `a` não pode ser zero.") #<<
     denom <- 2 * a
     delta <- b^2 - 4 * a * c
     sqrt_delta <- sqrt(delta)
@@ -344,9 +418,13 @@ baskara <- function(a, b, c) {
 }
 ```
 
-```{r, error=TRUE, eval=-2}
+```{r, error=TRUE}
 baskara(0, 2, 1)
-traceback() #<<
+```
+```{r, eval=FALSE}
+traceback()
+# 2: stop("Argumento `a` não pode ser zero.") at #2
+# 1: baskara(0, 2, 1)
 ```
 
 ---
@@ -356,10 +434,10 @@ Resolvendo o segundo problema:
 
 ```{r}
 baskara <- function(a, b, c) {
-    if(a == 0) stop("a nao pode ser zero")
+    if(a == 0) stop("Argumento `a` não pode ser zero.")
     denom <- 2 * a
     delta <- b^2 - 4 * a * c
-    if(delta < 0) stop("raiz negativa") #<<
+    if(delta < 0) stop("Delta é negativo.") #<<
     sqrt_delta <- sqrt(delta)
     x1 <- (-b - sqrt_delta)/denom
     x2 <- (-b + sqrt_delta)/denom
@@ -367,15 +445,26 @@ baskara <- function(a, b, c) {
 }
 ```
 
-```{r, error=TRUE, eval=-2}
+```{r, error=TRUE}
 baskara(3, 2, 1)
-traceback() #<<
 ```
+```{r, eval=FALSE}
+traceback()
+# 2: stop("Delta é negativo.") at #5
+# 1: baskara(3, 2, 1)
+```
+
+- O resultado é lido de baixo para cima.
+- O `traceback()` para na função que causou o erro (nesse caso óbvio), e
+  mostra qual a linha correspondente dentro da função.
 
 ---
 # Encontrando erros
 
 Usando `browser()`
+
+- Permite "entrar" no ambiente (temporário) da função em um ponto
+  específico, depois de chamar a função.
 
 ```{r, eval=FALSE}
 baskara <- function(a, b, c) {
@@ -391,14 +480,38 @@ baskara <- function(a, b, c) {
 
 ```{r, eval=FALSE}
 baskara(3, 2, 1)
+# Called from: baskara(3, 2, 1)
+# Browse[1]> debug at #5: sqrt_delta <- sqrt(delta)
+# Browse[2]>
 ```
 
-(Veja no script).
+---
+# Encontrando erros
+
+Note que:
+
+- O prompt do console muda de `> ` para `Browse[2]> `
+- Você está agora dentro do ambiente da função. Isso significa que:
+  - Os objetos que você tem acesso são os argumentos e outras expressões
+    executadas até esse ponto na função. Veja `ls()`.
+  - Os objetos criados no seu ambiente global não ficam visíveis.
+  - Você pode criar e/ou alterar objetos da função.
+- Cada <kbd>Enter</kbd> executa uma nova linha, até a última.
+- Você pode alterar os argumentos para ver o resultado.
+- Para sair digite `Q`.
+
+(Rode o script para ver como funciona).
 
 ---
 # Encontrando erros
 
 Usando `debug()`:
+
+- Uma forma mais geral para entrar no modelo `browser` da função.
+- Não especifica nada de especial dentro da função.
+- A função entra em modo `browser()` desde a primeira linha.
+
+Voltando com a função `baskara()` *naive*:
 
 ```{r, eval=FALSE}
 baskara <- function(a, b, c) {
@@ -434,10 +547,10 @@ Voltando ao exemplo da função `baskara()` com as funções `stop()`:
 
 ```{r}
 baskara <- function(a, b, c) {
-    if(a == 0) stop("a nao pode ser zero")
+    if(a == 0) stop("Argumento `a` não pode ser zero.") #<<
     denom <- 2 * a
     delta <- b^2 - 4 * a * c
-    if(delta < 0) stop("raiz negativa")
+    if(delta < 0) stop("Delta é negativo.") #<<
     sqrt_delta <- sqrt(delta)
     x1 <- (-b - sqrt_delta)/denom
     x2 <- (-b + sqrt_delta)/denom
@@ -448,15 +561,27 @@ baskara <- function(a, b, c) {
 ---
 # Ignorando erros
 
-Usando `try()`:
+**Usando `try()`:**
+
+Sem o `try()`, o objeto não é criado:
 
 ```{r, error=TRUE}
 baskara(0, 2, 1)
-try(baskara(0, 2, 1))
-er <- try(baskara(0, 2, 1))
-er
-class(er)
+er1 <- baskara(0, 2, 1)
+er1
 ```
+
+Com o `try()`, o objeto é criado e possui a classe `try-error`:
+
+```{r, error=TRUE}
+try(baskara(0, 2, 1))
+er2 <- try(baskara(0, 2, 1))
+er2
+class(er2)
+```
+
+---
+# Ignorando erros
 
 Não existe uma forma pronta de lidar com essa classe, mas você pode
 definir o que deve acontecer:
@@ -475,3 +600,16 @@ um erro:
 tryCatch(baskara(0, 2, 1),
          error = function(cmd) c(NA, NA))
 ```
+
+---
+class: center, middle, inverse
+# Desafio
+
+---
+# Desafio
+
+- Analise o resultado da função `profvis()` do slide 14.
+- Verifique os pontos críticos da execução e propornha mudanças para
+  otimizar o código.
+- Use também a função `microbenchmark()` para avaliar suas alternativas
+  propostas.
