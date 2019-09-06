@@ -1,0 +1,29 @@
+---
+title: "Geração de números aleatórios uniformes"
+author: Fernando Mayer
+date: 2019-09-06
+bibliography: ../ref.bib
+output:
+  xaringan::moon_reader:
+    # css: ["default", "fc", "fc-fonts", "fira.css"]
+    css: ["default", "fc", "fc-fonts"]
+    self_contained: TRUE
+    nature:
+      highlightStyle: github
+      highlightLines: TRUE
+      countIncrementalSlides: FALSE
+---
+
+
+```{r, cache=FALSE, include=FALSE}
+source("../setup_knitr.R")
+```
+
+# Introdução
+
+Alguma coisa.
+
+
+---
+class: center, middle, inverse
+# Performance de código
