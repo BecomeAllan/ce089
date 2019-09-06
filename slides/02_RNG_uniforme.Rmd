@@ -9,7 +9,7 @@ output:
     css: ["default", "fc", "fc-fonts"]
     self_contained: TRUE
     nature:
-      highlightStyle: github
+      # highlightStyle: github
       highlightLines: TRUE
       countIncrementalSlides: FALSE
 ---
@@ -21,9 +21,396 @@ source("../setup_knitr.R")
 
 # Introdução
 
-Alguma coisa.
+- Simulação computacional de processos estocásticos depende da
+geração de números aleatórios (GNA).
+- Inferência Bayesiana, jogos digitais, otimização estocástica também.
+
+Objetivos:
+
+- Discutir a importância da geração de números aleatórios em Estatística.
+- Descrever os principais algorítmos para GNA uniformes.
+
+---
+# A distribuição uniforme
+
+Se uma variável aleatória $X$ tem distribuição uniforme contínua entre
+$a$ e $b$, denotamos $X \sim \text{U}(a, b)$, e sua função de
+densidade é
+
+$$
+f(x, a, b) = \frac{1}{b - a} \cdot I(a \leq x < b), \quad -\infty < a <
+b < \infty.
+$$
+
+A função de probabilidade é
+
+$$
+F(x, a, b) = \Pr(X < x) = \int_{-\infty}^{x} f(x, a, b)\, \text{d}x =
+\begin{cases}
+0, & x < a \\
+\dfrac{x - a}{b - a}, & a \leq x < b\\
+1, & x \geq b.
+\end{cases}
+$$
+
+A média e variância são funções dos parâmetros
+
+$$
+\text{E}(X) = \frac{a + b}{2} \quad\text{e}\quad \text{V}(X) =
+\frac{(b - a)^2}{12}.
+$$
+
+---
+# Importância da distribuição uniforme
+
+- A distribuição tem pouca importância do ponto de vista de
+modelagem.
+- Porém, para simulação computacional, ela é central.
+- Números aleatório da Uniforme são:
+  - O principal ingrediente para GNA de outras distribuições.
+  - Usados em várias aplicações de Monte Carlo
+  (e.g. integração MC, inf. Bayesiana por MCMC, etc.)
+  - Utilizados em otimização estocástica.
+  - Empregados em jogos digitais (e.g. poker online).
+
+---
+# Geração de números aleatórios
+
+### Números aleatórios reais
+
+- São gerados por dispositivos via processos físicos.
+  - Globo de sorteio da Mega-Sena e bingos.
+  - Lançamento de um dado, moeda.
+  - Roleta de cassino.
+- Para uso em maior escala, são geralmente baseados em fenômenos
+que geram um nível baixo de rúido.
+  - Ruído termal.
+  - Ruído fotoelétrico.
+  - Ruído acústico.
+  - Movimento browniano de partículas.
+- Os sinais precisam ser traduzidos para números (intensidade).
+- A distribuição da v.a. pode não ter forma conhecida.
+- A v.a. pode ter correlação serial.
+- São usados em criptografia.
+
+Veja:
+
+- https://www.random.org/
+- https://www.fsf.org/blogs/gnu-press/neug-trng
+
+---
+# Geração de números aleatórios
+
+### Números pseudo aleatórios
+
+- São gerados por programas de computador, ou seja, algorítmos.
+- Os número não são realmente aleatórios, pois, dado o algorítmo
+gerador, pode-se prever os números (tem reprodutibilidade).
+- Do ponto de vista Estatístico, os números são imprevisíveis.
+- Bons GNA terão propriedades interessantes para aplicações
+Estatística.
+
+---
+# Geração de números pseudo aleatórios
+
+- Uma sequência de números gerados por um algoritmo, completamente
+  determinado pelo valor inicial do algoritmo: **semente** (*seed*) ou
+  **chave** (*key*).
+- Embora o determinismo possa não ser desejado, ele possui algumas
+  vantagens:
+  - Em simulação, permite repetir o mesmo processo usando a mesma
+    semente
+  - São mais eficientes, pois podem produzir grandes sequências em pouco
+    tempo
+- Por construção, os algoritmos são **periódicos**: a sequência se
+  repete a longo prazo
+  - No entanto, os algoritmos modernos possuem períodos tão longos, que
+    a periodicidade pode ser desprezada
+
+---
+# Geração de números pseudo aleatórios
+
+Um gerador de números pseudo aleatórios é uma estrutura do tipo
+$$
+\mathbb{\Theta} = (S, s_0, f, U, g)
+$$
+onde:
+
+- $S$ é um conjunto **finito** de estados
+- $s_0$ é o estado incial ou **semente**
+- $f: S \rightarrow S$ é uma função de tranformação
+- $U$ é um conjunto **finito** de símbolos de saída
+- $g: S \rightarrow U$ é uma função de saída
 
 
 ---
-class: center, middle, inverse
-# Performance de código
+# Geração de números pseudo aleatórios
+
+De maneira geral, a geração de números aleatórios é da seguinte forma:
+
+1. Defina o estado inicial (semente) $s_0$
+2. Para $n = 1, 2, 3, \ldots$ faça $s_n = f(s_{n-1})$
+3. Para cada $n$, calcule $u_n = g(s_n)$
+
+O **período** é definido pelo menor inteiro $p$, de forma que
+$$
+s_{p+n} = s_n
+$$
+
+---
+# Geração de números pseudo aleatórios
+
+Dessa forma, **aparentemente** qualquer função $f(\cdot)$ recursiva
+poderia ser usada como um gerador. Por exemplo:
+
+```{r}
+naive <- function(n, x0, a) {
+    x <- integer(n + 1)
+    x[1] <- x0
+    for(i in 2:length(x)) {
+        x[i] <- (a * x[i - 1])
+    }
+    return(x[-1])
+}
+naive(n = 10, x0 = 2, a = 345)
+```
+
+É um gerador válido, mas não necessariamente bom.
+
+---
+# Geração de números pseudo aleatórios
+
+O que faz um gerador ser bom?
+
+- A sequência deve ser intuitivamente aleatória
+- Essa aleatoriedade deve ser estabelecida teoricamente, ou passar por
+  testes de aleatoriedade
+- Deve-se conhecer alguma coisa sobre as propriedades teóricas do
+  gerador
+- A distribuição da v.a. é matematicamente conhecida
+(e.g. distribuição Uniforme).
+- O gerador produz v.a. que não apresentarem correlação serial, ou
+seja, as realizações são independentes umas das outras.
+
+Isso indica que geradores *ad hoc* (como o exemplo acima) devem ser
+evitados.
+
+---
+# GNA de von Neumann
+
+#### Artigo
+
+von Neumann, J. (1951). Various Techniques Used in Connection with
+Random Digits. In the Monte Carlo Method (ed. A.S. Householder et al.,
+36-38). **Nat. Bur. Standards Appl.** Math Ser. no. 12.
+
+#### Algorítmo
+
+- Definir um número $u_0$ de quatro digitos decimais e atribuir
+$i = 0$.
+- Calcular $u_i^2$. Agregar zeros à esquerda, quando necessário, para
+manter representação com 4 digitos: $u_i^2 = d_7 d_6... d_0$, onde cada
+$d_j$ é um inteiro entre 0 e 9.
+- Fazer $u_{i+1} = d_5 d_4 d_3 d_2$.
+- Incrementar $i$ fazendo $i = i+1$.
+- Repetir 2-4 até obter a sequência de tamanho desejado.
+
+Implemente e inspecione as propriedades deste GNA Uniformes.
+
+---
+# Geração de números pseudo aleatórios: métodos
+
+- Existem vários algorítmos para GNA. No R, existem 7 opções para
+o algorítmo de GNA.
+- Peça `help(Random)` para consultar a respectiva documentação.
+
+Algorítmos disponíveis no R:
+
+- Wichmann-Hill.
+- Marsaglia-Multicarry.
+- Super-Duper.
+- Mersenne-Twister (*default*).
+- Knuth-TAOCP-2002.
+- Knuth-TAOCP.
+- L'Ecuyer-CMRG.
+
+---
+# Gerador congruencial linear (GCL)
+
+O método congruencial linear é baseado na seguinte expressão recursiva
+
+$$
+\begin{align*}
+f(x_{i}) = (a x_{i-1} + c) \text{ mod } m
+\end{align*}
+$$
+
+onde:
+
+- $a \in \mathbb{N}^{+}$ é chamado de multiplicador,
+- $c \in \mathbb{N}^{+}$ é chamado de incremento,
+- $m \in \mathbb{N}^{+}$ é chamado de módulo.
+
+Um caso particular é quando $c=0$
+
+$$
+\begin{align*}
+f(x_{i}) = a x_{i-1} \text{ mod } m
+\end{align*}
+$$
+
+Nesse caso é chamado de gerador congruencial multiplicativo.
+
+Para obter valores uniformes no intervalo $[0,1]$ ainda é necessário
+
+$$
+g(x_i) = \frac{x_i}{m}
+$$
+
+---
+# Gerador congruencial linear (GCL)
+
+Implementação básica
+
+```{r}
+rcl <- function(n, x0, m, a, c, unit = TRUE) {
+    x <- integer(n + 1)
+    x[1] <- x0
+    for(i in 2:length(x)) {
+        x[i] <- (a * x[i - 1] + c) %% m
+    }
+    if(unit) x <- x/m
+    return(x[-1])
+}
+```
+
+Alguns resultados
+
+```{r}
+rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 1)
+rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 1)
+## Congruencial multiplicativo
+rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 0)
+rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
+```
+
+---
+# Gerador congruencial linear (GCL)
+
+- Naturalmente, a escolha de $a$, $c$ e $m$ deve ser feita com cuidado
+- Não são quaisquer valores que gerarão uma boa sequência
+- Em geral:
+  - $m$ deve ser um número inteiro grande
+  - $c$ e $m$ devem ser relativamente primos
+  - $a$ de tal forma que $ax \text{ mod } m \neq 0$
+- O período será no máximo $m$
+
+```{r}
+## Periodo = 4 < m = 10
+rcl(n = 12, x0 = 7, m = 10, a = 7, c = 7, unit = FALSE)
+## Outros períodos
+rcl(n = 12, x0 = 8, m = 10, a = 7, c = 7, unit = FALSE)
+rcl(n = 12, x0 = 1, m = 10, a = 7, c = 7, unit = FALSE)
+rcl(n = 12, x0 = 0, m = 10, a = 7, c = 7, unit = FALSE)
+rcl(n = 12, x0 = 2, m = 10, a = 7, c = 7, unit = FALSE)
+rcl(n = 12, x0 = 2, m = 100, a = 7, c = 7, unit = FALSE)
+```
+
+---
+# Gerador congruencial linear (GCL)
+
+Algumas combinações destes valores já foram estabelecidas na literatura.
+
+Por exemplo, Park e Mller (1988) definiram $m = 2^31 - 1$, $a=7^5$ e
+$c=0$ como uma boa combinação.
+
+```{r}
+## Park e Miller
+rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = FALSE)
+rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = TRUE)
+```
+
+Alguns outros métodos disponíveis.
+
+| GNA             | m            | a           | c          |
+|-----------------|--------------|-------------|------------|
+| Knuth-Lewis     | $2^{32}$     | $1664525$   | $1.01e9^1$ |
+| Lavaux-Jenssens | $2^{48}$     | $31167285$  | $1$        |
+| Haynes          | $2^{64}$     | $6.36e17^2$ | $1$        |
+| Marsaglia       | $2^{32}$     | $69069$     | $0$        |
+| Park-Miller     | $2^{31} - 1$ | $16807$     | $0$        |
+|                 |              |             |            |
+
+
+---
+# Gerador Mersenne Twister
+
+- Proposto por Matsumoto e Nishimura (1998)
+- É o método padrão implementado na função `runif()`
+- Atualmente é o que possui as melhores propriedades de um bom gerador
+- O nome vem do fato de que seu período é um número **primo de
+  Mersenne**, i.e., um primo da seuinte forma: $M_p = 2^p - 1$
+- O gerador trabalha internamente com números binários, por isso é
+  altamente eficiente computacionalmente (por isso também, o método não
+  é simples)
+- O período da sequência é de
+$2^{19927} - 1 \approx 4.3 \times 10^{6001}$
+
+---
+# Testes de aleatoriedade
+
+Existem diversos tipos de teste para a aleatoriedade de uma sequência.
+
+- [Dieharder: A Random Number Test
+  Suite](http://webhome.phy.duke.edu/~rgb/General/dieharder.php): uma
+  série de testes, adotado como "padrão" atualmente
+- Testes visuais
+  - Gráfico da sequência
+  - Histograma
+  - ACF (autocorrelação)
+- Testes estatísticos
+  - Teste de qui-quadrado
+  - Teste não paramétrico de Kolmogorov-Smirnov
+
+Gera uma sequência como exemplo
+
+```{r}
+x <- rcl(n = 1000, x0 = 1, m = 2^12, a = 125, c = 1, unit = TRUE)
+```
+
+---
+# Testes visuais
+
+```{r, out.width="70%", fig.show="hold", echo=c(2,3)}
+par(mfrow = c(1, 2))
+plot(x)
+hist(x)
+par(mfrow = c(1, 1))
+```
+
+---
+# Testes visuais
+
+ACF para correlação serial
+
+```{r, out.width="70%"}
+acf(x)
+```
+
+---
+# Teste de qui-quadrado
+
+```{r}
+xc <- cut(x, breaks = seq(0, 1, 0.1), include.lowest = TRUE)
+table(xc)
+chisq.test(x = table(xc))
+```
+
+---
+# Teste de Kolmogorov-Smirnov
+
+```{r, out.width="55%", fig.show="hold"}
+ks.test(x, "punif")
+plot(ecdf(x))
+plot(ecdf(runif(1000)), add = TRUE, col = 2)
+```
