@@ -874,7 +874,7 @@ div.tocify {
 <a class="sourceLine" id="cb28-7" title="7">)</a>
 <a class="sourceLine" id="cb28-8" title="8">st1</a>
 <a class="sourceLine" id="cb28-9" title="9"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb28-10" title="10"><span class="co">#   0.079   0.000   0.079</span></a>
+<a class="sourceLine" id="cb28-10" title="10"><span class="co">#   0.077   0.000   0.076</span></a>
 <a class="sourceLine" id="cb28-11" title="11"></a>
 <a class="sourceLine" id="cb28-12" title="12"><span class="co">## Tempo de execução usando a regra da reciclagem</span></a>
 <a class="sourceLine" id="cb28-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
@@ -883,7 +883,7 @@ div.tocify {
 <a class="sourceLine" id="cb28-16" title="16">st2</a>
 <a class="sourceLine" id="cb28-17" title="17"><span class="co">#    user  system elapsed </span></a>
 <a class="sourceLine" id="cb28-18" title="18"><span class="co">#   0.002   0.000   0.003</span></a></code></pre></div>
-<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.079/0.003 = 26.33 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
+<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.076/0.003 = 25.33 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Uma nota de precaução
@@ -907,7 +907,7 @@ Uma nota de precaução
 <a class="sourceLine" id="cb29-10" title="10">})</a>
 <a class="sourceLine" id="cb29-11" title="11">st1</a>
 <a class="sourceLine" id="cb29-12" title="12"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb29-13" title="13"><span class="co">#   0.079   0.004   0.082</span></a>
+<a class="sourceLine" id="cb29-13" title="13"><span class="co">#   0.076   0.004   0.081</span></a>
 <a class="sourceLine" id="cb29-14" title="14"></a>
 <a class="sourceLine" id="cb29-15" title="15"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e vai &quot;crescendo&quot; esse vetor</span></a>
 <a class="sourceLine" id="cb29-16" title="16">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
@@ -918,7 +918,7 @@ Uma nota de precaução
 <a class="sourceLine" id="cb29-21" title="21">})</a>
 <a class="sourceLine" id="cb29-22" title="22">st2</a>
 <a class="sourceLine" id="cb29-23" title="23"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb29-24" title="24"><span class="co">#   0.319   0.052   0.371</span></a>
+<a class="sourceLine" id="cb29-24" title="24"><span class="co">#   0.289   0.045   0.332</span></a>
 <a class="sourceLine" id="cb29-25" title="25"></a>
 <a class="sourceLine" id="cb29-26" title="26"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e cresce o vetor usando a função c()</span></a>
 <a class="sourceLine" id="cb29-27" title="27"><span class="co">## NUNCA faça isso!!</span></a>
@@ -930,10 +930,10 @@ Uma nota de precaução
 <a class="sourceLine" id="cb29-33" title="33">})</a>
 <a class="sourceLine" id="cb29-34" title="34">st3</a>
 <a class="sourceLine" id="cb29-35" title="35"><span class="co">#     user   system  elapsed </span></a>
-<a class="sourceLine" id="cb29-36" title="36"><span class="co"># 2015.664  216.319 2232.329</span></a>
+<a class="sourceLine" id="cb29-36" title="36"><span class="co"># 1722.093  177.903 1899.676</span></a>
 <a class="sourceLine" id="cb29-37" title="37"><span class="kw">identical</span>(out1, out2, out3)</a>
 <a class="sourceLine" id="cb29-38" title="38"><span class="co"># [1] TRUE</span></a></code></pre></div>
-<p>Essa simples diferença gera um aumento de tempo de execução da segunda forma, em relação à primeira, de aproximadamente 0.371/0.082 = 4.52 vezes. Já utilizando a terceira forma, “crescendo” o vetor com a função <code>c()</code>, o aumento de tempo (em relação ao primeiro) é de aproximadamente 2232.329/0.082 = 27224 vezes! Isso acontece porque o vetor <code>out</code> precisa ter seu tamanho aumentado com um elemento a cada iteração. Para fazer isso, o R precisa encontrar um espaço na memória que possa armazenar o objeto maior. É necessário então copiar o vetor de saída e apagar sua versão anterior antes de seguir para o próximo loop. Ao final, foi necessário escrever um milhão de vezes na memória do computador.</p>
+<p>Essa simples diferença gera um aumento de tempo de execução da segunda forma, em relação à primeira, de aproximadamente 0.332/0.081 = 4.1 vezes. Já utilizando a terceira forma, “crescendo” o vetor com a função <code>c()</code>, o aumento de tempo (em relação ao primeiro) é de aproximadamente 1899.676/0.081 = 23453 vezes! Isso acontece porque o vetor <code>out</code> precisa ter seu tamanho aumentado com um elemento a cada iteração. Para fazer isso, o R precisa encontrar um espaço na memória que possa armazenar o objeto maior. É necessário então copiar o vetor de saída e apagar sua versão anterior antes de seguir para o próximo loop. Ao final, foi necessário escrever um milhão de vezes na memória do computador.</p>
 <p>Já no primeiro caso, o tamanho do vetor de armazenamento nunca muda, e a memória para esse vetor já foi alocada previamente, de uma única vez.</p>
 <p><img src="img/R_club.jpg" width="90%" style="display: block; margin: auto;" /></p>
 </div>
