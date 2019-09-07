@@ -18,6 +18,8 @@ output:
 - Introdução à Estatística Computacional II.
   [HTML](slides/00_intro.html).
 - Técnicas de programação. [HTML](slides/01_tecnicas.html).
+- Geração de números aleatórios uniformes.
+  [HTML](slides/02_RNG_uniforme.html).
 
 ### Scripts
 
