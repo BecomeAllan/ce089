@@ -32,7 +32,13 @@ x4[u >= q] <- 1L
 identical(x3, x4)
 
 plot(ecdf(x))
-plot(ecdf(rbinom(1000, size = 1, p = p)), add = TRUE, col = 2)
+plot(ecdf(rbinom(n, size = 1, p = p)), add = TRUE, col = 2)
+
+Fx <- function(x, a, b) (x - a)/(b - a)
+plot(ecdf(x))
+curve(Fx(x, a = 1, b = 10), add = TRUE, col = 2, from = 0)
+legend("right", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
 
 rbinom(n, size = 1, prob = p)
 sample(c(0, 1), size = n, replace = TRUE, prob = c(0.6, 0.4))

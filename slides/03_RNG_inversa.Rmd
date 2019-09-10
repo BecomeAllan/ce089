@@ -83,3 +83,433 @@ plot(x, fx, type = "l")
 plot(ecdf(x))
 par(mfrow = c(1, 1))
 ```
+
+---
+# Transformação integral de probabilidade
+
+- Definição.
+- Prova.
+- Observações.
+
+---
+# Transformação integral de probabilidade
+
+- Como $F_X^{-1}(u) = x$, então $F_X^{-1}(u)$ possui a mesma
+  distribuição de $X$
+
+- Portanto, para gerar um valor aleatório de $X$, determine
+$u \sim \text{U}(0,1)$ e calcule a inversa $F_X^{-1}(u)$
+
+- O método é de fácil implementação, desde que $F_X^{-1}(u)$ seja fácil
+  de ser determinada
+
+- O método serve para gerar variáveis contínuas ou discretas.
+
+#### Resumindo:
+
+1. Determine a função inversa $F_X^{-1}(u)$
+2. Escreva um comando ou função para calcular $F_X^{-1}(u)$
+3. Para cada valor aleatório a ser gerado:
+  - (a) Obtenha um valor aleatório $u$ de $\text{U}(0,1)$
+  - (b) Calcule $x = F_X^{-1}(u)$
+
+---
+# Variáveis contínuas
+
+Considere a seguinte distribuição de probabilidade:
+
+$$
+f(x) = 3x^2, \quad 0 < x < 1
+$$
+
+A função de distribuição é
+
+$$
+F(x) = \int_0^x 3v\, dv = x^3
+$$
+
+A inversa é
+
+$$
+u = x^3 \quad \Rightarrow \quad x = u^{1/3} = F_X^{-1}(u)
+$$
+
+Uma implemantação simples seria
+
+```{r}
+## Gera 1000 valores da uniforme
+n <- 1000
+u <- runif(n)
+## Calcula a inversa
+x <- u^(1/3)
+```
+
+---
+# Variáveis contínuas
+
+```{r, out.width='70%'}
+## Histograma dos valores gerados pelo método da inversa
+hist(x, prob = TRUE)
+## Modelo teórico
+curve(3 * x^2, from = 0, to = 1, add = TRUE, col = 2)
+```
+
+---
+# Variáveis contínuas
+
+Uma v.a. $X$ segue o **modelo exponencial** com parâmetro $\lambda > 0$
+se sua densidade é dada por
+$$
+f(x) = \lambda e^{-\lambda x} \cdot I(x > 0),
+$$
+
+sendo $\lambda > 0$. Denota-se por $X \sim \text{Exp}(\lambda)$.
+
+A função de distribuição da Exponencial é
+$$
+F(x) = \int_{0}^{x} f(v)\, \text{d}v = 1 - \exp\{(-\lambda x)\}.
+$$
+
+Dessa forma, a inversa de $F(x)$ é
+$$
+\begin{align*}
+u &= 1 - \exp\{-\lambda x\}\\
+1 - u &= \exp\{-\lambda x\}\\
+\log(1 - u) &= -\lambda x\\
+-\frac{\log(1 - u)}{\lambda} &= x\\
+\therefore \quad x &= F^{-1}(u) = -\frac{\log(1 - u)}{\lambda}.
+\end{align*}
+$$
+
+---
+# Variáveis contínuas
+
+#### Implementação em R
+
+```{r}
+randexp <- function(n, lambda) {
+    u <- runif(n)
+    x <- -log(1 - u)/lambda
+    return(x)
+}
+```
+
+---
+# Variáveis contínuas
+
+```{r, out.width='60%'}
+x <- randexp(n = 1000, lambda = 0.5)
+Fx <- function(x, lambda) 1 - exp(-lambda * x)
+plot(ecdf(x))
+curve(Fx(x, lambda = 0.5), add = TRUE, col = 2, from = 0)
+legend("right", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+```
+
+---
+# Variáveis contínuas
+
+#### Uniforme no intervalo $[a,b]$
+
+Se $X \sim U[a,b]$ então
+$$
+f(x) = \frac{1}{b - a}, \quad  a \leq x \leq b
+$$
+Sua função de distribuição é
+$$
+F(x) = \int_{a}^{x} f(v)\, \text{d}v = \frac{x-a}{b-a}, \quad
+a \leq x \leq b
+$$
+Sua inversa é
+$$
+u = \frac{x-a}{b-a} \quad \Rightarrow \quad
+x = a + (b-1)u
+$$
+```{r}
+randunif <- function(n, a, b) {
+    u <- runif(n)
+    x <- a + (b - 1) * u
+    return(x)
+}
+```
+
+---
+# Variáveis contínuas
+
+#### Uniforme no intervalo $[a,b]$
+
+```{r, out.width='60%'}
+x <- randunif(n = 1000, a = 1, b = 10)
+Fx <- function(x, a, b) (x - a)/(b - a)
+plot(ecdf(x))
+curve(Fx(x, a = 1, b = 10), add = TRUE, col = 2, from = 0)
+legend("right", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+```
+
+---
+# Variáveis contínuas
+
+#### Gama
+
+Se $X \sim G[r,\lambda]$ então
+$$
+f(x) = \frac{1}{\Gamma(r)\lambda^r} x^{r-1} e^{\frac{x}{\lambda}},
+\quad  x > 0
+$$
+Sua função de distribuição é
+$$
+F(x) = \int_{0}^{x} f(v)\, \text{d}v =
+\frac{1}{\Gamma(r)} \gamma \left(r, \frac{x}{\lambda} \right)
+$$
+Sua inversa é
+$$
+u = \frac{1}{\Gamma(r)} \gamma \left(r, \frac{x}{\lambda} \right)
+\quad \Rightarrow \quad
+x = \frac{u^{-(r+1)}}{\Gamma(r)\lambda^r}e^{-u/\lambda}
+$$
+Onde $\gamma(\cdot)$ é a [função gama
+incompleta](https://en.wikipedia.org/wiki/Incomplete_gamma_function).
+```{r}
+randgama <- function(n, r, lambda) {
+    u <- runif(n)
+    x <- (u^(-(r + 1))/(gamma(r) * lambda^r)) * exp(-u/lambda)
+    return(x)
+}
+```
+
+---
+# Variáveis discretas
+
+A GNA de VAs discretas é feito por busca direta no intervalo ao qual o
+valor uniforme pertence na distribuição acumulada.
+
+Se $X$ é uma VA discreta e
+
+$$
+\begin{align}
+\ldots < x_{i-1} < x_i < x_{i+1} < \ldots
+\end{align}
+$$
+
+são os **pontos de descontinuidade** de $F_X(x)$, então a transformação
+inversa é
+
+$$
+\begin{align}
+F_X^{-1}(u) = x_i, \quad \text{ onde } \quad
+F_X(x_{i-1}) < u \leq F_X(x_{i})
+\end{align}
+$$
+
+Portanto, para cada valor:
+
+1. Gere $u$ de $U(0,1)$
+2. Define $x_i$ onde $F_X(x_{i-1}) < u \leq F_X(x_{i})$
+
+**Obs.:** o passo 2 pode ser difícil para algumas distribuições.
+
+---
+# Variáveis discretas
+
+#### Bernoulli
+
+Se $X \sim Ber(p)$ então
+$$
+P(X=x) = p^x (1-p)^{n-x}, \quad  x=0,1
+$$
+Sua função de distribuição é
+$$
+F_X(x) =
+\begin{cases}
+1-p, & x = 0 \\
+1,   & x = 1
+\end{cases}
+$$
+Portanto, se $p=0.4$, por exemplo,
+$$
+F_X^{-1}(u) =
+\begin{cases}
+1, & u > 0.6 \\
+0,   & u \leq 0.6
+\end{cases}
+$$
+Uma implementação elegante seria
+```{r}
+n <- 1000
+u <- runif(n)
+x <- as.integer(u > 0.6)
+```
+
+---
+# Variáveis discretas
+
+#### Bernoulli
+
+Mas poderiamos pensar em formas diferentes:
+
+```{r}
+## Uma forma mais longa (e menos eficiente) ----------------------------
+x2 <- integer(n)
+q <- 1 - p
+for(i in 1:length(x2)) {
+    if(u[i] < q) {
+        x2[i] <- 0L
+    } else {
+        x2[i] <- 1L
+    }
+}
+identical(x, x2)
+## Usando ifelse vetorizado --------------------------------------------
+x3 <- ifelse(u < q, 0L, 1L)
+identical(x2, x3)
+## Usando seleção condicional ------------------------------------------
+x4 <- integer(n)
+x4[u >= q] <- 1L
+identical(x3, x4)
+```
+
+---
+# Variáveis discretas
+
+#### Bernoulli
+
+```{r, out.width='50%', fig.show='hold'}
+plot(ecdf(x))
+curve(pbinom(x, size = 1, p = p), add = TRUE, type = "s", col = 2)
+```
+
+Outras formas de gerar da Bernoulli:
+
+```{r, eval=FALSE}
+rbinom(n, size = 1, prob = p)
+sample(c(0, 1), size = n, replace = TRUE, prob = c(0.6, 0.4))
+```
+
+---
+# Variáveis discretas
+
+#### Uniforme discreta
+
+Se $X$ tem distribuição uniforme discreta com $k$ valores, o seu
+suporte é o conjunto $x \in \{1, 2, \ldots, k\}$, $k \geq 2$. A função
+de probabilidade é
+$$
+p(x) = \frac{1}{k} \cdot I(x \in \{1, 2, \ldots, k\}).
+$$
+
+A função de probabilidade acumulada é
+$$
+F(x) = \frac{x}{k}.
+$$
+
+Gera-se números da VA uniforme $U \sim \text{U}(0, 1)$ e obtém-se
+números da VA $X$ de distribuição uniforme discreta usando
+
+$$
+X =
+\begin{cases}
+1, & \text{se } U < 1/k \\
+2, & \text{se } 1/k \leq U < 2/k \\
+\vdots & \vdots \\
+k, & \text{se } (k-1)/k \leq U < 1. \\
+\end{cases}
+$$
+
+---
+# Variáveis discretas
+
+#### Uniforme discreta
+
+Uma implementação "ingênua" seria
+
+```{r}
+n <- 1000
+u <- runif(n)
+x <- integer(n)
+k <- 10
+x[u < 1/k] <- 1
+x[u >= 1/k & u < 2/k] <- 2
+## Seria muito trabalhoso
+```
+
+Uma implementação usando conceitos de objetos do R
+
+```{r}
+xc <- cut(u, breaks = c(0, seq(1/k, (k-1)/k, 0.1), k/k),
+          include.lowest = TRUE)
+table(xc)
+x <- as.numeric(xc)
+```
+
+---
+# Variáveis discretas
+
+#### Uniforme discreta
+
+```{r, fig.show='hold', out.width='60%'}
+plot(ecdf(x))
+plot(ecdf(sample(1:10, size = n, replace = TRUE)), add = TRUE, col = 2)
+```
+
+---
+# Variáveis discretas
+
+Considere a seguinte distribuição
+
+```{r, out.width='60%'}
+x <- 1:4
+px <- c(.2, .15, .25, .4)
+plot(cumsum(px), type = "s", ylim = c(0, 1))
+```
+
+---
+# Variáveis discretas
+
+#### Algoritmo de busca sequencial
+
+```{r}
+randd <- function(x, px) {
+    u <- runif(1)
+    x <- 1
+    Fx <- px[x]
+    while(u > Fx) {
+        x <- x + 1
+        Fx <- Fx + px[x]
+    }
+    return(x)
+}
+replicate(10, randd(x = 1:4, px = px))
+```
+
+---
+# Variáveis discretas
+
+#### Algoritmo de busca sequencial - Poisson
+
+```{r}
+randpois <- function(lambda) {
+    lambda <- 5
+    u <- runif(1)
+    x <- 0
+    p0 <- exp(-lambda)
+    p <- p0
+    Fx <- p
+    while(u > Fx) {
+        x <- x + 1
+        p <- (lambda/x) * p
+        Fx <- Fx + p
+    }
+    return(x)
+}
+replicate(10, randpois(lambda = 5))
+```
+
+---
+# Variáveis discretas
+
+```{r}
+x <- replicate(10000, randpois(lambda = 5))
+plot(ecdf(x))
+curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3)
+```
