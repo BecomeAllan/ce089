@@ -1,0 +1,85 @@
+---
+title: "Geração de números aleatórios não uniformes"
+subtitle: "Método da transformação integral de probabilidade"
+author: Fernando Mayer
+date: 2019-09-10
+bibliography: ../ref.bib
+output:
+  xaringan::moon_reader:
+    # css: ["default", "fc", "fc-fonts", "fira.css"]
+    css: ["default", "fc", "fc-fonts"]
+    self_contained: TRUE
+    nature:
+      # highlightStyle: github
+      highlightLines: TRUE
+      countIncrementalSlides: FALSE
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("../setup_knitr.R")
+```
+
+# Introdução
+
+- A GNA Uniformes são o ponto de partida para GNA de outras
+distribuições.
+
+- Do ponto de vista de simulação computacional, é importante
+gerar números das distribuições de probabilidade mais comuns.
+
+- Também é importante saber gerar números de distribuições desconhecidas
+  ou da qual se sabe apenas seu núcleo
+
+#### Objetivos
+
+- Mostrar a GNA de VAs contínusa e discretas
+
+- Apresentar o método da transformação integral de probabilidades
+
+---
+# Distribuição uniforme: propriedades
+
+Se $X \sim \text{U}(a, b)$, então sua função de densidade é
+
+$$
+f(x; a, b) = \frac{1}{b - a} \cdot I(a \leq x < b), \quad -\infty < a <
+b < \infty.
+$$
+
+A função de distribuição é
+
+$$
+F(x; a, b) = \Pr(X < x) = \int_{-\infty}^{x} f(x, a, b)\, \text{d}x =
+\begin{cases}
+0, & x < a \\
+\dfrac{x - a}{b - a}, & a \leq x < b\\
+1, & x \geq b.
+\end{cases}
+$$
+
+#### Caso particular: $X \sim \text{U}(0, 1)$
+
+$$
+f(x) = 1, \quad 0 < x < 1
+$$
+
+$$
+F(x) =
+\begin{cases}
+0, & x < 0 \\
+x, & 0 \leq x < 1\\
+1, & x \geq b.
+\end{cases}
+$$
+
+---
+# Distribuição uniforme: propriedades
+
+```{r, fig.show='hold', out.width='60%'}
+x <- seq(0, 1, 0.01)
+fx <- dunif(x)
+par(mfrow = c(1, 2))
+plot(x, fx, type = "l")
+plot(ecdf(x))
+par(mfrow = c(1, 1))
+```
