@@ -505,7 +505,7 @@ Existem duas formas básicas de tornar um loop `for` no R mais rápido:
 
 Veja este exemplo:
 
-```{r, cache=TRUE}
+```{r, eval=FALSE}
 ## Vetor com uma sequência de 1 a 1.000.000
 x <- 1:1000000
 
@@ -537,6 +537,15 @@ st3 <- system.time({
 })
 st3
 identical(out1, out2, out3)
+```
+
+```{r, include=FALSE, eval=FALSE}
+save(st1, st2, st3, out1, out2, out3,
+     file = "dados/timings.rda")
+```
+
+```{r, include=FALSE}
+load("dados/timings.rda")
 ```
 
 Essa simples diferença gera um aumento de tempo de execução da segunda
