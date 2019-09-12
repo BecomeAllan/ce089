@@ -71,7 +71,6 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **26/11 (Ter)**:
 - **29/11 (Sex)**:
 - **03/12 (Ter)**:
-- **09/08 (Sex)**:
 
 [Moodle]: https://moodle.c3sl.ufpr.br/course/view.php?id=282
 [Resolução 64/18 - CEPE]: http://www.soc.ufpr.br/portal/wp-content/uploads/2018/11/cepe-64-18-atualizada.pdf
