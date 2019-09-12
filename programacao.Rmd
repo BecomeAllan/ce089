@@ -538,7 +538,7 @@ st3 <- system.time({
 
 ```{r, include=FALSE, eval=FALSE}
 save(st1, st2, st3, out1, out2, out3,
-     file = "dados/timings.rda")
+     file = "dados/timings.rda", compress = "xz")
 ```
 
 ```{r, include=FALSE}
