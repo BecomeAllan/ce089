@@ -516,7 +516,6 @@ st1 <- system.time({
         out1[i] <- x[i]^2
     }
 })
-st1
 
 ## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
 st2 <- system.time({
@@ -525,7 +524,6 @@ st2 <- system.time({
         out2[i] <- x[i]^2
     }
 })
-st2
 
 ## Cria um objeto de tamanho "zero" e cresce o vetor usando a função c()
 ## NUNCA faça isso!!
@@ -535,8 +533,7 @@ st3 <- system.time({
         out3 <- c(out3, x[i]^2)
     }
 })
-st3
-identical(out1, out2, out3)
+
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -546,6 +543,14 @@ save(st1, st2, st3, out1, out2, out3,
 
 ```{r, include=FALSE}
 load("dados/timings.rda")
+```
+
+Veja que os objetos criados são de fato idênticos, mas os tempos de
+execução são bem diferentes
+
+```{r}
+identical(out1, out2, out3)
+rbind(st1, st2, st3)[,1:3]
 ```
 
 Essa simples diferença gera um aumento de tempo de execução da segunda
