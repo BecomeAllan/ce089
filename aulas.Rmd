@@ -44,11 +44,13 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **03/09 (Ter)**: Atividade disponível no [Moodle][].
 - **06/09 (Sex)**: Geração de números aleatórios uniformes.
 [Slides](slides/02_RNG_uniforme.html).
-- **10/09 (Ter)**:
+- **10/09 (Ter)**: Geração de números aleatórios não uniformes: método
+  da transformação integral de probabilidade.
 - **13/09 (Sex)**:
 - **17/09 (Ter)**:
 - **20/09 (Sex)**:
-- **24/09 (Ter)**:
+- **24/09 (Ter)**: Não haverá aula devido ao SIEPE.
+[Resolução 64/18 - CEPE][].
 - **27/09 (Sex)**:
 - **01/10 (Ter)**:
 - **04/10 (Sex)**:
@@ -72,3 +74,4 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **09/08 (Sex)**:
 
 [Moodle]: https://moodle.c3sl.ufpr.br/course/view.php?id=282
+[Resolução 64/18 - CEPE]: http://www.soc.ufpr.br/portal/wp-content/uploads/2018/11/cepe-64-18-atualizada.pdf
