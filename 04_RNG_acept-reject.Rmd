@@ -127,9 +127,9 @@ legend("bottomright",
        col = c(4, 1, 1),
        lwd = c(1, 1, 2),
        bty = "n")
-points(y, f(y), pch = 19, col = 2)
-points(y, M * g(y), pch = 19, col = 1)
-points(y, u * M * g(y), pch = 19, col = 4)
+points(y, f(y), pch = 4, col = 4)
+points(y, M * g(y), pch = 4, col = 1)
+points(y, u * M * g(y), pch = 19, col = 2)
 ```
 
 ```{r}
