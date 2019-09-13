@@ -351,6 +351,7 @@ Mas poderiamos pensar em formas diferentes:
 ```{r}
 ## Uma forma mais longa (e menos eficiente) ----------------------------
 x2 <- integer(n)
+p <- 0.4
 q <- 1 - p
 for(i in 1:length(x2)) {
     if(u[i] < q) {
@@ -439,7 +440,7 @@ Uma implementação usando conceitos de objetos do R
 xc <- cut(u, breaks = c(0, seq(1/k, (k-1)/k, 0.1), k/k),
           include.lowest = TRUE)
 table(xc)
-x <- as.numeric(xc)
+x <- as.integer(xc)
 ```
 
 ---
@@ -448,8 +449,78 @@ x <- as.numeric(xc)
 #### Uniforme discreta
 
 ```{r, fig.show='hold', out.width='60%'}
+Fx <- function(x, k) x/k
 plot(ecdf(x))
-plot(ecdf(sample(1:10, size = n, replace = TRUE)), add = TRUE, col = 2)
+curve(Fx(x, k = 10), add = TRUE, col = 2, from = 0, to = 10, n = 10)
+```
+
+---
+# Variáveis discretas
+
+### Algoritmo de busca sequêncial
+
+Uma forma mais geral de gerar valores aleatórios de **qualquer**
+distribuição discreta.
+
+Defina o vetor $p$ de probabilidades (implicita ou explicitamente) e
+gere $u \sim U(0,1)$. Com isso, faça:
+
+1. Atribua $x_0 = 1$, $p_0 = P[X = x_0]$ e $F(x) = p_0$
+2. Enquanto $u > F(x)$ faça:
+  - $x = x+1$
+  - $F(x) = F(x) + p_x$
+3. Retorne $x$
+
+---
+# Variáveis discretas
+
+### Algoritmo de busca sequêncial
+
+No caso da distribuição Uniforme discreta acima, com $k=10$, o algoritmo
+seria então
+
+1. Atribua $x_0 = 1$, $p_0 = P[X = x_0] = 1/10 = 0.1$ e $F(x) = p_0$
+2. Enquanto $u > F(x)$ faça:
+  - $x = x+1$
+  - $F(x) = F(x) + p_x$
+3. Retorne $x$
+
+Uma implementação básica seria
+
+```{r}
+randd <- function(x, px) {
+    u <- runif(1)
+    x <- 1
+    Fx <- px[x]
+    while(u > Fx) {
+        x <- x + 1
+        Fx <- Fx + px[x]
+    }
+    return(x)
+}
+```
+
+---
+# Variáveis discretas
+
+### Algoritmo de busca sequêncial
+
+Note que esse algoritmo possui três "restrições"
+- O vetor de probabilidades $p$ deve ser passado explicitamente
+- Gera apenas valores de VAs que começam em 1
+- Gera apenas **uma realização** da variável aleatória
+
+```{r}
+k <- 10
+x <- 1:k
+px <- rep(1/k, length(x))
+randd(x = x, px = px)
+```
+
+Para gerar mais valores podemos usar a função `replicate()`
+
+```{r}
+replicate(n = 10, randd(x = x, px = px))
 ```
 
 ---
@@ -466,20 +537,14 @@ plot(cumsum(px), type = "s", ylim = c(0, 1))
 ---
 # Variáveis discretas
 
-#### Algoritmo de busca sequencial
+Para gerar valores aleatórios desta distribuição, podemos usar a mesma
+função definida acima, apenas passando os vetores de $X$ e $p_x$
+adequados.
 
-```{r}
-randd <- function(x, px) {
-    u <- runif(1)
-    x <- 1
-    Fx <- px[x]
-    while(u > Fx) {
-        x <- x + 1
-        Fx <- Fx + px[x]
-    }
-    return(x)
-}
-replicate(10, randd(x = 1:4, px = px))
+```{r, out.width='60%'}
+randd(x = x, px = px)
+xr <- replicate(n = 10000, randd(x = x, px = px))
+plot(ecdf(xr)); lines(x, cumsum(px), type = "s", col = 2)
 ```
 
 ---
@@ -487,14 +552,64 @@ replicate(10, randd(x = 1:4, px = px))
 
 #### Algoritmo de busca sequencial - Poisson
 
+- No caso de uma distribuição como a Poisson, a aplicação direta deste
+  algoritmo não é possível pois:
+  - A Poisson assume um número infinito de valores discretos
+  ( $0, 1, 2, \ldots$ )
+  - As probbailidades dependem do parâmetro da distribuição
+
+- Assim, não é possível definir previamente os valores de $X$ e $p_x$
+
+- Uma solução seria então calcular as probabilidades implicitamente
+  através de alguma forma de **recursão**
+
+---
+# Variáveis discretas
+
+#### Algoritmo de busca sequencial - Poisson
+
+Sabendo que
+
+$$
+P[X=x] = \frac{e^{-\lambda}\lambda^x}{x!}
+$$
+
+Então podemos determinar a probabilidade de $x+1$ como sendo
+
+$$
+\begin{align*}
+P[X = x+1] &= \frac{e^{-\lambda}\lambda^{x+1}}{(x+1)!} \\
+  &= \frac{e^{-\lambda}\lambda^{x}\lambda}{(x+1)x!} \\
+  &= \frac{e^{-\lambda}\lambda^{x}}{x!} \frac{\lambda}{(x+1)} \\
+  &= P[X=x] \frac{\lambda}{(x+1)} \\
+\end{align*}
+$$
+
+Dessa forma, podemos usar essa **atualização de probabilidade
+recursiva** no algoritmo de busca sequencial.
+
+---
+# Variáveis discretas
+
+#### Algoritmo de busca sequêncial - Poisson
+
+Uma adaptação do algoritmo geral para a Poisson seria então
+
+1. Gera $u \sim U(0,1)$
+2. Atribua $x_0 = 0$, $p_0 = P[X = x_0]$, $F(x) = p_0$ e $p=p_0$
+2. Enquanto $u > F(x)$ faça:
+  - $x = x+1$
+  - $p = \frac{\lambda}{x} p$
+  - $F(x) = F(x) + p$
+3. Retorne $x$
+
 ```{r}
 randpois <- function(lambda) {
-    lambda <- 5
     u <- runif(1)
     x <- 0
     p0 <- exp(-lambda)
+    Fx <- p0
     p <- p0
-    Fx <- p
     while(u > Fx) {
         x <- x + 1
         p <- (lambda/x) * p
@@ -502,14 +617,33 @@ randpois <- function(lambda) {
     }
     return(x)
 }
-replicate(10, randpois(lambda = 5))
 ```
 
 ---
 # Variáveis discretas
 
-```{r}
+```{r, out.width='60%'}
+randpois(lambda = 5)
+replicate(10, randpois(lambda = 5))
 x <- replicate(10000, randpois(lambda = 5))
 plot(ecdf(x))
+plot(ecdf(rpois(x, lambda = 5)), add = TRUE, col = 2)
 curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3)
 ```
+
+---
+# Exercícios
+
+- Gerar valores aleatórios das distribuições **contínuas** especificadas
+abaixo
+  - $F(x) = 1-(x-1)^{2}, \quad 0 < x < 1.$
+  - $F(x) = x^{\theta}, \quad 0 < x < 1, \theta > 1.$
+  - $F(x) = 1-\exp\{-x^2/2\tau^2\}, \quad x > 0, \tau > 0.$
+  - $f(x) = \frac{1}{2} \sin(x), \quad 0 < x < \pi.$
+  - $f(x) = \frac{\sec^2(x)}{\sqrt{3}} , \quad 0 < x < \pi/3.$
+
+> Dica: use programas de matemática simbólica para verificar os
+resultados. Wolfram Alpha: <http://www.wolframalpha.com/>.
+
+- Implemente o algoritmo de busca sequencial para gerar valores de uma
+distribuição binomial.
