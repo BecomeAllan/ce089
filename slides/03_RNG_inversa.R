@@ -100,12 +100,11 @@ randd(x = 0:1, px = c(.6, .4), x0 = 0)
 ## Poisson -------------------------------------------------------------
 
 randpois <- function(lambda) {
-    lambda <- 5
     u <- runif(1)
     x <- 0
     p0 <- exp(-lambda)
+    Fx <- p0
     p <- p0
-    Fx <- p
     while(u > Fx) {
         x <- x + 1
         p <- (lambda/x) * p
@@ -118,7 +117,7 @@ replicate(10, randpois(lambda = 5))
 x <- replicate(10000, randpois(lambda = 5))
 plot(ecdf(x))
 plot(ecdf(rpois(x, lambda = 5)), add = TRUE, col = 2)
-curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3)
+curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3, from = 0)
 
 
 ## Geometrica ----------------------------------------------------------
