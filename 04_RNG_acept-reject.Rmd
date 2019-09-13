@@ -8,6 +8,10 @@ output:
     number_sections: true
 ---
 
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+```
+
 # Introdução
 
 Quando se deseja gerar números aleatórios de distribuições de
@@ -42,11 +46,26 @@ distribuição de probabilidade caracterizada pela função densidade $f$:
      contrário, descartar $y$.
   4. Repetir até atingir o número de valores desejado $n$.
 
-```{r}
-#-----------------------------------------------------------------------
-# Seja X uma v.a. com f(x) = 1.5 * x^2, -1 < x < 1. Simular valores
-# desta.
+Para determinar o valor de $M$, basta seguir a seguinte relação
 
+$$
+M \geq \max_x \frac{f(x)}{g(x)}
+$$
+
+Alguns pontos que devem ser levados em consideração:
+
+1. O limite $f(x) \leq M g(x)$ não precisa ser tão pequeno. O algoritmo
+   permanece válido (mas possivelmente menos eficiente) quando $M$ for
+   um valor maior
+2. A probabilidade de aceitação é $1/M$. Portanto $M$ deve ser o menor
+   possível para maior eficiência computacional.
+
+## Exemplo 1
+
+Seja $X$ uma v.a. com $f(x) = 1.5 x^2, -1 < x < 1$. Simular valores
+desta.
+
+```{r}
 # Gráfico da f.d.p da v.a. X, f(x).
 curve(1.5 * (x ^ 2), -1, 1)
 
@@ -77,6 +96,7 @@ M <- 3
 x <- NULL
 
 # 1. Gerar y cuja densidade é g()
+set.seed(1)
 y <- runif(n = 1, -1, 1)
 y
 
@@ -94,12 +114,25 @@ if (u < r) {
 } else {
     print("u >= r então valor descartado.")
 }
+```
 
+Verifica os pontos no gráfico:
+
+```{r}
+curve(1.5 * (x^2), -1, 1, col = 4)
+curve(3 * 0.5 + 0 * x, add = TRUE, lty = 2, lwd = 2)
+legend("bottomright",
+       legend = c("f(x)", "g(x)", "M g(x)"),
+       lty = c(1, 2, 2),
+       col = c(4, 1, 1),
+       lwd = c(1, 1, 2),
+       bty = "n")
 points(y, f(y), pch = 19, col = 2)
 points(y, M * g(y), pch = 19, col = 1)
 points(y, u * M * g(y), pch = 19, col = 4)
+```
 
-
+```{r}
 ## Simula de uma unica vez, com um valor fixo de simulações
 Nsim <- 2500
 y <- runif(Nsim, -1, 1)
@@ -112,7 +145,7 @@ ur <- u[u >= r]
 curve(1.5 * (x^2), -1, 1, col = 4)
 curve(3 * 0.5 + 0 * x, add = TRUE, lty = 2, lwd = 2)
 points(x, ua * M * g(x), col = 3)
-points(y[u >= r], ur * M * g(x), col = 2)
+points(y[u >= r], ur * M * g(y[u >= r]), col = 2)
 
 ## Quantos foram aceitados
 length(x)/length(y)
@@ -122,31 +155,98 @@ length(x)/length(y)
 length(ur)/length(u)
 
 ## Agora, simula um numero fixo de valores
-N <- 10L
-n <- 0L
-l <- 1L
 
-y <- runif(Nsim, -1, 1)
+## Simula 1000 valores
+N <- 1000L
+x <- numeric(0)
+while(length(x) < N) {
+    y <- runif(1, -1, 1)
+    u <- runif(1)
+    r <- f(y)/(M * g(y))
+    if(u < r) {
+        ## Não é a forma mais eficiente!
+        x <- c(x, y)
+    }
+}
+length(x)
+hist(x)
+```
+
+## Exemplo 2
+
+```{r}
+##----------------------------------------------------------------------
+## X ~ Beta(a = 2.7, b = 6.3) e distribuição proposta é U(0,1)
+curve(dbeta(x, 2.7, 6.3), from = 0, to = 1, col = 4)
+curve(1 + 0 * x, from = 0, to = 1, add = TRUE, lty = 2)
+
+## Qual deve ser o valor de M?
+M <- optimize(f = function(x) {dbeta(x, 2.7, 6.3)/1},
+              interval = c(0, 1), maximum = TRUE)$objective
+M
+
+## Define funções
+f <- function(x) dbeta(x, 2.7, 6.3)
+g <- function(x) 1 + 0 * x
+
+## Simula
+Nsim <- 2500
+a <- 2.7; b <- 6.3
+y <- runif(Nsim)
 u <- runif(Nsim)
 r <- f(y)/(M * g(y))
 x <- y[u < r]
 ua <- u[u < r]
 ur <- u[u >= r]
 
-x <- numeric(N)
+## Verifica
+curve(dbeta(x, 2.7, 6.3), from = 0, to = 1, col = 4)
+curve(M * 1 + 0 * x, from = 0, to = 1, add = TRUE, lty = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u >= r], ur * M * g(y[u >= r]), col = 2)
 
-while(n < N) {
-    y <- runif(1, -1, 1)
-    u <- runif(1)
-    r <- f(y)/(M * g(y))
-    if(u < r) {
-        x[n] <- y
-        n <- n + 1L
-    } else {
-        l <- l + 1L
-    }
-}
+## Quantos foram aceitados
+length(x)/length(y)
+## Taxa (teorica) de aceitacao é
+1/M
 
-x
+##----------------------------------------------------------------------
+## X ~ Beta(a = 2.7, b = 6.3) e distribuição proposta é
+## Beta(a = 2, b = 6)
+curve(dbeta(x, 2.7, 6.3), from = 0, to = 1, col = 4, ylim = c(0,3))
+curve(dbeta(x, 2, 6), from = 0, to = 1, add = TRUE, lty = 2)
 
+## Qual deve ser o valor de M?
+M <- optimize(f = function(x) {dbeta(x, 2.7, 6.3)/dbeta(x, 2, 6)},
+              interval = c(0, 1), maximum = TRUE)$objective
+M
+
+## Define funções
+f <- function(x) dbeta(x, 2.7, 6.3)
+g <- function(x) dbeta(x, 2, 6)
+
+## Simula
+Nsim <- 2500
+a <- 2.7; b <- 6.3
+y <- rbeta(Nsim, 2, 6)
+u <- runif(Nsim)
+r <- f(y)/(M * g(y))
+x <- y[u < r]
+ua <- u[u < r]
+ur <- u[u >= r]
+
+## Verifica
+curve(dbeta(x, 2.7, 6.3), from = 0, to = 1, col = 4, ylim = c(0,5))
+curve(M * dbeta(x, 2, 6), from = 0, to = 1, add = TRUE, lty = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u >= r], ur * M * g(y[u >= r]), col = 2)
+
+## Quantos foram aceitados
+length(x)/length(y)
+## Taxa (teorica) de aceitacao é
+1/M
 ```
+
+## Outros exemplos
+
+http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html
