@@ -46,12 +46,14 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 [Slides](slides/02_RNG_uniforme.html).
 - **10/09 (Ter)**: Geração de números aleatórios não uniformes: método
   da transformação integral de probabilidade.
-- **13/09 (Sex)**:
-- **17/09 (Ter)**:
-- **20/09 (Sex)**:
+- **13/09 (Sex)**: Geração de números aleatórios não uniformes: método
+  de aceitação e rejeição.
+- **17/09 (Ter)**: Geração de números aleatórios não uniformes: método
+  da relação entre variáveis.
+- **20/09 (Sex)**: Atividade disponível no [Moodle][].
 - **24/09 (Ter)**: Não haverá aula devido ao SIEPE.
 [Resolução 64/18 - CEPE][].
-- **27/09 (Sex)**:
+- **27/09 (Sex)**: **Prova 1**.
 - **01/10 (Ter)**:
 - **04/10 (Sex)**:
 - **08/10 (Ter)**:
