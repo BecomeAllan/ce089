@@ -1,0 +1,215 @@
+---
+title: "Geração de números não uniformes"
+subtitle: "Método da transformação de variáveis"
+author: "Walmes M. Zeviani e Fernando P. Mayer"
+bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+```
+
+```{r}
+figunit <- function() {
+    ## eixo x = a + cos \theta * raio
+    circx <- cos(seq(0, 2*pi, .01)) * 1
+    ## eixo y = b + sin \theta * raio
+    circy <- sin(seq(0, 2*pi, .01)) * 1
+    ## (a,b) eh o ponto de origem, aqui (0,0)
+    ## grafico
+    plot(circx, circy, type = "l", xlim = c(-1,1), ylim = c(-1,1),
+         xaxs = "i", yaxs = "i", asp = 1, xlab = "X", ylab = "Y")
+    abline(v = c(-1,1), col = 2)
+    abline(v = c(0,0), col = 1)
+    segments(-1, -1, 1, -1, col = 2)
+    segments(-1, 1, 1, 1, col = 2)
+    segments(-1, 0, 1, 0, col = 1)
+    points(0, 0, pch = 19, col = 1)
+}
+```
+
+# Introdução
+
+```{r}
+
+##----------------------------------------------------------------------
+## Gerando valores da normal pelo algoritmo de Box-Muller
+
+## A ideia é passar isso aqui para coordenadas polares
+plot(rnorm(10000), rnorm(10000))
+
+Nsim <- 2500
+u1 <- runif(Nsim)
+u2 <- runif(Nsim)
+R <- sqrt(-2 * log(u1))
+T <- 2 * pi * u2
+x1 <- R * cos(T)
+x2 <- R * sin(T)
+figunit()
+points(x1, x2)
+
+## Confere
+hist(c(x1, x2))
+plot(ecdf(c(x1, x2)))
+curve(pnorm(x), add = TRUE, col = 2)
+
+## Uma função mais eficiente
+boxmuller <- function(n) {
+    m <- ceiling(n/2)
+    u1 <- runif(m)
+    u2 <- runif(m)
+    R <- sqrt(-2 * log(u1))
+    T <- 2 * pi * u2
+    x <- c(R * cos(T), R * sin(T))
+    if (n %% 2 == 0) x else x[-1]
+}
+boxmuller(2)
+boxmuller(3)
+boxmuller(4)
+boxmuller(5)
+
+
+RNGkind()
+set.seed(1, normal.kind = "Box-Muller")
+xx <- rnorm(1000)
+yy <- boxmuller(1000)
+
+plot(ecdf(xx))
+plot(ecdf(yy), col = 3, add = TRUE)
+curve(pnorm(x), add = TRUE, col = 2)
+
+RNGkind()
+set.seed(1, normal.kind = "Inversion")
+RNGkind()
+zz <- rnorm(1000)
+
+plot(ecdf(yy), col = 4, add = TRUE)
+RNGkind()
+
+
+##----------------------------------------------------------------------
+## Método Polar
+
+## Visualizacao do metodo polar
+Nsim <- 2500
+u1 <- runif(Nsim, -1, 1)
+u2 <- runif(Nsim, -1, 1)
+r2 <- u1^2 + u2^2
+ac <- r2 <= 1
+z <- sqrt((-2 * log(r2[ac]))/r2[ac])
+x1 <- u1[ac] * z
+x2 <- u2[ac] * z
+figunit()
+points(u1[ac], u2[ac], pch = 1, col = 3)
+points(u1[!ac], u2[!ac], pch = 1, col = 2)
+
+## Taxa de aceitacao
+sum(ac)/Nsim
+
+## Confere
+hist(c(x1, x2))
+plot(ecdf(c(x1, x2)))
+curve(pnorm(x), add = TRUE, col = 2)
+
+## Funcao generica pare gerar n valores
+polarmethod <- function(n) {
+    m <- ceiling(n/2)
+    x1 <- numeric(m)
+    x2 <- numeric(m)
+    i <- 1
+    while (i <= m) {
+        u1 <- runif(1, -1, 1)
+        u2 <- runif(1, -1, 1)
+        R2 <- u1^2 + u2^2
+        if (R2 <= 1) {
+            z <- sqrt((-2 * log(R2))/R2)
+            x1[i] <- u1 * z
+            x2[i] <- u2 * z
+            i <- i + 1
+        }
+    }
+    x <- c(x1, x2)
+    if (n %% 2 == 0) x else x[-1]
+}
+
+set.seed(1)
+boxmuller(2)
+polarmethod(2)
+polarmethod(3)
+polarmethod(4)
+polarmethod(5)
+
+curve(pnorm(x), col = 2, from = -4, to = 4, lwd = 2)
+yy <- boxmuller(1000)
+ww <- polarmethod(1000)
+plot(ecdf(yy), col = 1, add = TRUE)
+plot(ecdf(ww), col = 3, add = TRUE)
+
+RNGkind()
+set.seed(1, normal.kind = "Box-Muller")
+xx <- rnorm(1000)
+yy <- boxmuller(1000)
+ww <- polarmethod(1000)
+plot(ecdf(xx))
+plot(ecdf(yy), col = 3, add = TRUE)
+plot(ecdf(ww), col = 5, add = TRUE)
+curve(pnorm(x), add = TRUE, col = 2)
+RNGkind()
+set.seed(1, normal.kind = "Inversion")
+RNGkind()
+zz <- rnorm(1000)
+
+plot(ecdf(yy), col = 4, add = TRUE)
+RNGkind()
+
+## Compara os dois metodos
+microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
+
+
+
+```
+
+
+```{r, eval=FALSE}
+## Algoritmo de Hardle
+boxmuller <- function(n) {
+    if(n %% 2 == 0) {
+        a <- n/2
+    } else { # tem problema aqui
+        a <- n/2 + 1
+    }
+    x1 <- x2 <- 1:a
+    for(i in 1:a) {
+        u1 <- runif(1)
+        u2 <- runif(1)
+        x1[i] <- sqrt(-2 * log(u1)) * cos(2 * pi * u2)
+        x2[i] <- sqrt(-2 * log(u1)) * sin(2 * pi * u2)
+    }
+    c(x1, x2)
+}
+
+boxmuller(4)
+boxmuller(5)
+
+
+boxmuller <- function(n) {
+    m <- ceiling(n/2)
+    x1 <- x2 <- 1:m
+    for(i in 1:m) {
+        u1 <- runif(1)
+        u2 <- runif(1)
+        x1[i] <- sqrt(-2 * log(u1)) * cos(2 * pi * u2)
+        x2[i] <- sqrt(-2 * log(u1)) * sin(2 * pi * u2)
+    }
+    x <- c(x1, x2)
+    if(n %% 2) x else x[-1]
+}
+
+boxmuller(4)
+boxmuller(5)
+
+
+```
