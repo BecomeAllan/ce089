@@ -6,20 +6,418 @@ bibliography: ref.bib
 output:
   html_document:
     number_sections: true
+    toc_depth: 3
 ---
 
 ```{r, cache=FALSE, include=FALSE}
 source("setup_knitr.R")
 ```
 
+# Introdução
+
+A ideia do método da transformação de variáveis é gerar valores
+aleatórios de uma distribuição qualquer, com base na relação com alguma
+outra distribuição conhecida. Portanto, primeiro gera-se valores de uma
+distribuição da qual se conhece e que possua um bom gerador disponível.
+Depois disso, basta aplicar a transformação para se chegar nos valores
+da distribuição desejada.
+
+Um exemplo típico é, por exemplo, quando queremos gerar valores de uma
+distribuição $\text{logN}(\mu, \sigma^2)$ a partir de valores
+gerados de uma $\text{N}(\mu, \sigma^2)$. Nesse caso, se $Y \sim
+\text{N}(\mu, \sigma^2)$, então usando a transformação $X = e^{Y}$, $X$
+terá distribuição $\text{logN}(\mu, \sigma^2)$, pois $\log X = Y$.
+
+Para um diagrama completo (ou quase) da relação entre distribuições
+univariadas, veja [Univariate Distribution
+Relationships](http://www.math.wm.edu/~leemis/chart/UDR/UDR.html) de
+Lawrence Leemis.
+
+# Exemplos de transformações
+
+Alguns exemplos são:
+
+1. Se $Z \sim \text{N}(0,1)$, então $V=Z^2 \sim \chi^2(1)$
+2. Se $U \sim \chi^2(m)$ e $V \sim \chi^2(n)$ são independentes, então
+$F = \frac{U/m}{V/n}$ terá a distribuição $F$ com $(m,n)$ graus de
+liberdade.
+3. Se $Z \sim \text{N}(0,1)$ e $V \sim \chi^2(n)$ são independentes,
+   então $T = \frac{Z}{\sqrt{V/n}}$ terá a distribuição $t$ de Student
+   com $n$ graus de liberdade.
+4. Se $U_1, \ldots, U_{12} \sim \text{U}(-1/2,1/2)$, então $Z =
+   \sum_{i=1}^{12} U_i$ terá distribuição $\text{N}(0,1)$ (usando o
+   **Teorema do Limite Central**).
+5. Se $U, V \sim \text{U}(0,1)$ são independentes, então
+$$
+Z_1 = \sqrt{-2 \log U} \cos (2\pi V) \qquad
+Z_2 = \sqrt{-2 \log U} \sin (2\pi V)
+$$
+serão duas VAs **independentes** com distribuição normal padrão.
+6. Se $U \sim \text{Gama}(r,\lambda)$ e $V \sim \text{Gama}(s,\lambda)$
+   são independentes, então $X = \frac{U}{U+V}$ terá a distribuição
+   $\text{Beta}(r, s)$.
+7. Se $U, V \sim \text{U}(0,1)$ são independentes, então
+$$
+X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
+\right\rfloor
+$$
+terá a distribuição $\text{Logaritmica}(\theta)$, onde $\lfloor x
+\rfloor$ denota a parte inteira (arredondada para baixo) de $x$.
+8. $U \sim \text{U}(0,1)$, então $X = -\lambda \log U$ terá distribuição
+$\text{Exp}(\lambda)$.
+
+**Somas** e **misturas** de distribuições são considerados tipos
+especiais de transformações.
+
+Veremos algumas implementações abaixo.
+
+## Exemplo (distribuição Beta)
+
+Se $U \sim \text{Gama}(r,\lambda)$ e $V \sim \text{Gama}(s,\lambda)$
+são independentes, então
+$$
+X = \frac{U}{U+V}
+$$
+terá a distribuição $\text{Beta}(r, s)$.
+
+1. Gere um valor aleatório $u$ de $\text{Gama}(r, 1)$
+1. Gere um valor aleatório $v$ de $\text{Gama}(s, 1)$
+1. Calcule $x = \dfrac{u}{u+v}$
+
+Para gerar valores de uma $\text{Beta}(3,2)$ fazemos então:
+
 ```{r}
-figunit <- function() {
+n <- 1000
+r <- 3
+s <- 2
+u <- rgamma(n, shape = r, rate = 1)
+v <- rgamma(n, shape = s, rate = 1)
+x <- u/(u + v)
+## Comparação
+par(mfrow = c(1, 2))
+plot(ecdf(x))
+curve(pbeta(x, r, s), add = TRUE, col = 2)
+q <- qbeta(ppoints(n), r, s)
+qqplot(q, x)
+abline(0, 1, col = 2)
+par(mfrow = c(1, 1))
+```
+
+## Exemplo (distribuição Logarítmica)
+
+Dizemos que $X$ segue a distribuição (discreta) Logarítmica se
+$$
+f(x) = P[X=x] = \frac{a \theta^x}{x}, \quad x=1, 2, \ldots
+$$
+onde $0 < \theta < 1$ e $a = (-\log (1-\theta))^{-1}$.
+
+Se $U, V \sim \text{U}(0,1)$ são independentes, então
+$$
+X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
+\right\rfloor
+$$
+terá a distribuição $\text{Logaritmica}(\theta)$.
+
+1. Gere um valor aleatório $u$ de $\text{U}(0, 1)$
+1. Gere um valor aleatório $v$ de $\text{U}(0, 1)$
+1. Calcule $x = \left\lfloor 1 + \frac{\log (v)}{\log (1 - (1 -
+   \theta)^u)} \right\rfloor$
+
+Para gerar valores de uma $\text{Logaritmica}(0.5)$ fazemos então
+
+```{r}
+n <- 1000
+theta <- 0.5
+u <- runif(n)
+v <- runif(n)
+x <- floor(1 + log(v) / log(1 - (1 - theta)^u))
+## Calcula as probabilidades teóricas (exatas) usando a definição da
+## distribuição
+k <- 1:max(x)
+p <- -1/log(1 - theta) * theta^k/k
+## Compara a proporção de valores gerados com a prob. teórica
+cbind("Gerado" = prop.table(table(x)), "Teórico" = p)
+## Comparação gráfica
+par(mfrow = c(1, 2))
+plot(prop.table(table(x)), xlab = "X", ylab = "P[X]")
+points(p ~ I(k + 0.1), type = "h", col = 2, lwd = 2)
+legend("topright", legend = c("Empírico", "Teórico"),
+       lty = 1, col = c(1, 2))
+plot(ecdf(x))
+lines(cumsum(p), type = "s", col = 2)
+par(mfrow = c(1, 1))
+```
+
+# Somas e misturas
+
+Somas e misturas de VAs são tipos especiais de transformações. Chamamos
+de **convolução** a soma de VAs independentes. As **misturas** são VAs
+formadas pela mistura de outras VAs (discretas ou contínuas).
+
+## Convoluções
+
+Seja $X_1, \ldots, X_n$ VAs independentes e identicamente distribuídas,
+com distribuição comum $X_j \sim X$, e considere $S = X_1 + \cdots + X_n$.
+A função de distribuição da soma $S$ é chamada de **convolução de ordem
+$n$** de $X$, e denotada por $F_X^{*(n)}$.
+
+Portanto, podemos gerar uma convolução diretamente através da geração de
+$X_1, \ldots, X_n$ e calculando a soma.
+
+Algumas convoluções importantes:
+
+1. Se $Z_1, \ldots, Z_n \sim \text{N}(0,1)$, então $V = \sum_{i=1}^{n}
+   Z_i^2 \sim \chi^2(n)$
+2. Se $U_1, \ldots, U_{12} \sim \text{U}(-1/2,1/2)$, então $Z =
+   \sum_{i=1}^{12} U_i$ terá distribuição $\text{N}(0,1)$ (usando o
+   **Teorema do Limite Central**).
+3. A distribuição binomial negativa $\text{BinNeg}(r,p)$ pode ser
+   definida como:
+   - A convolução de $r$ VAs iid $\text{Geom}(p)$ (**convolução**)
+   - Se $X|\lambda \sim \text{Poisson}(\lambda)$ e $\lambda \sim
+     \text{Gama}(r, \beta)$, então $X$ terá distribuição binomial
+     negativa com parâmetros $r$ e $p = \beta/(1+\beta)$ (**mistura**)
+4. A convolução de $r$ VAs independentes $\text{Exp}(\lambda)$ tem
+   distribuição $\text{Gama}(r, \lambda)$.
+5. A soma de $n$ VAs iid $\text{Ber}(p)$ tem distribuição
+   $\text{Bin}(n,p)$.
+
+
+### Exemplo (distribuição qui-quadrado)
+
+Se $Z_1, \ldots, Z_n \sim \text{N}(0,1)$, então $V = \sum_{i=1}^{n}
+Z_i^2 \sim \chi^2(n)$.
+
+Para gerar $m$ valores de uma $\chi^2(n)$:
+
+1. Crie uma matriz $m \times n$ com $mn$ VAs $\text{N(0,1)}$
+2. Calcule o quadrado de cada número da matriz em (1)
+3. Calcule a soma das linhas da matriz. Cada soma de linha é uma
+   realização da distribuição $\chi^2(n)$
+4. Retorne o vetor com as somas
+
+Para gerar $m=1000$ valores da $\chi^2(2)$:
+
+```{r}
+m <- 1000
+n <- 2
+X <- matrix(rnorm(n * m), nrow = m, ncol = n)^2
+x <- rowSums(X)
+## Comparação
+par(mfrow = c(1, 2))
+plot(ecdf(x))
+curve(pchisq(x, n), add = TRUE, col = 2)
+q <- qchisq(ppoints(m), 2)
+qqplot(q, x)
+abline(0, 1, col = 2)
+par(mfrow = c(1, 1))
+```
+
+### Exemplo (distribuição binomial)
+
+Se $X_1, \ldots, X_n \sim \text{Ber}(p)$, então $Y = \sum_{i=1}^{n}
+X_1 + \cdots + X_n$ terá distribuição $\text{Bin}(n,p)$
+
+Para gerar $m$ valores de uma $\text{Bin}(n, p)$ (usando a geração de
+Bernoulli pela uniforme):
+
+1. Crie uma matriz $m \times n$ com $mn$ VAs $\text{U}(0,1)$
+   - Se $u > p$ faça 1, caso contrário 0. Até aqui é o mesmo que gerar $n$
+   valores aleatórios de uma $\text{Ber}(p)$ em cada linha da matriz
+2. Calcule a soma das linhas da matriz. Cada soma de linha é uma
+   realização da distribuição $\text{Bin}(n, p)$
+3. Retorne o vetor com as somas
+
+Para gerar $m = 1000$ valores de $\text{Bin}(6, 0.5)$:
+
+```{r}
+m <- 1000
+size <- 6
+prob <- 0.5
+X <- matrix(runif(m * size) > prob, nrow = m, ncol = size)
+x <- rowSums(X)
+## Calcula as probabilidades teóricas (exatas) usando a definição da
+## distribuição
+k <- 0:max(x)
+p <- dbinom(k, size = size, prob = prob)
+## Compara a proporção de valores gerados com a prob. teórica
+round(cbind("Gerado" = prop.table(table(x)), "Teórico" = p), 3)
+## Comparação gráfica
+par(mfrow = c(1, 2))
+plot(prop.table(table(x)), xlab = "X", ylab = "P[X]")
+points(p ~ I(k + 0.1), type = "h", col = 2, lwd = 2)
+legend("topright", legend = c("Empírico", "Teórico"),
+       lty = 1, col = c(1, 2))
+plot(ecdf(x))
+lines(cumsum(p), type = "S", col = 2)
+par(mfrow = c(1, 1))
+```
+
+# Distribuição normal
+
+Existem vários métodos para se gerar valores aleatórios de uma
+distribuição normal.
+
+Geralmente, estes métodos são desenvolvidos para gerar valores de uma
+distribuição normal padrão $\text{N}(0,1)$. No entanto, sabemos que a
+transformação
+$$
+Z = \frac{X - \mu}{\sigma} \sim \text{N}(0,1)
+$$
+Portanto, podemos obter
+$$
+X = Z\sigma + \mu
+$$
+que terá distribuição $\text{N}(\mu, \sigma^2)$, a partir de valores
+gerados de $Z$.
+
+## Por convolução
+
+Se $U_1, \ldots, U_{12} \sim \text{U}(-1/2,1/2)$, então $Z =
+\sum_{i=1}^{12} U_i$ terá distribuição $\text{N}(0,1)$.
+
+Note que, neste caso, $\text{E}[Z] = 0$ e $\text{Var}[Z] = 1$. Pelo
+**Teorema do Limite Central** (TLC), e sabendo do fato que a Uniforme é
+simétrica, então $Z \sim \text{N}(0,1)$.
+
+Para gerar $m$ valores de uma $\text{N}(0, 1)$:
+
+1. Crie uma matriz $m \times n=12$ com $mn$ VAs $\text{U}(-0.5,0.5)$
+2. Calcule a soma das linhas da matriz
+3. Retorne o vetor com as somas
+
+Para gerar $m = 1000$ valores de $\text{N}(0, 1)$:
+
+```{r}
+m <- 1000
+n <- 12
+X <- matrix(runif(m * n, -0.5, 0.5), nrow = m, ncol = n)
+x <- rowSums(X)
+## Comparação
+par(mfrow = c(1, 2))
+plot(ecdf(x))
+curve(pnorm(x), add = TRUE, col = 2)
+q <- qnorm(ppoints(m))
+qqplot(q, x)
+abline(0, 1, col = 2)
+par(mfrow = c(1, 1))
+```
+
+## Método de Box-Muller
+
+A ideia geral do métopdo desenvolvido por Box e Muller é transformar a
+relação entre duas normais padrão, de coordenadas cartesianas para
+coordenadas polares, ou seja,
+
+```{r}
+plot(rnorm(10000), rnorm(10000))
+```
+
+Assista ao vídeo
+[A integral Gaussiana](https://www.youtube.com/watch?v=lHB7P8-ctLE) no
+perfil do Luiz Chamon para compreender a passagem de coordenadas
+cartesianas para coordenadas polares.
+
+```{r, echo = FALSE, results = "asis", eval = (knitr::opts_knit$get("rmarkdown.pandoc.to") == "html")}
+cat('
+<div style="position:relative;height:0;padding-bottom:56.25%">
+  <iframe src="https://www.youtube.com/embed/lHB7P8-ctLE?ecver=2"
+          width="640"
+          height="360"
+          frameborder="0"
+          style="position:absolute;width:100%;height:100%;left:0;padding:1em"
+          allowfullscreen>
+  </iframe>
+</div>
+')
+```
+
+Para gerar números aleatórios da distribuição normal padrão, precisamos
+de valores para o **raio** $r$ e o **ângulo** $\theta$ de tal forma a
+poder convertê-los em valores $x$ e $y$ usando as expressões
+$$
+\begin{cases}
+x = r \cos(\theta) \\
+y = r \sin(\theta).
+\end{cases}
+$$
+
+Valores para o **ângulo** podem ser obtidos pelo produto de uma
+$\text{Uniforme}(0, 1)$ por $2\pi$, ou seja $\theta \sim 2\pi U(0, 1)$.
+
+Para o **raio**, precisamos verificar **qual a distribuição adequada**.
+Note que a função de distribuição acumulada da variável $R$ pode ser
+determinada a partir da integral
+$$
+\begin{align*}
+\Pr(R \leq r) &=
+\int_{0}^{2\pi} \int_{0}^{r}
+  (2\pi)^{-1} s\exp\{-s^2/2\}\, \text{d}s \text{d}\theta \\
+&= (2\pi)^{-1} \int_{0}^{2\pi} \text{d}\theta \int_{0}^{r}
+  s\exp\{-s^2/2\}\, \text{d}s \\
+ &= (2\pi)^{-1} (2\pi) \int_{0}^{r}
+  s\exp\{-s^2/2\}\, \text{d}s\\
+ &= \int_{0}^{r}
+  s\exp\{-s^2/2\}\, \text{d}s.
+\end{align*}
+$$
+
+Para resolver a integral, considere $u = s^2$ e com isso $\text{d}s =
+\text{d}u/2s$. Os limites de integração são alterados: quando $s =
+0$ tem-se que $u = s^2 = 0$; quando $s = r$ tem-se que $u = s^2 =
+r^2$. Dessa forma, a integral fica
+$$
+\begin{align*}
+\Pr(R \leq r)
+ &= \int_{0}^{r}
+  s\exp\{-s^2/2\}\, \text{d}s\\
+ &= \int_{0}^{r^2}
+  s\exp\{-u/2\}\, (2s)^{-1}\text{d}u\\
+ &= \frac{1}{2} \int_{0}^{r^2}
+  \exp\{-u/2\}\, \text{d}u\\
+ &= \frac{1}{2} (-2) (\exp\{-u/2\}) \biggr\rvert_{0}^{r^2}\\
+ &= -(\exp\{-u/2\}) \biggr\rvert_{0}^{r^2}\\
+ &= -(\exp\{-r^2/2\} - \exp\{-0^2/2\})\\
+ &= 1 - \exp\{-r^2/2\}.
+\end{align*}
+$$
+
+O resultado obtido foi a função de distribuição acumulada da variável
+aleatória $R$, ou seja, $F(r)$. Se formos capazes de inverter essa
+função, poderemos gerar números aleatórios de $R$ usando números
+uniformes.
+
+A inversa da função $F(r) = 1 - \exp\{-r^2/2\}$ é
+$$
+\begin{align*}
+u &= 1 - \exp\{-r^2/2\}\\
+\log(1 - u) &= -r^2/2\\
+r &= \pm \sqrt{-2 \log(1 - u)}
+\end{align*}
+$$
+
+Como os valores de $u$ são realizações de uma uniforme padrão, podemos
+simplificar esse resultado para
+$$
+  r = \sqrt{-2 \log(u)}
+$$
+
+Assim, para gerar números da normal padrão, usamos
+$$
+\begin{cases}
+x = \sqrt{-2 \log(u_1)}\, \cos(2\pi u_2)\\
+y = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
+\end{cases}
+$$
+em que $u_1$ e $u_2$ são números da Uniforme padrão.
+
+```{r plotcirc, echo=FALSE}
+plotcirc <- function() {
     ## eixo x = a + cos \theta * raio
     circx <- cos(seq(0, 2*pi, .01)) * 1
     ## eixo y = b + sin \theta * raio
     circy <- sin(seq(0, 2*pi, .01)) * 1
     ## (a,b) eh o ponto de origem, aqui (0,0)
-    ## grafico
     plot(circx, circy, type = "l", xlim = c(-1,1), ylim = c(-1,1),
          xaxs = "i", yaxs = "i", asp = 1, xlab = "X", ylab = "Y")
     abline(v = c(-1,1), col = 2)
@@ -31,16 +429,21 @@ figunit <- function() {
 }
 ```
 
-# Introdução
+O algoritmo de Box-Muller é definido como:
+
+1. Gera valores $u_1$ e $u_2$ de $\text{U}(0,1)$
+2. Calcule
+$$
+\begin{cases}
+x_1 = \sqrt{-2 \log(u_1)}\, \cos(2\pi u_2)\\
+x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
+\end{cases}
+$$
+3. Retorne $\{x_1, x_2\}$
 
 ```{r}
-
 ##----------------------------------------------------------------------
 ## Gerando valores da normal pelo algoritmo de Box-Muller
-
-## A ideia é passar isso aqui para coordenadas polares
-plot(rnorm(10000), rnorm(10000))
-
 Nsim <- 2500
 u1 <- runif(Nsim)
 u2 <- runif(Nsim)
@@ -48,14 +451,29 @@ R <- sqrt(-2 * log(u1))
 T <- 2 * pi * u2
 x1 <- R * cos(T)
 x2 <- R * sin(T)
-figunit()
+plotcirc()
 points(x1, x2)
+```
 
+```{r}
 ## Confere
-hist(c(x1, x2))
+par(mfrow = c(1, 2))
 plot(ecdf(c(x1, x2)))
 curve(pnorm(x), add = TRUE, col = 2)
+q <- qnorm(ppoints(Nsim))
+qqplot(q, c(x1, x2))
+abline(0, 1, col = 2)
+par(mfrow = c(1, 1))
+```
 
+Note que sempre serão geradas duas normais padrão, `x1` e `x2`. Com
+isso, o resultado final será sempre o dobro do valor requerido. Assim,
+para gerar $n$ valores (e não $2n$), temos duas opções:
+
+1. Usar apenas `x1` ou `x2`
+2. Rodar o algoritmo em $n/2$ passos e concatenar `x1` e `x2`
+
+```{r}
 ## Uma função mais eficiente
 boxmuller <- function(n) {
     m <- ceiling(n/2)
@@ -70,30 +488,27 @@ boxmuller(2)
 boxmuller(3)
 boxmuller(4)
 boxmuller(5)
+```
 
+## Método de coordenadas polares
 
-RNGkind()
-set.seed(1, normal.kind = "Box-Muller")
-xx <- rnorm(1000)
-yy <- boxmuller(1000)
+O método de coordenadas polares (ou simplemente método polar) é uma
+variação do método de Box-Muller. A motivação do método foi a de evitar
+o uso de funções transcendentais.
 
-plot(ecdf(xx))
-plot(ecdf(yy), col = 3, add = TRUE)
-curve(pnorm(x), add = TRUE, col = 2)
+1. Gere valores $u_1, u_2 \sim \text{U}(-1, 1)$
+2. Calculw $r^2 = u_1^2 + u_2^2$.
+3. Se esse ponto estiver dentro do raio unitário, ou seja, se $r^2 \leq
+1$, então calcule $z = \sqrt{(-2 \log r^2)/r^2}$
+   - Faça $x_1 = u_1 z$ e $x_2 = u_2 z$
 
-RNGkind()
-set.seed(1, normal.kind = "Inversion")
-RNGkind()
-zz <- rnorm(1000)
+Veja que esse método nada mais é do que uma forma do algoritmo de
+**aceitação-rejeição**.
 
-plot(ecdf(yy), col = 4, add = TRUE)
-RNGkind()
+Note que apenas substituimos $\cos(2\pi u_2) = u_1/\sqrt{r^2}$ e
+$\sin(2\pi u_2) = u_2/\sqrt{r^2}$.
 
-
-##----------------------------------------------------------------------
-## Método Polar
-
-## Visualizacao do metodo polar
+```{r}
 Nsim <- 2500
 u1 <- runif(Nsim, -1, 1)
 u2 <- runif(Nsim, -1, 1)
@@ -102,19 +517,28 @@ ac <- r2 <= 1
 z <- sqrt((-2 * log(r2[ac]))/r2[ac])
 x1 <- u1[ac] * z
 x2 <- u2[ac] * z
-figunit()
+plotcirc()
 points(u1[ac], u2[ac], pch = 1, col = 3)
 points(u1[!ac], u2[!ac], pch = 1, col = 2)
+```
 
+```{r}
 ## Taxa de aceitacao
 sum(ac)/Nsim
-
 ## Confere
-hist(c(x1, x2))
+## Confere
+par(mfrow = c(1, 2))
 plot(ecdf(c(x1, x2)))
 curve(pnorm(x), add = TRUE, col = 2)
+q <- qnorm(ppoints(Nsim))
+qqplot(q, c(x1, x2))
+abline(0, 1, col = 2)
+par(mfrow = c(1, 1))
+```
 
-## Funcao generica pare gerar n valores
+Podemos também defnir uma função gernérica para gerar $n$ valores:
+
+```{r}
 polarmethod <- function(n) {
     m <- ceiling(n/2)
     x1 <- numeric(m)
@@ -134,29 +558,30 @@ polarmethod <- function(n) {
     x <- c(x1, x2)
     if (n %% 2 == 0) x else x[-1]
 }
-
-set.seed(1)
-boxmuller(2)
 polarmethod(2)
 polarmethod(3)
 polarmethod(4)
 polarmethod(5)
+```
 
-curve(pnorm(x), col = 2, from = -4, to = 4, lwd = 2)
-yy <- boxmuller(1000)
-ww <- polarmethod(1000)
-plot(ecdf(yy), col = 1, add = TRUE)
-plot(ecdf(ww), col = 3, add = TRUE)
+Comparando os dois métodos vemos que:
 
+```{r, eval=FALSE}
+microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
+```
+
+No R:
+
+```{r}
 RNGkind()
 set.seed(1, normal.kind = "Box-Muller")
 xx <- rnorm(1000)
 yy <- boxmuller(1000)
-ww <- polarmethod(1000)
+
 plot(ecdf(xx))
 plot(ecdf(yy), col = 3, add = TRUE)
-plot(ecdf(ww), col = 5, add = TRUE)
 curve(pnorm(x), add = TRUE, col = 2)
+
 RNGkind()
 set.seed(1, normal.kind = "Inversion")
 RNGkind()
@@ -164,14 +589,7 @@ zz <- rnorm(1000)
 
 plot(ecdf(yy), col = 4, add = TRUE)
 RNGkind()
-
-## Compara os dois metodos
-microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
-
-
-
 ```
-
 
 ```{r, eval=FALSE}
 ## Algoritmo de Hardle
@@ -210,6 +628,5 @@ boxmuller <- function(n) {
 
 boxmuller(4)
 boxmuller(5)
-
 
 ```
