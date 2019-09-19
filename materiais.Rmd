@@ -22,7 +22,7 @@ output:
   [HTML](slides/02_RNG_uniforme.html).
 - Geração de números aleatórios não uniformes: método
   da transformação integral de probabilidade.
-  [Slides](slides/03_RNG_inversa.html).
+  [HTML](slides/03_RNG_inversa.html).
 
 ### Scripts
 
