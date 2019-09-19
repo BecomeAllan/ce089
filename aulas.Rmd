@@ -46,6 +46,7 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 [Slides](slides/02_RNG_uniforme.html).
 - **10/09 (Ter)**: Geração de números aleatórios não uniformes: método
   da transformação integral de probabilidade.
+  [Slides](slides/03_RNG_inversa.html).
 - **13/09 (Sex)**: Geração de números aleatórios não uniformes: método
   de aceitação e rejeição.
 - **17/09 (Ter)**: Geração de números aleatórios não uniformes: método

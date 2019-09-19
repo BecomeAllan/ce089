@@ -20,6 +20,9 @@ output:
 - Técnicas de programação. [HTML](slides/01_tecnicas.html).
 - Geração de números aleatórios uniformes.
   [HTML](slides/02_RNG_uniforme.html).
+- Geração de números aleatórios não uniformes: método
+  da transformação integral de probabilidade.
+  [Slides](slides/03_RNG_inversa.html).
 
 ### Scripts
 
