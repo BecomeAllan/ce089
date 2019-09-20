@@ -555,9 +555,7 @@ div.tocify {
 <p>Para verificar as bibliotecas disponíveis e se existem pacotes para ser atualizados, use</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">packageStatus</span>()</a></code></pre></div>
 <p>Para atualizar automaticamente todos os pacotes faça</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">update.packages</span>(<span class="dt">ask =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="co"># Updating HTML index of packages in &#39;.Library&#39;</span></a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="co"># Making &#39;packages.html&#39; ... done</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">update.packages</span>(<span class="dt">ask =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 <div id="criando-uma-funcao" class="section level1">
 <h1><span class="header-section-number">3</span> Criando uma função</h1>
@@ -1599,7 +1597,7 @@ div.tocify {
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">mean</a>
 <a class="sourceLine" id="cb111-2" title="2"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x7a1ec58&gt;</span></a>
+<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x3eaed40&gt;</span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">mean.default</a>
@@ -1627,7 +1625,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x7a22f30&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x3eb6a58&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1687,7 +1685,7 @@ div.tocify {
 </div>
 <div id="informacao-de-sessao" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Thursday, 19 September, 2019, 22:39
+<pre><code># Friday, 20 September, 2019, 01:36
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)

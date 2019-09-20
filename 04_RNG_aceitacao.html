@@ -475,16 +475,23 @@ div.tocify {
 <li>Casos em que não se tem expressão para a função de densidade acumulada, <span class="math inline">\(F\)</span>, como é o caso da distribuição gaussiana e gama.</li>
 <li>Casos em que mesmo que se conheça <span class="math inline">\(F(x)\)</span> não possível chegar à uma expressão para a função <span class="math inline">\(F^{-1}\)</span>.</li>
 </ul>
+</div>
+<div id="metodo-de-aceitacao-e-rejeicao" class="section level1">
+<h1><span class="header-section-number">2</span> Método de aceitação e rejeição</h1>
 <p>Se a função densidade de probabilidade for conhecida, <span class="math inline">\(f\)</span>, então é possível gerar números aleatórios dessa variável aleatória caracterizada por <span class="math inline">\(f\)</span> pelo método da aceitação e rejeição. É necessário satisfazer dois requisitos:</p>
 <ol style="list-style-type: decimal">
 <li>Ter um bom gerador de números uniformes.</li>
-<li>Ter um bom gerador de números de uma variável aleatória representada por uma distribuição <span class="math inline">\(D\)</span>, escolhida de tal maneira que existe uma constante <span class="math inline">\(M\)</span> tal que a densidade de <span class="math inline">\(g\)</span> que caracteriza a distribuição <span class="math inline">\(D\)</span> satisfaz <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> do domínio de <span class="math inline">\(f\)</span>.</li>
+<li>Ter um bom gerador de números de uma variável aleatória representada por uma distribuição <span class="math inline">\(D\)</span>, escolhida de tal maneira que existe uma constante <span class="math inline">\(M\)</span> tal que a densidade de <span class="math inline">\(g\)</span> que caracteriza a distribuição <span class="math inline">\(D\)</span> satisfaz <span class="math display">\[
+f(x) \leq M g(x)
+\]</span> para todo <span class="math inline">\(x\)</span> do domínio de <span class="math inline">\(f\)</span>. A função <span class="math inline">\(g\)</span> que “encapsula” a função <span class="math inline">\(f\)</span> é chamada de <strong>distribuiçao proposta</strong> (<em>proposal</em>).</li>
 </ol>
 <p>O seguinte algoritmo permite gerar números aleatórios de uma distribuição de probabilidade caracterizada pela função densidade <span class="math inline">\(f\)</span>:</p>
 <ol style="list-style-type: decimal">
 <li>Gerar <span class="math inline">\(y\)</span> como sendo uma ocorrência da variável aleatória representada por <span class="math inline">\(D\)</span>.</li>
 <li>Gerar <span class="math inline">\(u\)</span> como sendo uma ocorrência de uma uniforme padrão.</li>
-<li>Se <span class="math inline">\(u \leq f(y)/(M g(y))\)</span> considerar que <span class="math inline">\(x = y\)</span> é um valor da distribuição de probabilidade alvo cuja densidade é <span class="math inline">\(f\)</span>, caso contrário, descartar <span class="math inline">\(y\)</span>.</li>
+<li>Se <span class="math display">\[
+u \leq \frac{f(y)}{M g(y)}
+\]</span> considerar que <span class="math inline">\(x = y\)</span> é um valor da distribuição de probabilidade alvo cuja densidade é <span class="math inline">\(f\)</span>, caso contrário, descartar <span class="math inline">\(y\)</span>.</li>
 <li>Repetir até atingir o número de valores desejado <span class="math inline">\(n\)</span>.</li>
 </ol>
 <p>Para determinar o valor de <span class="math inline">\(M\)</span>, basta seguir a seguinte relação</p>
@@ -497,202 +504,275 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <li>A probabilidade de aceitação é <span class="math inline">\(1/M\)</span>. Portanto <span class="math inline">\(M\)</span> deve ser o menor possível para maior eficiência computacional.</li>
 </ol>
 <div id="exemplo-1" class="section level2">
-<h2><span class="header-section-number">1.1</span> Exemplo 1</h2>
-<p>Seja <span class="math inline">\(X\)</span> uma v.a. com <span class="math inline">\(f(x) = 1.5 x^2, -1 &lt; x &lt; 1\)</span>. Simular valores desta.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># Gráfico da f.d.p da v.a. X, f(x).</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">^</span><span class="st"> </span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3"></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co"># Tem integral 1?</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dt">lower =</span> <span class="dv">-1</span>, <span class="dt">upper =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="co"># 1 with absolute error &lt; 1.1e-14</span></a>
-<a class="sourceLine" id="cb1-7" title="7"></a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co">#-----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="co"># Considere como g() a densidade de uma uniforme entre -1 e 1. Então se</span></a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="co"># a base é 2, o altura deve ser 0.5 para ter produto 1, assim g(y) =</span></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="co"># 0.5, -1 &lt; y &lt; 1. Qual deve ser um valor de M para garantir que f(x) &lt;=</span></a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="co"># (M g(x)) para todo x dentro do [-1, 1]? O valor de M tem que ser 3,</span></a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="co"># pois 3 * 0.5 &lt;= sup_{x} f(x) = 1.5.</span></a>
-<a class="sourceLine" id="cb1-14" title="14"></a>
-<a class="sourceLine" id="cb1-15" title="15"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb1-16" title="16"><span class="kw">curve</span>(<span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-17" title="17"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-18" title="18"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</a>
-<a class="sourceLine" id="cb1-19" title="19">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
-<a class="sourceLine" id="cb1-20" title="20">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb1-21" title="21">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb1-22" title="22">       <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb1-23" title="23">       <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a>
-<a class="sourceLine" id="cb1-24" title="24"></a>
-<a class="sourceLine" id="cb1-25" title="25"><span class="co"># Criando os elementos necessários.</span></a>
-<a class="sourceLine" id="cb1-26" title="26">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb1-27" title="27">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x</a>
-<a class="sourceLine" id="cb1-28" title="28">M &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb1-29" title="29">x &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb1-30" title="30"></a>
-<a class="sourceLine" id="cb1-31" title="31"><span class="co"># 1. Gerar y cuja densidade é g()</span></a>
-<a class="sourceLine" id="cb1-32" title="32"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-33" title="33">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-34" title="34">y</a>
-<a class="sourceLine" id="cb1-35" title="35"><span class="co"># [1] -0.4689827</span></a>
-<a class="sourceLine" id="cb1-36" title="36"></a>
-<a class="sourceLine" id="cb1-37" title="37"><span class="co"># 2. Gerar u de uma uniforme padrão.</span></a>
-<a class="sourceLine" id="cb1-38" title="38">u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-39" title="39">u</a>
-<a class="sourceLine" id="cb1-40" title="40"><span class="co"># [1] 0.3721239</span></a>
-<a class="sourceLine" id="cb1-41" title="41"></a>
-<a class="sourceLine" id="cb1-42" title="42"><span class="co"># 3. Comparar e decidir.</span></a>
-<a class="sourceLine" id="cb1-43" title="43">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb1-44" title="44">r</a>
-<a class="sourceLine" id="cb1-45" title="45"><span class="co"># [1] 0.2199447</span></a>
-<a class="sourceLine" id="cb1-46" title="46"></a>
-<a class="sourceLine" id="cb1-47" title="47"><span class="cf">if</span> (u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
-<a class="sourceLine" id="cb1-48" title="48">    x &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb1-49" title="49">    <span class="kw">print</span>(<span class="st">&quot;u &lt; r então valor aceito.&quot;</span>)</a>
-<a class="sourceLine" id="cb1-50" title="50">} <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb1-51" title="51">    <span class="kw">print</span>(<span class="st">&quot;u &gt;= r então valor descartado.&quot;</span>)</a>
-<a class="sourceLine" id="cb1-52" title="52">}</a>
-<a class="sourceLine" id="cb1-53" title="53"><span class="co"># [1] &quot;u &gt;= r então valor descartado.&quot;</span></a></code></pre></div>
-<p><img src="figures/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /><img src="figures/unnamed-chunk-2-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<h2><span class="header-section-number">2.1</span> Exemplo 1</h2>
+<p>Seja <span class="math inline">\(X\)</span> uma VA com <span class="math inline">\(f(x) = 1.5 x^2, -1 &lt; x &lt; 1\)</span>. Simular valores desta.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Gráfico da f.d.p da v.a. X, f(x).</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">^</span><span class="st"> </span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>)</a></code></pre></div>
+<p><img src="figures/fdp-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Tem integral 1?</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dt">lower =</span> <span class="dv">-1</span>, <span class="dt">upper =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co"># 1 with absolute error &lt; 1.1e-14</span></a></code></pre></div>
+<p>Vamos considerar como <span class="math inline">\(g\)</span> (a distribuição prposta) a densidade de uma uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para ter produto 1, assim <span class="math inline">\(g(y) = 0.5, -1 &lt; y &lt; 1\)</span>. Qual deve ser um valor de <span class="math inline">\(M\)</span> para garantir que <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> dentro do intervalo <span class="math inline">\([-1, 1]\)</span>? Pela definição acima, temos que: <span class="math display">\[
+M \geq \max_x \frac{f(x)}{g(x)} = \frac{1.5}{0.5} = 3
+\]</span> Portanto, fazemos <span class="math inline">\(M = 3\)</span>, pois esse é o valor mínimo necessário para satisfazer <span class="math inline">\(f(x) \leq M g(x)\)</span> (e queremos o valor de <span class="math inline">\(M\)</span> menor possível para mais eficiência computacional).</p>
+<p>No gráfico abaixo, vemos a função <span class="math inline">\(f(x)\)</span>, a proposta <span class="math inline">\(g(x)\)</span>, e a que iremos de fato utilizar no algoritmo, a <span class="math inline">\(M g(x)\)</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">curve</span>(<span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb3-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<p><img src="figures/proposal-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Agora podemos prosseguir com o algoritmo:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">## Criando os elementos necessários.</span></a>
+<a class="sourceLine" id="cb4-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb4-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x</a>
+<a class="sourceLine" id="cb4-4" title="4">M &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb4-5" title="5">x &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb4-6" title="6"></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">## 1. Gerar y cuja densidade é g()</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-9" title="9">(y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co"># [1] -0.4689827</span></a>
+<a class="sourceLine" id="cb4-11" title="11"></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">## 2. Gerar u de uma uniforme padrão.</span></a>
+<a class="sourceLine" id="cb4-13" title="13">(u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dt">n =</span> <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co"># [1] 0.3721239</span></a>
+<a class="sourceLine" id="cb4-15" title="15"></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">## 3. Calcula a razão entre as densidades</span></a>
+<a class="sourceLine" id="cb4-17" title="17">(r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y)))</a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co"># [1] 0.2199447</span></a>
+<a class="sourceLine" id="cb4-19" title="19"></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="co">## 4. Compara e decide</span></a>
+<a class="sourceLine" id="cb4-21" title="21"><span class="cf">if</span> (u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
+<a class="sourceLine" id="cb4-22" title="22">    x &lt;-<span class="st"> </span>y</a>
+<a class="sourceLine" id="cb4-23" title="23">    <span class="kw">print</span>(<span class="st">&quot;u &lt; r então valor aceito.&quot;</span>)</a>
+<a class="sourceLine" id="cb4-24" title="24">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb4-25" title="25">    <span class="kw">print</span>(<span class="st">&quot;u &gt;= r então valor descartado.&quot;</span>)</a>
+<a class="sourceLine" id="cb4-26" title="26">}</a>
+<a class="sourceLine" id="cb4-27" title="27"><span class="co"># [1] &quot;u &gt;= r então valor descartado.&quot;</span></a></code></pre></div>
 <p>Verifica os pontos no gráfico:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</a>
-<a class="sourceLine" id="cb2-4" title="4">       <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
-<a class="sourceLine" id="cb2-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb2-6" title="6">       <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb2-7" title="7">       <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb2-8" title="8">       <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="kw">points</span>(y, <span class="kw">f</span>(y), <span class="dt">pch =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="kw">points</span>(y, M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="dt">pch =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="kw">points</span>(y, u <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## Simula de uma unica vez, com um valor fixo de simulações</span></a>
-<a class="sourceLine" id="cb3-2" title="2">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
-<a class="sourceLine" id="cb3-3" title="3">y &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-4" title="4">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb3-5" title="5">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb3-6" title="6">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb3-7" title="7">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb3-8" title="8">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb3-9" title="9"></a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb3-11" title="11"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-14" title="14"></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="co">## Quantos foram aceitados</span></a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
-<a class="sourceLine" id="cb3-17" title="17"><span class="co"># [1] 0.346</span></a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
-<a class="sourceLine" id="cb3-19" title="19"><span class="dv">1</span><span class="op">/</span>M</a>
-<a class="sourceLine" id="cb3-20" title="20"><span class="co"># [1] 0.3333333</span></a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="co">## Quantos foram rejeitados</span></a>
-<a class="sourceLine" id="cb3-22" title="22"><span class="kw">length</span>(ur)<span class="op">/</span><span class="kw">length</span>(u)</a>
-<a class="sourceLine" id="cb3-23" title="23"><span class="co"># [1] 0.654</span></a>
-<a class="sourceLine" id="cb3-24" title="24"></a>
-<a class="sourceLine" id="cb3-25" title="25"><span class="co">## Agora, simula um numero fixo de valores</span></a>
-<a class="sourceLine" id="cb3-26" title="26"></a>
-<a class="sourceLine" id="cb3-27" title="27"><span class="co">## Simula 1000 valores</span></a>
-<a class="sourceLine" id="cb3-28" title="28">N &lt;-<span class="st"> </span>1000L</a>
-<a class="sourceLine" id="cb3-29" title="29">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb3-30" title="30"><span class="cf">while</span>(<span class="kw">length</span>(x) <span class="op">&lt;</span><span class="st"> </span>N) {</a>
-<a class="sourceLine" id="cb3-31" title="31">    y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-32" title="32">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-33" title="33">    r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb3-34" title="34">    <span class="cf">if</span>(u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
-<a class="sourceLine" id="cb3-35" title="35">        <span class="co">## Não é a forma mais eficiente!</span></a>
-<a class="sourceLine" id="cb3-36" title="36">        x &lt;-<span class="st"> </span><span class="kw">c</span>(x, y)</a>
-<a class="sourceLine" id="cb3-37" title="37">    }</a>
-<a class="sourceLine" id="cb3-38" title="38">}</a>
-<a class="sourceLine" id="cb3-39" title="39"><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb3-40" title="40"><span class="co"># [1] 1000</span></a>
-<a class="sourceLine" id="cb3-41" title="41"><span class="kw">hist</span>(x)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /><img src="figures/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb5-4" title="4">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">points</span>(y, <span class="kw">f</span>(y), <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="kw">text</span>(y, <span class="kw">f</span>(y), <span class="st">&quot;f(y)&quot;</span>, <span class="dt">pos =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="kw">points</span>(y, M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="kw">text</span>(y, M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="st">&quot;M g(y)&quot;</span>, <span class="dt">pos =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="kw">points</span>(y, u <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="kw">text</span>(y, u <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y), <span class="st">&quot;u&quot;</span>, <span class="dt">pos =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/proposalpoints-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Note que o valor sorteado de <span class="math inline">\(y\)</span> (da proposta <span class="math inline">\(\text{U}[-1,1]\)</span>) foi -0.469. Os pontos azul e preto são as densidades da <span class="math inline">\(f\)</span> e da <span class="math inline">\(g\)</span> avaliadas nesse ponto. Como o valor sorteado <span class="math inline">\(u\)</span> (da <span class="math inline">\(\text{U}[0,1]\)</span>) foi <span class="math inline">\(0.372 &gt; 0.22 = f(y)/Mg(y)\)</span>, então o valor de <span class="math inline">\(y\)</span> é rejeitado. Isso fica claro pelo gráfico, pois esse ponto está em uma área acima da densidade de <span class="math inline">\(f\)</span>, portanto não deve fazer parte de uma amostra dessa distribuição.</p>
+<p>Veja também que o valor de <span class="math inline">\(u\)</span> é comparável com a razão <span class="math inline">\(f(y)/Mg(y)\)</span>, pois esta razão sempre será algum valor entre 0 e 1. Portanto o valor de <span class="math inline">\(u\)</span> é sempre relativo à essa razão (i.e., não está na mesma escala das densidades de <span class="math inline">\(f\)</span> e <span class="math inline">\(g\)</span>).</p>
+<div class="alert alert-warning">
+<p>Para uma ilustração animada veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html">este exemplo</a> da geração de números de uma distribuição normal, a partir de uma Cauchy (distribuição proposta). Para os detalhes da implementação veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html">este link</a>.</p>
+</div>
+<p>Agora, podemos definir um algoritmo que repete esse processo para um número fixo de amostras da distribuição proposta.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Simula de uma unica vez, com um valor fixo de simulações</span></a>
+<a class="sourceLine" id="cb6-2" title="2">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">## Amostra da proposta</span></a>
+<a class="sourceLine" id="cb6-5" title="5">y &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">## Amostra da U(0,1)</span></a>
+<a class="sourceLine" id="cb6-7" title="7">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">## Calcula a razão</span></a>
+<a class="sourceLine" id="cb6-9" title="9">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">## x será um vetor com os valores de y onde u &lt; r</span></a>
+<a class="sourceLine" id="cb6-11" title="11">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">## Valores de u aceitos (apenas para o grafico)</span></a>
+<a class="sourceLine" id="cb6-13" title="13">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">## Valores de u rejeitados (apenas para o grafico)</span></a>
+<a class="sourceLine" id="cb6-15" title="15">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a></code></pre></div>
+<p>Graficamente, temos a seguinte situação. Os pontos verde são aqueles aceitados na simulação, e portanto, farão parte da amostra aleatória da distribuição <span class="math inline">\(f\)</span> que queremos. Os pontos em vermelho são todos aqueles que foram rejeitados e foram descartados.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">curve</span>(<span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dv">-1</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">curve</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/sim1-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Lembre-se que a taxa teórica de aceitação é <span class="math inline">\(1/M\)</span>, portanto, podemos conferir isso com essa amostra específica.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Quantos foram aceitados</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co"># [1] 0.3456</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="dv">1</span><span class="op">/</span>M</a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co"># [1] 0.3333333</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">## Quantos foram rejeitados</span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="kw">length</span>(ur)<span class="op">/</span><span class="kw">length</span>(u)</a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co"># [1] 0.6544</span></a></code></pre></div>
+<p>No algoritmo acima, fixamos o número de amostras de <span class="math inline">\(g\)</span> (2500), e com isso, obtivemos uma amostra de apenas 864 valores de <span class="math inline">\(f\)</span> (porque a taxa de aceitação foi de 35%). No entanto, na maioria das vezes, o que queremos é gerar um número fixo <span class="math inline">\(N\)</span> de valores da distribuição de interesse <span class="math inline">\(f\)</span>. Como não temos como prever antecipadamente a taxa de aceitação para cada simulação, então precisamos de uma estrutura de repetição como o <code>while()</code>, que executará o algoritmo o número de vezes necessário para gerar uma amostra com exatamente <span class="math inline">\(N\)</span> valores.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Simula 1000 valores de f</span></a>
+<a class="sourceLine" id="cb9-2" title="2">N &lt;-<span class="st"> </span>1000L</a>
+<a class="sourceLine" id="cb9-3" title="3">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="cf">while</span>(<span class="kw">length</span>(x) <span class="op">&lt;</span><span class="st"> </span>N) {</a>
+<a class="sourceLine" id="cb9-5" title="5">    y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-6" title="6">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-7" title="7">    r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
+<a class="sourceLine" id="cb9-8" title="8">    <span class="cf">if</span>(u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
+<a class="sourceLine" id="cb9-9" title="9">        <span class="co">## Não é a forma mais eficiente!</span></a>
+<a class="sourceLine" id="cb9-10" title="10">        x &lt;-<span class="st"> </span><span class="kw">c</span>(x, y)</a>
+<a class="sourceLine" id="cb9-11" title="11">    }</a>
+<a class="sourceLine" id="cb9-12" title="12">}</a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="kw">length</span>(x)</a>
+<a class="sourceLine" id="cb9-14" title="14"><span class="co"># [1] 1000</span></a></code></pre></div>
+<p>Podemos então verificar se a simulação gerou de fato valores de <span class="math inline">\(f\)</span> através de um histograma e da comparação das distribuições acumuladas da amostra (empírica) e teórica (definido a expressão analítica para a acumulada <span class="math inline">\(F_X(x)\)</span>).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">hist</span>(x)</a>
+<a class="sourceLine" id="cb10-3" title="3">Fx &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">3</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="kw">curve</span>(Fx, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">-1</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Empírica&quot;</span>, <span class="st">&quot;Teórica&quot;),</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="st">       lty = 1, col = 1:2, bty = &quot;</span>n<span class="st">&quot;)</span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="st">par(mfrow = c(1, 1))</span></a></code></pre></div>
+<p><img src="figures/compara-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exemplo-2" class="section level2">
-<h2><span class="header-section-number">1.2</span> Exemplo 2</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">##----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">## X ~ Beta(a = 2.7, b = 6.3) e distribuição proposta é U(0,1)</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="kw">curve</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-5" title="5"></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">## Qual deve ser o valor de M?</span></a>
-<a class="sourceLine" id="cb4-7" title="7">M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)<span class="op">/</span><span class="dv">1</span>},</a>
-<a class="sourceLine" id="cb4-8" title="8">              <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective</a>
-<a class="sourceLine" id="cb4-9" title="9">M</a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co"># [1] 2.669744</span></a>
-<a class="sourceLine" id="cb4-11" title="11"></a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="co">## Define funções</span></a>
-<a class="sourceLine" id="cb4-13" title="13">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)</a>
-<a class="sourceLine" id="cb4-14" title="14">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x</a>
-<a class="sourceLine" id="cb4-15" title="15"></a>
-<a class="sourceLine" id="cb4-16" title="16"><span class="co">## Simula</span></a>
-<a class="sourceLine" id="cb4-17" title="17">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
-<a class="sourceLine" id="cb4-18" title="18">a &lt;-<span class="st"> </span><span class="fl">2.7</span>; b &lt;-<span class="st"> </span><span class="fl">6.3</span></a>
-<a class="sourceLine" id="cb4-19" title="19">y &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb4-20" title="20">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb4-21" title="21">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb4-22" title="22">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-23" title="23">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-24" title="24">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-25" title="25"></a>
-<a class="sourceLine" id="cb4-26" title="26"><span class="co">## Verifica</span></a>
-<a class="sourceLine" id="cb4-27" title="27"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb4-28" title="28"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-29" title="29"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb4-30" title="30"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-31" title="31"></a>
-<a class="sourceLine" id="cb4-32" title="32"><span class="co">## Quantos foram aceitados</span></a>
-<a class="sourceLine" id="cb4-33" title="33"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
-<a class="sourceLine" id="cb4-34" title="34"><span class="co"># [1] 0.3772</span></a>
-<a class="sourceLine" id="cb4-35" title="35"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
-<a class="sourceLine" id="cb4-36" title="36"><span class="dv">1</span><span class="op">/</span>M</a>
-<a class="sourceLine" id="cb4-37" title="37"><span class="co"># [1] 0.3745677</span></a>
-<a class="sourceLine" id="cb4-38" title="38"></a>
-<a class="sourceLine" id="cb4-39" title="39"><span class="co">##----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb4-40" title="40"><span class="co">## X ~ Beta(a = 2.7, b = 6.3) e distribuição proposta é</span></a>
-<a class="sourceLine" id="cb4-41" title="41"><span class="co">## Beta(a = 2, b = 6)</span></a>
-<a class="sourceLine" id="cb4-42" title="42"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb4-43" title="43"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-44" title="44"></a>
-<a class="sourceLine" id="cb4-45" title="45"><span class="co">## Qual deve ser o valor de M?</span></a>
-<a class="sourceLine" id="cb4-46" title="46">M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)<span class="op">/</span><span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>)},</a>
-<a class="sourceLine" id="cb4-47" title="47">              <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective</a>
-<a class="sourceLine" id="cb4-48" title="48">M</a>
-<a class="sourceLine" id="cb4-49" title="49"><span class="co"># [1] 1.671808</span></a>
-<a class="sourceLine" id="cb4-50" title="50"></a>
-<a class="sourceLine" id="cb4-51" title="51"><span class="co">## Define funções</span></a>
-<a class="sourceLine" id="cb4-52" title="52">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)</a>
-<a class="sourceLine" id="cb4-53" title="53">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb4-54" title="54"></a>
-<a class="sourceLine" id="cb4-55" title="55"><span class="co">## Simula</span></a>
-<a class="sourceLine" id="cb4-56" title="56">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
-<a class="sourceLine" id="cb4-57" title="57">a &lt;-<span class="st"> </span><span class="fl">2.7</span>; b &lt;-<span class="st"> </span><span class="fl">6.3</span></a>
-<a class="sourceLine" id="cb4-58" title="58">y &lt;-<span class="st"> </span><span class="kw">rbeta</span>(Nsim, <span class="dv">2</span>, <span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb4-59" title="59">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb4-60" title="60">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb4-61" title="61">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-62" title="62">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-63" title="63">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a>
-<a class="sourceLine" id="cb4-64" title="64"></a>
-<a class="sourceLine" id="cb4-65" title="65"><span class="co">## Verifica</span></a>
-<a class="sourceLine" id="cb4-66" title="66"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb4-67" title="67"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-68" title="68"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb4-69" title="69"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-70" title="70"></a>
-<a class="sourceLine" id="cb4-71" title="71"><span class="co">## Quantos foram aceitados</span></a>
-<a class="sourceLine" id="cb4-72" title="72"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
-<a class="sourceLine" id="cb4-73" title="73"><span class="co"># [1] 0.6092</span></a>
-<a class="sourceLine" id="cb4-74" title="74"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
-<a class="sourceLine" id="cb4-75" title="75"><span class="dv">1</span><span class="op">/</span>M</a>
-<a class="sourceLine" id="cb4-76" title="76"><span class="co"># [1] 0.5981549</span></a></code></pre></div>
-<p><img src="figures/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /><img src="figures/unnamed-chunk-5-2.png" width="80%" style="display: block; margin: auto;" /><img src="figures/unnamed-chunk-5-3.png" width="80%" style="display: block; margin: auto;" /><img src="figures/unnamed-chunk-5-4.png" width="80%" style="display: block; margin: auto;" /></p>
+<h2><span class="header-section-number">2.2</span> Exemplo 2</h2>
+<!-- Robert e Casella -->
+<p>Considere que deseja-se gerar valores de uma distribuição <span class="math inline">\(\text{Beta}(\alpha = 2.7, \beta = 6.3)\)</span> (e também suponha que não dispomos de um gerador como o que já existe no R pela função <code>rbeta()</code>).</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>)</a></code></pre></div>
+<p><img src="figures/beta-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>A distribuição proposta mais natural seria uma Uniforme entre 0 e 1, que possui densidade 1 (para todo <span class="math inline">\(x\)</span>).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="kw">curve</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb12-4" title="4">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<p><img src="figures/propbeta1-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Como podemos achar o valor de <span class="math inline">\(M\)</span> que satisfaça <span class="math inline">\(f(x) \leq M g(x)\)</span>? Já vimos que esse valor pode ser determinado por <span class="math display">\[
+M \geq \max_x \frac{f(x)}{g(x)}
+\]</span> O valor máximo da densidade de <span class="math inline">\(g(x)\)</span> é fácil de ser encontrado, pois nesse caso é 1 para todo <span class="math inline">\(x\)</span>. Como fazer então para determinar o valor máximo da <span class="math inline">\(\text{Beta}(2.7, 6.3)\)</span>? Temos duas opções:</p>
+<ol style="list-style-type: decimal">
+<li>Usar a expressão da <strong>moda</strong> da distribuição (se existir)</li>
+<li>Achar esse valor máximo por otimização numérica</li>
+</ol>
+<p>No caso da distribuição Beta, existe uma expressão fechada para de determinar a moda, que é <span class="math inline">\(\frac{\alpha-1}{\alpha+\beta-2}\)</span>. Portanto seria fácil nesse caso determinar o valor máximo da densidade por meio de</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">## Define parâmetros</span></a>
+<a class="sourceLine" id="cb13-2" title="2">alfa &lt;-<span class="st"> </span><span class="fl">2.7</span>; beta &lt;-<span class="st"> </span><span class="fl">6.3</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">## A moda é</span></a>
+<a class="sourceLine" id="cb13-4" title="4">(moda &lt;-<span class="st"> </span>(alfa <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)<span class="op">/</span>(alfa <span class="op">+</span><span class="st"> </span>beta <span class="op">-</span><span class="st"> </span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="co"># [1] 0.2428571</span></a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="co">## A densidade nesse ponto é então</span></a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="kw">dbeta</span>(moda, alfa, beta)</a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="co"># [1] 2.669744</span></a></code></pre></div>
+<p>No entanto, em diversas situações, não temos uma expressão fechada para a moda ou ela não pode ser determinada analiticamente. Por isso, nesses casos, podemos encontrar o valor máximo da função através de <strong>otimização numérica</strong> dessa função. Esse método serve para qualquer distribuição (na verdade qualquer função) onde deseja-se obter o ponto de máxima.</p>
+<p>No R, podemos passar a função que desejamos maximizar para a função <code>optimize()</code>. Aqui usaremos a função <code>dbeta()</code> que já implementa a expressão de densidade da Beta, mas poderíamos também escrever essa função manualmente e usá-la na otimização.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">(max.beta &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, alfa, beta)},</a>
+<a class="sourceLine" id="cb14-2" title="2">                      <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co"># $maximum</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co"># [1] 0.2428608</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co"># </span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co"># $objective</span></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co"># [1] 2.669744</span></a></code></pre></div>
+<p>Note que a função retorna dois valores: o ponto onde foi encontrada a densidade máxima (igual a moda), e o valor da densidade nesse ponto. Veja que os resultados são virtualmente os mesmos dos anteriores obtidos de forma analítica. Por ser uma forma mais geral, prosseguiremos com o valor de densidade máximo obtido dessa forma. Agora podemos então determinar o valor de <span class="math inline">\(M\)</span>, como sendo</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">(M &lt;-<span class="st"> </span>max.beta<span class="op">$</span>objective<span class="op">/</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co"># [1] 2.669744</span></a></code></pre></div>
+<p>Assim, ficamos com a distribuição proposta <span class="math inline">\(Mg(x)\)</span> como pode ser visto abaixo.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, alfa, beta), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw">curve</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb16-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<p><img src="figures/propbeta2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Seguindo com o algoritmo de aceitação e rejeição, a ideia é a mesma do exemplo anterior, mudando as funções apropriadamente.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Define funções</span></a>
+<a class="sourceLine" id="cb17-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, alfa, beta)</a>
+<a class="sourceLine" id="cb17-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x</a>
+<a class="sourceLine" id="cb17-4" title="4"></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="co">## Simula com número fixo</span></a>
+<a class="sourceLine" id="cb17-6" title="6">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="co">## Amostra da proposta U(0,1)</span></a>
+<a class="sourceLine" id="cb17-8" title="8">y &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb17-9" title="9"><span class="co">## Amostra u também de U(0,1)</span></a>
+<a class="sourceLine" id="cb17-10" title="10">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb17-11" title="11"><span class="co">## Calcula a razão</span></a>
+<a class="sourceLine" id="cb17-12" title="12">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
+<a class="sourceLine" id="cb17-13" title="13"><span class="co">## x serão os valores de y onde u &lt; r</span></a>
+<a class="sourceLine" id="cb17-14" title="14">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb17-15" title="15"><span class="co">## Aceitados</span></a>
+<a class="sourceLine" id="cb17-16" title="16">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb17-17" title="17"><span class="co">## Rejeitados</span></a>
+<a class="sourceLine" id="cb17-18" title="18">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a></code></pre></div>
+<p>Assim como no exemplo anterior, podemos visualizar os pontos amsotrados que foram aceitados e aqueles rejeitados.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, alfa, beta), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/betaac-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Lembre-se que a taxa de aceitação teórica é <span class="math inline">\(1/M\)</span>, e neste exemplo temos</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">## Quantos foram aceitados</span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co"># [1] 0.3768</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="dv">1</span><span class="op">/</span>M</a>
+<a class="sourceLine" id="cb19-6" title="6"><span class="co"># [1] 0.3745677</span></a></code></pre></div>
+<p>Note pelo gráfico acima que a maior parte dos pontos amostrados não são aceitos (veja também a baixa taxa de aceitação). Isso mostra que estamos disperdisando a maior parte do tempo computacional amostrando pontos que não serão aceitos.</p>
+<p>Devemos então pensar em uma outra distribuição proposta, com a intenção de melhorar (aumentar) a taxa de aceitação. Naturalmente, uma distribuição proposta com um formato mais próximo daquele que queremos amostrar seria possivelmente mais eficiente.</p>
+<p>Considere então como uma nova distribuição proposta uma <span class="math inline">\(\text{Beta}(2, 6)\)</span> (ainda queremos amostrar de uma <span class="math inline">\(\text{Beta}(2.7, 6.3)\)</span>).</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb20-4" title="4">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<p><img src="figures/propbeta3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Com o formato mais próximo da proposta, certamente a taxa de aceitação será maior. Precisamos novamente encontrar o valor <span class="math inline">\(M\)</span> que satisfaça <span class="math inline">\(f(x) \leq M g(x)\)</span>. Já vimos que podemos usar a moda, mas vamos usar o método geral de encontrar a densidade máxima das duas distribuições por otimização numérica. Aqui também temos duas opções:</p>
+<ol style="list-style-type: decimal">
+<li>Encontrar o máximo de cada função separadamente e fazer a razão entre eles</li>
+<li>Encontrar diretamente o máxima da razão entre as duas distribuições</li>
+</ol>
+<p>A segunda abordagem é mais direta e levará ao mesmo resultado da primeira, mas só precisaremos fazer uma otimização. Portanto prosseguimos com</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">(M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)<span class="op">/</span><span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>)},</a>
+<a class="sourceLine" id="cb21-2" title="2">               <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective)</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co"># [1] 1.671808</span></a></code></pre></div>
+<p>Note que esse já é o valor de <span class="math inline">\(M\)</span>, e ficamos com a seguinte situação</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
+<a class="sourceLine" id="cb22-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<p><img src="figures/propbeta4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Agora fazemos o mesmo processo para um número fixo de simulações</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co">## Define funções</span></a>
+<a class="sourceLine" id="cb23-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>)</a>
+<a class="sourceLine" id="cb23-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb23-4" title="4"></a>
+<a class="sourceLine" id="cb23-5" title="5"><span class="co">## Simula</span></a>
+<a class="sourceLine" id="cb23-6" title="6">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb23-7" title="7"><span class="co">## Amostra da proposta</span></a>
+<a class="sourceLine" id="cb23-8" title="8">y &lt;-<span class="st"> </span><span class="kw">rbeta</span>(Nsim, <span class="dv">2</span>, <span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb23-9" title="9"><span class="co">## Amostra da U(0,1)</span></a>
+<a class="sourceLine" id="cb23-10" title="10">u &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb23-11" title="11">r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
+<a class="sourceLine" id="cb23-12" title="12">x &lt;-<span class="st"> </span>y[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb23-13" title="13">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
+<a class="sourceLine" id="cb23-14" title="14">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a></code></pre></div>
+<p>O resultado dos pontos aceitados agora pode ser visto abaixo.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, <span class="dv">2</span>, <span class="dv">6</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb24-4" title="4"><span class="kw">points</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r], ur <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y[u <span class="op">&gt;=</span><span class="st"> </span>r]), <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/betaac2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja que muitos mais pontos agora são aceitos. De fato, a taxa de aceitação usando essa nova distribuição proposta é bem maior quando comparada à taxa anterior com a uniforme como proposta.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="co">## Quantos foram aceitados</span></a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">length</span>(x)<span class="op">/</span><span class="kw">length</span>(y)</a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="co"># [1] 0.5988</span></a>
+<a class="sourceLine" id="cb25-4" title="4"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
+<a class="sourceLine" id="cb25-5" title="5"><span class="dv">1</span><span class="op">/</span>M</a>
+<a class="sourceLine" id="cb25-6" title="6"><span class="co"># [1] 0.5981549</span></a></code></pre></div>
+<p>Novamente, podemos verificar a distribuição da amostra gerada através de um histograma, e (preferencialmente), através das distribuições acumuladas empírica e teórica.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="kw">hist</span>(x, <span class="dt">freq =</span> <span class="ot">FALSE</span>); <span class="kw">lines</span>(<span class="kw">density</span>(x), <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb26-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb26-5" title="5"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;Empírica&quot;</span>, <span class="st">&quot;Teórica&quot;),</span></a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="st">       lty = 1, col = 1:2, bty = &quot;</span>n<span class="st">&quot;)</span></a>
+<a class="sourceLine" id="cb26-7" title="7"><span class="st">par(mfrow = c(1, 1))</span></a></code></pre></div>
+<p><img src="figures/betaconf-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="outros-exemplos" class="section level2">
-<h2><span class="header-section-number">1.3</span> Outros exemplos</h2>
-<p><a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html" class="uri">http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html</a></p>
 </div>
+<div id="exercicios" class="section level1">
+<h1><span class="header-section-number">3</span> Exercícios</h1>
+<ol style="list-style-type: decimal">
+<li>A partir do algoritmo que simula 1000 valores da distribuição do exemplo 1, proponha um código mais eficiente (i.e. que não cresça o vetor<code>x</code> como feito lá).</li>
+<li>Para a distribuição Beta do exemplo 2, escreva um algoritmo geral que gere um número fixo <span class="math inline">\(N\)</span> de valores.</li>
+</ol>
 </div>
 
 <center>

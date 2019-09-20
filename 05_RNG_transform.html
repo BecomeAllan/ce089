@@ -518,9 +518,9 @@ X = \frac{U}{U+V}
 <a class="sourceLine" id="cb1-10" title="10"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, r, s), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb1-11" title="11">q &lt;-<span class="st"> </span><span class="kw">qbeta</span>(<span class="kw">ppoints</span>(n), r, s)</a>
 <a class="sourceLine" id="cb1-12" title="12"><span class="kw">qqplot</span>(q, x)</a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-14" title="14"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb1-13" title="13"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 <div id="exemplo-distribuicao-logaritmica" class="section level2">
 <h2><span class="header-section-number">2.2</span> Exemplo (distribuição Logarítmica)</h2>
@@ -537,35 +537,35 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <li>Calcule <span class="math inline">\(x = \left\lfloor 1 + \frac{\log (v)}{\log (1 - (1 - \theta)^u)} \right\rfloor\)</span></li>
 </ol>
 <p>Para gerar valores de uma <span class="math inline">\(\text{Logaritmica}(0.5)\)</span> fazemos então</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">n &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb2-2" title="2">theta &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb2-3" title="3">u &lt;-<span class="st"> </span><span class="kw">runif</span>(n)</a>
-<a class="sourceLine" id="cb2-4" title="4">v &lt;-<span class="st"> </span><span class="kw">runif</span>(n)</a>
-<a class="sourceLine" id="cb2-5" title="5">x &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(v) <span class="op">/</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta)<span class="op">^</span>u))</a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">## Calcula as probabilidades teóricas (exatas) usando a definição da</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">## distribuição</span></a>
-<a class="sourceLine" id="cb2-8" title="8">k &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x)</a>
-<a class="sourceLine" id="cb2-9" title="9">p &lt;-<span class="st"> </span><span class="dv">-1</span><span class="op">/</span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta) <span class="op">*</span><span class="st"> </span>theta<span class="op">^</span>k<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">## Compara a proporção de valores gerados com a prob. teórica</span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="kw">cbind</span>(<span class="st">&quot;Gerado&quot;</span> =<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(x)), <span class="st">&quot;Teórico&quot; = p)</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="st">#   Gerado     Teórico</span></a>
-<a class="sourceLine" id="cb2-13" title="13"><span class="st"># 1  0.737 0.721347520</span></a>
-<a class="sourceLine" id="cb2-14" title="14"><span class="st"># 2  0.156 0.180336880</span></a>
-<a class="sourceLine" id="cb2-15" title="15"><span class="st"># 3  0.062 0.060112293</span></a>
-<a class="sourceLine" id="cb2-16" title="16"><span class="st"># 4  0.023 0.022542110</span></a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="st"># 5  0.012 0.009016844</span></a>
-<a class="sourceLine" id="cb2-18" title="18"><span class="st"># 6  0.008 0.003757018</span></a>
-<a class="sourceLine" id="cb2-19" title="19"><span class="st"># 7  0.002 0.001610151</span></a>
-<a class="sourceLine" id="cb2-20" title="20"><span class="st">## Comparação gráfica</span></a>
-<a class="sourceLine" id="cb2-21" title="21"><span class="st">par(mfrow = c(1, 2))</span></a>
-<a class="sourceLine" id="cb2-22" title="22"><span class="st">plot(prop.table(table(x)), xlab = &quot;</span>X<span class="st">&quot;, ylab = &quot;</span>P[X]<span class="st">&quot;)</span></a>
-<a class="sourceLine" id="cb2-23" title="23"><span class="st">points(p ~ I(k + 0.1), type = &quot;</span>h<span class="st">&quot;, col = 2, lwd = 2)</span></a>
-<a class="sourceLine" id="cb2-24" title="24"><span class="st">legend(&quot;</span>topright<span class="st">&quot;, legend = c(&quot;</span>Empírico<span class="st">&quot;, &quot;</span>Teórico&quot;),</a>
-<a class="sourceLine" id="cb2-25" title="25">       lty =<span class="st"> </span><span class="dv">1</span>, col =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)<span class="er">)</span></a>
-<a class="sourceLine" id="cb2-26" title="26"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb2-27" title="27"><span class="kw">lines</span>(<span class="kw">cumsum</span>(p), <span class="dt">type =</span> <span class="st">&quot;s&quot;</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb2-28" title="28"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">n &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb3-2" title="2">theta &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb3-3" title="3">u &lt;-<span class="st"> </span><span class="kw">runif</span>(n)</a>
+<a class="sourceLine" id="cb3-4" title="4">v &lt;-<span class="st"> </span><span class="kw">runif</span>(n)</a>
+<a class="sourceLine" id="cb3-5" title="5">x &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(v) <span class="op">/</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta)<span class="op">^</span>u))</a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">## Calcula as probabilidades teóricas (exatas) usando a definição da</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">## distribuição</span></a>
+<a class="sourceLine" id="cb3-8" title="8">k &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x)</a>
+<a class="sourceLine" id="cb3-9" title="9">p &lt;-<span class="st"> </span><span class="dv">-1</span><span class="op">/</span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta) <span class="op">*</span><span class="st"> </span>theta<span class="op">^</span>k<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">## Compara a proporção de valores gerados com a prob. teórica</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="kw">cbind</span>(<span class="st">&quot;Gerado&quot;</span> =<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(x)), <span class="st">&quot;Teórico&quot; = p)</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="st">#   Gerado     Teórico</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="st"># 1  0.738 0.721347520</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="st"># 2  0.155 0.180336880</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="st"># 3  0.062 0.060112293</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="st"># 4  0.023 0.022542110</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="st"># 5  0.012 0.009016844</span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="st"># 6  0.008 0.003757018</span></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="st"># 7  0.002 0.001610151</span></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="st">## Comparação gráfica</span></a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="st">par(mfrow = c(1, 2))</span></a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="st">plot(prop.table(table(x)), xlab = &quot;</span>X<span class="st">&quot;, ylab = &quot;</span>P[X]<span class="st">&quot;)</span></a>
+<a class="sourceLine" id="cb3-23" title="23"><span class="st">points(p ~ I(k + 0.1), type = &quot;</span>h<span class="st">&quot;, col = 2, lwd = 2)</span></a>
+<a class="sourceLine" id="cb3-24" title="24"><span class="st">legend(&quot;</span>topright<span class="st">&quot;, legend = c(&quot;</span>Empírico<span class="st">&quot;, &quot;</span>Teórico&quot;),</a>
+<a class="sourceLine" id="cb3-25" title="25">       lty =<span class="st"> </span><span class="dv">1</span>, col =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)<span class="er">)</span></a>
+<a class="sourceLine" id="cb3-26" title="26"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb3-27" title="27"><span class="kw">lines</span>(<span class="kw">cumsum</span>(p), <span class="dt">type =</span> <span class="st">&quot;s&quot;</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 </div>
 <div id="somas-e-misturas" class="section level1">
@@ -598,19 +598,19 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <li>Retorne o vetor com as somas</li>
 </ol>
 <p>Para gerar <span class="math inline">\(m=1000\)</span> valores da <span class="math inline">\(\chi^2(2)\)</span>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb3-2" title="2">n &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb3-3" title="3">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(n <span class="op">*</span><span class="st"> </span>m), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> n)<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb3-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="co">## Comparação</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb3-8" title="8"><span class="kw">curve</span>(<span class="kw">pchisq</span>(x, n), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qchisq</span>(<span class="kw">ppoints</span>(m), <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="kw">qqplot</span>(q, x)</a>
-<a class="sourceLine" id="cb3-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb5-2" title="2">n &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb5-3" title="3">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(n <span class="op">*</span><span class="st"> </span>m), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> n)<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb5-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">## Comparação</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="kw">curve</span>(<span class="kw">pchisq</span>(x, n), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qchisq</span>(<span class="kw">ppoints</span>(m), <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="kw">qqplot</span>(q, x)</a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 <div id="exemplo-distribuicao-binomial" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Exemplo (distribuição binomial)</h3>
@@ -625,35 +625,35 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <li>Retorne o vetor com as somas</li>
 </ol>
 <p>Para gerar <span class="math inline">\(m = 1000\)</span> valores de <span class="math inline">\(\text{Bin}(6, 0.5)\)</span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb4-2" title="2">size &lt;-<span class="st"> </span><span class="dv">6</span></a>
-<a class="sourceLine" id="cb4-3" title="3">prob &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb4-4" title="4">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>size) <span class="op">&gt;</span><span class="st"> </span>prob, <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> size)</a>
-<a class="sourceLine" id="cb4-5" title="5">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">## Calcula as probabilidades teóricas (exatas) usando a definição da</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">## distribuição</span></a>
-<a class="sourceLine" id="cb4-8" title="8">k &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="kw">max</span>(x)</a>
-<a class="sourceLine" id="cb4-9" title="9">p &lt;-<span class="st"> </span><span class="kw">dbinom</span>(k, <span class="dt">size =</span> size, <span class="dt">prob =</span> prob)</a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co">## Compara a proporção de valores gerados com a prob. teórica</span></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="kw">round</span>(<span class="kw">cbind</span>(<span class="st">&quot;Gerado&quot;</span> =<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(x)), <span class="st">&quot;Teórico&quot; = p), 3)</span></a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="st">#   Gerado Teórico</span></a>
-<a class="sourceLine" id="cb4-13" title="13"><span class="st"># 0  0.009   0.016</span></a>
-<a class="sourceLine" id="cb4-14" title="14"><span class="st"># 1  0.100   0.094</span></a>
-<a class="sourceLine" id="cb4-15" title="15"><span class="st"># 2  0.211   0.234</span></a>
-<a class="sourceLine" id="cb4-16" title="16"><span class="st"># 3  0.330   0.312</span></a>
-<a class="sourceLine" id="cb4-17" title="17"><span class="st"># 4  0.243   0.234</span></a>
-<a class="sourceLine" id="cb4-18" title="18"><span class="st"># 5  0.096   0.094</span></a>
-<a class="sourceLine" id="cb4-19" title="19"><span class="st"># 6  0.011   0.016</span></a>
-<a class="sourceLine" id="cb4-20" title="20"><span class="st">## Comparação gráfica</span></a>
-<a class="sourceLine" id="cb4-21" title="21"><span class="st">par(mfrow = c(1, 2))</span></a>
-<a class="sourceLine" id="cb4-22" title="22"><span class="st">plot(prop.table(table(x)), xlab = &quot;</span>X<span class="st">&quot;, ylab = &quot;</span>P[X]<span class="st">&quot;)</span></a>
-<a class="sourceLine" id="cb4-23" title="23"><span class="st">points(p ~ I(k + 0.1), type = &quot;</span>h<span class="st">&quot;, col = 2, lwd = 2)</span></a>
-<a class="sourceLine" id="cb4-24" title="24"><span class="st">legend(&quot;</span>topright<span class="st">&quot;, legend = c(&quot;</span>Empírico<span class="st">&quot;, &quot;</span>Teórico&quot;),</a>
-<a class="sourceLine" id="cb4-25" title="25">       <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb4-26" title="26"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb4-27" title="27"><span class="kw">lines</span>(<span class="kw">cumsum</span>(p), <span class="dt">type =</span> <span class="st">&quot;S&quot;</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-28" title="28"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb7-2" title="2">size &lt;-<span class="st"> </span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb7-3" title="3">prob &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb7-4" title="4">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>size) <span class="op">&gt;</span><span class="st"> </span>prob, <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> size)</a>
+<a class="sourceLine" id="cb7-5" title="5">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">## Calcula as probabilidades teóricas (exatas) usando a definição da</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">## distribuição</span></a>
+<a class="sourceLine" id="cb7-8" title="8">k &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="kw">max</span>(x)</a>
+<a class="sourceLine" id="cb7-9" title="9">p &lt;-<span class="st"> </span><span class="kw">dbinom</span>(k, <span class="dt">size =</span> size, <span class="dt">prob =</span> prob)</a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">## Compara a proporção de valores gerados com a prob. teórica</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="kw">round</span>(<span class="kw">cbind</span>(<span class="st">&quot;Gerado&quot;</span> =<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(x)), <span class="st">&quot;Teórico&quot; = p), 3)</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="st">#   Gerado Teórico</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="st"># 0  0.009   0.016</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="st"># 1  0.100   0.094</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="st"># 2  0.211   0.234</span></a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="st"># 3  0.330   0.312</span></a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="st"># 4  0.243   0.234</span></a>
+<a class="sourceLine" id="cb7-18" title="18"><span class="st"># 5  0.096   0.094</span></a>
+<a class="sourceLine" id="cb7-19" title="19"><span class="st"># 6  0.011   0.016</span></a>
+<a class="sourceLine" id="cb7-20" title="20"><span class="st">## Comparação gráfica</span></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="st">par(mfrow = c(1, 2))</span></a>
+<a class="sourceLine" id="cb7-22" title="22"><span class="st">plot(prop.table(table(x)), xlab = &quot;</span>X<span class="st">&quot;, ylab = &quot;</span>P[X]<span class="st">&quot;)</span></a>
+<a class="sourceLine" id="cb7-23" title="23"><span class="st">points(p ~ I(k + 0.1), type = &quot;</span>h<span class="st">&quot;, col = 2, lwd = 2)</span></a>
+<a class="sourceLine" id="cb7-24" title="24"><span class="st">legend(&quot;</span>topright<span class="st">&quot;, legend = c(&quot;</span>Empírico<span class="st">&quot;, &quot;</span>Teórico&quot;),</a>
+<a class="sourceLine" id="cb7-25" title="25">       <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb7-26" title="26"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb7-27" title="27"><span class="kw">lines</span>(<span class="kw">cumsum</span>(p), <span class="dt">type =</span> <span class="st">&quot;S&quot;</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 </div>
 </div>
@@ -676,24 +676,24 @@ X = Z\sigma + \mu
 <li>Retorne o vetor com as somas</li>
 </ol>
 <p>Para gerar <span class="math inline">\(m = 1000\)</span> valores de <span class="math inline">\(\text{N}(0, 1)\)</span>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb5-2" title="2">n &lt;-<span class="st"> </span><span class="dv">12</span></a>
-<a class="sourceLine" id="cb5-3" title="3">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>n, <span class="fl">-0.5</span>, <span class="fl">0.5</span>), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> n)</a>
-<a class="sourceLine" id="cb5-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">## Comparação</span></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb5-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(m))</a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="kw">qqplot</span>(q, x)</a>
-<a class="sourceLine" id="cb5-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb5-12" title="12"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb9-2" title="2">n &lt;-<span class="st"> </span><span class="dv">12</span></a>
+<a class="sourceLine" id="cb9-3" title="3">X &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>n, <span class="fl">-0.5</span>, <span class="fl">0.5</span>), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> n)</a>
+<a class="sourceLine" id="cb9-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rowSums</span>(X)</a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">## Comparação</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb9-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(m))</a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="kw">qqplot</span>(q, x)</a>
+<a class="sourceLine" id="cb9-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 <div id="metodo-de-box-muller" class="section level2">
 <h2><span class="header-section-number">4.2</span> Método de Box-Muller</h2>
 <p>A ideia geral do métopdo desenvolvido por Box e Muller é transformar a relação entre duas normais padrão, de coordenadas cartesianas para coordenadas polares, ou seja,</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">plot</span>(<span class="kw">rnorm</span>(<span class="dv">10000</span>), <span class="kw">rnorm</span>(<span class="dv">10000</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">plot</span>(<span class="kw">rnorm</span>(<span class="dv">10000</span>), <span class="kw">rnorm</span>(<span class="dv">10000</span>))</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Assista ao vídeo <a href="https://www.youtube.com/watch?v=lHB7P8-ctLE">A integral Gaussiana</a> no perfil do Luiz Chamon para compreender a passagem de coordenadas cartesianas para coordenadas polares.</p>
 <div style="position:relative;height:0;padding-bottom:56.25%">
@@ -767,50 +767,50 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 \]</span></li>
 <li>Retorne <span class="math inline">\(\{x_1, x_2\}\)</span></li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">##----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">## Gerando valores da normal pelo algoritmo de Box-Muller</span></a>
-<a class="sourceLine" id="cb7-3" title="3">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
-<a class="sourceLine" id="cb7-4" title="4">u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb7-5" title="5">u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
-<a class="sourceLine" id="cb7-6" title="6">R &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1))</a>
-<a class="sourceLine" id="cb7-7" title="7">T &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2</a>
-<a class="sourceLine" id="cb7-8" title="8">x1 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(T)</a>
-<a class="sourceLine" id="cb7-9" title="9">x2 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(T)</a>
-<a class="sourceLine" id="cb7-10" title="10"><span class="kw">plotcirc</span>()</a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="kw">points</span>(x1, x2)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">##----------------------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co">## Gerando valores da normal pelo algoritmo de Box-Muller</span></a>
+<a class="sourceLine" id="cb12-3" title="3">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb12-4" title="4">u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb12-5" title="5">u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim)</a>
+<a class="sourceLine" id="cb12-6" title="6">R &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1))</a>
+<a class="sourceLine" id="cb12-7" title="7">T &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2</a>
+<a class="sourceLine" id="cb12-8" title="8">x1 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(T)</a>
+<a class="sourceLine" id="cb12-9" title="9">x2 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(T)</a>
+<a class="sourceLine" id="cb12-10" title="10"><span class="kw">plotcirc</span>()</a>
+<a class="sourceLine" id="cb12-11" title="11"><span class="kw">points</span>(x1, x2)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(<span class="kw">c</span>(x1, x2)))</a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb8-5" title="5">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(Nsim))</a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="kw">qqplot</span>(q, <span class="kw">c</span>(x1, x2))</a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb8-8" title="8"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(<span class="kw">c</span>(x1, x2)))</a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb13-5" title="5">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(Nsim))</a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="kw">qqplot</span>(q, <span class="kw">c</span>(x1, x2))</a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p>Note que sempre serão geradas duas normais padrão, <code>x1</code> e <code>x2</code>. Com isso, o resultado final será sempre o dobro do valor requerido. Assim, para gerar <span class="math inline">\(n\)</span> valores (e não <span class="math inline">\(2n\)</span>), temos duas opções:</p>
 <ol style="list-style-type: decimal">
 <li>Usar apenas <code>x1</code> ou <code>x2</code></li>
 <li>Rodar o algoritmo em <span class="math inline">\(n/2\)</span> passos e concatenar <code>x1</code> e <code>x2</code></li>
 </ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Uma função mais eficiente</span></a>
-<a class="sourceLine" id="cb9-2" title="2">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb9-3" title="3">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb9-4" title="4">    u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
-<a class="sourceLine" id="cb9-5" title="5">    u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
-<a class="sourceLine" id="cb9-6" title="6">    R &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1))</a>
-<a class="sourceLine" id="cb9-7" title="7">    T &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2</a>
-<a class="sourceLine" id="cb9-8" title="8">    x &lt;-<span class="st"> </span><span class="kw">c</span>(R <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(T), R <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(T))</a>
-<a class="sourceLine" id="cb9-9" title="9">    <span class="cf">if</span> (n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb9-10" title="10">}</a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="kw">boxmuller</span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb9-12" title="12"><span class="co"># [1] 0.3113464 0.4781314</span></a>
-<a class="sourceLine" id="cb9-13" title="13"><span class="kw">boxmuller</span>(<span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb9-14" title="14"><span class="co"># [1]  0.3406243 -1.2019522 -0.5617963</span></a>
-<a class="sourceLine" id="cb9-15" title="15"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="co"># [1] -0.1001500 -0.7714633  0.2579528 -0.5260271</span></a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb9-18" title="18"><span class="co"># [1] 0.9472103 2.1910514 0.3098626 0.7486332 1.6331408</span></a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## Uma função mais eficiente</span></a>
+<a class="sourceLine" id="cb15-2" title="2">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
+<a class="sourceLine" id="cb15-3" title="3">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-4" title="4">    u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
+<a class="sourceLine" id="cb15-5" title="5">    u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
+<a class="sourceLine" id="cb15-6" title="6">    R &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1))</a>
+<a class="sourceLine" id="cb15-7" title="7">    T &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2</a>
+<a class="sourceLine" id="cb15-8" title="8">    x &lt;-<span class="st"> </span><span class="kw">c</span>(R <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(T), R <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(T))</a>
+<a class="sourceLine" id="cb15-9" title="9">    <span class="cf">if</span> (n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb15-10" title="10">}</a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="kw">boxmuller</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-12" title="12"><span class="co"># [1] 0.9234418 1.0826671</span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="kw">boxmuller</span>(<span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co"># [1]  0.66055651  0.07799255 -1.80340422</span></a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="co"># [1]  0.6975372 -0.3609859 -0.1677477 -0.4755585</span></a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co"># [1] 1.0071460 1.0662797 0.1684460 0.1523806 0.3098626</span></a></code></pre></div>
 </div>
 <div id="metodo-de-coordenadas-polares" class="section level2">
 <h2><span class="header-section-number">4.3</span> Método de coordenadas polares</h2>
@@ -825,119 +825,119 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 </ol>
 <p>Veja que esse método nada mais é do que uma forma do algoritmo de <strong>aceitação-rejeição</strong>.</p>
 <p>Note que apenas substituimos <span class="math inline">\(\cos(2\pi u_2) = u_1/\sqrt{r^2}\)</span> e <span class="math inline">\(\sin(2\pi u_2) = u_2/\sqrt{r^2}\)</span>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
-<a class="sourceLine" id="cb10-2" title="2">u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb10-3" title="3">u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb10-4" title="4">r2 &lt;-<span class="st"> </span>u1<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>u2<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb10-5" title="5">ac &lt;-<span class="st"> </span>r2 <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb10-6" title="6">z &lt;-<span class="st"> </span><span class="kw">sqrt</span>((<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(r2[ac]))<span class="op">/</span>r2[ac])</a>
-<a class="sourceLine" id="cb10-7" title="7">x1 &lt;-<span class="st"> </span>u1[ac] <span class="op">*</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb10-8" title="8">x2 &lt;-<span class="st"> </span>u2[ac] <span class="op">*</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="kw">plotcirc</span>()</a>
-<a class="sourceLine" id="cb10-10" title="10"><span class="kw">points</span>(u1[ac], u2[ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="kw">points</span>(u1[<span class="op">!</span>ac], u2[<span class="op">!</span>ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb16-2" title="2">u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3">u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(Nsim, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4">r2 &lt;-<span class="st"> </span>u1<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>u2<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb16-5" title="5">ac &lt;-<span class="st"> </span>r2 <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb16-6" title="6">z &lt;-<span class="st"> </span><span class="kw">sqrt</span>((<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(r2[ac]))<span class="op">/</span>r2[ac])</a>
+<a class="sourceLine" id="cb16-7" title="7">x1 &lt;-<span class="st"> </span>u1[ac] <span class="op">*</span><span class="st"> </span>z</a>
+<a class="sourceLine" id="cb16-8" title="8">x2 &lt;-<span class="st"> </span>u2[ac] <span class="op">*</span><span class="st"> </span>z</a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="kw">plotcirc</span>()</a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="kw">points</span>(u1[ac], u2[ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="kw">points</span>(u1[<span class="op">!</span>ac], u2[<span class="op">!</span>ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## Taxa de aceitacao</span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="kw">sum</span>(ac)<span class="op">/</span>Nsim</a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="co"># [1] 0.7916</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(<span class="kw">c</span>(x1, x2)))</a>
-<a class="sourceLine" id="cb11-8" title="8"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb11-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(Nsim))</a>
-<a class="sourceLine" id="cb11-10" title="10"><span class="kw">qqplot</span>(q, <span class="kw">c</span>(x1, x2))</a>
-<a class="sourceLine" id="cb11-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb11-12" title="12"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Taxa de aceitacao</span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="kw">sum</span>(ac)<span class="op">/</span>Nsim</a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="co"># [1] 0.7912</span></a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(<span class="kw">c</span>(x1, x2)))</a>
+<a class="sourceLine" id="cb17-8" title="8"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb17-9" title="9">q &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="kw">ppoints</span>(Nsim))</a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="kw">qqplot</span>(q, <span class="kw">c</span>(x1, x2))</a>
+<a class="sourceLine" id="cb17-11" title="11"><span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p>Podemos também defnir uma função gernérica para gerar <span class="math inline">\(n\)</span> valores:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">polarmethod &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb12-2" title="2">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb12-3" title="3">    x1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(m)</a>
-<a class="sourceLine" id="cb12-4" title="4">    x2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(m)</a>
-<a class="sourceLine" id="cb12-5" title="5">    i &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb12-6" title="6">    <span class="cf">while</span> (i <span class="op">&lt;=</span><span class="st"> </span>m) {</a>
-<a class="sourceLine" id="cb12-7" title="7">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb12-8" title="8">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb12-9" title="9">        R2 &lt;-<span class="st"> </span>u1<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>u2<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb12-10" title="10">        <span class="cf">if</span> (R2 <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb12-11" title="11">            z &lt;-<span class="st"> </span><span class="kw">sqrt</span>((<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(R2))<span class="op">/</span>R2)</a>
-<a class="sourceLine" id="cb12-12" title="12">            x1[i] &lt;-<span class="st"> </span>u1 <span class="op">*</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb12-13" title="13">            x2[i] &lt;-<span class="st"> </span>u2 <span class="op">*</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb12-14" title="14">            i &lt;-<span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb12-15" title="15">        }</a>
-<a class="sourceLine" id="cb12-16" title="16">    }</a>
-<a class="sourceLine" id="cb12-17" title="17">    x &lt;-<span class="st"> </span><span class="kw">c</span>(x1, x2)</a>
-<a class="sourceLine" id="cb12-18" title="18">    <span class="cf">if</span> (n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb12-19" title="19">}</a>
-<a class="sourceLine" id="cb12-20" title="20"><span class="kw">polarmethod</span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb12-21" title="21"><span class="co"># [1]  0.3961692 -0.2598577</span></a>
-<a class="sourceLine" id="cb12-22" title="22"><span class="kw">polarmethod</span>(<span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb12-23" title="23"><span class="co"># [1]  0.1673346 -0.9556475  1.1766460</span></a>
-<a class="sourceLine" id="cb12-24" title="24"><span class="kw">polarmethod</span>(<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb12-25" title="25"><span class="co"># [1] 0.92790593 0.01865709 1.73304948 1.10557666</span></a>
-<a class="sourceLine" id="cb12-26" title="26"><span class="kw">polarmethod</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb12-27" title="27"><span class="co"># [1] -1.4593440  1.3746084 -0.9991863 -1.2083035 -0.6710088</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">polarmethod &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
+<a class="sourceLine" id="cb19-2" title="2">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb19-3" title="3">    x1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(m)</a>
+<a class="sourceLine" id="cb19-4" title="4">    x2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(m)</a>
+<a class="sourceLine" id="cb19-5" title="5">    i &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb19-6" title="6">    <span class="cf">while</span> (i <span class="op">&lt;=</span><span class="st"> </span>m) {</a>
+<a class="sourceLine" id="cb19-7" title="7">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb19-8" title="8">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb19-9" title="9">        R2 &lt;-<span class="st"> </span>u1<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>u2<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb19-10" title="10">        <span class="cf">if</span> (R2 <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>) {</a>
+<a class="sourceLine" id="cb19-11" title="11">            z &lt;-<span class="st"> </span><span class="kw">sqrt</span>((<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(R2))<span class="op">/</span>R2)</a>
+<a class="sourceLine" id="cb19-12" title="12">            x1[i] &lt;-<span class="st"> </span>u1 <span class="op">*</span><span class="st"> </span>z</a>
+<a class="sourceLine" id="cb19-13" title="13">            x2[i] &lt;-<span class="st"> </span>u2 <span class="op">*</span><span class="st"> </span>z</a>
+<a class="sourceLine" id="cb19-14" title="14">            i &lt;-<span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb19-15" title="15">        }</a>
+<a class="sourceLine" id="cb19-16" title="16">    }</a>
+<a class="sourceLine" id="cb19-17" title="17">    x &lt;-<span class="st"> </span><span class="kw">c</span>(x1, x2)</a>
+<a class="sourceLine" id="cb19-18" title="18">    <span class="cf">if</span> (n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb19-19" title="19">}</a>
+<a class="sourceLine" id="cb19-20" title="20"><span class="kw">polarmethod</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb19-21" title="21"><span class="co"># [1]  0.8877987 -0.9400620</span></a>
+<a class="sourceLine" id="cb19-22" title="22"><span class="kw">polarmethod</span>(<span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb19-23" title="23"><span class="co"># [1] -0.5380968 -0.2598577 -0.9556475</span></a>
+<a class="sourceLine" id="cb19-24" title="24"><span class="kw">polarmethod</span>(<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb19-25" title="25"><span class="co"># [1] 0.1673346 0.9279059 1.1766460 1.7330495</span></a>
+<a class="sourceLine" id="cb19-26" title="26"><span class="kw">polarmethod</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb19-27" title="27"><span class="co"># [1] -1.0159191 -1.4593440  1.1055767 -0.9991863 -1.2083035</span></a></code></pre></div>
 <p>Comparando os dois métodos vemos que:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a></code></pre></div>
 <p>No R:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">RNGkind</span>()</a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="kw">set.seed</span>(<span class="dv">1</span>, <span class="dt">normal.kind =</span> <span class="st">&quot;Box-Muller&quot;</span>)</a>
-<a class="sourceLine" id="cb14-4" title="4">xx &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb14-5" title="5">yy &lt;-<span class="st"> </span><span class="kw">boxmuller</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb14-6" title="6"></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(xx))</a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="kw">plot</span>(<span class="kw">ecdf</span>(yy), <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb14-9" title="9"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb14-10" title="10"></a>
-<a class="sourceLine" id="cb14-11" title="11"><span class="kw">RNGkind</span>()</a>
-<a class="sourceLine" id="cb14-12" title="12"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Box-Muller&quot;       &quot;Rejection&quot;</span></a>
-<a class="sourceLine" id="cb14-13" title="13"><span class="kw">set.seed</span>(<span class="dv">1</span>, <span class="dt">normal.kind =</span> <span class="st">&quot;Inversion&quot;</span>)</a>
-<a class="sourceLine" id="cb14-14" title="14"><span class="kw">RNGkind</span>()</a>
-<a class="sourceLine" id="cb14-15" title="15"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a>
-<a class="sourceLine" id="cb14-16" title="16">zz &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb14-17" title="17"></a>
-<a class="sourceLine" id="cb14-18" title="18"><span class="kw">plot</span>(<span class="kw">ecdf</span>(yy), <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb14-19" title="19"><span class="kw">RNGkind</span>()</a>
-<a class="sourceLine" id="cb14-20" title="20"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">RNGkind</span>()</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="kw">set.seed</span>(<span class="dv">1</span>, <span class="dt">normal.kind =</span> <span class="st">&quot;Box-Muller&quot;</span>)</a>
+<a class="sourceLine" id="cb21-4" title="4">xx &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb21-5" title="5">yy &lt;-<span class="st"> </span><span class="kw">boxmuller</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb21-6" title="6"></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="kw">plot</span>(<span class="kw">ecdf</span>(xx))</a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="kw">plot</span>(<span class="kw">ecdf</span>(yy), <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb21-10" title="10"></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="kw">RNGkind</span>()</a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Box-Muller&quot;       &quot;Rejection&quot;</span></a>
+<a class="sourceLine" id="cb21-13" title="13"><span class="kw">set.seed</span>(<span class="dv">1</span>, <span class="dt">normal.kind =</span> <span class="st">&quot;Inversion&quot;</span>)</a>
+<a class="sourceLine" id="cb21-14" title="14"><span class="kw">RNGkind</span>()</a>
+<a class="sourceLine" id="cb21-15" title="15"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a>
+<a class="sourceLine" id="cb21-16" title="16">zz &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb21-17" title="17"></a>
+<a class="sourceLine" id="cb21-18" title="18"><span class="kw">plot</span>(<span class="kw">ecdf</span>(yy), <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## Algoritmo de Hardle</span></a>
-<a class="sourceLine" id="cb15-2" title="2">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb15-3" title="3">    <span class="cf">if</span>(n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {</a>
-<a class="sourceLine" id="cb15-4" title="4">        a &lt;-<span class="st"> </span>n<span class="op">/</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb15-5" title="5">    } <span class="cf">else</span> { <span class="co"># tem problema aqui</span></a>
-<a class="sourceLine" id="cb15-6" title="6">        a &lt;-<span class="st"> </span>n<span class="op">/</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb15-7" title="7">    }</a>
-<a class="sourceLine" id="cb15-8" title="8">    x1 &lt;-<span class="st"> </span>x2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>a</a>
-<a class="sourceLine" id="cb15-9" title="9">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>a) {</a>
-<a class="sourceLine" id="cb15-10" title="10">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb15-11" title="11">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb15-12" title="12">        x1[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
-<a class="sourceLine" id="cb15-13" title="13">        x2[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
-<a class="sourceLine" id="cb15-14" title="14">    }</a>
-<a class="sourceLine" id="cb15-15" title="15">    <span class="kw">c</span>(x1, x2)</a>
-<a class="sourceLine" id="cb15-16" title="16">}</a>
-<a class="sourceLine" id="cb15-17" title="17"></a>
-<a class="sourceLine" id="cb15-18" title="18"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb15-19" title="19"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb15-20" title="20"></a>
-<a class="sourceLine" id="cb15-21" title="21"></a>
-<a class="sourceLine" id="cb15-22" title="22">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
-<a class="sourceLine" id="cb15-23" title="23">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb15-24" title="24">    x1 &lt;-<span class="st"> </span>x2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>m</a>
-<a class="sourceLine" id="cb15-25" title="25">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>m) {</a>
-<a class="sourceLine" id="cb15-26" title="26">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb15-27" title="27">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb15-28" title="28">        x1[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
-<a class="sourceLine" id="cb15-29" title="29">        x2[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
-<a class="sourceLine" id="cb15-30" title="30">    }</a>
-<a class="sourceLine" id="cb15-31" title="31">    x &lt;-<span class="st"> </span><span class="kw">c</span>(x1, x2)</a>
-<a class="sourceLine" id="cb15-32" title="32">    <span class="cf">if</span>(n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb15-33" title="33">}</a>
-<a class="sourceLine" id="cb15-34" title="34"></a>
-<a class="sourceLine" id="cb15-35" title="35"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb15-36" title="36"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">RNGkind</span>()</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co">## Algoritmo de Hardle</span></a>
+<a class="sourceLine" id="cb23-2" title="2">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
+<a class="sourceLine" id="cb23-3" title="3">    <span class="cf">if</span>(n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb23-4" title="4">        a &lt;-<span class="st"> </span>n<span class="op">/</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb23-5" title="5">    } <span class="cf">else</span> { <span class="co"># tem problema aqui</span></a>
+<a class="sourceLine" id="cb23-6" title="6">        a &lt;-<span class="st"> </span>n<span class="op">/</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb23-7" title="7">    }</a>
+<a class="sourceLine" id="cb23-8" title="8">    x1 &lt;-<span class="st"> </span>x2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>a</a>
+<a class="sourceLine" id="cb23-9" title="9">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>a) {</a>
+<a class="sourceLine" id="cb23-10" title="10">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-11" title="11">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-12" title="12">        x1[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
+<a class="sourceLine" id="cb23-13" title="13">        x2[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
+<a class="sourceLine" id="cb23-14" title="14">    }</a>
+<a class="sourceLine" id="cb23-15" title="15">    <span class="kw">c</span>(x1, x2)</a>
+<a class="sourceLine" id="cb23-16" title="16">}</a>
+<a class="sourceLine" id="cb23-17" title="17"></a>
+<a class="sourceLine" id="cb23-18" title="18"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb23-19" title="19"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb23-20" title="20"></a>
+<a class="sourceLine" id="cb23-21" title="21"></a>
+<a class="sourceLine" id="cb23-22" title="22">boxmuller &lt;-<span class="st"> </span><span class="cf">function</span>(n) {</a>
+<a class="sourceLine" id="cb23-23" title="23">    m &lt;-<span class="st"> </span><span class="kw">ceiling</span>(n<span class="op">/</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb23-24" title="24">    x1 &lt;-<span class="st"> </span>x2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>m</a>
+<a class="sourceLine" id="cb23-25" title="25">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>m) {</a>
+<a class="sourceLine" id="cb23-26" title="26">        u1 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-27" title="27">        u2 &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-28" title="28">        x1[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
+<a class="sourceLine" id="cb23-29" title="29">        x2[i] &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(u1)) <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2)</a>
+<a class="sourceLine" id="cb23-30" title="30">    }</a>
+<a class="sourceLine" id="cb23-31" title="31">    x &lt;-<span class="st"> </span><span class="kw">c</span>(x1, x2)</a>
+<a class="sourceLine" id="cb23-32" title="32">    <span class="cf">if</span>(n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span>) x <span class="cf">else</span> x[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb23-33" title="33">}</a>
+<a class="sourceLine" id="cb23-34" title="34"></a>
+<a class="sourceLine" id="cb23-35" title="35"><span class="kw">boxmuller</span>(<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb23-36" title="36"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a></code></pre></div>
 </div>
 </div>
 
