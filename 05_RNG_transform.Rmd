@@ -86,7 +86,7 @@ terá a distribuição $\text{Beta}(r, s)$.
 
 Para gerar valores de uma $\text{Beta}(3,2)$ fazemos então:
 
-```{r}
+```{r, fig.show='hold'}
 n <- 1000
 r <- 3
 s <- 2
@@ -104,6 +104,9 @@ par(mfrow = c(1, 1))
 ```
 
 ## Exemplo (distribuição Logarítmica)
+
+(Este é um exemplo de uma distribuição onde não existe uma função pronta
+no R para gerar valores).
 
 Dizemos que $X$ segue a distribuição (discreta) Logarítmica se
 $$
@@ -125,7 +128,7 @@ terá a distribuição $\text{Logaritmica}(\theta)$.
 
 Para gerar valores de uma $\text{Logaritmica}(0.5)$ fazemos então
 
-```{r}
+```{r, fig.show='hold'}
 n <- 1000
 theta <- 0.5
 u <- runif(n)
@@ -198,7 +201,7 @@ Para gerar $m$ valores de uma $\chi^2(n)$:
 
 Para gerar $m=1000$ valores da $\chi^2(2)$:
 
-```{r}
+```{r, fig.show='hold'}
 m <- 1000
 n <- 2
 X <- matrix(rnorm(n * m), nrow = m, ncol = n)^2
@@ -230,7 +233,7 @@ Bernoulli pela uniforme):
 
 Para gerar $m = 1000$ valores de $\text{Bin}(6, 0.5)$:
 
-```{r}
+```{r, fig.show='hold'}
 m <- 1000
 size <- 6
 prob <- 0.5
@@ -288,7 +291,7 @@ Para gerar $m$ valores de uma $\text{N}(0, 1)$:
 
 Para gerar $m = 1000$ valores de $\text{N}(0, 1)$:
 
-```{r}
+```{r, fig.show='hold'}
 m <- 1000
 n <- 12
 X <- matrix(runif(m * n, -0.5, 0.5), nrow = m, ncol = n)
@@ -302,6 +305,13 @@ qqplot(q, x)
 abline(0, 1, col = 2)
 par(mfrow = c(1, 1))
 ```
+
+Note que as caudas da distribuição empírica começa a se afastar um pouco
+da teórica. De fato, esse é um problema desse método simples por
+convolução.
+
+Os métodos a seguir são mais recomendados (e utilizados) para gerar
+valores da normal.
 
 ## Método de Box-Muller
 
@@ -442,20 +452,23 @@ $$
 3. Retorne $\{x_1, x_2\}$
 
 ```{r}
-##----------------------------------------------------------------------
 ## Gerando valores da normal pelo algoritmo de Box-Muller
 Nsim <- 2500
+## Amostra das uniformes
 u1 <- runif(Nsim)
 u2 <- runif(Nsim)
+## Raio
 R <- sqrt(-2 * log(u1))
+## Angulo
 T <- 2 * pi * u2
 x1 <- R * cos(T)
 x2 <- R * sin(T)
+## O código desta função está no final da página
 plotcirc()
 points(x1, x2)
 ```
 
-```{r}
+```{r, fig.show='hold'}
 ## Confere
 par(mfrow = c(1, 2))
 plot(ecdf(c(x1, x2)))
@@ -476,12 +489,14 @@ para gerar $n$ valores (e não $2n$), temos duas opções:
 ```{r}
 ## Uma função mais eficiente
 boxmuller <- function(n) {
+    ## Executa o algoritmo em somente metade dos valores requeridos
     m <- ceiling(n/2)
     u1 <- runif(m)
     u2 <- runif(m)
     R <- sqrt(-2 * log(u1))
     T <- 2 * pi * u2
     x <- c(R * cos(T), R * sin(T))
+    ## Se n for par, retorne tudo, caso contrário, tire um valor
     if (n %% 2 == 0) x else x[-1]
 }
 boxmuller(2)
@@ -494,7 +509,7 @@ boxmuller(5)
 
 O método de coordenadas polares (ou simplemente método polar) é uma
 variação do método de Box-Muller. A motivação do método foi a de evitar
-o uso de funções transcendentais.
+o uso de funções transcendentais como seno e cossseno.
 
 1. Gere valores $u_1, u_2 \sim \text{U}(-1, 1)$
 2. Calculw $r^2 = u_1^2 + u_2^2$.
@@ -522,11 +537,23 @@ points(u1[ac], u2[ac], pch = 1, col = 3)
 points(u1[!ac], u2[!ac], pch = 1, col = 2)
 ```
 
+Note que a taxa de aceitação será sempre a razão entre a área do círculo
+e a área do quadrado. A área do cículo é $A_c = \pi r^2 = \pi$. A área
+do quadrado é $A_q = l^2 = (2r)^2 = 4$. Portanto, a taxa de aceitação
+(teórica) será
+$$
+\frac{A_c}{A_q} = \frac{\pi}{4} \approx `r round(pi/4, 3)`
+$$
+
+A taxa de aceitação da simulação foi
+
 ```{r}
-## Taxa de aceitacao
 sum(ac)/Nsim
-## Confere
-## Confere
+```
+
+Conferindo os valores gerados:
+
+```{r, fig.show='hold'}
 par(mfrow = c(1, 2))
 plot(ecdf(c(x1, x2)))
 curve(pnorm(x), add = TRUE, col = 2)
@@ -565,35 +592,57 @@ polarmethod(5)
 ```
 
 Comparando os dois métodos vemos que, apesar do método polar não usar
-funções seno e cosseno, é necessário usar o `while()`, o que "encareçe"
+funções seno e cosseno, é necessário usar o `while()`, o que "encarece"
 o algoritmo computacionalemnte.
 
 ```{r}
 microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
 ```
 
-No R:
+## A função `rnorm()`
+
+No R, sabemos que a função `rnorm()` serve para gerar valores aleatórios
+da distribuição normal. Esta função usa um algoritmo chamadpo de
+"inversão", cujos detalhes estão descritos em `help(qnorm)`.
+
+No entanto, assim como no caso da Uniforme, também estão implementados
+outros algoritmos para gerar valores da Normal, incluindo o algoritmo de
+Box-Muller.
 
 ```{r}
+## Confere os métodos padrão para a geração de valores aleatórios. O
+## primeiro algoritmo é da Uniforme, o segundo é o da Normal e o
+## terceiro é o método utilizado pela função sample(). Veja os detalhes
+## em help(Random)
 RNGkind()
+## Define semente e altera o gerados para o de Box-Muller
 set.seed(1, normal.kind = "Box-Muller")
+## Box-MUller pela rnorm
 xx <- rnorm(1000)
+## Box-Muller implementado aqui
 yy <- boxmuller(1000)
-
-plot(ecdf(xx))
-plot(ecdf(yy), col = 3, add = TRUE)
-curve(pnorm(x), add = TRUE, col = 2)
-
 RNGkind()
+## Volta para o padrão da rnorm
 set.seed(1, normal.kind = "Inversion")
 RNGkind()
+## Gera valores com o algoritmo padrão
 zz <- rnorm(1000)
-
-plot(ecdf(yy), col = 4, add = TRUE)
-RNGkind()
 ```
 
-```{r, eval=FALSE}
+Comparando todo mundo:
+
+```{r}
+plot(ecdf(xx), main = "")
+plot(ecdf(yy), col = 3, add = TRUE)
+plot(ecdf(zz), col = 4, add = TRUE)
+curve(pnorm(x), add = TRUE, col = 2)
+legend("right",
+       legend = c("Box-Muller (R)", "Box-Muller (Implementado)",
+                  "Inversion", "Teórica"), cex = 0.8,
+       col = c(1, 3, 4, 2), lty = 1, bty = "n")
+```
+
+```{r, eval=FALSE, include=FALSE}
 ## Algoritmo de Hardle
 boxmuller <- function(n) {
     if(n %% 2 == 0) {
@@ -632,3 +681,13 @@ boxmuller(4)
 boxmuller(5)
 
 ```
+
+# Funções
+
+```{r plotcirc, echo=TRUE}
+```
+
+# Exercícios
+
+1. Faça a implementação das distribuições mencionadas e que não foram
+   implementadas aqui.
