@@ -878,8 +878,15 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <a class="sourceLine" id="cb19-25" title="25"><span class="co"># [1] 0.1673346 0.9279059 1.1766460 1.7330495</span></a>
 <a class="sourceLine" id="cb19-26" title="26"><span class="kw">polarmethod</span>(<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb19-27" title="27"><span class="co"># [1] -1.0159191 -1.4593440  1.1055767 -0.9991863 -1.2083035</span></a></code></pre></div>
-<p>Comparando os dois métodos vemos que:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a></code></pre></div>
+<p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encareçe” o algoritmo computacionalemnte.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="co"># Unit: microseconds</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">#               expr      min        lq      mean   median       uq</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co">#    boxmuller(1000)  101.988  106.2485  114.5275  113.473  120.976</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="co">#  polarmethod(1000) 2808.619 2966.9510 3437.3960 3024.822 3125.584</span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="co">#        max neval</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="co">#    147.545   100</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co">#  10025.545   100</span></a></code></pre></div>
 <p>No R:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">RNGkind</span>()</a>
 <a class="sourceLine" id="cb21-2" title="2"><span class="co"># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</span></a>
