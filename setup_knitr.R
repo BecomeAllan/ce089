@@ -8,7 +8,7 @@ opts_chunk$set(
     fig.width = 10,
     fig.height = 8,
     fig.align = "center",
-    fig.show = "hold",
+    ## fig.show = "hold",
     out.width = "80%",
     ## dpi = 80, ## aumentar o dpi para exibir maior.
     ## dev = "png",
