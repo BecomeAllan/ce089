@@ -564,9 +564,11 @@ polarmethod(4)
 polarmethod(5)
 ```
 
-Comparando os dois métodos vemos que:
+Comparando os dois métodos vemos que, apesar do método polar não usar
+funções seno e cosseno, é necessário usar o `while()`, o que "encareçe"
+o algoritmo computacionalemnte.
 
-```{r, eval=FALSE}
+```{r}
 microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
 ```
 
