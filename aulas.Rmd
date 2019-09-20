@@ -50,7 +50,7 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **13/09 (Sex)**: Geração de números aleatórios não uniformes: método
   de aceitação e rejeição. [HTML](04_RNG_aceitacao.html).
 - **17/09 (Ter)**: Geração de números aleatórios não uniformes: método
-  da relação entre variáveis.
+  da relação entre variáveis. [HTML](05_RNG_transform.html).
 - **20/09 (Sex)**: Atividade disponível no [Moodle][].
 - **24/09 (Ter)**: Não haverá aula devido ao SIEPE.
 [Resolução 64/18 - CEPE][].
