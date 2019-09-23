@@ -87,9 +87,71 @@ par(mfrow = c(1, 1))
 ---
 # Transformação integral de probabilidade
 
-- Definição.
-- Prova.
-- Observações.
+#### Definição (Transformação Integral de Probabilidade)
+
+<!-- Mood, pg. 202; Casella e Berger, pg. 49 -->
+
+(a) Se $X$ é uma variável aleatória com função de distribuição acumulada
+$F_X(x)$, então $U = F_X(X)$ é uniformemente distribuída no intervalo
+$(0,1)$, isto é, $P[U \leq u] = u$, $0 < u < 1$.
+
+(b) Se $U$ é uniformemente distribuída mo intervalo $(0,1)$, então
+$X = F_{X}^{-1}(U)$ possui função de distribuição acumulada
+$F_X(\cdot)$.
+
+#### Demonstração
+
+.pull-left[
+Parte (a)
+$$
+\begin{align*}
+P[U \leq u] &= P[F_X(X) \leq u] \\
+ &= P[F_{X}^{-1}(F_X(X)) \leq F_{X}^{-1}(u)] \\
+ &= P[X \leq F_{X}^{-1}(u)] \\
+ &= F_X(F_{X}^{-1}(u)) \\
+ &= u
+\end{align*}
+$$
+]
+
+.pull-right[
+Parte (b)
+$$
+\begin{align*}
+P[X \leq x] &= P[F_X^{-1}(U) \leq x] \\
+ &= P[F_{X}(F_X^{-1}(U)) \leq F_{X}(x)] \\
+ &= P[U \leq F_{X}(x)] \\
+ &= F_X(x)
+\end{align*}
+$$
+]
+
+---
+# Transformação integral de probabilidade
+
+#### Observação
+
+Se $F_X$ for estritamente crescente, então $F_X^{-1}$ é bem definida
+por
+$$
+F_X^{-1}(u) = x \quad \Longleftrightarrow \quad F_X(x) = u.
+$$
+No entanto, por definição, $F_X$ pode ser não decrescente (constante em
+algum intervalo), então $F_X^{-1}$ não é bem definida.
+
+Considere que, se $x_1$ e $x_2$, $x_1 < x_2$, são os limites (inferior e
+superior, respectivamente) da parte não descrescente de uma função,
+então qualquer $x$ que satisfaça $x_1 \leq x \leq x_2$ satisfaz
+$F_X(x) = u$. Esse problema é evitado definindo $F_X^{-1}(u)$ para
+$0 < u < 1$ por
+$$
+F_X^{-1}(u) = \inf \\{ x \, : \, F_X(x) \geq u \\}
+$$
+ou seja, o menor valor (ínfimo) de $x$ no subconjunto de valores
+formados por $F_X(x) \geq u$. Dessa forma, por essa definição, se houver
+um $x$ que satisfaça $x_1 \leq x \leq x_2$, então $F_X^{-1}(u) = x_1$.
+
+<!-- Tem que ter os graficos aqui!!! -->
 
 ---
 # Transformação integral de probabilidade
