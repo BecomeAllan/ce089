@@ -697,7 +697,7 @@ X = Z\sigma + \mu
 <h2><span class="header-section-number">4.2</span> Método de Box-Muller</h2>
 <p>A ideia geral do métopdo desenvolvido por Box e Muller é transformar a relação entre duas normais padrão, de coordenadas cartesianas para coordenadas polares, ou seja,</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">plot</span>(<span class="kw">rnorm</span>(<span class="dv">10000</span>), <span class="kw">rnorm</span>(<span class="dv">10000</span>))</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /> Usando as coordenadas polares, soteiam-se valores do raio (<span class="math inline">\(r\)</span>) e do ângulo <span class="math inline">\(\theta\)</span> (usando associações com a <span class="math inline">\(\text{U}(0,1)\)</span>), que darão as coordenadas <span class="math inline">\((r, \theta)\)</span> em coordenadas polares. Depois, converte-se novamente para o plano cartesiano, obtendo assim um ponto na coordenada <span class="math inline">\((x, y)\)</span>, que representam um par de observações de duas VAs <span class="math inline">\(X, Y \sim \text{N}(0,1)\)</span> independentes.</p>
 <p>Assista ao vídeo <a href="https://www.youtube.com/watch?v=lHB7P8-ctLE">A integral Gaussiana</a> no perfil do Luiz Chamon para compreender a passagem de coordenadas cartesianas para coordenadas polares.</p>
 <div style="position:relative;height:0;padding-bottom:56.25%">
 <p><iframe src="https://www.youtube.com/embed/lHB7P8-ctLE?ecver=2"
@@ -707,12 +707,12 @@ X = Z\sigma + \mu
           style="position:absolute;width:100%;height:100%;left:0;padding:1em"
           allowfullscreen> </iframe></p>
 </div>
-<p>Para gerar números aleatórios da distribuição normal padrão, precisamos de valores para o <strong>raio</strong> <span class="math inline">\(r\)</span> e o <strong>ângulo</strong> <span class="math inline">\(\theta\)</span> de tal forma a poder convertê-los em valores <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span> usando as expressões <span class="math display">\[
+<p>Para gerar números aleatórios da distribuição normal padrão, precisamos de valores para o <strong>raio</strong> <span class="math inline">\(r\)</span> e o <strong>ângulo</strong> <span class="math inline">\(\theta\)</span> (em coordenadas polares)de tal forma a poder convertê-los em valores <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span> usando as expressões <span class="math display">\[
 \begin{cases}
 x = r \cos(\theta) \\
 y = r \sin(\theta).
 \end{cases}
-\]</span></p>
+\]</span> Dessa forma, o par <span class="math inline">\((x,y)\)</span> será uma realização das variáveis aleatórias <span class="math inline">\((X,Y)\)</span>, que possuem, cada uma, distribuição <span class="math inline">\(\text{N}(0,1)\)</span>.</p>
 <p>Valores para o <strong>ângulo</strong> podem ser obtidos pelo produto de uma <span class="math inline">\(\text{Uniforme}(0, 1)\)</span> por <span class="math inline">\(2\pi\)</span>, ou seja <span class="math inline">\(\theta \sim 2\pi U(0, 1)\)</span>.</p>
 <p>Para o <strong>raio</strong>, precisamos verificar <strong>qual a distribuição adequada</strong>. Note que a função de distribuição acumulada da variável <span class="math inline">\(R\)</span> pode ser determinada a partir da integral <span class="math display">\[
 \begin{align*}
@@ -759,6 +759,36 @@ x = \sqrt{-2 \log(u_1)}\, \cos(2\pi u_2)\\
 y = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 \end{cases}
 \]</span> em que <span class="math inline">\(u_1\)</span> e <span class="math inline">\(u_2\)</span> são números da Uniforme padrão.</p>
+<!--
+<div class="panel panel-primary">
+<div class="panel-heading">Definição alternativa</div>
+<div class="panel-body">
+
+http://keyonvafa.com/box-muller-transform/
+
+A ideia por trás do algoritmo de Box-Muller é imaginar duas amostras
+independentes $X,Y \sim \text{N}(0,1)$ plotadas no plano cartesiano e
+representar esses pontos em coordenadas polares. Para transformar um
+poto $(x,y)$ no plano cartesiano para cooordenadas polares, precisamos
+da distância do ponto à origem (o raio $r$) e o ângulo $\theta$ que o
+raio faz com o eixo $y$.
+
+Começando com o raio, sabemos que $R^2 = X^2 + Y^2$ (por Pitágoras).
+Como $X$ e $Y$ são normais padrão, sabemos que o a soma de duas normais
+padrão ao quadrado terá uma distribuição $\chi^2$ com dois graus de
+liberdade. Também sabemos (por relação entre VAs), que uma distribuição
+$\chi^2$ com dois graus de liberdade é equivalente à uma VA
+$\text{Gama}(1, 2)$, que, por sua vez, é equivalente à uma VA
+$\text{Exp}(2)$. Já vimos também (veja item 8 no começo desta página)
+que se $U_1 \sim \text{U}(0,1)$, então $X = - 2 \log U_1$. Resumindo:
+$$
+R^2 \sim \chi^2(2) \sim \text{Gama}(1, 2) \sim \text{Exp}(2) \sim -2
+\log U_1
+$$
+onde $U_1 \sim \text{U}(0,1)$.
+</div>
+</div>
+-->
 <p>O algoritmo de Box-Muller é definido como:</p>
 <ol style="list-style-type: decimal">
 <li>Gera valores <span class="math inline">\(u_1\)</span> e <span class="math inline">\(u_2\)</span> de <span class="math inline">\(\text{U}(0,1)\)</span></li>
@@ -781,9 +811,7 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <a class="sourceLine" id="cb7-9" title="9">T &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>u2</a>
 <a class="sourceLine" id="cb7-10" title="10">x1 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">cos</span>(T)</a>
 <a class="sourceLine" id="cb7-11" title="11">x2 &lt;-<span class="st"> </span>R <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(T)</a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="co">## O código desta função está no final da página</span></a>
-<a class="sourceLine" id="cb7-13" title="13"><span class="kw">plotcirc</span>()</a>
-<a class="sourceLine" id="cb7-14" title="14"><span class="kw">points</span>(x1, x2)</a></code></pre></div>
+<a class="sourceLine" id="cb7-12" title="12"><span class="kw">plot</span>(x1, x2, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>))</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Confere</span></a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
@@ -825,7 +853,7 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>O método de coordenadas polares (ou simplemente método polar) é uma variação do método de Box-Muller. A motivação do método foi a de evitar o uso de funções transcendentais como seno e cossseno.</p>
 <ol style="list-style-type: decimal">
 <li>Gere valores <span class="math inline">\(u_1, u_2 \sim \text{U}(-1, 1)\)</span></li>
-<li>Calculw <span class="math inline">\(r^2 = u_1^2 + u_2^2\)</span>.</li>
+<li>Calcule <span class="math inline">\(r^2 = u_1^2 + u_2^2\)</span>.</li>
 <li>Se esse ponto estiver dentro do raio unitário, ou seja, se <span class="math inline">\(r^2 \leq 1\)</span>, então calcule <span class="math inline">\(z = \sqrt{(-2 \log r^2)/r^2}\)</span>
 <ul>
 <li>Faça <span class="math inline">\(x_1 = u_1 z\)</span> e <span class="math inline">\(x_2 = u_2 z\)</span></li>
@@ -841,9 +869,10 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <a class="sourceLine" id="cb10-6" title="6">z &lt;-<span class="st"> </span><span class="kw">sqrt</span>((<span class="op">-</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(r2[ac]))<span class="op">/</span>r2[ac])</a>
 <a class="sourceLine" id="cb10-7" title="7">x1 &lt;-<span class="st"> </span>u1[ac] <span class="op">*</span><span class="st"> </span>z</a>
 <a class="sourceLine" id="cb10-8" title="8">x2 &lt;-<span class="st"> </span>u2[ac] <span class="op">*</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="kw">plotcirc</span>()</a>
-<a class="sourceLine" id="cb10-10" title="10"><span class="kw">points</span>(u1[ac], u2[ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="kw">points</span>(u1[<span class="op">!</span>ac], u2[<span class="op">!</span>ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">## O código desta função está no final da página</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="kw">plotcirc</span>()</a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">points</span>(u1[ac], u2[ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="kw">points</span>(u1[<span class="op">!</span>ac], u2[<span class="op">!</span>ac], <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Note que a taxa de aceitação será sempre a razão entre a área do círculo e a área do quadrado. A área do cículo é <span class="math inline">\(A_c = \pi r^2 = \pi\)</span>. A área do quadrado é <span class="math inline">\(A_q = l^2 = (2r)^2 = 4\)</span>. Portanto, a taxa de aceitação (teórica) será <span class="math display">\[
 \frac{A_c}{A_q} = \frac{\pi}{4} \approx 0.785
@@ -891,12 +920,12 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq     mean    median       uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  102.269  107.4175  118.506  116.7945  124.023</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2849.871 3028.2910 3553.795 3100.1640 3220.521</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean   median       uq</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.942  105.6405  112.3212  109.735  117.394</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2812.376 2972.9925 3434.3717 3031.861 3112.702</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    192.814   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10266.029   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    134.319   100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10044.114   100</span></a></code></pre></div>
 </div>
 <div id="a-funcao-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
@@ -936,13 +965,13 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 </div>
 <div id="funcoes" class="section level1">
 <h1><span class="header-section-number">5</span> Funções</h1>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">plotcirc &lt;-<span class="st"> </span><span class="cf">function</span>() {</a>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">plotcirc &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) {</a>
 <a class="sourceLine" id="cb17-2" title="2">    <span class="co">## eixo x = a + cos \theta * raio</span></a>
 <a class="sourceLine" id="cb17-3" title="3">    circx &lt;-<span class="st"> </span><span class="kw">cos</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="op">*</span>pi, <span class="fl">.01</span>)) <span class="op">*</span><span class="st"> </span><span class="dv">1</span></a>
 <a class="sourceLine" id="cb17-4" title="4">    <span class="co">## eixo y = b + sin \theta * raio</span></a>
 <a class="sourceLine" id="cb17-5" title="5">    circy &lt;-<span class="st"> </span><span class="kw">sin</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="op">*</span>pi, <span class="fl">.01</span>)) <span class="op">*</span><span class="st"> </span><span class="dv">1</span></a>
 <a class="sourceLine" id="cb17-6" title="6">    <span class="co">## (a,b) eh o ponto de origem, aqui (0,0)</span></a>
-<a class="sourceLine" id="cb17-7" title="7">    <span class="kw">plot</span>(circx, circy, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb17-7" title="7">    <span class="kw">plot</span>(circx, circy, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">xlim =</span> xlim, <span class="dt">ylim =</span> ylim,</a>
 <a class="sourceLine" id="cb17-8" title="8">         <span class="dt">xaxs =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">yaxs =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">asp =</span> <span class="dv">1</span>, <span class="dt">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Y&quot;</span>)</a>
 <a class="sourceLine" id="cb17-9" title="9">    <span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">col =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb17-10" title="10">    <span class="kw">abline</span>(<span class="dt">v =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">col =</span> <span class="dv">1</span>)</a>
