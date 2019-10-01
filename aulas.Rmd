@@ -55,7 +55,7 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **24/09 (Ter)**: Não haverá aula devido ao SIEPE.
 [Resolução 64/18 - CEPE][].
 - **27/09 (Sex)**: **Prova 1**.
-- **01/10 (Ter)**:
+- **01/10 (Ter)**: Integração de Monte Carlo. [HTML](06_MC_intro.html).
 - **04/10 (Sex)**:
 - **08/10 (Ter)**:
 - **11/10 (Sex)**:
