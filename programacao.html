@@ -467,7 +467,7 @@ div.tocify {
 </div>
 
 
-<div id="introducao" class="section level1">
+<div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
 <p>Por quê programar?</p>
 <ul>
@@ -482,7 +482,7 @@ div.tocify {
 <li>Utilize as ferramentas básicas da programação: <strong>estruturas de repetição</strong> (<code>for()</code>) e <strong>estruturas de seleção</strong> (<code>if()</code>).</li>
 </ul>
 </div>
-<div id="estrutura-de-repeticao-for" class="section level1">
+<div id="estrutura-de-repetição-for" class="section level1">
 <h1><span class="header-section-number">2</span> Estrutura de repetição <code>for()</code></h1>
 <p>Serve para repetir um ou mais comandos diversas vezes. Para ver como funciona, considere o seguinte exemplo:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){</a>
@@ -772,7 +772,7 @@ div.tocify {
 <a class="sourceLine" id="cb21-22" title="22"><span class="co"># 5 7.000000</span></a>
 <a class="sourceLine" id="cb21-23" title="23"><span class="co"># 6 4.333333</span></a></code></pre></div>
 </div>
-<div id="estrutura-de-selecao-if" class="section level1">
+<div id="estrutura-de-seleção-if" class="section level1">
 <h1><span class="header-section-number">3</span> Estrutura de seleção <code>if()</code></h1>
 <p>Uma estrutura de seleção serve para executar algum comando apenas se alguma condição (em forma de <strong>expressão condicional</strong>) seja satisfeita. Geralmente é utilizada dentro de um <code>for()</code>.</p>
 <p>No exemplo inicial poderíamos querer imprimir um resultado caso satisfaça determinada condição. Por exemplo, se o valor de <code>x</code> for menor ou igual a 105, então imprima um texto informando isso.</p>
@@ -845,7 +845,7 @@ div.tocify {
 <a class="sourceLine" id="cb25-28" title="28"><span class="co"># 5 7.000000  aprovado</span></a>
 <a class="sourceLine" id="cb25-29" title="29"><span class="co"># 6 4.333333 reprovado</span></a></code></pre></div>
 </div>
-<div id="o-modo-do-r-vetorizacao" class="section level1">
+<div id="o-modo-do-r-vetorização" class="section level1">
 <h1><span class="header-section-number">4</span> O modo do R: vetorização</h1>
 <p>As funções vetorizadas do R, além de facilitar e resumir a execução de tarefas repetitivas, também são computacionalmente mais eficientes, <em>i.e.</em> o tempo de execução das rotinas é muito mais rápido.</p>
 <p>Já vimos que a <strong>regra da reciclagem</strong> é uma forma de vetorizar cálculos no R. Os cálculos feitos com funções vetorizadas (ou usando a regra de reciclagem) são muito mais eficientes (e preferíveis) no R. Por exemplo, podemos criar um vetor muito grande de números e querer calcular o quadrado de cada número. Se pensássemos em usar uma estrutura de repetição, o cálculo seria o seguinte:</p>
@@ -874,7 +874,7 @@ div.tocify {
 <a class="sourceLine" id="cb28-7" title="7">)</a>
 <a class="sourceLine" id="cb28-8" title="8">st1</a>
 <a class="sourceLine" id="cb28-9" title="9"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb28-10" title="10"><span class="co">#   0.076   0.000   0.077</span></a>
+<a class="sourceLine" id="cb28-10" title="10"><span class="co">#   0.077   0.000   0.077</span></a>
 <a class="sourceLine" id="cb28-11" title="11"></a>
 <a class="sourceLine" id="cb28-12" title="12"><span class="co">## Tempo de execução usando a regra da reciclagem</span></a>
 <a class="sourceLine" id="cb28-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
@@ -882,7 +882,7 @@ div.tocify {
 <a class="sourceLine" id="cb28-15" title="15">)</a>
 <a class="sourceLine" id="cb28-16" title="16">st2</a>
 <a class="sourceLine" id="cb28-17" title="17"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb28-18" title="18"><span class="co">#   0.002   0.000   0.003</span></a></code></pre></div>
+<a class="sourceLine" id="cb28-18" title="18"><span class="co">#   0.003   0.000   0.003</span></a></code></pre></div>
 <p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.077/0.003 = 25.67 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
@@ -1045,7 +1045,7 @@ Uma nota de precaução
 <a class="sourceLine" id="cb37-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1 0.1428571  aprovado</span></a>
 <a class="sourceLine" id="cb37-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2 1.1842157 reprovado</span></a></code></pre></div>
 </div>
-<div id="a-familia-de-funcoes-apply" class="section level1">
+<div id="a-família-de-funções-apply" class="section level1">
 <h1><span class="header-section-number">5</span> A família de funções <code>*apply()</code></h1>
 <p>As funções da chamada família <code>*apply()</code> são as implementações básicas de operações vetorizadas no R. Sempre que possível é desejável utilizar estas funções no lugar das estruturas de repetição. Em qualquer situação, a performance destas funções (em tempo computacional) será sempre superior</p>
 <p>A função <code>apply()</code>, como já vista acima, é capaz de fazer operações nas linhas (<code>MARGIN = 1</code>) e também nas colunas (<code>MARGIN = 2</code>).</p>

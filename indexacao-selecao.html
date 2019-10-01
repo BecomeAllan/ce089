@@ -467,7 +467,7 @@ div.tocify {
 </div>
 
 
-<div id="indexacao" class="section level1">
+<div id="indexação" class="section level1">
 <h1><span class="header-section-number">1</span> Indexação</h1>
 <p>Existem 6 maneiras diferentes de indexar valores no R. Podemos indexar usando:</p>
 <ul>
@@ -484,7 +484,7 @@ div.tocify {
 <li>O operador<code>[[ ]]</code> é usado para extrair elementos de uma <strong>lista</strong> ou <strong>data frame</strong>. Pode ser usado para extrair um único elemento, e a classe do objeto retornado não precisa necessariamente ser uma lista ou data frame.</li>
 <li>O operador <code>$</code> é usado para extrair elementos <strong>nomeados</strong> de uma lista ou data frame. É similar ao operador <code>[[ ]]</code>.</li>
 </ul>
-<div id="indexacao-de-vetores" class="section level2">
+<div id="indexação-de-vetores" class="section level2">
 <h2><span class="header-section-number">1.1</span> Indexação de vetores</h2>
 <p>Observe o seguinte vetor de contagens</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">cont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">8</span>, <span class="dv">4</span>, <span class="ot">NA</span>, <span class="dv">9</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">9</span>)</a>
@@ -525,7 +525,7 @@ div.tocify {
 <a class="sourceLine" id="cb8-3" title="3">cont[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)]</a>
 <a class="sourceLine" id="cb8-4" title="4"><span class="co"># [1] 1 7 9</span></a></code></pre></div>
 </div>
-<div id="exercicios-1" class="section level2">
+<div id="exercícios-1" class="section level2">
 <h2><span class="header-section-number">1.2</span> Exercícios 1</h2>
 <ol style="list-style-type: decimal">
 <li>Crie um vetor com os valores: <code>88, 5, 12, 13</code></li>
@@ -578,7 +578,7 @@ div.tocify {
 <p>Dica: veja <code>?letters</code></p>
 </div>
 </div>
-<div id="indexacao-de-matrizes" class="section level2">
+<div id="indexação-de-matrizes" class="section level2">
 <h2><span class="header-section-number">1.3</span> Indexação de matrizes</h2>
 <p>Considere a seguinte matriz</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">nrow =</span> <span class="dv">3</span>)</a>
@@ -641,7 +641,7 @@ div.tocify {
 <a class="sourceLine" id="cb20-20" title="20"><span class="co"># [1] 2</span></a></code></pre></div>
 </div>
 </div>
-<div id="indexacao-de-listas" class="section level2">
+<div id="indexação-de-listas" class="section level2">
 <h2><span class="header-section-number">1.4</span> Indexação de listas</h2>
 <p>Considere a seguinte lista:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">lis &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>), mat, <span class="dv">5</span><span class="op">:</span><span class="dv">0</span>)</a>
@@ -728,7 +728,7 @@ div.tocify {
 <p>O símbolo <code>$</code> é utilizado para acessar componentes <strong>nomeados</strong> de listas ou data frames.</p>
 </div>
 </div>
-<div id="indexacao-de-data-frames" class="section level2">
+<div id="indexação-de-data-frames" class="section level2">
 <h2><span class="header-section-number">1.5</span> Indexação de data frames</h2>
 <p>Considere o seguinte data frame</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">A =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">B =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="ot">NA</span>, <span class="dv">5</span>, <span class="dv">8</span>))</a>
@@ -825,7 +825,7 @@ div.tocify {
 <a class="sourceLine" id="cb46-5" title="5"><span class="co"># 1 4 2</span></a>
 <a class="sourceLine" id="cb46-6" title="6"><span class="co"># 3 2 5</span></a>
 <a class="sourceLine" id="cb46-7" title="7"><span class="co"># 4 1 8</span></a></code></pre></div>
-<div id="a-funcao-with" class="section level3">
+<div id="a-função-with" class="section level3">
 <h3><span class="header-section-number">1.5.1</span> A função <code>with()</code></h3>
 <p>Para evitar fazer muitas indexações de um mesmo data frame, por exemplo, podemos utilizar a função <code>with()</code></p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="kw">with</span>(da, A)</a>
@@ -841,7 +841,7 @@ div.tocify {
 <a class="sourceLine" id="cb50-2" title="2"><span class="co"># [1] 2.5</span></a></code></pre></div>
 </div>
 </div>
-<div id="exercicios-2" class="section level2">
+<div id="exercícios-2" class="section level2">
 <h2><span class="header-section-number">1.6</span> Exercícios 2</h2>
 <ol style="list-style-type: decimal">
 <li>Crie a seguinte matriz <span class="math display">\[\left[ \begin{array}{ccc}
@@ -871,9 +871,9 @@ div.tocify {
 </ol>
 </div>
 </div>
-<div id="selecao-condicional" class="section level1">
+<div id="seleção-condicional" class="section level1">
 <h1><span class="header-section-number">2</span> Seleção condicional</h1>
-<div id="selecao-condicional-em-vetores" class="section level2">
+<div id="seleção-condicional-em-vetores" class="section level2">
 <h2><span class="header-section-number">2.1</span> Seleção condicional em vetores</h2>
 <div class="alert alert-warning">
 <p>A <strong>seleção condicional</strong> serve para extrair dados que satisfaçam algum critério, usando <strong>expressões condicionais</strong> e <strong>operadores lógicos</strong>.</p>
@@ -933,7 +933,7 @@ div.tocify {
 <a class="sourceLine" id="cb61-8" title="8">cara[dados <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">14</span>)]</a>
 <a class="sourceLine" id="cb61-9" title="9"><span class="co"># [1] &quot;f&quot; &quot;h&quot;</span></a></code></pre></div>
 </div>
-<div id="a-funcao-which" class="section level2">
+<div id="a-função-which" class="section level2">
 <h2><span class="header-section-number">2.2</span> A função <code>which()</code></h2>
 <p>Até agora vimos seleções condicionais que nos retornavam o resultado de uma expressão condicional em vetores. No entanto, muitas vezes estamos interessados em saber a <strong>posição</strong> do resultado de uma expressão condicional, ao invés do resultado em si.</p>
 <p>A fução <code>which()</code> retorna as posições dos elementos que retornarem <code>TRUE</code> em uma expressão condicional.</p>
@@ -958,7 +958,7 @@ div.tocify {
 <a class="sourceLine" id="cb62-19" title="19"><span class="kw">which</span>(cara <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;c&quot;</span>))</a>
 <a class="sourceLine" id="cb62-20" title="20"><span class="co"># [1] 1 3</span></a></code></pre></div>
 </div>
-<div id="exercicios-3" class="section level2">
+<div id="exercícios-3" class="section level2">
 <h2><span class="header-section-number">2.3</span> Exercícios 3</h2>
 <ol style="list-style-type: decimal">
 <li>Crie um vetor (<code>x</code>) com os valores 3, 8, 10, 4, 9, 7, 1, 9, 2, 4.</li>
@@ -973,7 +973,7 @@ div.tocify {
 <li>Quais as posições das letras “A”, “B”, “D” em a?</li>
 </ol>
 </div>
-<div id="selecao-condicional-em-data-frames" class="section level2">
+<div id="seleção-condicional-em-data-frames" class="section level2">
 <h2><span class="header-section-number">2.4</span> Seleção condicional em data frames</h2>
 <p>Considere o seguinte data frame</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">dados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">ano =</span> <span class="kw">c</span>(<span class="dv">2001</span>, <span class="dv">2002</span>, <span class="dv">2003</span>, <span class="dv">2004</span>, <span class="dv">2005</span>),</a>
@@ -1042,7 +1042,7 @@ div.tocify {
 <a class="sourceLine" id="cb69-33" title="33"><span class="co"># [1] 26 25 32</span></a></code></pre></div>
 <p>A grande vantagem é que a função <code>subset()</code> já lida com os <code>NA</code>s (se isso for o que você precisa).</p>
 </div>
-<div id="exercicios-4" class="section level2">
+<div id="exercícios-4" class="section level2">
 <h2><span class="header-section-number">2.5</span> Exercícios 4</h2>
 <ol style="list-style-type: decimal">
 <li>Você contou 42 caranguejos na Joaquina, 34 no Campeche, 59 na Armação, e 18 na Praia Mole. Crie um data frame para armazenar estas informações (número de caranguejos observados e local).</li>
@@ -1054,7 +1054,7 @@ div.tocify {
 </ol>
 </div>
 </div>
-<div id="respostas-dos-exercicios" class="section level1">
+<div id="respostas-dos-exercícios" class="section level1">
 <h1><span class="header-section-number">3</span> Respostas dos exercícios</h1>
 <p>A resolução dos exercícios desta página está disponível neste <a href="scripts/indexacao-selecao-exercicios.R">script</a>.</p>
 </div>

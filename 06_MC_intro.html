@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fernando P. Mayer" />
+
+
+<title>Métodos de Monte Carlo</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-66454501-13"></script>
+<script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-66454501-13');
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CE089</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="aulas.html">Aulas</a>
+</li>
+<li>
+  <a href="referencias.html">Referências</a>
+</li>
+<li>
+  <a href="notas.html">Notas</a>
+</li>
+<li>
+  <a href="materiais.html">Materiais</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leg-ufpr/ce089">
+    <span class="fa fa-github fa-lg"></span>
+     
+    GitHub
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Métodos de Monte Carlo</h1>
+<h4 class="author">Fernando P. Mayer</h4>
+
+</div>
+
+
+<!-- - Método de Monte Carlo -->
+<!--   - Integração -->
+<!--   - Simulação -->
+<!-- - Estimativa de área do pi -->
+<!-- - Integração simples -->
+<!--   - Exemplos e variância -->
+<!-- - Técnicas de redução de variância -->
+<!--   - Exemplos -->
+<!--   - Amostragem por importância -->
+<blockquote>
+<p><em>Monte Carlo methods are experiments.</em></p>
+</blockquote>
+<blockquote>
+<p>Gentle, J. (2009)</p>
+</blockquote>
+<div id="introdução" class="section level1">
+<h1><span class="header-section-number">1</span> Introdução</h1>
+<p>Duas grandes classes de problemas numéricos que surgem na inferência estatística são: problemas de <strong>otimização</strong>, e problemas de <strong>integração</strong>. De fato, diversos exemplos mostram que nem sempre é possível calcular analiticamente os estimadores associados à um determinado paradigma (máxima verossimilhança, bayesiano, método dos momentos, etc).</p>
+<p>Experimentação de Monte Carlo significa o uso de valores aleatórios para a estimação de alguma função de uma distribuição de probabilidade. Um problema que não possui um componente estocástico pode ser colocado como um problema com um componente que pode ser identificado como a esperança de uma função de uma variável aleatória (VA). Isso pode ser feito através da decomposição de uma função densidade de probabilidade. O problema é então resolvido pela estimação do valor esperado por meio do uso de uma amostra aleatória da distribuição da VA.</p>
+<p>O termo “Método de Monte Carlo” surgiu no laboratório nacional de Los Alamos (EUA), no final dos anos 1940, durante o desenvolvimento de uma bomba atômica (Metropolis e Ulam, 1949). O termo “Monte Carlo” faz referência à cidade famosa por seus cassinos, que fazem uso de mecanismos “aleatórios” para jogos. O desenvolvimento destes métodos também contribuíram fortemente para o desenvolvimento dos primeiros computadores eletrônicos, acelarando a computação de tarefas numéricas repetitivas.</p>
+<p>Não existe um consenso em como os métodos de Monte Carlo poderiam ser definidos, mas algumas distinções podem ser feitas:</p>
+<ul>
+<li><strong>Simulação</strong>: Sortear <strong>um</strong> valor de uma <span class="math inline">\(U(0,1)\)</span> pode simular o lançamento de uma moeda: se for menor do que 0.5, atribua cara, caso contrário, coroa.</li>
+<li><strong>Método de Monte Carlo</strong>: Derramar uma caixa de moedas em uma mesa e calcular a proporção de moedas que caem cara ou coroa.</li>
+<li><strong>Simulação de Monte Carlo</strong>: Sortear um grande número de valores de uma <span class="math inline">\(U(0,1)\)</span> e atribuir cara (menor que 0.5) ou coroa.</li>
+</ul>
+<p>Os métodos de Monte Carlo também podem ser divididos em duas categorias:</p>
+<ul>
+<li><strong>Integração</strong> de Monte Carlo: quando utilizado para resolver problemas de integração numérica</li>
+<li><strong>Simulação</strong> de Monte Carlo: quando utilizado para resolver problemas mais gerais através de simulação</li>
+</ul>
+</div>
+<div id="integração-de-monte-carlo" class="section level1">
+<h1><span class="header-section-number">2</span> Integração de Monte Carlo</h1>
+<p>A integração de Monte Carlo é uma técnica numérica que se baseia em amostragem aleatória para <strong>aproximar</strong> um resultado, aplicando esse processo para a estimação numérica de integrais.</p>
+<p>De maneira geral, um probelma de inferência estatística pode ser formulado como a estimação de uma integral do tipo <span class="math display">\[
+\theta = \int_{D} h(x) \text{d}x
+\]</span> Se a integral possui forma fechada, então não há necessidade de qualquer método de aproximação. Caso não seja possível resolver a integral de forma analítica, e se <span class="math inline">\(D\)</span> for de uma ou duas dimensões, então existem diversos métodos de <strong>quadratura</strong> para aproximar o valor dessa integral. Por exemplo:</p>
+<ul>
+<li>Método trapezoidal</li>
+<li>Método de Simpson 1/3</li>
+<li>Quadratura de Gauss-Hermite</li>
+<li>Aproximação de Laplace</li>
+</ul>
+<p>No entanto, quando a dimensão em <span class="math inline">\(D\)</span> for alta, a integração de Monte Carlo é uma alternativa mais viável (que pode ser usada em problemas de baixa dimensão também).</p>
+<p>Se a gunção <span class="math inline">\(h\)</span> for decomposta de forma a ter um componente que é uma densidade de probabilidade, ou seja, <span class="math display">\[
+h(x) = g(x)f(x)
+\]</span> onde <span class="math inline">\(\int_{D} f(x) dx = 1\)</span> e <span class="math inline">\(f(x) \geq 0\)</span>, então a integral <span class="math inline">\(\theta\)</span> pode ser vista como a esperança da VA <span class="math inline">\(Y = g(x)\)</span>, onde <span class="math inline">\(X\)</span> tem distribuição <span class="math inline">\(f(x)\)</span>, ou seja, <span class="math display">\[
+\theta = \text{E}[g(X)] = \int_{D} g(x)f(x) dx.
+\]</span> Com uma amostra aleatória <span class="math inline">\(x_1, \ldots, x_m\)</span> da distribuição <span class="math inline">\(f(x)\)</span> da VA <span class="math inline">\(X\)</span>, então uma estimativa <strong>não viesada</strong> de <span class="math inline">\(\theta\)</span> é a média amostral <span class="math display">\[
+\hat\theta = \frac{1}{m} \sum_{i=1}^{m} g(x_i)
+\]</span></p>
+<p>Essa tecnica é usada em muitas situações em estatística. Resumindo, temos os seguintes passos:</p>
+<ol style="list-style-type: decimal">
+<li>Decomponha a função de interesse para incluir uma função densidade de probabilidade.</li>
+<li>Identifique o valor esperado.</li>
+<li>Use uma amostra aleatória para estimar o valor esperado.</li>
+</ol>
+<p><strong>Note então que, na integração de Monte Carlo, trocamos um problema de resolver uma integral por um problema de calcular uma média (por simulação).</strong></p>
+<div id="integração-simples-de-monte-carlo" class="section level2">
+<h2><span class="header-section-number">2.1</span> Integração simples de Monte Carlo</h2>
+<p>Considere o problema de estimar <span class="math display">\[
+\theta = \int_0^1 g(x) dx.
+\]</span> Se <span class="math inline">\(X_1, \ldots, X_m\)</span> é uma amostra aleatória de <span class="math inline">\(U(0,1)\)</span>, então <span class="math display">\[
+\hat\theta = \frac{1}{m} \sum_{i=1}^{m} g(x_i)
+\]</span> Pode-se mostrar que <span class="math inline">\(\hat\theta\)</span> converge para <span class="math inline">\(\text{E}[\hat\theta] = \theta\)</span> quando <span class="math inline">\(m \to \infty\)</span> com probabilidade 1, pela <strong>Lei Forte dos Grandes Números</strong>.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Lei forte dos grandes números
+</div>
+<div class="panel-body">
+<p>Sejam <span class="math inline">\(X_1, \ldots, X_n\)</span> VAs iid com <span class="math inline">\(\text{E}[X] = \mu\)</span> e <span class="math inline">\(\text{Var}[X] = \sigma^2\)</span>, e definimos <span class="math inline">\(\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i\)</span>. Então, para cada <span class="math inline">\(\epsilon &gt; 0\)</span>, <span class="math display">\[
+P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
+\]</span> isto é, converge quase certamente para <span class="math inline">\(\mu\)</span>.</p>
+</div>
+</div>
+<p>Por exemplo, obtenha uma estimativa de <span class="math display">\[
+\theta = \int_0^1 e^{-x} dx
+\]</span></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Obtem m valores da U(0,1)</span></a>
+<a class="sourceLine" id="cb1-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb1-3" title="3">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">## Calcula g(x)</span></a>
+<a class="sourceLine" id="cb1-5" title="5">theta.hat &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">## Calcula a média</span></a>
+<a class="sourceLine" id="cb1-7" title="7">(m.theta.hat &lt;-<span class="st"> </span><span class="kw">sum</span>(theta.hat)<span class="op">/</span>m)</a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co"># [1] 0.6313544</span></a></code></pre></div>
+<p>Nesse caso, podemos obter a solução analítica e integração numérica no R para comparar as estimativas</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Solução analítica</span></a>
+<a class="sourceLine" id="cb2-2" title="2">(theta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co"># [1] 0.6321206</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">## Integração numérica no R</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x), <span class="dt">lower =</span> <span class="dv">0</span>, <span class="dt">upper =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co"># 0.6321206 with absolute error &lt; 7e-15</span></a></code></pre></div>
+<p>Um caso mais geral é estimar a integral do tipo <span class="math display">\[
+\theta = \int_a^b g(x) dx
+\]</span> Nesse caso, temos que substituir a <span class="math inline">\(U(0,1)\)</span> por alguma outra densidade com suporte no intervalo dos limites de integração. Por exemplo, se <span class="math inline">\(X \sim U(a,b)\)</span>, então <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span> e</p>
+<p><span class="math display">\[\begin{align*}
+\theta &amp;= \int_a^b g(x) f(x) dx \\
+  &amp;= (b-a) \int_a^b g(x) \frac{1}{b-a} dx \\
+  &amp;= (b-a) \text{E}[g(X)]
+\end{align*}\]</span></p>
+<p>Visualmente, temos a seguinte situação:</p>
+<p><img width="40%" src="img/MCIntegration01.png"/> <img width="40%" src="img/MCIntegration02.png"/></p>
+<p>O que temos, na verdade, é a soma de <span class="math inline">\(m\)</span> áreas de retângulos, que no final, tendem a reproduzir a área da função desejada.</p>
+<p><img src="img/MCIntegration03.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>De maneira geral, para calcular <span class="math inline">\(\theta = \int_a^b g(x) dx\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li>Gere <span class="math inline">\(X_1, \ldots, X_m\)</span> de <span class="math inline">\(U(a,b)\)</span></li>
+<li>Calcule <span class="math inline">\(\overline{g(x)} = \frac{1}{m}\sum_{i=1}^{m} g(x_i)\)</span></li>
+<li><span class="math inline">\(\hat\theta = (b-a)\overline{g(x)}\)</span></li>
+</ol>
+<p>Por exemplo, obtenha uma estimativa de <span class="math display">\[
+\theta = \int_2^4 e^{-x} dx
+\]</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## Obtem m valores da U(2,4)</span></a>
+<a class="sourceLine" id="cb3-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb3-3" title="3">a &lt;-<span class="st"> </span><span class="dv">2</span>; b &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb3-4" title="4">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="dt">min =</span> a, <span class="dt">max =</span> b)</a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">## Calcula g(x)</span></a>
+<a class="sourceLine" id="cb3-6" title="6">theta.hat &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">## Calcula a média * (b - a)</span></a>
+<a class="sourceLine" id="cb3-8" title="8">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))</a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co"># [1] 0.1171233</span></a></code></pre></div>
+<p>Nesse caso, podemos obter a solução analítica e integração numérica no R para comparar as estimativas</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">## Solução analítica</span></a>
+<a class="sourceLine" id="cb4-2" title="2">(theta &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co"># [1] 0.1170196</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">## Integração numérica no R</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x), <span class="dt">lower =</span> <span class="dv">2</span>, <span class="dt">upper =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co"># 0.1170196 with absolute error &lt; 1.3e-15</span></a></code></pre></div>
+</div>
+<div id="variância-do-estimador-de-monte-carlo" class="section level2">
+<h2><span class="header-section-number">2.2</span> Variância do estimador de Monte Carlo</h2>
+<p>Como <span class="math inline">\(\hat\theta\)</span> é resultado de uma amostra aleatória de <span class="math inline">\(m\)</span> valores, naturalmente, cada amostra poderá gerar uma estimativa (razoavelmente) diferente, e sempre existirá uma variabilidade dos valores amostrados ao redor da média, que é o <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>A variância de <span class="math inline">\(\hat\theta\)</span> é <span class="math display">\[
+\hat{V}(\hat\theta) = \frac{\sigma^2}{m} =
+\frac{\sum_{i=1}^m [g(x_i) - \overline{g(x)}]^2}{m^2}
+\]</span> Portanto, o erro padrão da estimativa será <span class="math display">\[
+\hat{EP}(\hat\theta) = \frac{\hat\sigma}{\sqrt{m}} =
+\frac{\sqrt{\sum_{i=1}^m [g(x_i) - \overline{g(x)}]^2}}{m}
+\]</span></p>
+<p>Seguindo o exemplo anterior, vimos que a estimativa da integral é</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">m.theta.hat</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co"># [1] 0.1171233</span></a></code></pre></div>
+<p>Mas veja que existe uma distribuição de valores para compor esta estimativa média</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">hist</span>(theta.hat); <span class="kw">abline</span>(<span class="dt">v =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>A variância relacionada ao estimador pode então ser calculada como</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Variancia</span></a>
+<a class="sourceLine" id="cb7-2" title="2">(v.theta.hat &lt;-<span class="st"> </span><span class="kw">sum</span>((theta.hat <span class="op">-</span><span class="st"> </span>m.theta.hat)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>m<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co"># [1] 4.499182e-07</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">## Erro padrão</span></a>
+<a class="sourceLine" id="cb7-5" title="5">(se.theta.hat &lt;-<span class="st"> </span><span class="kw">sqrt</span>(v.theta.hat))</a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co"># [1] 0.0006707594</span></a></code></pre></div>
+<p>Pelo Teorema do Limite Central, temos que</p>
+<p><span class="math display">\[
+\frac{\hat\theta - \text{E}(\hat\theta)}{\sqrt{\hat{V}(\hat\theta)}}
+\]</span> converge em distribuição para <span class="math inline">\(N(0,1)\)</span> quando <span class="math inline">\(m \to \infty\)</span>. Portanto, para <span class="math inline">\(m\)</span> suficientemente grande, <span class="math inline">\(\hat\theta\)</span> é aproximadamente Normal com média <span class="math inline">\(\theta\)</span>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Simula 1000 médias</span></a>
+<a class="sourceLine" id="cb8-2" title="2">r &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb8-3" title="3">res &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>r, a, b), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> r)</a>
+<a class="sourceLine" id="cb8-4" title="4">m.theta.sim &lt;-<span class="st"> </span><span class="kw">apply</span>(res, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">mean</span>(<span class="kw">exp</span>(<span class="op">-</span>x)) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))</a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="kw">hist</span>(m.theta.sim); <span class="kw">abline</span>(<span class="dt">v =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Com esse resultado, podemos inclusive fornecer um intervalo de confiança associado à nossa estimativa</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Media e veriancia</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">c</span>(m.theta.hat, v.theta.hat)</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co"># [1] 1.171233e-01 4.499182e-07</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">## Intervalo de confiança (95%)</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="kw">c</span>(m.theta.hat <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>se.theta.hat, m.theta.hat <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>se.theta.hat)</a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co"># [1] 0.1158086 0.1184380</span></a></code></pre></div>
+</div>
+<div id="redução-da-variância" class="section level2">
+<h2><span class="header-section-number">2.3</span> Redução da variância</h2>
+<p>Note que, embora a variância do estimador do exemplo anterior pareça pequena, o método simples de Monte Carlo não é o método mais eficiente, ou seja, aquele que provê estimativas com a menor variância possível. Isso porque, como vimos, estamos supondo uma distribuição Uniforme no intervalo <span class="math inline">\((a,b)\)</span>, para qualquer que seja o formato da função que temos interesse em integrar.</p>
+<p>A redução da variância é importante pois sempre estamos interessados em obter estimativas que sejam mais precisas possíveis, evitando erros numéricos ou de aproximações.</p>
+<p>Existem várias adaptações para o método simples de Monte Carlo, com a intenção de se obter estimativas mais precisas, i.e., com menor variância. Alguns deles são:</p>
+<ul>
+<li>Variáveis antitéticas</li>
+<li>Variáveis de controle</li>
+<li>Amostragem por importância</li>
+</ul>
+</div>
+<div id="amostragem-por-importância" class="section level2">
+<h2><span class="header-section-number">2.4</span> Amostragem por importância</h2>
+<p>Limitações do método simples de Monte Carlo:</p>
+<ol style="list-style-type: decimal">
+<li>Não se aplica para intervalos não definidos</li>
+<li>É ineficiente quando a função <span class="math inline">\(g(x)\)</span> não é uniforme</li>
+</ol>
+<p>Quando consideramos um problema de integração como um problema de valor esperado, é netural que consideremos outras funções de densidade além da Uniforme. Isso leva à um método mais geral chamdo de <strong>amostragem por importância</strong>.</p>
+<p>A amostragem por importância reduz a variância pelo fato de podermos escolher uma densidade <span class="math inline">\(f(x)\)</span> mais parecida com com a função <span class="math inline">\(g(x)\)</span> sendo integrada. Ao escolher uma densidade mais parecida, a variância é reduzida. Intuitivamente, a amostragem por importância tende a gerar mais amostra onde a contribuição para a integral é maior, ou “importante”. Se pudermos determinar as regiões mais importantes para a integração, a variância do estimador de Monte Carlo pode ser significativamente reduzida.</p>
+<p><img src="img/importancesampling.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y\)</span> a VA <span class="math inline">\(g(X)/f(X)\)</span>, então <span class="math display">\[
+\int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
+\]</span> Com isso, podemos estimar <span class="math inline">\(\text{E}[Y]\)</span> como uma integração simples de Monte Carlo, ou seja, <span class="math display">\[
+\frac{1}{m}\sum_{i=1}^{m} Y_i = \frac{1}{m}\sum_{i=1}^{m}
+\frac{g(X_i)}{f(X_i)}
+\]</span> onde as VAs <span class="math inline">\(X_1, \ldots, X_m\)</span> são geradas a partir da distribuição de <span class="math inline">\(f(x)\)</span>. A função <span class="math inline">\(f(x)\)</span> é chamada de <strong>função de importância</strong>.</p>
+<p>No método de amostragem por importância, a variância do estimador baseado em <span class="math inline">\(Y= g(X)/f(X)\)</span> é <span class="math inline">\(\text{Var}(Y)/m\)</span>, então a variância de <span class="math inline">\(Y\)</span> deve ser pequena.</p>
+<p>Na verdade, a variância de <span class="math inline">\(Y\)</span> é pequena, se <span class="math inline">\(Y\)</span> for aproximadamente constante, o que significa que a densidade <span class="math inline">\(f(x)\)</span> deve estar “próxima” da densidade de <span class="math inline">\(g(x)\)</span>. Também é importante que a função <span class="math inline">\(f(x)\)</span> seja fácil de simular.</p>
+<p><strong>Exemplo:</strong> Considere estimar a integral <span class="math display">\[
+\theta = \int_0^1 \frac{e^{-x}}{1+x^2} dx
+\]</span> pelo método de amostragem por importância. Diversas funções de importância podem ser propostas para esse caso:</p>
+<p><span class="math display">\[\begin{align*}
+f_0(x) &amp;= 1, \quad 0&lt;x&lt;1 \\
+f_1(x) &amp;= e^{-x}, \quad 0&lt;x&lt;\infty \\
+f_2(x) &amp;= (1+x^2)^{-1}/\pi, \quad -\infty&lt;x&lt;\infty \\
+f_3(x) &amp;= e^{-x}/(1-e^{-1}), \quad 0&lt;x&lt;1 \\
+f_4(x) &amp;= 4(1-x^2)^{-1}/\pi, \quad 0&lt;x&lt;1 \\
+\end{align*}\]</span></p>
+<p>Alguns detalhes:</p>
+<ul>
+<li><span class="math inline">\(f_1\)</span> e <span class="math inline">\(f_2\)</span> possuem domínio maior, o que irá contribuir com muitos zeros (ineficientes)</li>
+<li><span class="math inline">\(f_1\)</span> é uma Exponencial com <span class="math inline">\(\lambda = 1\)</span></li>
+<li><span class="math inline">\(f_2\)</span> é uma Cauchy padrão</li>
+<li><span class="math inline">\(f_3\)</span> e <span class="math inline">\(f_4\)</span> não são funções conhecidas, por isso precisamos usar o método da transformação integral de probabilidade para gerar números destas distribuições</li>
+</ul>
+<p>Graficamente temos o seguinte cenário:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">.01</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2">w &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb10-3" title="3">f1 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb10-4" title="4">f2 &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>pi) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-5" title="5">f3 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb10-6" title="6">f4 &lt;-<span class="st"> </span><span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi)</a>
+<a class="sourceLine" id="cb10-7" title="7">g &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)&quot;</span>,</a>
+<a class="sourceLine" id="cb10-10" title="10">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">lines</span>(x, g<span class="op">/</span>g, <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="kw">lines</span>(x, f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="kw">lines</span>(x, f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="kw">lines</span>(x, f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="kw">lines</span>(x, f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;g&quot;</span>, <span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb10-17" title="17">       <span class="dt">col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)/f(x)&quot;</span>,</a>
+<a class="sourceLine" id="cb10-19" title="19">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">3.2</span>), <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-20" title="20"><span class="kw">lines</span>(x, g<span class="op">/</span>f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="kw">lines</span>(x, g<span class="op">/</span>f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-22" title="22"><span class="kw">lines</span>(x, g<span class="op">/</span>f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="kw">lines</span>(x, g<span class="op">/</span>f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb10-24" title="24"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb10-25" title="25">       <span class="dt">col =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb11-2" title="2">theta.hat &lt;-<span class="st"> </span>se &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb11-4" title="4">    <span class="co">## exp(-x - log(1+x^2)) * (x &gt; 0) * (x &lt; 1)</span></a>
+<a class="sourceLine" id="cb11-5" title="5">    <span class="kw">exp</span>(<span class="op">-</span>x)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb11-6" title="6">}</a>
+<a class="sourceLine" id="cb11-7" title="7"></a>
+<a class="sourceLine" id="cb11-8" title="8">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># usando f0</span></a>
+<a class="sourceLine" id="cb11-9" title="9">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x)</a>
+<a class="sourceLine" id="cb11-10" title="10">theta.hat[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb11-11" title="11">se[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb11-12" title="12"></a>
+<a class="sourceLine" id="cb11-13" title="13">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="dv">1</span>)   <span class="co"># usando f1</span></a>
+<a class="sourceLine" id="cb11-14" title="14">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb11-15" title="15">theta.hat[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb11-16" title="16">se[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb11-17" title="17"></a>
+<a class="sourceLine" id="cb11-18" title="18">x &lt;-<span class="st"> </span><span class="kw">rcauchy</span>(m)   <span class="co"># usando f2</span></a>
+<a class="sourceLine" id="cb11-19" title="19">i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">which</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>), <span class="kw">which</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb11-20" title="20">x[i] &lt;-<span class="st"> </span><span class="dv">2</span>  <span class="co"># para evitar erros em g(x)</span></a>
+<a class="sourceLine" id="cb11-21" title="21">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">dcauchy</span>(x)</a>
+<a class="sourceLine" id="cb11-22" title="22">theta.hat[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb11-23" title="23">se[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb11-24" title="24"></a>
+<a class="sourceLine" id="cb11-25" title="25">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># f3, pelo método da inversa</span></a>
+<a class="sourceLine" id="cb11-26" title="26">x &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>u <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb11-27" title="27">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb11-28" title="28">theta.hat[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb11-29" title="29">se[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb11-30" title="30"></a>
+<a class="sourceLine" id="cb11-31" title="31">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)    <span class="co"># f4, pelo método da inversa</span></a>
+<a class="sourceLine" id="cb11-32" title="32">x &lt;-<span class="st"> </span><span class="kw">tan</span>(pi <span class="op">*</span><span class="st"> </span>u <span class="op">/</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb11-33" title="33">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi))</a>
+<a class="sourceLine" id="cb11-34" title="34">theta.hat[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb11-35" title="35">se[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a></code></pre></div>
+<p>Os resultados das estimativas com seus erros-padrões são</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">rbind</span>(theta.hat, se<span class="op">/</span><span class="kw">sqrt</span>(m))</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co">#                  [,1]        [,2]        [,3]         [,4]        [,5]</span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="co"># theta.hat 0.529818632 0.515872875 0.516541531 0.5229808794 0.523916815</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co">#           0.002473804 0.004197679 0.009495447 0.0009789315 0.001410172</span></a></code></pre></div>
+<p>Os resultados indicam que <span class="math inline">\(f_3\)</span>, e possivelmente <span class="math inline">\(f_4\)</span> produzem as menores variâncias entre as funções propostas, enquanto que <span class="math inline">\(f_2\)</span> possui a maior variância. Note que <span class="math inline">\(f_0\)</span>, a uniforme, possui erro padrão maior.</p>
+<p>Esse exemplo mostra que a função de importância que resulta na menor variância de <span class="math inline">\(Y = g(X)/f(X)\)</span> deve ser escolhida com cuidado.</p>
+</div>
+</div>
+
+<center>
+  <hr width="100%" size="3px">
+  <p> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR">
+      <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" alt="Licença Creative Commons 4.0"> </a>
+  </p>
+  <p> <font size="2"> Este conteúdo
+      está disponível por meio da Licença Creative Commons 4.0 </font>
+  </p>
+</center>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

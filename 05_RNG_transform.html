@@ -468,13 +468,13 @@ div.tocify {
 </div>
 
 
-<div id="introducao" class="section level1">
+<div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
 <p>A ideia do método da transformação de variáveis é gerar valores aleatórios de uma distribuição qualquer, com base na relação com alguma outra distribuição conhecida. Portanto, primeiro gera-se valores de uma distribuição da qual se conhece e que possua um bom gerador disponível. Depois disso, basta aplicar a transformação para se chegar nos valores da distribuição desejada.</p>
 <p>Um exemplo típico é, por exemplo, quando queremos gerar valores de uma distribuição <span class="math inline">\(\text{logN}(\mu, \sigma^2)\)</span> a partir de valores gerados de uma <span class="math inline">\(\text{N}(\mu, \sigma^2)\)</span>. Nesse caso, se <span class="math inline">\(Y \sim \text{N}(\mu, \sigma^2)\)</span>, então usando a transformação <span class="math inline">\(X = e^{Y}\)</span>, <span class="math inline">\(X\)</span> terá distribuição <span class="math inline">\(\text{logN}(\mu, \sigma^2)\)</span>, pois <span class="math inline">\(\log X = Y\)</span>.</p>
 <p>Para um diagrama completo (ou quase) da relação entre distribuições univariadas, veja <a href="http://www.math.wm.edu/~leemis/chart/UDR/UDR.html">Univariate Distribution Relationships</a> de Lawrence Leemis.</p>
 </div>
-<div id="exemplos-de-transformacoes" class="section level1">
+<div id="exemplos-de-transformações" class="section level1">
 <h1><span class="header-section-number">2</span> Exemplos de transformações</h1>
 <p>Alguns exemplos são:</p>
 <ol style="list-style-type: decimal">
@@ -495,7 +495,7 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 </ol>
 <p><strong>Somas</strong> e <strong>misturas</strong> de distribuições são considerados tipos especiais de transformações.</p>
 <p>Veremos algumas implementações abaixo.</p>
-<div id="exemplo-distribuicao-beta" class="section level2">
+<div id="exemplo-distribuição-beta" class="section level2">
 <h2><span class="header-section-number">2.1</span> Exemplo (distribuição Beta)</h2>
 <p>Se <span class="math inline">\(U \sim \text{Gama}(r,\lambda)\)</span> e <span class="math inline">\(V \sim \text{Gama}(s,\lambda)\)</span> são independentes, então <span class="math display">\[
 X = \frac{U}{U+V}
@@ -522,7 +522,7 @@ X = \frac{U}{U+V}
 <a class="sourceLine" id="cb1-14" title="14"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="exemplo-distribuicao-logaritmica" class="section level2">
+<div id="exemplo-distribuição-logarítmica" class="section level2">
 <h2><span class="header-section-number">2.2</span> Exemplo (distribuição Logarítmica)</h2>
 <p>(Este é um exemplo de uma distribuição onde não existe uma função pronta no R para gerar valores).</p>
 <p>Dizemos que <span class="math inline">\(X\)</span> segue a distribuição (discreta) Logarítmica se <span class="math display">\[
@@ -572,7 +572,7 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <div id="somas-e-misturas" class="section level1">
 <h1><span class="header-section-number">3</span> Somas e misturas</h1>
 <p>Somas e misturas de VAs são tipos especiais de transformações. Chamamos de <strong>convolução</strong> a soma de VAs independentes. As <strong>misturas</strong> são VAs formadas pela mistura de outras VAs (discretas ou contínuas).</p>
-<div id="convolucoes" class="section level2">
+<div id="convoluções" class="section level2">
 <h2><span class="header-section-number">3.1</span> Convoluções</h2>
 <p>Seja <span class="math inline">\(X_1, \ldots, X_n\)</span> VAs independentes e identicamente distribuídas, com distribuição comum <span class="math inline">\(X_j \sim X\)</span>, e considere <span class="math inline">\(S = X_1 + \cdots + X_n\)</span>. A função de distribuição da soma <span class="math inline">\(S\)</span> é chamada de <strong>convolução de ordem <span class="math inline">\(n\)</span></strong> de <span class="math inline">\(X\)</span>, e denotada por <span class="math inline">\(F_X^{*(n)}\)</span>.</p>
 <p>Portanto, podemos gerar uma convolução diretamente através da geração de <span class="math inline">\(X_1, \ldots, X_n\)</span> e calculando a soma.</p>
@@ -588,7 +588,7 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <li>A convolução de <span class="math inline">\(r\)</span> VAs independentes <span class="math inline">\(\text{Exp}(\lambda)\)</span> tem distribuição <span class="math inline">\(\text{Gama}(r, \lambda)\)</span>.</li>
 <li>A soma de <span class="math inline">\(n\)</span> VAs iid <span class="math inline">\(\text{Ber}(p)\)</span> tem distribuição <span class="math inline">\(\text{Bin}(n,p)\)</span>.</li>
 </ol>
-<div id="exemplo-distribuicao-qui-quadrado" class="section level3">
+<div id="exemplo-distribuição-qui-quadrado" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Exemplo (distribuição qui-quadrado)</h3>
 <p>Se <span class="math inline">\(Z_1, \ldots, Z_n \sim \text{N}(0,1)\)</span>, então <span class="math inline">\(V = \sum_{i=1}^{n} Z_i^2 \sim \chi^2(n)\)</span>.</p>
 <p>Para gerar <span class="math inline">\(m\)</span> valores de uma <span class="math inline">\(\chi^2(n)\)</span>:</p>
@@ -613,7 +613,7 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 <a class="sourceLine" id="cb3-12" title="12"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p><img src="figures/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="exemplo-distribuicao-binomial" class="section level3">
+<div id="exemplo-distribuição-binomial" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Exemplo (distribuição binomial)</h3>
 <p>Se <span class="math inline">\(X_1, \ldots, X_n \sim \text{Ber}(p)\)</span>, então <span class="math inline">\(Y = \sum_{i=1}^{n} X_1 + \cdots + X_n\)</span> terá distribuição <span class="math inline">\(\text{Bin}(n,p)\)</span></p>
 <p>Para gerar <span class="math inline">\(m\)</span> valores de uma <span class="math inline">\(\text{Bin}(n, p)\)</span> (usando a geração de Bernoulli pela uniforme):</p>
@@ -658,7 +658,7 @@ X = \left\lfloor 1 + \frac{\log (V)}{\log (1 - (1 - \theta)^U)}
 </div>
 </div>
 </div>
-<div id="distribuicao-normal" class="section level1">
+<div id="distribuição-normal" class="section level1">
 <h1><span class="header-section-number">4</span> Distribuição normal</h1>
 <p>Existem vários métodos para se gerar valores aleatórios de uma distribuição normal.</p>
 <p>Geralmente, estes métodos são desenvolvidos para gerar valores de uma distribuição normal padrão <span class="math inline">\(\text{N}(0,1)\)</span>. No entanto, sabemos que a transformação <span class="math display">\[
@@ -666,7 +666,7 @@ Z = \frac{X - \mu}{\sigma} \sim \text{N}(0,1)
 \]</span> Portanto, podemos obter <span class="math display">\[
 X = Z\sigma + \mu
 \]</span> que terá distribuição <span class="math inline">\(\text{N}(\mu, \sigma^2)\)</span>, a partir de valores gerados de <span class="math inline">\(Z\)</span>.</p>
-<div id="por-convolucao" class="section level2">
+<div id="por-convolução" class="section level2">
 <h2><span class="header-section-number">4.1</span> Por convolução</h2>
 <p>Se <span class="math inline">\(U_1, \ldots, U_{12} \sim \text{U}(-1/2,1/2)\)</span>, então <span class="math inline">\(Z = \sum_{i=1}^{12} U_i\)</span> terá distribuição <span class="math inline">\(\text{N}(0,1)\)</span>.</p>
 <p>Note que, neste caso, <span class="math inline">\(\text{E}[Z] = 0\)</span> e <span class="math inline">\(\text{Var}[Z] = 1\)</span>. Pelo <strong>Teorema do Limite Central</strong> (TLC), e sabendo do fato que a Uniforme é simétrica, então <span class="math inline">\(Z \sim \text{N}(0,1)\)</span>.</p>
@@ -693,7 +693,7 @@ X = Z\sigma + \mu
 <p>Note que as caudas da distribuição empírica começa a se afastar um pouco da teórica. De fato, esse é um problema desse método simples por convolução.</p>
 <p>Os métodos a seguir são mais recomendados (e utilizados) para gerar valores da normal.</p>
 </div>
-<div id="metodo-de-box-muller" class="section level2">
+<div id="método-de-box-muller" class="section level2">
 <h2><span class="header-section-number">4.2</span> Método de Box-Muller</h2>
 <p>A ideia geral do métopdo desenvolvido por Box e Muller é transformar a relação entre duas normais padrão, de coordenadas cartesianas para coordenadas polares, ou seja,</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">plot</span>(<span class="kw">rnorm</span>(<span class="dv">10000</span>), <span class="kw">rnorm</span>(<span class="dv">10000</span>))</a></code></pre></div>
@@ -848,7 +848,7 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <a class="sourceLine" id="cb9-19" title="19"><span class="kw">boxmuller</span>(<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb9-20" title="20"><span class="co"># [1] 1.0071460 1.0662797 0.1684460 0.1523806 0.3098626</span></a></code></pre></div>
 </div>
-<div id="metodo-de-coordenadas-polares" class="section level2">
+<div id="método-de-coordenadas-polares" class="section level2">
 <h2><span class="header-section-number">4.3</span> Método de coordenadas polares</h2>
 <p>O método de coordenadas polares (ou simplemente método polar) é uma variação do método de Box-Muller. A motivação do método foi a de evitar o uso de funções transcendentais como seno e cossseno.</p>
 <ol style="list-style-type: decimal">
@@ -920,14 +920,14 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean   median       uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.942  105.6405  112.3212  109.735  117.394</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2812.376 2972.9925 3434.3717 3031.861 3112.702</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean    median       uq</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  102.632  107.123  116.5463  114.6575  121.510</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2883.557 3015.088 3511.4525 3097.9840 3176.076</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    134.319   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10044.114   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    157.677   100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10469.850   100</span></a></code></pre></div>
 </div>
-<div id="a-funcao-rnorm" class="section level2">
+<div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
 <p>No R, sabemos que a função <code>rnorm()</code> serve para gerar valores aleatórios da distribuição normal. Esta função usa um algoritmo chamadpo de “inversão”, cujos detalhes estão descritos em <code>help(qnorm)</code>.</p>
 <p>No entanto, assim como no caso da Uniforme, também estão implementados outros algoritmos para gerar valores da Normal, incluindo o algoritmo de Box-Muller.</p>
@@ -963,7 +963,7 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p><img src="figures/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="funcoes" class="section level1">
+<div id="funções" class="section level1">
 <h1><span class="header-section-number">5</span> Funções</h1>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">plotcirc &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) {</a>
 <a class="sourceLine" id="cb17-2" title="2">    <span class="co">## eixo x = a + cos \theta * raio</span></a>
@@ -981,7 +981,7 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <a class="sourceLine" id="cb17-14" title="14">    <span class="kw">points</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb17-15" title="15">}</a></code></pre></div>
 </div>
-<div id="exercicios" class="section level1">
+<div id="exercícios" class="section level1">
 <h1><span class="header-section-number">6</span> Exercícios</h1>
 <ol style="list-style-type: decimal">
 <li>Faça a implementação das distribuições mencionadas e que não foram implementadas aqui.</li>

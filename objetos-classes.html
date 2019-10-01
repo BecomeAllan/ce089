@@ -467,15 +467,15 @@ div.tocify {
 </div>
 
 
-<div id="funcoes-e-argumentos" class="section level1">
+<div id="funções-e-argumentos" class="section level1">
 <h1><span class="header-section-number">1</span> Funções e argumentos</h1>
 <p>As funções no R são definidas como:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">nome</span>(argumento1, argumento2, ...)</a></code></pre></div>
 <p>Exemplo: função <code>runif()</code> (para gerar valores aleatórios de uma distribuição uniforme):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 87.308697 96.752508 86.824711 44.333815 20.001841  9.147146 58.761712</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8]  7.965788 53.238603 47.756540</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 81.389806 33.384041 77.881297 70.453752 22.658670 44.812161 84.061569</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 96.759214  3.594182 60.187811</span></a></code></pre></div>
 <p>Argumentos que já possuem um valor especificado (como <code>max</code> e <code>min</code>) podem ser omitidos:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>)</a></code></pre></div>
 <p>Se os argumentos forem nomeados, a ordem deles dentro da função não tem mais importância:</p>
@@ -557,7 +557,7 @@ div.tocify {
 <p>Para atualizar automaticamente todos os pacotes faça</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">update.packages</span>(<span class="dt">ask =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
-<div id="criando-uma-funcao" class="section level1">
+<div id="criando-uma-função" class="section level1">
 <h1><span class="header-section-number">3</span> Criando uma função</h1>
 <p>A ideia original do R é transformar usuários em programadores</p>
 <blockquote>
@@ -580,7 +580,7 @@ div.tocify {
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">ola.mundo</span>(<span class="st">&quot;Funções são legais&quot;</span>)</a>
 <a class="sourceLine" id="cb26-2" title="2"><span class="co"># Funções são legais</span></a></code></pre></div>
 <p>(Veremos detalhes de funções mais adiante)</p>
-<div id="exercicios-1" class="section level2">
+<div id="exercícios-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Exercícios 1</h2>
 <ol style="list-style-type: decimal">
 <li>Usando a função <code>runif()</code> gere <span class="math inline">\(30\)</span> números aleatórios entre:
@@ -656,8 +656,8 @@ div.tocify {
 <p>Objetos podem armazenar diferentes estruturas de dados:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb34-2" title="2">y</a>
-<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.04819137 0.59454081 0.79127122 0.59886868 0.02791593 0.39572663</span></a>
-<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.10624396 0.02411139 0.84089777 0.32639993</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.002494266 0.665600482 0.841280356 0.837529009 0.975058771</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [6] 0.866146188 0.854758798 0.027386882 0.913168983 0.830082558</span></a></code></pre></div>
 <p>Note que cada objeto só pode armazenar uma estrutura (um número ou uma sequência de valores) de cada vez! (Aqui, o valor <span class="math inline">\(4\)</span> que estava armazenado em <code>y</code> foi sobrescrito pelos valores acima.)</p>
 <div id="nomes-de-objetos" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nomes de objetos</h2>
@@ -674,7 +674,7 @@ div.tocify {
 </ul>
 <p><code>dados</code> <span class="math inline">\(\neq\)</span> <code>Dados</code> <span class="math inline">\(\neq\)</span> <code>DADOS</code></p>
 </div>
-<div id="gerenciando-a-area-de-trabalho" class="section level2">
+<div id="gerenciando-a-área-de-trabalho" class="section level2">
 <h2><span class="header-section-number">4.2</span> Gerenciando a área de trabalho</h2>
 <p>Liste os objetos criados com a função <code>ls()</code>:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">ls</span>()</a></code></pre></div>
@@ -688,7 +688,7 @@ div.tocify {
 <p><strong>Cuidado!</strong> O comando acima apaga todos os objetos na sua área de trabalho sem perguntar. Depois só é possível recuperar os objetos ao rodar os script novamente.</p>
 </div>
 </div>
-<div id="exercicios-2" class="section level2">
+<div id="exercícios-2" class="section level2">
 <h2><span class="header-section-number">4.3</span> Exercícios 2</h2>
 <ol style="list-style-type: decimal">
 <li>Armazene o resultado da equação <span class="math inline">\(32 + 16^2 - 25^3\)</span> no objeto <code>x</code></li>
@@ -758,7 +758,7 @@ div.tocify {
 <a class="sourceLine" id="cb39-34" title="34"><span class="co"># [1] &quot;raw&quot;</span></a>
 <a class="sourceLine" id="cb39-35" title="35"><span class="kw">class</span>(x)</a>
 <a class="sourceLine" id="cb39-36" title="36"><span class="co"># [1] &quot;raw&quot;</span></a></code></pre></div>
-<div id="vetores-numericos" class="section level2">
+<div id="vetores-numéricos" class="section level2">
 <h2><span class="header-section-number">5.1</span> Vetores numéricos</h2>
 <p>Características:</p>
 <ul>
@@ -788,7 +788,7 @@ div.tocify {
 <a class="sourceLine" id="cb42-3" title="3"><span class="kw">object.size</span>(x)</a>
 <a class="sourceLine" id="cb42-4" title="4"><span class="co"># 80 bytes</span></a></code></pre></div>
 <p>A diferença pode parecer pequena, mas pode ter um grande impacto computacional quando os vetores são formados por milhares ou milhões de números.</p>
-<div id="representacao-numerica-dentro-do-r" class="section level3">
+<div id="representação-numérica-dentro-do-r" class="section level3">
 <h3><span class="header-section-number">5.1.1</span> Representação numérica dentro do R</h3>
 <p>Os números que aparecem na tela do console do R são apenas representações simplificadas do número real armazenado na memória. Por exemplo,</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
@@ -834,7 +834,7 @@ div.tocify {
 <a class="sourceLine" id="cb49-4" title="4"><span class="co">#  [9] &quot;5.514350e-01&quot; &quot;4.566147e-01&quot;</span></a></code></pre></div>
 <p>Nessa representação, o valor 2.875775e-01 = <span class="math inline">\(2.875775 \times 10^{-01}\)</span> = <span class="math inline">\(0.2875775\)</span>.</p>
 </div>
-<div id="sequencias-de-numeros" class="section level3">
+<div id="sequências-de-números" class="section level3">
 <h3><span class="header-section-number">5.1.2</span> Sequências de números</h3>
 <p>Usando a função <code>seq()</code></p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>)</a>
@@ -857,7 +857,7 @@ div.tocify {
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb55-2" title="2"><span class="co">#  [1] 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3</span></a></code></pre></div>
 </div>
-<div id="operacoes-matematicas-em-vetores-numericos" class="section level3">
+<div id="operações-matemáticas-em-vetores-numéricos" class="section level3">
 <h3><span class="header-section-number">5.1.3</span> Operações matemáticas em vetores numéricos</h3>
 <p>Operações podem ser feitas entre um vetor e um número:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">num <span class="op">*</span><span class="st"> </span><span class="dv">2</span></a>
@@ -1026,7 +1026,7 @@ div.tocify {
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1"><span class="kw">is.infinite</span>(perd)</a>
 <a class="sourceLine" id="cb71-2" title="2"><span class="co"># [1]  TRUE FALSE  TRUE</span></a></code></pre></div>
 </div>
-<div id="exercicios-3" class="section level2">
+<div id="exercícios-3" class="section level2">
 <h2><span class="header-section-number">5.5</span> Exercícios 3</h2>
 <ol style="list-style-type: decimal">
 <li>Crie um objeto com os valores 54, 0, 17, 94, 12.5, 2, 0.9, 15.
@@ -1177,7 +1177,7 @@ div.tocify {
 <a class="sourceLine" id="cb83-14" title="14"><span class="co"># [1] &quot;matrix&quot;</span></a>
 <a class="sourceLine" id="cb83-15" title="15"><span class="kw">typeof</span>(m)</a>
 <a class="sourceLine" id="cb83-16" title="16"><span class="co"># [1] &quot;integer&quot;</span></a></code></pre></div>
-<div id="operacoes-matematicas-em-matrizes" class="section level3">
+<div id="operações-matemáticas-em-matrizes" class="section level3">
 <h3><span class="header-section-number">6.2.1</span> Operações matemáticas em matrizes</h3>
 <p>Matriz multiplicada por um escalar</p>
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1">matriz <span class="op">*</span><span class="st"> </span><span class="dv">2</span></a>
@@ -1539,7 +1539,7 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div id="exercicios-4" class="section level2">
+<div id="exercícios-4" class="section level2">
 <h2><span class="header-section-number">7.1</span> Exercícios 4</h2>
 <ol style="list-style-type: decimal">
 <li>Crie um objeto para armazenar a seguinte matriz <span class="math display">\[\left[ \begin{array}{ccc}
@@ -1563,7 +1563,7 @@ div.tocify {
 <p>Para criar o data frame, a primeira linha deve ser preenchida com as suas próprias informações (use a função <code>data.frame()</code>). Depois, pergunte essas mesmas informações para dois colegas ao seu lado, e adicione as informações deles à esse data frame (use <code>rbind()</code>). Acresente mais uma coluna com o nome do time de futebol de cada um.</p>
 </div>
 </div>
-<div id="programacao-orientada-a-objetos" class="section level1">
+<div id="programação-orientada-a-objetos" class="section level1">
 <h1><span class="header-section-number">8</span> Programação Orientada a Objetos</h1>
 <p>Como vimos anteriormente, o R é uma linguagem de programação orientada à objetos. Dois conceitos fundamentais desse tipo de linguagem são os de <strong>classe</strong> e <strong>método</strong>. Já vimos também que todo objeto no R possui uma classe (que define sua estrutura) e analisamos algumas delas. O que seria então um método? Para responder essa pergunta precisamos entender inicialmente os tipos de orientação a objetos que o R possui.</p>
 <p>O R possui 3 sitemas de orientação a objetos: <strong>S3</strong>, <strong>S4</strong>, e <strong>RC</strong>:</p>
@@ -1597,7 +1597,7 @@ div.tocify {
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">mean</a>
 <a class="sourceLine" id="cb111-2" title="2"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x3f48700&gt;</span></a>
+<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x5ad80d0&gt;</span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">mean.default</a>
@@ -1625,7 +1625,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x3f52338&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x5ad9cf8&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1670,7 +1670,7 @@ div.tocify {
 <a class="sourceLine" id="cb118-20" title="20"><span class="co"># [1] 0.4946632</span></a></code></pre></div>
 <p>Obviamente esse processo todo é extremamente importante ao se criar novas funções no R. Podemos tanto criar uma função genérica (como a <code>mean()</code>) e diversos métodos para ela usando classes de objetos existentes, quanto (inclusive) criar novas classes e funções método para elas. Essa é uma das grandes lberdades que o método S3 de orientação à objetos permite, e possivelmente um dos motivos pelos quais é relativamente simples criar pacotes inteiros no R.</p>
 </div>
-<div id="referencias" class="section level1">
+<div id="referências" class="section level1">
 <h1><span class="header-section-number">9</span> Referências</h1>
 <p>Para mais detalhes e exemplos dos assuntos abordados aqui, veja <span class="citation">Grolemund (2014)</span>. Uma abordagem mais avançada e detalhada sobre programação orientada a objetos no R pode ser consultada em <span class="citation">(<span class="citeproc-not-found" data-reference-id="Wickham2015"><strong>???</strong></span>)</span>.</p>
 <div id="refs">
@@ -1679,13 +1679,13 @@ div.tocify {
 </div>
 </div>
 </div>
-<div id="respostas-dos-exercicios" class="section level1">
+<div id="respostas-dos-exercícios" class="section level1">
 <h1><span class="header-section-number">10</span> Respostas dos exercícios</h1>
 <p>A resolução dos exercícios desta página está disponível neste <a href="scripts/objetos-classes-exercicios.R">script</a>.</p>
 </div>
-<div id="informacao-de-sessao" class="section level1">
+<div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Monday, 23 September, 2019, 23:52
+<pre><code># Tuesday, 01 October, 2019, 23:16
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1710,10 +1710,10 @@ div.tocify {
 # [1] knitr_1.25
 # 
 # loaded via a namespace (and not attached):
-#  [1] microbenchmark_1.4-6 compiler_3.6.1       magrittr_1.5        
+#  [1] microbenchmark_1.4-7 compiler_3.6.1       magrittr_1.5        
 #  [4] tools_3.6.1          htmltools_0.3.6      yaml_2.2.0          
-#  [7] Rcpp_1.0.2           stringi_1.4.3        rmarkdown_1.15.2    
-# [10] stringr_1.4.0        xfun_0.9             digest_0.6.21       
+#  [7] Rcpp_1.0.2           stringi_1.4.3        rmarkdown_1.16.1    
+# [10] stringr_1.4.0        xfun_0.10            digest_0.6.21       
 # [13] evaluate_0.14</code></pre>
 </div>
 
