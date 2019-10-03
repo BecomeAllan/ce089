@@ -13,16 +13,6 @@ output:
 source("setup_knitr.R")
 ```
 
-<!-- - Método de Monte Carlo -->
-<!--   - Integração -->
-<!--   - Simulação -->
-<!-- - Estimativa de área do pi -->
-<!-- - Integração simples -->
-<!--   - Exemplos e variância -->
-<!-- - Técnicas de redução de variância -->
-<!--   - Exemplos -->
-<!--   - Amostragem por importância -->
-
 > *Monte Carlo methods are experiments.*
 
 > Gentle, J. (2009)
@@ -205,6 +195,7 @@ final, tendem a reproduzir a área da função desejada.
 ```{r, echo=FALSE, out.width='90%'}
 knitr::include_graphics("img/MCIntegration03.png")
 ```
+(Figuras extraídas de https://www.scratchapixel.com).
 
 De maneira geral, para calcular $\theta = \int_a^b g(x) dx$:
 
@@ -305,6 +296,26 @@ c(m.theta.hat, v.theta.hat)
 c(m.theta.hat - 1.96 * se.theta.hat, m.theta.hat + 1.96 * se.theta.hat)
 ```
 
+Veja que assintoticamente, i.e., conforme aumentamos o tamanho da
+amostra, o valor da integral se aproxima cada vez mais do valor
+verdadeiro (que nesse caso sabemos calcular analiticamente, apenas para
+comparação).
+
+```{r}
+## Simula a convergência para o verdadeiro valor conforme aumenta o
+## tamanho da amostra
+nsamp <- 1e4
+set.seed(19)
+x <- exp(-runif(nsamp, a, b))
+estint <- (cumsum(x) * (b - a))/(1:nsamp)
+esterr <- sqrt(cumsum((x - estint)^2))/(1:nsamp)
+plot(estint, ylim = c(.05, .15), type = "l",
+     xlab = "Tamanho da amostra", ylab = "Estimativa")
+abline(h = theta, col = 2)
+lines(estint - 1.96 * esterr, lty = 2)
+lines(estint + 1.96 * esterr, lty = 2)
+```
+
 ## Redução da variância
 
 Note que, embora a variância do estimador do exemplo anterior pareça
@@ -350,6 +361,7 @@ significativamente reduzida.
 ```{r, echo=FALSE, out.width='50%'}
 knitr::include_graphics("img/importancesampling.png")
 ```
+(Figura extraída de https://www.scratchapixel.com).
 
 Suponha que $X$ seja uma VA com densidade $f(x)$. Seja $Y$ a VA
 $g(X)/f(X)$, então
