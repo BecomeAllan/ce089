@@ -921,11 +921,11 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
 <a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean    median        uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.925  106.4245  114.2366  113.2615  118.7305</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2817.032 2975.0760 3458.6630 3021.4455 3122.0030</span></a>
-<a class="sourceLine" id="cb14-6" title="6"><span class="co">#       max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#   147.320   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  9966.761   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.694  108.6895  115.3229  114.8465  119.3815</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 3017.986 3188.1845 3812.5259 3257.5330 3359.7980</span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    140.286   100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  12669.193   100</span></a></code></pre></div>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>

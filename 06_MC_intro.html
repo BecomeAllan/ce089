@@ -467,15 +467,6 @@ div.tocify {
 </div>
 
 
-<!-- - Método de Monte Carlo -->
-<!--   - Integração -->
-<!--   - Simulação -->
-<!-- - Estimativa de área do pi -->
-<!-- - Integração simples -->
-<!--   - Exemplos e variância -->
-<!-- - Técnicas de redução de variância -->
-<!--   - Exemplos -->
-<!--   - Amostragem por importância -->
 <blockquote>
 <p><em>Monte Carlo methods are experiments.</em></p>
 </blockquote>
@@ -572,7 +563,7 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 <p>Visualmente, temos a seguinte situação:</p>
 <p><img width="40%" src="img/MCIntegration01.png"/> <img width="40%" src="img/MCIntegration02.png"/></p>
 <p>O que temos, na verdade, é a soma de <span class="math inline">\(m\)</span> áreas de retângulos, que no final, tendem a reproduzir a área da função desejada.</p>
-<p><img src="img/MCIntegration03.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="img/MCIntegration03.png" width="90%" style="display: block; margin: auto;" /> (Figuras extraídas de <a href="https://www.scratchapixel.com" class="uri">https://www.scratchapixel.com</a>).</p>
 <p>De maneira geral, para calcular <span class="math inline">\(\theta = \int_a^b g(x) dx\)</span>:</p>
 <ol style="list-style-type: decimal">
 <li>Gere <span class="math inline">\(X_1, \ldots, X_m\)</span> de <span class="math inline">\(U(a,b)\)</span></li>
@@ -639,6 +630,20 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 <a class="sourceLine" id="cb9-4" title="4"><span class="co">## Intervalo de confiança (95%)</span></a>
 <a class="sourceLine" id="cb9-5" title="5"><span class="kw">c</span>(m.theta.hat <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>se.theta.hat, m.theta.hat <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>se.theta.hat)</a>
 <a class="sourceLine" id="cb9-6" title="6"><span class="co"># [1] 0.1158086 0.1184380</span></a></code></pre></div>
+<p>Veja que assintoticamente, i.e., conforme aumentamos o tamanho da amostra, o valor da integral se aproxima cada vez mais do valor verdadeiro (que nesse caso sabemos calcular analiticamente, apenas para comparação).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## Simula a convergência para o verdadeiro valor conforme aumenta o</span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="co">## tamanho da amostra</span></a>
+<a class="sourceLine" id="cb10-3" title="3">nsamp &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="kw">set.seed</span>(<span class="dv">19</span>)</a>
+<a class="sourceLine" id="cb10-5" title="5">x &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="kw">runif</span>(nsamp, a, b))</a>
+<a class="sourceLine" id="cb10-6" title="6">estint &lt;-<span class="st"> </span>(<span class="kw">cumsum</span>(x) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))<span class="op">/</span>(<span class="dv">1</span><span class="op">:</span>nsamp)</a>
+<a class="sourceLine" id="cb10-7" title="7">esterr &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">cumsum</span>((x <span class="op">-</span><span class="st"> </span>estint)<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span>(<span class="dv">1</span><span class="op">:</span>nsamp)</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="kw">plot</span>(estint, <span class="dt">ylim =</span> <span class="kw">c</span>(.<span class="dv">05</span>, <span class="fl">.15</span>), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>,</a>
+<a class="sourceLine" id="cb10-9" title="9">     <span class="dt">xlab =</span> <span class="st">&quot;Tamanho da amostra&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Estimativa&quot;</span>)</a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="kw">abline</span>(<span class="dt">h =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">lines</span>(estint <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>esterr, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="kw">lines</span>(estint <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>esterr, <span class="dt">lty =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="redução-da-variância" class="section level2">
 <h2><span class="header-section-number">2.3</span> Redução da variância</h2>
@@ -660,7 +665,7 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 </ol>
 <p>Quando consideramos um problema de integração como um problema de valor esperado, é netural que consideremos outras funções de densidade além da Uniforme. Isso leva à um método mais geral chamdo de <strong>amostragem por importância</strong>.</p>
 <p>A amostragem por importância reduz a variância pelo fato de podermos escolher uma densidade <span class="math inline">\(f(x)\)</span> mais parecida com com a função <span class="math inline">\(g(x)\)</span> sendo integrada. Ao escolher uma densidade mais parecida, a variância é reduzida. Intuitivamente, a amostragem por importância tende a gerar mais amostra onde a contribuição para a integral é maior, ou “importante”. Se pudermos determinar as regiões mais importantes para a integração, a variância do estimador de Monte Carlo pode ser significativamente reduzida.</p>
-<p><img src="img/importancesampling.png" width="50%" style="display: block; margin: auto;" /></p>
+<p><img src="img/importancesampling.png" width="50%" style="display: block; margin: auto;" /> (Figura extraída de <a href="https://www.scratchapixel.com" class="uri">https://www.scratchapixel.com</a>).</p>
 <p>Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y\)</span> a VA <span class="math inline">\(g(X)/f(X)\)</span>, então <span class="math display">\[
 \int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
 \]</span> Com isso, podemos estimar <span class="math inline">\(\text{E}[Y]\)</span> como uma integração simples de Monte Carlo, ou seja, <span class="math display">\[
@@ -687,73 +692,73 @@ f_4(x) &amp;= 4(1-x^2)^{-1}/\pi, \quad 0&lt;x&lt;1 \\
 <li><span class="math inline">\(f_3\)</span> e <span class="math inline">\(f_4\)</span> não são funções conhecidas, por isso precisamos usar o método da transformação integral de probabilidade para gerar números destas distribuições</li>
 </ul>
 <p>Graficamente temos o seguinte cenário:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">.01</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2">w &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb10-3" title="3">f1 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
-<a class="sourceLine" id="cb10-4" title="4">f2 &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>pi) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb10-5" title="5">f3 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb10-6" title="6">f4 &lt;-<span class="st"> </span><span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi)</a>
-<a class="sourceLine" id="cb10-7" title="7">g &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb10-8" title="8"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)&quot;</span>,</a>
-<a class="sourceLine" id="cb10-10" title="10">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="kw">lines</span>(x, g<span class="op">/</span>g, <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-12" title="12"><span class="kw">lines</span>(x, f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-13" title="13"><span class="kw">lines</span>(x, f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-14" title="14"><span class="kw">lines</span>(x, f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-15" title="15"><span class="kw">lines</span>(x, f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-16" title="16"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;g&quot;</span>, <span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb10-17" title="17">       <span class="dt">col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
-<a class="sourceLine" id="cb10-18" title="18"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)/f(x)&quot;</span>,</a>
-<a class="sourceLine" id="cb10-19" title="19">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">3.2</span>), <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-20" title="20"><span class="kw">lines</span>(x, g<span class="op">/</span>f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-21" title="21"><span class="kw">lines</span>(x, g<span class="op">/</span>f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-22" title="22"><span class="kw">lines</span>(x, g<span class="op">/</span>f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-23" title="23"><span class="kw">lines</span>(x, g<span class="op">/</span>f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
-<a class="sourceLine" id="cb10-24" title="24"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
-<a class="sourceLine" id="cb10-25" title="25">       <span class="dt">col =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
-<a class="sourceLine" id="cb10-26" title="26"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb11-2" title="2">theta.hat &lt;-<span class="st"> </span>se &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb11-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb11-4" title="4">    <span class="co">## exp(-x - log(1+x^2)) * (x &gt; 0) * (x &lt; 1)</span></a>
-<a class="sourceLine" id="cb11-5" title="5">    <span class="kw">exp</span>(<span class="op">-</span>x)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb11-6" title="6">}</a>
-<a class="sourceLine" id="cb11-7" title="7"></a>
-<a class="sourceLine" id="cb11-8" title="8">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># usando f0</span></a>
-<a class="sourceLine" id="cb11-9" title="9">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x)</a>
-<a class="sourceLine" id="cb11-10" title="10">theta.hat[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
-<a class="sourceLine" id="cb11-11" title="11">se[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
-<a class="sourceLine" id="cb11-12" title="12"></a>
-<a class="sourceLine" id="cb11-13" title="13">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="dv">1</span>)   <span class="co"># usando f1</span></a>
-<a class="sourceLine" id="cb11-14" title="14">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
-<a class="sourceLine" id="cb11-15" title="15">theta.hat[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
-<a class="sourceLine" id="cb11-16" title="16">se[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
-<a class="sourceLine" id="cb11-17" title="17"></a>
-<a class="sourceLine" id="cb11-18" title="18">x &lt;-<span class="st"> </span><span class="kw">rcauchy</span>(m)   <span class="co"># usando f2</span></a>
-<a class="sourceLine" id="cb11-19" title="19">i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">which</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>), <span class="kw">which</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))</a>
-<a class="sourceLine" id="cb11-20" title="20">x[i] &lt;-<span class="st"> </span><span class="dv">2</span>  <span class="co"># para evitar erros em g(x)</span></a>
-<a class="sourceLine" id="cb11-21" title="21">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">dcauchy</span>(x)</a>
-<a class="sourceLine" id="cb11-22" title="22">theta.hat[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
-<a class="sourceLine" id="cb11-23" title="23">se[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
-<a class="sourceLine" id="cb11-24" title="24"></a>
-<a class="sourceLine" id="cb11-25" title="25">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># f3, pelo método da inversa</span></a>
-<a class="sourceLine" id="cb11-26" title="26">x &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>u <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
-<a class="sourceLine" id="cb11-27" title="27">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
-<a class="sourceLine" id="cb11-28" title="28">theta.hat[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
-<a class="sourceLine" id="cb11-29" title="29">se[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
-<a class="sourceLine" id="cb11-30" title="30"></a>
-<a class="sourceLine" id="cb11-31" title="31">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)    <span class="co"># f4, pelo método da inversa</span></a>
-<a class="sourceLine" id="cb11-32" title="32">x &lt;-<span class="st"> </span><span class="kw">tan</span>(pi <span class="op">*</span><span class="st"> </span>u <span class="op">/</span><span class="st"> </span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb11-33" title="33">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi))</a>
-<a class="sourceLine" id="cb11-34" title="34">theta.hat[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
-<a class="sourceLine" id="cb11-35" title="35">se[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">.01</span>)</a>
+<a class="sourceLine" id="cb11-2" title="2">w &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb11-3" title="3">f1 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb11-4" title="4">f2 &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>pi) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-5" title="5">f3 &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb11-6" title="6">f4 &lt;-<span class="st"> </span><span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi)</a>
+<a class="sourceLine" id="cb11-7" title="7">g &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-8" title="8"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)&quot;</span>,</a>
+<a class="sourceLine" id="cb11-10" title="10">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="kw">lines</span>(x, g<span class="op">/</span>g, <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-12" title="12"><span class="kw">lines</span>(x, f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-13" title="13"><span class="kw">lines</span>(x, f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-14" title="14"><span class="kw">lines</span>(x, f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="kw">lines</span>(x, f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;g&quot;</span>, <span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb11-17" title="17">       <span class="dt">col =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb11-18" title="18"><span class="kw">plot</span>(x, g, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;g(x)/f(x)&quot;</span>,</a>
+<a class="sourceLine" id="cb11-19" title="19">     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">3.2</span>), <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-20" title="20"><span class="kw">lines</span>(x, g<span class="op">/</span>f1, <span class="dt">col =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-21" title="21"><span class="kw">lines</span>(x, g<span class="op">/</span>f2, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="kw">lines</span>(x, g<span class="op">/</span>f3, <span class="dt">col =</span> <span class="dv">5</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-23" title="23"><span class="kw">lines</span>(x, g<span class="op">/</span>f4, <span class="dt">col =</span> <span class="dv">6</span>, <span class="dt">lwd =</span> w)</a>
+<a class="sourceLine" id="cb11-24" title="24"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb11-25" title="25">       <span class="dt">col =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb11-26" title="26"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb12-2" title="2">theta.hat &lt;-<span class="st"> </span>se &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb12-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb12-4" title="4">    <span class="co">## exp(-x - log(1+x^2)) * (x &gt; 0) * (x &lt; 1)</span></a>
+<a class="sourceLine" id="cb12-5" title="5">    <span class="kw">exp</span>(<span class="op">-</span>x)<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb12-6" title="6">}</a>
+<a class="sourceLine" id="cb12-7" title="7"></a>
+<a class="sourceLine" id="cb12-8" title="8">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># usando f0</span></a>
+<a class="sourceLine" id="cb12-9" title="9">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x)</a>
+<a class="sourceLine" id="cb12-10" title="10">theta.hat[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb12-11" title="11">se[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb12-12" title="12"></a>
+<a class="sourceLine" id="cb12-13" title="13">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="dv">1</span>)   <span class="co"># usando f1</span></a>
+<a class="sourceLine" id="cb12-14" title="14">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
+<a class="sourceLine" id="cb12-15" title="15">theta.hat[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb12-16" title="16">se[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb12-17" title="17"></a>
+<a class="sourceLine" id="cb12-18" title="18">x &lt;-<span class="st"> </span><span class="kw">rcauchy</span>(m)   <span class="co"># usando f2</span></a>
+<a class="sourceLine" id="cb12-19" title="19">i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">which</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>), <span class="kw">which</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb12-20" title="20">x[i] &lt;-<span class="st"> </span><span class="dv">2</span>  <span class="co"># para evitar erros em g(x)</span></a>
+<a class="sourceLine" id="cb12-21" title="21">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">dcauchy</span>(x)</a>
+<a class="sourceLine" id="cb12-22" title="22">theta.hat[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb12-23" title="23">se[<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb12-24" title="24"></a>
+<a class="sourceLine" id="cb12-25" title="25">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)     <span class="co"># f3, pelo método da inversa</span></a>
+<a class="sourceLine" id="cb12-26" title="26">x &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>u <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb12-27" title="27">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb12-28" title="28">theta.hat[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb12-29" title="29">se[<span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a>
+<a class="sourceLine" id="cb12-30" title="30"></a>
+<a class="sourceLine" id="cb12-31" title="31">u &lt;-<span class="st"> </span><span class="kw">runif</span>(m)    <span class="co"># f4, pelo método da inversa</span></a>
+<a class="sourceLine" id="cb12-32" title="32">x &lt;-<span class="st"> </span><span class="kw">tan</span>(pi <span class="op">*</span><span class="st"> </span>u <span class="op">/</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb12-33" title="33">fg &lt;-<span class="st"> </span><span class="kw">g</span>(x) <span class="op">/</span><span class="st"> </span>(<span class="dv">4</span> <span class="op">/</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>pi))</a>
+<a class="sourceLine" id="cb12-34" title="34">theta.hat[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">mean</span>(fg)</a>
+<a class="sourceLine" id="cb12-35" title="35">se[<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">sd</span>(fg)</a></code></pre></div>
 <p>Os resultados das estimativas com seus erros-padrões são</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">rbind</span>(theta.hat, se<span class="op">/</span><span class="kw">sqrt</span>(m))</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="co">#                  [,1]        [,2]        [,3]         [,4]        [,5]</span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="co"># theta.hat 0.529818632 0.515872875 0.516541531 0.5229808794 0.523916815</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="co">#           0.002473804 0.004197679 0.009495447 0.0009789315 0.001410172</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">rbind</span>(theta.hat, se<span class="op">/</span><span class="kw">sqrt</span>(m))</a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="co">#                  [,1]       [,2]        [,3]         [,4]        [,5]</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co"># theta.hat 0.525261009 0.52980810 0.539874509 0.5250382027 0.525325250</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="co">#           0.002447843 0.00418581 0.009629678 0.0009686918 0.001408793</span></a></code></pre></div>
 <p>Os resultados indicam que <span class="math inline">\(f_3\)</span>, e possivelmente <span class="math inline">\(f_4\)</span> produzem as menores variâncias entre as funções propostas, enquanto que <span class="math inline">\(f_2\)</span> possui a maior variância. Note que <span class="math inline">\(f_0\)</span>, a uniforme, possui erro padrão maior.</p>
 <p>Esse exemplo mostra que a função de importância que resulta na menor variância de <span class="math inline">\(Y = g(X)/f(X)\)</span> deve ser escolhida com cuidado.</p>
 </div>
