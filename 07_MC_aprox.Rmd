@@ -1,6 +1,6 @@
 ---
 title: "Métodos de Monte Carlo"
-subtitle: "Aproximações baseadas em simulação de Monte Carlo"
+subtitle: "Distribuições aproximadas baseadas em simulação de Monte Carlo"
 author: "Fernando P. Mayer"
 bibliography: ref.bib
 output:
@@ -13,13 +13,10 @@ output:
 source("setup_knitr.R")
 ```
 
-# Introdução
-
-# Aproximação de $\pi$
-
-## Método do círculo/quadrado
-
-## Agulha de Buffon
+<!-- # Introdução -->
+<!-- # Aproximação de $\pi$ -->
+<!-- ## Método do círculo/quadrado -->
+<!-- ## Agulha de Buffon -->
 
 # Aproximação de integrais
 
@@ -37,7 +34,7 @@ intervalos de confiança podem ser obtidos devido à suposição de que
 assintoticamente a estimativa possui distribuição normal.
 
 Agora, veremos que podemos obter essa mesma estimativa, mas de uma forma
-um pouco diferente: simulando a proópria distribuição de interesse, e
+um pouco diferente: simulando a própria distribuição de interesse, e
 obtendo valores de áreas (integrais) usando a própria amostra. A
 vantagem é que, dessa forma, obtemos uma descrição mais completa do
 problema em questão, e, com isso, podemos obter outras medidas que forem
@@ -46,7 +43,7 @@ erros-padrões e intervalos de confiança podem ser derivados a partir da
 própria distribuição amostral.
 
 A obtenção de uma amostra da distribuição de interesse será fundamental
-para os métodos de ingerência que veremos mais adiante. Além disso,
+para os métodos de inferência que veremos mais adiante. Além disso,
 estes métodos são utilizados como o "padrão" para a resolução de
 problemas em inferência bayesiana.
 
@@ -119,7 +116,7 @@ estimativa das probabilidades $P[0<X<1]$ e $P[2<X<4]$, respectivamente.
 
 No entanto, se quisermos calcular a seguinte probabilidade
 $$
-P[X>2]\theta = \int_2^{\infty} e^{-x} dx
+P[X>2] = \int_2^{\infty} e^{-x} dx
 $$
 
 Nesse caso, a integração simples de Monte Carlo não é útil, pois não é
@@ -162,8 +159,7 @@ Pela integração simples de Monte Carlo, podemos facilmente obter esta
 estimativa:
 
 ```{r}
-a <- 9.39
-b <- 33.67
+a <- 9.39; b <- 33.67
 m <- 10000
 x <- runif(m, 0.3, 0.5)
 ## Calcula g(x)
@@ -197,7 +193,7 @@ pbeta(0.2, a, b, lower.tail = FALSE)
 Note que nos dois exemplos acima, para cada problema de cálculo de
 probabilidades (integrais), precisamos aplicar o método de Monte Carlo.
 
-No entanto, suponha que precisamos fazer diversos cálculos osb uma
+No entanto, suponha que precisamos fazer diversos cálculos sob uma
 determinada VA. Ao invés de aplicar esse método para cada cálculo,
 podemos pensar que seria mais fácil se pudessemos obter uma amostra da
 distribuição de interesse. A partir desta distribuição, qualquer cálculo
@@ -326,6 +322,24 @@ sum(x >= 2)/N
 pexp(2, 1, lower.tail = FALSE)
 ```
 
+De maneira geral, dessa forma, qualquer probabilidade pode ser calculada
+como mostrado acima. Matematicamente, podemos representar esse processo
+por
+
+$$
+P[X \leq x] = \frac{1}{m} \sum_{i=1}^m I(X \leq x)
+$$
+onde
+$$
+I(X \leq x) =
+\begin{cases}
+1, & \text{se } X \leq x \\
+0, & \text{caso contrário}
+\end{cases}
+$$
+é uma função indicadora. Note que isso se extende para qualquer outro
+tipo de probabilidade, e.g. $P[X > x]$, etc.
+
 ### Exemplo (beta)
 
 Voltando ao exemplo de $X \sim \text{Beta}(a=9.39, b=33.67)$, queremos
@@ -333,12 +347,11 @@ calcular $P[0.3 < X < 0.5]$, mas agora através da obtenção de uma
 amostra completa desta distribuição.
 
 Usando o método de aceitação-rejeição, vamos usar como distribuição
-prpposta uma $\text{U}(0,1)$. Portanto:
+proposta uma $\text{U}(0,1)$. Portanto:
 
 ```{r}
-a <- 9.39
-b <- 33.67
-(M <- optimize(f = function(x) {dbeta(x, a, b)},
+a <- 9.39; b <- 33.67
+(M <- optimize(f = function(x) {dbeta(x, a, b)/dunif(x)},
                interval = c(0, 1), maximum = TRUE)$objective)
 ```
 
@@ -405,8 +418,127 @@ O método de re-amostragem por importância é também muito utilizado no
 contexto de inferência bayesiana, na obtenção de distribuições
 posteriores de parâmetros.
 
+Lembrando que, na amsotrgem por importância, temos o seguinte cenário.
+Suponha que $X$ seja uma VA com densidade $f(x)$. Seja $Y$ a VA
+$g(X)/f(X)$, então
+$$
+\int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
+$$
+Com isso, podemos estimar $\text{E}[Y]$ como uma integração simples de
+Monte Carlo, ou seja,
+$$
+\frac{1}{m}\sum_{i=1}^{m} Y_i = \frac{1}{m}\sum_{i=1}^{m}
+\frac{g(X_i)}{f(X_i)}
+$$
+onde as VAs $X_1, \ldots, X_m$ são geradas a partir da distribuição de
+$f(x)$. A função $f(x)$ é chamada de **função de importância**.
+
+<div class="panel panel-primary">
+<div class="panel-heading">Aproximando uma integral indefinida pela
+amostragem por importância</div>
+<div class="panel-body">
+Voltando brevemente ao caso da exponencial, pela amostragem por
+importância, podemos agora obter uma estimativa de $P[X > 2]$, caso que
+não conseguimos usando a integração simples de Monte Carlo.
 ```{r}
-## Usando o passo-a-passo
+## Define funções
+g <- function(x) exp(-x) * (x >= 2)
+f <- function(x) dexp(x, 0.5) # Prposta é Exp(0.5)
+## 1. Amostra da proposta
+m <- 1e5
+x <- rexp(m, 0.5)
+## 2. Calcula a média da razão
+mean(g(x)/f(x))
+## Teórico
+pexp(2, 1, lower.tail = FALSE)
+```
+</div>
+</div>
+
+O algoritmo para o método de **amostragem por importância** é o
+seguinte:
+
+1. Gerar uma amostra de $m$ observações independentes da função de
+   importância $f(x)$, $\{x_1, \ldots, x_m\}$.
+2. Calcular a razão entre $g(x)$ e $f(x)$ e determinar a média
+$\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}$
+
+A média fornece diretamente uma estimativa de integral requerida.
+
+O algoritmo do método de **re-amostragem por importância** é uma
+extensão do algoritmo anterior e consiste nos seguintes passos:
+
+1. (*Amostragem*) Gerar uma amostra de $m$ observações independentes da
+   função de importância $f(x)$, $\{x_1, \ldots, x_m\}$.
+2. Calcular os **pesos**
+$$
+w(x_i) = \frac{g(x_i)}{f(x_i)}
+$$
+Os pesos dão uma ideia da probabilidade de aceitação de um determinado
+$x_i$. Como estes pesos podem ser maiores do que 1, eles precisam ser
+padronizados por
+$$
+w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
+$$
+3. (*Re-amostragem por importância*) Amostrar **com reposição** $k < m$
+   valores de $\{x_1, \ldots, x_m\}$, utilizando os pesos $\{w^*(x_1),
+   \ldots, w^*(x_m)\}$, como uma **distribuição discreta de
+   probabilidades**.
+
+Dessa forma, $\mathcal{X} = \{x^*_1, \ldots, x^*_k\}$ será uma amostra de
+$g(X)$.
+
+### Exemplo (exponencial)
+
+Seguindo com o exemplo da $\text{Exp}(1)$, o código abaixo serve para
+gerar uma amostra por importância desta distribuição.
+
+A função de importância considerada aqui é uma $\text{Exp}(0.5)$.
+Lembre-se que nesse caso, não é necessário que a função proposta seja
+maior do que a função alvo.
+
+```{r}
+## Define funções
+g <- function(x) exp(-x) * (x >= 0)
+f <- function(x) dexp(x, 0.5)
+## 1. Amostragem
+m <- 1e5
+x <- rexp(m, 0.5)
+## 2. Calcula pesos
+w <- g(x)/f(x)
+w.norm <- w/sum(w)
+## 3. Re-amostragem por importância
+k <- 1e4
+## Amostra considerando os pesos normalizados para cada X
+g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
+## Verifica a distribuição da amostra
+hist(g.sample, freq = FALSE, ylim = c(0, 1))
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+```
+
+É possível ver porque o método funciona quando vemos um gráfico dos
+valoreas amostrados de $X$ com seus respectivos pesos:
+
+```{r}
+plot(x, w.norm)
+```
+
+Com uma amostra completa da distribuição, podemos então calcular
+qualquer tipo de probabilidades:
+
+```{r}
+## P[2 < X < 4]
+sum(g.sample >= 2 & g.sample <= 4)/k
+## Teórica
+pexp(4, 1) - pexp(2, 1)
+## P[X > 2]
+sum(g.sample > 2)/k
+pexp(2, 1, lower.tail = FALSE)
+```
+
+```{r, include=FALSE}
+## Usando a discretização: no caso da exponencial não é util, pois o
+## limite superior precisa ser definido
 g <- function(x) exp(-x) #* (x > 0) * (x < 1)
 m <- 10000
 u <- seq(0, 6, length.out = m)
@@ -416,7 +548,6 @@ teta.sir <- sample(u, size = k, replace = TRUE, prob = p.alpha)
 hist(teta.sir)
 sum(teta.sir > 2)/k
 pexp(2, 1, lower.tail = FALSE)
-
 ## Usando a prórpria densidade
 g <- function(x) exp(-x) #* (x > 0) * (x < 1)
 m <- 10000
@@ -427,33 +558,55 @@ hist(teta.sir)
 sum(teta.sir > 2)/10000
 pexp(2, 1, lower.tail = FALSE)
 integrate(function(x) exp(-x), lower = 2, upper = Inf)
+```
 
-## Meu algoritmo
-g <- function(x) exp(-x) * (x >= 0)
-f <- function(x) dexp(x, 2)
-m <- 10000
-x <- rexp(m, 2)
-w <- g(x)/f(x)
+### Exemplo (beta)
+
+Voltando ao exemplo de $X \sim \text{Beta}(a=9.39, b=33.67)$, vamos ober
+uma amostra desta distribuição pelo método de re-amostragem por
+importância. Aqui também utilizaremos uma $\text{U}(0,1)$ como função de
+importância.
+
+```{r}
+## Define funções
+a <- 9.39; b <- 33.67
+g <- function(x, a, b) dbeta(x, a, b)
+f <- function(x) dunif(x) # usando U(0,1)
+## 1. Amostragem
+m <- 1e5
+x <- runif(m)
+## 2. Calcula pesos
+w <- g(x, a, b)/f(x)
 w.norm <- w/sum(w)
-k <- 1000
+## 3. Re-amostragem por importância
+k <- 1e4
+## Amostra considerando os pesos normalizados para cada X
 g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
-hist(g.sample)
-sum(g.sample > 2)/k
-pexp(2, 1, lower.tail = FALSE)
+## Verifica a distribuição da amostra
+hist(g.sample, freq = FALSE, ylim = c(0, 7))
+curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
+```
 
+Novamente podemos conferir a relação entre os valores amostrados de $X$
+e seus respectivos pesos calculados:
 
-sum(g.sample > 0 & g.sample < 1)/k
+```{r}
+plot(x, w.norm)
+```
 
+Calcula probabilidades:
 
-(theta <- 1 - exp(-1))
-integrate(function(x) exp(-x), lower = 0, upper = 1)
+```{r}
+## P[0.3 < X < 0.5]
+sum(g.sample > 0.3 & g.sample < 0.5)/k
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+## P[X > 0.2]
+sum(g.sample > 0.2)/k
+pbeta(0.2, a, b, lower.tail = FALSE)
+```
 
-
-## Usando a beta(a, b) -------------------------------------------------
-a <- 9.39
-b <- 33.67
-
-## Usando o passo-a-passo
+```{r, include=FALSE}
+## Usando a discretização
 g <- function(x, a, b) dbeta(x, a, b)
 m <- 100000
 u <- seq(0, 1, length.out = m)
@@ -474,18 +627,27 @@ teta.sir <- sample(u, size = k, replace = TRUE, prob = w)
 hist(teta.sir)
 sum(teta.sir > 0.3 & teta.sir < 0.5)/k
 pbeta(0.5, a, b) - pbeta(0.3, a, b)
-
-## Meu algoritmo
-g <- function(x, a, b) dbeta(x, a, b)
-f <- function(x) dunif(x) # usando U(0,1)
-m <- 100000
-x <- runif(m)
-w <- g(x, a, b)/f(x)
-w.norm <- w/sum(w)
-k <- 10000
-g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
-hist(g.sample)
-sum(g.sample > 0.3 & g.sample < 0.5)/k
-pbeta(0.5, a, b) - pbeta(0.3, a, b)
-
 ```
+
+A obtenção de uma amostra da distribuição completa da VA de interesse
+possui diversas finalidades. Por exemplo, no caso da beta, podemos obter
+um resumo
+
+```{r}
+summary(g.sample)
+```
+
+ou, por exemplo, saber o intervalo onde se encontram 95% dos dados:
+
+```{r}
+quantile(g.sample, probs = c(.025, .975))
+```
+
+Esse tipo de resumo será utilizado nos métodos de inferência que veremos
+mais adiante.
+
+No contexto de inferência bayesiana, as distribuições geradas por estes
+métodos se referem às **distribuições posteriores dos parâmetros**
+objetos da inferência. Dessa forma, o intervalo acima, por exemplo, nos
+forneceria diretamente um "intervalo de credibilidade" de 95% para os
+valores do parâmetro.

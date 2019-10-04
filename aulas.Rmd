@@ -56,7 +56,8 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 [Resolução 64/18 - CEPE][].
 - **27/09 (Sex)**: **Prova 1**.
 - **01/10 (Ter)**: Integração de Monte Carlo. [HTML](06_MC_intro.html).
-- **04/10 (Sex)**:
+- **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de
+  Monte Carlo. [HTML](07_MC_aprox.html).
 - **08/10 (Ter)**:
 - **11/10 (Sex)**:
 - **15/10 (Ter)**:
