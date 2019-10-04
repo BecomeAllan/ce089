@@ -462,33 +462,25 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Métodos de Monte Carlo</h1>
-<h3 class="subtitle">Aproximações baseadas em simulação de Monte Carlo</h3>
+<h3 class="subtitle">Distribuições aproximadas baseadas em simulação de Monte Carlo</h3>
 <h4 class="author">Fernando P. Mayer</h4>
 
 </div>
 
 
-<div id="introdução" class="section level1">
-<h1><span class="header-section-number">1</span> Introdução</h1>
-</div>
-<div id="aproximação-de-pi" class="section level1">
-<h1><span class="header-section-number">2</span> Aproximação de <span class="math inline">\(\pi\)</span></h1>
-<div id="método-do-círculoquadrado" class="section level2">
-<h2><span class="header-section-number">2.1</span> Método do círculo/quadrado</h2>
-</div>
-<div id="agulha-de-buffon" class="section level2">
-<h2><span class="header-section-number">2.2</span> Agulha de Buffon</h2>
-</div>
-</div>
+<!-- # Introdução -->
+<!-- # Aproximação de $\pi$ -->
+<!-- ## Método do círculo/quadrado -->
+<!-- ## Agulha de Buffon -->
 <div id="aproximação-de-integrais" class="section level1">
-<h1><span class="header-section-number">3</span> Aproximação de integrais</h1>
+<h1><span class="header-section-number">1</span> Aproximação de integrais</h1>
 <p>Já vimos que a integração de Monte Carlo serve para aproximar integrais de alta dimensão ou que não possuem solução fechada (analítica).</p>
 <p>Agora veremos que a integração de Monte Carlo, naturalmente serve também para o cáculo de probabilidades entre algum intervalo, e.g., <span class="math inline">\(P[a &lt; X &lt; b]\)</span> ou <span class="math inline">\(P[X &gt; a]\)</span>, que nada mais são do que cálculos de áreas no intervalo especificado.</p>
 <p>A integração de Monte Carlo nos fornece uma estimativa dessa integral, e, como vimos, o erro padrão dessa estimativa pode ser calculado, e intervalos de confiança podem ser obtidos devido à suposição de que assintoticamente a estimativa possui distribuição normal.</p>
-<p>Agora, veremos que podemos obter essa mesma estimativa, mas de uma forma um pouco diferente: simulando a proópria distribuição de interesse, e obtendo valores de áreas (integrais) usando a própria amostra. A vantagem é que, dessa forma, obtemos uma descrição mais completa do problema em questão, e, com isso, podemos obter outras medidas que forem necessárias, de uma única vez. Além disso, medidas de incerteza como erros-padrões e intervalos de confiança podem ser derivados a partir da própria distribuição amostral.</p>
-<p>A obtenção de uma amostra da distribuição de interesse será fundamental para os métodos de ingerência que veremos mais adiante. Além disso, estes métodos são utilizados como o “padrão” para a resolução de problemas em inferência bayesiana.</p>
+<p>Agora, veremos que podemos obter essa mesma estimativa, mas de uma forma um pouco diferente: simulando a própria distribuição de interesse, e obtendo valores de áreas (integrais) usando a própria amostra. A vantagem é que, dessa forma, obtemos uma descrição mais completa do problema em questão, e, com isso, podemos obter outras medidas que forem necessárias, de uma única vez. Além disso, medidas de incerteza como erros-padrões e intervalos de confiança podem ser derivados a partir da própria distribuição amostral.</p>
+<p>A obtenção de uma amostra da distribuição de interesse será fundamental para os métodos de inferência que veremos mais adiante. Além disso, estes métodos são utilizados como o “padrão” para a resolução de problemas em inferência bayesiana.</p>
 <div id="integração-de-monte-carlo" class="section level2">
-<h2><span class="header-section-number">3.1</span> Integração de Monte Carlo</h2>
+<h2><span class="header-section-number">1.1</span> Integração de Monte Carlo</h2>
 <p>Como vimos, a integração <strong>simples</strong> de Monte Carlo é um algoritmo <strong>não sequencial</strong> (i.e., os valores amostrados são independentes) para aproximação de integrais do tipo <span class="math display">\[
 \theta = \int_a^b g(x) dx
 \]</span></p>
@@ -506,7 +498,7 @@ div.tocify {
 <li><span class="math inline">\(\hat\theta = (b-a)\overline{g(x)}\)</span></li>
 </ol>
 <div id="exemplo-exponencial" class="section level3">
-<h3><span class="header-section-number">3.1.1</span> Exemplo (exponencial)</h3>
+<h3><span class="header-section-number">1.1.1</span> Exemplo (exponencial)</h3>
 <p>Para obter a estimativa de <span class="math display">\[
 \theta = \int_0^1 e^{-x} dx
 \]</span> fazemos:</p>
@@ -538,7 +530,7 @@ div.tocify {
 <a class="sourceLine" id="cb2-12" title="12"><span class="co"># [1] 0.1170196</span></a></code></pre></div>
 <p>Vemos que, nos dois casos acima, estamos na verdade obtendo uma estimativa das probabilidades <span class="math inline">\(P[0&lt;X&lt;1]\)</span> e <span class="math inline">\(P[2&lt;X&lt;4]\)</span>, respectivamente.</p>
 <p>No entanto, se quisermos calcular a seguinte probabilidade <span class="math display">\[
-P[X&gt;2]\theta = \int_2^{\infty} e^{-x} dx
+P[X&gt;2] = \int_2^{\infty} e^{-x} dx
 \]</span></p>
 <p>Nesse caso, a integração simples de Monte Carlo não é útil, pois não é possível que o limite de integração seja indefinido.</p>
 <p>Na verdade, podemos pensar em uma aproximação <strong>grosseira</strong>, supondo que vamos amostrar de <span class="math inline">\(X \sim \text{U}(2, \infty)\)</span>, onde podemos aproximar o valor de <span class="math inline">\(\infty\)</span> por um número grande. Por exemplo:</p>
@@ -560,25 +552,24 @@ P[X&gt;2]\theta = \int_2^{\infty} e^{-x} dx
 <p>Note que o valor estimado nesse caso está longe do velor correto, pois estamos adotando um procedimento completamente arbitrário.</p>
 </div>
 <div id="exemplo-beta" class="section level3">
-<h3><span class="header-section-number">3.1.2</span> Exemplo (beta)</h3>
+<h3><span class="header-section-number">1.1.2</span> Exemplo (beta)</h3>
 <p>Considere que uma VA <span class="math inline">\(X\)</span> tem distribuição <span class="math inline">\(\text{Beta}(a=9.39, b=33.67)\)</span>, e queremos obter <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, ou seja,</p>
 <p><span class="math display">\[
 P[0.3 &lt; X &lt; 0.5] = \int_{0.3}^{0.5}
 \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
 \]</span></p>
 <p>Pela integração simples de Monte Carlo, podemos facilmente obter esta estimativa:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span></a>
-<a class="sourceLine" id="cb4-2" title="2">b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb4-3" title="3">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb4-4" title="4">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="fl">0.3</span>, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb4-6" title="6">theta.hat &lt;-<span class="st"> </span><span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">## Calcula a média</span></a>
-<a class="sourceLine" id="cb4-8" title="8">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.3</span>))</a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co"># [1] 0.1014207</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="co"># [1] 0.1018369</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
+<a class="sourceLine" id="cb4-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb4-3" title="3">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="fl">0.3</span>, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">## Calcula g(x)</span></a>
+<a class="sourceLine" id="cb4-5" title="5">theta.hat &lt;-<span class="st"> </span><span class="kw">dbeta</span>(x, a, b)</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">## Calcula a média</span></a>
+<a class="sourceLine" id="cb4-7" title="7">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.3</span>))</a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co"># [1] 0.1014207</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">## Solução analítica</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co"># [1] 0.1018369</span></a></code></pre></div>
 <p>No caso da Beta, calcular probabilidades do tipo <span class="math inline">\(P[X&gt;0.2]\)</span>, por exemplo, é mais fácil, pois sabemos que o domínio da Beta está no intervalo <span class="math inline">\((0,1)\)</span>. Portanto, os limites de integração são definidos <span class="math display">\[
 P[X &gt; 0.2] = \int_{0.2}^{1}
 \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
@@ -594,13 +585,13 @@ P[X &gt; 0.2] = \int_{0.2}^{1}
 <a class="sourceLine" id="cb5-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb5-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
 <p>Note que nos dois exemplos acima, para cada problema de cálculo de probabilidades (integrais), precisamos aplicar o método de Monte Carlo.</p>
-<p>No entanto, suponha que precisamos fazer diversos cálculos osb uma determinada VA. Ao invés de aplicar esse método para cada cálculo, podemos pensar que seria mais fácil se pudessemos obter uma amostra da distribuição de interesse. A partir desta distribuição, qualquer cálculo necessário pode ser derivado facilmente.</p>
+<p>No entanto, suponha que precisamos fazer diversos cálculos sob uma determinada VA. Ao invés de aplicar esse método para cada cálculo, podemos pensar que seria mais fácil se pudessemos obter uma amostra da distribuição de interesse. A partir desta distribuição, qualquer cálculo necessário pode ser derivado facilmente.</p>
 <p>Essa é a ideia dos métodos a seguir. O primeiro deles, a amostragem por aceitação-rejeição já foi visto no contexto de geração de números aleatórios. A mesma ideia será usada aqui, mas agora usaremos a amostra gerada da distribuição de interesse para resolver problemas de integração.</p>
 <p>O segundo método, o de re-amostragem por importância, pode ser visto como uma extensão do método de amostragem por importância, que vimos no contexto de generalização do método simples de integração de Monte Carlo. Nesse caso, usaremos as mesmas ideias para gerar uma amostra da distribuição de interesse, e não apenas resolver uma integral.</p>
 </div>
 </div>
 <div id="amostragem-por-rejeição" class="section level2">
-<h2><span class="header-section-number">3.2</span> Amostragem por rejeição</h2>
+<h2><span class="header-section-number">1.2</span> Amostragem por rejeição</h2>
 <p>A ideia inicial do método é exatamente igual ao que já foi visto anteriormente no contexto de geração de números aleatórios de uma distribuição alvo <span class="math inline">\(f\)</span>.</p>
 <p>O seguinte algoritmo permite gerar números aleatórios de uma distribuição de probabilidade caracterizada pela função densidade <span class="math inline">\(f\)</span>:</p>
 <ol style="list-style-type: decimal">
@@ -616,7 +607,7 @@ u \leq \frac{f(y)}{M g(y)}
 M \geq \max_x \frac{f(x)}{g(x)}
 \]</span></p>
 <div id="exemplo-exponencial-1" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Exemplo (exponencial)</h3>
+<h3><span class="header-section-number">1.2.1</span> Exemplo (exponencial)</h3>
 <p>Suponha novamente que queremos obter a integral</p>
 <p><span class="math display">\[
 \theta = \int_2^4 e^{-x} dx
@@ -673,16 +664,25 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <a class="sourceLine" id="cb11-4" title="4"><span class="co">## Teórica</span></a>
 <a class="sourceLine" id="cb11-5" title="5"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb11-6" title="6"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+<p>De maneira geral, dessa forma, qualquer probabilidade pode ser calculada como mostrado acima. Matematicamente, podemos representar esse processo por</p>
+<p><span class="math display">\[
+P[X \leq x] = \frac{1}{m} \sum_{i=1}^m I(X \leq x)
+\]</span> onde <span class="math display">\[
+I(X \leq x) =
+\begin{cases}
+1, &amp; \text{se } X \leq x \\
+0, &amp; \text{caso contrário}
+\end{cases}
+\]</span> é uma função indicadora. Note que isso se extende para qualquer outro tipo de probabilidade, e.g. <span class="math inline">\(P[X &gt; x]\)</span>, etc.</p>
 </div>
 <div id="exemplo-beta-1" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Exemplo (beta)</h3>
+<h3><span class="header-section-number">1.2.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, queremos calcular <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, mas agora através da obtenção de uma amostra completa desta distribuição.</p>
-<p>Usando o método de aceitação-rejeição, vamos usar como distribuição prpposta uma <span class="math inline">\(\text{U}(0,1)\)</span>. Portanto:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span></a>
-<a class="sourceLine" id="cb12-2" title="2">b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb12-3" title="3">(M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, a, b)},</a>
-<a class="sourceLine" id="cb12-4" title="4">               <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective)</a>
-<a class="sourceLine" id="cb12-5" title="5"><span class="co"># [1] 6.426808</span></a></code></pre></div>
+<p>Usando o método de aceitação-rejeição, vamos usar como distribuição proposta uma <span class="math inline">\(\text{U}(0,1)\)</span>. Portanto:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
+<a class="sourceLine" id="cb12-2" title="2">(M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, a, b)<span class="op">/</span><span class="kw">dunif</span>(x)},</a>
+<a class="sourceLine" id="cb12-3" title="3">               <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective)</a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co"># [1] 6.426808</span></a></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="kw">curve</span>(<span class="kw">dunif</span>(x), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb13-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dunif</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
@@ -729,113 +729,136 @@ M \geq \max_x \frac{f(x)}{g(x)}
 </div>
 </div>
 <div id="re-amostragem-por-importância" class="section level2">
-<h2><span class="header-section-number">3.3</span> Re-amostragem por importância</h2>
+<h2><span class="header-section-number">1.3</span> Re-amostragem por importância</h2>
 <p>O método de re-amostragem por importância (SIR - <em>Sampling Importance Resampling</em>) é uma alternativa ao método de aceitação-rejeição quando não é possível determinar um valor razoável para <span class="math inline">\(M\)</span>. A essência do algoritmo é amostrar valores segundo pesos que são computados para cada um deles.</p>
 <p>Veremos que o método nada mais é do que uma extensão do método de amostragem por importância para aproximação de integrais. No entanto, o objetivo aqui também é obter a distribuição completa da densidade alvo, e, com isso, calcular quantidades de interesse.</p>
 <p>O método de re-amostragem por importância é também muito utilizado no contexto de inferência bayesiana, na obtenção de distribuições posteriores de parâmetros.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Usando o passo-a-passo</span></a>
-<a class="sourceLine" id="cb16-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="co">#* (x &gt; 0) * (x &lt; 1)</span></a>
-<a class="sourceLine" id="cb16-3" title="3">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb16-4" title="4">u &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="dt">length.out =</span> m)</a>
-<a class="sourceLine" id="cb16-5" title="5">p.alpha &lt;-<span class="st"> </span><span class="kw">g</span>(u)<span class="op">/</span><span class="kw">sum</span>(<span class="kw">g</span>(u))</a>
-<a class="sourceLine" id="cb16-6" title="6">k &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb16-7" title="7">teta.sir &lt;-<span class="st"> </span><span class="kw">sample</span>(u, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> p.alpha)</a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="kw">hist</span>(teta.sir)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">sum</span>(teta.sir <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="co"># [1] 0.137</span></a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="co"># [1] 0.1353353</span></a>
-<a class="sourceLine" id="cb17-5" title="5"></a>
-<a class="sourceLine" id="cb17-6" title="6"><span class="co">## Usando a prórpria densidade</span></a>
-<a class="sourceLine" id="cb17-7" title="7">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="co">#* (x &gt; 0) * (x &lt; 1)</span></a>
-<a class="sourceLine" id="cb17-8" title="8">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb17-9" title="9">u &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="dt">length.out =</span> m)</a>
-<a class="sourceLine" id="cb17-10" title="10">w &lt;-<span class="st"> </span><span class="kw">dexp</span>(u, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb17-11" title="11">teta.sir &lt;-<span class="st"> </span><span class="kw">sample</span>(u, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w)</a>
-<a class="sourceLine" id="cb17-12" title="12"><span class="kw">hist</span>(teta.sir)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">sum</span>(teta.sir <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="co"># [1] 0.1268</span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb18-4" title="4"><span class="co"># [1] 0.1353353</span></a>
-<a class="sourceLine" id="cb18-5" title="5"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x), <span class="dt">lower =</span> <span class="dv">2</span>, <span class="dt">upper =</span> <span class="ot">Inf</span>)</a>
-<a class="sourceLine" id="cb18-6" title="6"><span class="co"># 0.1353353 with absolute error &lt; 7.7e-06</span></a>
-<a class="sourceLine" id="cb18-7" title="7"></a>
-<a class="sourceLine" id="cb18-8" title="8"><span class="co">## Meu algoritmo</span></a>
-<a class="sourceLine" id="cb18-9" title="9">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb18-10" title="10">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb18-11" title="11">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb18-12" title="12">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb18-13" title="13">w &lt;-<span class="st"> </span><span class="kw">g</span>(x)<span class="op">/</span><span class="kw">f</span>(x)</a>
-<a class="sourceLine" id="cb18-14" title="14">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
-<a class="sourceLine" id="cb18-15" title="15">k &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb18-16" title="16">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
-<a class="sourceLine" id="cb18-17" title="17"><span class="kw">hist</span>(g.sample)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="co"># [1] 0.155</span></a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="co"># [1] 0.1353353</span></a>
-<a class="sourceLine" id="cb19-5" title="5"></a>
-<a class="sourceLine" id="cb19-6" title="6"></a>
-<a class="sourceLine" id="cb19-7" title="7"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb19-8" title="8"><span class="co"># [1] 0.607</span></a>
-<a class="sourceLine" id="cb19-9" title="9"></a>
-<a class="sourceLine" id="cb19-10" title="10"></a>
-<a class="sourceLine" id="cb19-11" title="11">(theta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb19-12" title="12"><span class="co"># [1] 0.6321206</span></a>
-<a class="sourceLine" id="cb19-13" title="13"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x), <span class="dt">lower =</span> <span class="dv">0</span>, <span class="dt">upper =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb19-14" title="14"><span class="co"># 0.6321206 with absolute error &lt; 7e-15</span></a>
-<a class="sourceLine" id="cb19-15" title="15"></a>
-<a class="sourceLine" id="cb19-16" title="16"></a>
-<a class="sourceLine" id="cb19-17" title="17"><span class="co">## Usando a beta(a, b) -------------------------------------------------</span></a>
-<a class="sourceLine" id="cb19-18" title="18">a &lt;-<span class="st"> </span><span class="fl">9.39</span></a>
-<a class="sourceLine" id="cb19-19" title="19">b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb19-20" title="20"></a>
-<a class="sourceLine" id="cb19-21" title="21"><span class="co">## Usando o passo-a-passo</span></a>
-<a class="sourceLine" id="cb19-22" title="22">g &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb19-23" title="23">m &lt;-<span class="st"> </span><span class="dv">100000</span></a>
-<a class="sourceLine" id="cb19-24" title="24">u &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> m)</a>
-<a class="sourceLine" id="cb19-25" title="25">p.alpha &lt;-<span class="st"> </span><span class="kw">g</span>(u, a, b)<span class="op">/</span><span class="kw">sum</span>(<span class="kw">g</span>(u, a, b))</a>
-<a class="sourceLine" id="cb19-26" title="26">k &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb19-27" title="27">teta.sir &lt;-<span class="st"> </span><span class="kw">sample</span>(u, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> p.alpha)</a>
-<a class="sourceLine" id="cb19-28" title="28"><span class="kw">hist</span>(teta.sir)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-4.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">sum</span>(teta.sir <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>teta.sir <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb20-2" title="2"><span class="co"># [1] 0.0993</span></a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb20-4" title="4"><span class="co"># [1] 0.1018369</span></a>
-<a class="sourceLine" id="cb20-5" title="5"></a>
-<a class="sourceLine" id="cb20-6" title="6"><span class="co">## Usando a prórpria densidade</span></a>
-<a class="sourceLine" id="cb20-7" title="7">g &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb20-8" title="8">m &lt;-<span class="st"> </span><span class="dv">100000</span></a>
-<a class="sourceLine" id="cb20-9" title="9">u &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> m)</a>
-<a class="sourceLine" id="cb20-10" title="10">w &lt;-<span class="st"> </span><span class="kw">dbeta</span>(u, a, b)</a>
-<a class="sourceLine" id="cb20-11" title="11">k &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb20-12" title="12">teta.sir &lt;-<span class="st"> </span><span class="kw">sample</span>(u, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w)</a>
-<a class="sourceLine" id="cb20-13" title="13"><span class="kw">hist</span>(teta.sir)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-5.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">sum</span>(teta.sir <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>teta.sir <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="co"># [1] 0.1006</span></a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb21-4" title="4"><span class="co"># [1] 0.1018369</span></a>
-<a class="sourceLine" id="cb21-5" title="5"></a>
-<a class="sourceLine" id="cb21-6" title="6"><span class="co">## Meu algoritmo</span></a>
-<a class="sourceLine" id="cb21-7" title="7">g &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb21-8" title="8">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dunif</span>(x) <span class="co"># usando U(0,1)</span></a>
-<a class="sourceLine" id="cb21-9" title="9">m &lt;-<span class="st"> </span><span class="dv">100000</span></a>
-<a class="sourceLine" id="cb21-10" title="10">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
-<a class="sourceLine" id="cb21-11" title="11">w &lt;-<span class="st"> </span><span class="kw">g</span>(x, a, b)<span class="op">/</span><span class="kw">f</span>(x)</a>
-<a class="sourceLine" id="cb21-12" title="12">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
-<a class="sourceLine" id="cb21-13" title="13">k &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb21-14" title="14">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
-<a class="sourceLine" id="cb21-15" title="15"><span class="kw">hist</span>(g.sample)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-17-6.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="co"># [1] 0.1018</span></a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb22-4" title="4"><span class="co"># [1] 0.1018369</span></a></code></pre></div>
+<p>Lembrando que, na amsotrgem por importância, temos o seguinte cenário. Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y\)</span> a VA <span class="math inline">\(g(X)/f(X)\)</span>, então <span class="math display">\[
+\int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
+\]</span> Com isso, podemos estimar <span class="math inline">\(\text{E}[Y]\)</span> como uma integração simples de Monte Carlo, ou seja, <span class="math display">\[
+\frac{1}{m}\sum_{i=1}^{m} Y_i = \frac{1}{m}\sum_{i=1}^{m}
+\frac{g(X_i)}{f(X_i)}
+\]</span> onde as VAs <span class="math inline">\(X_1, \ldots, X_m\)</span> são geradas a partir da distribuição de <span class="math inline">\(f(x)\)</span>. A função <span class="math inline">\(f(x)\)</span> é chamada de <strong>função de importância</strong>.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Aproximando uma integral indefinida pela amostragem por importância
+</div>
+<div class="panel-body">
+<p>Voltando brevemente ao caso da exponencial, pela amostragem por importância, podemos agora obter uma estimativa de <span class="math inline">\(P[X &gt; 2]\)</span>, caso que não conseguimos usando a integração simples de Monte Carlo.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Define funções</span></a>
+<a class="sourceLine" id="cb16-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>) <span class="co"># Prposta é Exp(0.5)</span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="co">## 1. Amostra da proposta</span></a>
+<a class="sourceLine" id="cb16-5" title="5">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
+<a class="sourceLine" id="cb16-6" title="6">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="co">## 2. Calcula a média da razão</span></a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="kw">mean</span>(<span class="kw">g</span>(x)<span class="op">/</span><span class="kw">f</span>(x))</a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="co"># [1] 0.1358222</span></a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="co">## Teórico</span></a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb16-12" title="12"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+</div>
+</div>
+<p>O algoritmo para o método de <strong>amostragem por importância</strong> é o seguinte:</p>
+<ol style="list-style-type: decimal">
+<li>Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
+<li>Calcular a razão entre <span class="math inline">\(g(x)\)</span> e <span class="math inline">\(f(x)\)</span> e determinar a média <span class="math inline">\(\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}\)</span></li>
+</ol>
+<p>A média fornece diretamente uma estimativa de integral requerida.</p>
+<p>O algoritmo do método de <strong>re-amostragem por importância</strong> é uma extensão do algoritmo anterior e consiste nos seguintes passos:</p>
+<ol style="list-style-type: decimal">
+<li>(<em>Amostragem</em>) Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
+<li>Calcular os <strong>pesos</strong> <span class="math display">\[
+w(x_i) = \frac{g(x_i)}{f(x_i)}
+\]</span> Os pesos dão uma ideia da probabilidade de aceitação de um determinado <span class="math inline">\(x_i\)</span>. Como estes pesos podem ser maiores do que 1, eles precisam ser padronizados por <span class="math display">\[
+w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
+\]</span></li>
+<li>(<em>Re-amostragem por importância</em>) Amostrar <strong>com reposição</strong> <span class="math inline">\(k &lt; m\)</span> valores de <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>, utilizando os pesos <span class="math inline">\(\{w^*(x_1), \ldots, w^*(x_m)\}\)</span>, como uma <strong>distribuição discreta de probabilidades</strong>.</li>
+</ol>
+<p>Dessa forma, <span class="math inline">\(\mathcal{X} = \{x^*_1, \ldots, x^*_k\}\)</span> será uma amostra de <span class="math inline">\(g(X)\)</span>.</p>
+<div id="exemplo-exponencial-2" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Exemplo (exponencial)</h3>
+<p>Seguindo com o exemplo da <span class="math inline">\(\text{Exp}(1)\)</span>, o código abaixo serve para gerar uma amostra por importância desta distribuição.</p>
+<p>A função de importância considerada aqui é uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Lembre-se que nesse caso, não é necessário que a função proposta seja maior do que a função alvo.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Define funções</span></a>
+<a class="sourceLine" id="cb17-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb17-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="co">## 1. Amostragem</span></a>
+<a class="sourceLine" id="cb17-5" title="5">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
+<a class="sourceLine" id="cb17-6" title="6">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="co">## 2. Calcula pesos</span></a>
+<a class="sourceLine" id="cb17-8" title="8">w &lt;-<span class="st"> </span><span class="kw">g</span>(x)<span class="op">/</span><span class="kw">f</span>(x)</a>
+<a class="sourceLine" id="cb17-9" title="9">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="co">## 3. Re-amostragem por importância</span></a>
+<a class="sourceLine" id="cb17-11" title="11">k &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
+<a class="sourceLine" id="cb17-12" title="12"><span class="co">## Amostra considerando os pesos normalizados para cada X</span></a>
+<a class="sourceLine" id="cb17-13" title="13">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
+<a class="sourceLine" id="cb17-14" title="14"><span class="co">## Verifica a distribuição da amostra</span></a>
+<a class="sourceLine" id="cb17-15" title="15"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb17-16" title="16"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Com uma amostra completa da distribuição, podemos então calcular qualquer tipo de probabilidades:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">## P[2 &lt; X &lt; 4]</span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co"># [1] 0.1204</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="co">## Teórica</span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="kw">pexp</span>(<span class="dv">4</span>, <span class="dv">1</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb19-6" title="6"><span class="co"># [1] 0.1170196</span></a>
+<a class="sourceLine" id="cb19-7" title="7"><span class="co">## P[X &gt; 2]</span></a>
+<a class="sourceLine" id="cb19-8" title="8"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb19-9" title="9"><span class="co"># [1] 0.1361</span></a>
+<a class="sourceLine" id="cb19-10" title="10"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb19-11" title="11"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+</div>
+<div id="exemplo-beta-2" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Exemplo (beta)</h3>
+<p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, vamos ober uma amostra desta distribuição pelo método de re-amostragem por importância. Aqui também utilizaremos uma <span class="math inline">\(\text{U}(0,1)\)</span> como função de importância.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Define funções</span></a>
+<a class="sourceLine" id="cb20-2" title="2">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
+<a class="sourceLine" id="cb20-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
+<a class="sourceLine" id="cb20-4" title="4">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dunif</span>(x) <span class="co"># usando U(0,1)</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="co">## 1. Amostragem</span></a>
+<a class="sourceLine" id="cb20-6" title="6">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
+<a class="sourceLine" id="cb20-7" title="7">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co">## 2. Calcula pesos</span></a>
+<a class="sourceLine" id="cb20-9" title="9">w &lt;-<span class="st"> </span><span class="kw">g</span>(x, a, b)<span class="op">/</span><span class="kw">f</span>(x)</a>
+<a class="sourceLine" id="cb20-10" title="10">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="co">## 3. Re-amostragem por importância</span></a>
+<a class="sourceLine" id="cb20-12" title="12">k &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
+<a class="sourceLine" id="cb20-13" title="13"><span class="co">## Amostra considerando os pesos normalizados para cada X</span></a>
+<a class="sourceLine" id="cb20-14" title="14">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
+<a class="sourceLine" id="cb20-15" title="15"><span class="co">## Verifica a distribuição da amostra</span></a>
+<a class="sourceLine" id="cb20-16" title="16"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
+<a class="sourceLine" id="cb20-17" title="17"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
+<p><img src="figures/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Calcula probabilidades:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">## P[0.3 &lt; X &lt; 0.5]</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co"># [1] 0.102</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
+<a class="sourceLine" id="cb22-5" title="5"><span class="co"># [1] 0.1018369</span></a>
+<a class="sourceLine" id="cb22-6" title="6"><span class="co">## P[X &gt; 0.2]</span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>)<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="co"># [1] 0.584</span></a>
+<a class="sourceLine" id="cb22-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb22-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
+<p>A obtenção de uma amostra da distribuição completa da VA de interesse possui diversas finalidades. Por exemplo, no caso da beta, podemos obter um resumo</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">summary</span>(g.sample)</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="co">#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="co"># 0.03969 0.17313 0.21344 0.21780 0.25754 0.50699</span></a></code></pre></div>
+<p>ou, por exemplo, saber o intervalo onde se encontram 95% dos dados:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">quantile</span>(g.sample, <span class="dt">probs =</span> <span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>))</a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="co">#      2.5%     97.5% </span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="co"># 0.1094833 0.3526790</span></a></code></pre></div>
+<p>Esse tipo de resumo será utilizado nos métodos de inferência que veremos mais adiante.</p>
+<p>No contexto de inferência bayesiana, as distribuições geradas por estes métodos se referem às <strong>distribuições posteriores dos parâmetros</strong> objetos da inferência. Dessa forma, o intervalo acima, por exemplo, nos forneceria diretamente um “intervalo de credibilidade” de 95% para os valores do parâmetro.</p>
+</div>
 </div>
 </div>
 
