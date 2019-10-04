@@ -1,0 +1,491 @@
+---
+title: "Métodos de Monte Carlo"
+subtitle: "Aproximações baseadas em simulação de Monte Carlo"
+author: "Fernando P. Mayer"
+bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
+    toc_depth: 3
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+```
+
+# Introdução
+
+# Aproximação de $\pi$
+
+## Método do círculo/quadrado
+
+## Agulha de Buffon
+
+# Aproximação de integrais
+
+Já vimos que a integração de Monte Carlo serve para aproximar integrais
+de alta dimensão ou que não possuem solução fechada (analítica).
+
+Agora veremos que a integração de Monte Carlo, naturalmente serve também
+para o cáculo de probabilidades entre algum intervalo, e.g., $P[a < X <
+b]$ ou $P[X > a]$, que nada mais são do que cálculos de áreas no
+intervalo especificado.
+
+A integração de Monte Carlo nos fornece uma estimativa dessa integral,
+e, como vimos, o erro padrão dessa estimativa pode ser calculado, e
+intervalos de confiança podem ser obtidos devido à suposição de que
+assintoticamente a estimativa possui distribuição normal.
+
+Agora, veremos que podemos obter essa mesma estimativa, mas de uma forma
+um pouco diferente: simulando a proópria distribuição de interesse, e
+obtendo valores de áreas (integrais) usando a própria amostra. A
+vantagem é que, dessa forma, obtemos uma descrição mais completa do
+problema em questão, e, com isso, podemos obter outras medidas que forem
+necessárias, de uma única vez. Além disso, medidas de incerteza como
+erros-padrões e intervalos de confiança podem ser derivados a partir da
+própria distribuição amostral.
+
+A obtenção de uma amostra da distribuição de interesse será fundamental
+para os métodos de ingerência que veremos mais adiante. Além disso,
+estes métodos são utilizados como o "padrão" para a resolução de
+problemas em inferência bayesiana.
+
+## Integração de Monte Carlo
+
+Como vimos, a integração **simples** de Monte Carlo é um algoritmo **não
+sequencial** (i.e., os valores amostrados são independentes) para
+aproximação de integrais do tipo
+$$
+\theta = \int_a^b g(x) dx
+$$
+
+através da relação
+
+\begin{align*}
+\theta &= \int_a^b g(x) f(x) dx \\
+  &= (b-a) \int_a^b g(x) \frac{1}{b-a} dx \\
+  &= (b-a) \text{E}[g(X)]
+\end{align*}
+
+onde $X \sim \text{U}(a, b)$.
+
+De maneira geral, para calcular $\theta = \int_a^b g(x) dx$:
+
+1. Gere $X_1, \ldots, X_m$ de $U(a,b)$
+2. Calcule $\overline{g(x)} = \frac{1}{m}\sum_{i=1}^{m} g(x_i)$
+3. $\hat\theta = (b-a)\overline{g(x)}$
+
+### Exemplo (exponencial)
+
+Para obter a estimativa de
+$$
+\theta = \int_0^1 e^{-x} dx
+$$
+fazemos:
+
+```{r}
+## Obtem m valores da U(0,1)
+m <- 10000
+x <- runif(m)
+## Calcula g(x)
+theta.hat <- exp(-x)
+## Calcula a média
+(m.theta.hat <- sum(theta.hat)/m)
+## Solução analítica
+(theta <- 1 - exp(-1))
+```
+
+Para obter a estimativa de
+$$
+\theta = \int_2^4 e^{-x} dx
+$$
+fazemos:
+
+```{r}
+## Obtem m valores da U(2,4)
+m <- 10000
+a <- 2; b <- 4
+x <- runif(m, min = a, max = b)
+## Calcula g(x)
+theta.hat <- exp(-x)
+## Calcula a média * (b - a)
+(m.theta.hat <- (sum(theta.hat)/m) * (b - a))
+## Solução analítica
+(theta <- exp(-2) - exp(-4))
+```
+
+Vemos que, nos dois casos acima, estamos na verdade obtendo uma
+estimativa das probabilidades $P[0<X<1]$ e $P[2<X<4]$, respectivamente.
+
+No entanto, se quisermos calcular a seguinte probabilidade
+$$
+P[X>2]\theta = \int_2^{\infty} e^{-x} dx
+$$
+
+Nesse caso, a integração simples de Monte Carlo não é útil, pois não é
+possível que o limite de integração seja indefinido.
+
+Na verdade, podemos pensar em uma aproximação **grosseira**, supondo que
+vamos amostrar de $X \sim \text{U}(2, \infty)$, onde podemos aproximar o
+valor de $\infty$ por um número grande. Por exemplo:
+
+```{r}
+## Obtem m valores da U(2,Inf)
+m <- 10000
+a <- 2; b <- 1e5
+x <- runif(m, min = a, max = b)
+## Calcula g(x)
+theta.hat <- exp(-x)
+## Calcula a média * (b - a)
+(m.theta.hat <- (sum(theta.hat)/m) * (b - a))
+## Solução analítica
+(theta <- exp(-2) - exp(-1e5))
+## Usando a exponencial
+pexp(2, 1, lower.tail = FALSE)
+```
+
+Note que o valor estimado nesse caso está longe do velor correto, pois
+estamos adotando um procedimento completamente arbitrário.
+
+### Exemplo (beta)
+
+Considere que uma VA $X$ tem distribuição
+$\text{Beta}(a=9.39, b=33.67)$, e queremos obter $P[0.3 < X < 0.5]$, ou
+seja,
+
+$$
+P[0.3 < X < 0.5] = \int_{0.3}^{0.5}
+\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
+$$
+
+Pela integração simples de Monte Carlo, podemos facilmente obter esta
+estimativa:
+
+```{r}
+a <- 9.39
+b <- 33.67
+m <- 10000
+x <- runif(m, 0.3, 0.5)
+## Calcula g(x)
+theta.hat <- dbeta(x, a, b)
+## Calcula a média
+(m.theta.hat <- (sum(theta.hat)/m) * (0.5 - 0.3))
+## Solução analítica
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+```
+
+No caso da Beta, calcular probabilidades do tipo $P[X>0.2]$, por
+exemplo, é mais fácil, pois sabemos que o domínio da Beta está no
+intervalo $(0,1)$. Portanto, os limites de integração são definidos
+$$
+P[X > 0.2] = \int_{0.2}^{1}
+\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
+$$
+Assim, podemos fazer
+
+```{r}
+m <- 10000
+x <- runif(m, 0.2, 1)
+## Calcula g(x)
+theta.hat <- dbeta(x, a, b)
+## Calcula a média
+(m.theta.hat <- (sum(theta.hat)/m) * (1 - 0.2))
+## Solução analítica
+pbeta(0.2, a, b, lower.tail = FALSE)
+```
+
+Note que nos dois exemplos acima, para cada problema de cálculo de
+probabilidades (integrais), precisamos aplicar o método de Monte Carlo.
+
+No entanto, suponha que precisamos fazer diversos cálculos osb uma
+determinada VA. Ao invés de aplicar esse método para cada cálculo,
+podemos pensar que seria mais fácil se pudessemos obter uma amostra da
+distribuição de interesse. A partir desta distribuição, qualquer cálculo
+necessário pode ser derivado facilmente.
+
+Essa é a ideia dos métodos a seguir. O primeiro deles, a amostragem por
+aceitação-rejeição já foi visto no contexto de geração de números
+aleatórios. A mesma ideia será usada aqui, mas agora usaremos a amostra
+gerada da distribuição de interesse para resolver problemas de
+integração.
+
+O segundo método, o de re-amostragem por importância, pode ser visto
+como uma extensão do método de amostragem por importância, que vimos no
+contexto de generalização do método simples de integração de Monte
+Carlo. Nesse caso, usaremos as mesmas ideias para gerar uma amostra da
+distribuição de interesse, e não apenas resolver uma integral.
+
+## Amostragem por rejeição
+
+A ideia inicial do método é exatamente igual ao que já foi visto
+anteriormente no contexto de geração de números aleatórios de uma
+distribuição alvo $f$.
+
+O seguinte algoritmo permite gerar números aleatórios de uma
+distribuição de probabilidade caracterizada pela função densidade $f$:
+
+1. Gerar $y$ como sendo uma ocorrência da variável aleatória
+proveniente de uma distribuição com densidade $g$, que "encapsula" a
+distribuição de $f$.
+2. Gerar $u$ como sendo uma ocorrência de uma uniforme padrão.
+3. Se
+$$
+u \leq \frac{f(y)}{M g(y)}
+$$
+considerar que $x = y$ é um valor da
+distribuição de probabilidade alvo cuja densidade é $f$, caso
+contrário, descartar $y$.
+4. Repetir até atingir o número de valores desejado $n$.
+
+Para determinar o valor de $M$, basta seguir a seguinte relação
+
+$$
+M \geq \max_x \frac{f(x)}{g(x)}
+$$
+
+### Exemplo (exponencial)
+
+Suponha novamente que queremos obter a integral
+
+$$
+\theta = \int_2^4 e^{-x} dx
+$$
+
+Sabemos que a função acima é uma $\text{Exp(1)}$. Ao invés de usar o
+método de integração de Monte Carlo, vamos obter uma amostra desta
+distribuição, e, com ela, calcularemos a integral desejada.
+
+Por simplificação, usaremos como distribuição proposta uma
+$\text{Exp}(0.5)$. Nesse caso, obtemos o valor de $M$ como
+
+```{r}
+(M <- optimize(f = function(x) {dexp(x, 1)/dexp(x, .5)},
+               interval = c(0, 50), maximum = TRUE)$objective)
+```
+
+```{r}
+curve(dexp(x, 1), from = 0, to = 10, col = 4, ylim = c(0, 1))
+curve(dexp(x, 0.5), from = 0, to = 10, add = TRUE, lty = 2)
+curve(M * dexp(x, .5), add = TRUE, lty = 2, lwd = 2)
+legend("topright", legend = c("f(x)", "g(x)", "M g(x)"),
+       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = "n")
+```
+
+Agora podemos prosseguir com o algoritmo da seguinte forma:
+
+```{r}
+## Criando os elementos necessários
+f <- function(x) dexp(x, 1)
+g <- function(x) dexp(x, 0.5)
+## Simula valores de f
+N <- 1e5
+x <- numeric(N)
+i <- 1
+j <- 1
+while(i <= N) {
+    y <- rexp(1, 0.5)
+    u <- runif(1)
+    r <- f(y)/(M * g(y))
+    if(u < r) {
+        x[i] <- y
+        i <- i + 1
+    }
+    j <- j + 1
+}
+length(x)
+hist(x, freq = FALSE, ylim = c(0, 1))
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+```
+
+Como agora temos a distribuição completa da $\text{Exp}(1)$, podemos
+obter qualquer probabilidade (ou integral) aproximada, simplesmente
+através das contagens de valores no intervalo especificado. Note que a
+integral da distribuição, ou seja, $\int_0^{\infty} f(x) dx$ deve fechar
+em **aproximadamente** 1:
+
+```{r}
+sum(x > 0 & x <= max(x))/N
+```
+
+Agora, por exemplo, a $P[2<X<4]$ pode ser calculada como
+
+```{r}
+## Probabilidade empírica
+sum(x >= 2 & x <= 4)/N
+## Teórica
+pexp(4, 1) - pexp(2, 1)
+```
+
+Agora se quisermos calcular $P[X>2]$, temos condições de fazer através
+de
+
+```{r}
+## Probabilidade empírica
+sum(x >= 2)/N
+## Teórica
+pexp(2, 1, lower.tail = FALSE)
+```
+
+### Exemplo (beta)
+
+Voltando ao exemplo de $X \sim \text{Beta}(a=9.39, b=33.67)$, queremos
+calcular $P[0.3 < X < 0.5]$, mas agora através da obtenção de uma
+amostra completa desta distribuição.
+
+Usando o método de aceitação-rejeição, vamos usar como distribuição
+prpposta uma $\text{U}(0,1)$. Portanto:
+
+```{r}
+a <- 9.39
+b <- 33.67
+(M <- optimize(f = function(x) {dbeta(x, a, b)},
+               interval = c(0, 1), maximum = TRUE)$objective)
+```
+
+```{r}
+curve(dbeta(x, a, b), from = 0, to = 1, col = 4, ylim = c(0, 7))
+curve(dunif(x), from = 0, to = 1, add = TRUE, lty = 2)
+curve(M * dunif(x), add = TRUE, lty = 2, lwd = 2)
+legend("right", legend = c("f(x)", "g(x)", "M g(x)"),
+       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = "n")
+```
+
+Seguindo o mesmo algoritmo anterior, temos então:
+
+```{r}
+## Criando os elementos necessários
+f <- function(x, a, b) dbeta(x, a, b)
+g <- function(x) dunif(x)
+## Simula valores de f
+N <- 1e5
+x <- numeric(N)
+i <- 1
+j <- 1
+while(i <= N) {
+    y <- runif(1)
+    u <- runif(1)
+    r <- f(y, a, b)/(M * g(y))
+    if(u < r) {
+        x[i] <- y
+        i <- i + 1
+    }
+    j <- j + 1
+}
+length(x)
+sum(x >= 0 & x <= 1)/N
+hist(x, freq = FALSE, ylim = c(0, 7))
+curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
+```
+
+Agora, podemos calcular qualquer probabilidade. Por exemplo:
+
+```{r}
+## P[0.3 < X < 0.5]
+sum(x > 0.3 & x < 0.5)/N
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+## P[X > 0.2]
+sum(x > 0.2)/N
+pbeta(0.2, a, b, lower.tail = FALSE)
+```
+
+## Re-amostragem por importância
+
+O método de re-amostragem por importância (SIR - *Sampling Importance
+Resampling*) é uma alternativa ao método de aceitação-rejeição quando
+não é possível determinar um valor razoável para $M$. A essência do
+algoritmo é amostrar valores segundo pesos que são computados para cada
+um deles.
+
+Veremos que o método nada mais é do que uma extensão do método de
+amostragem por importância para aproximação de integrais. No entanto,
+o objetivo aqui também é obter a distribuição completa da densidade
+alvo, e, com isso, calcular quantidades de interesse.
+
+O método de re-amostragem por importância é também muito utilizado no
+contexto de inferência bayesiana, na obtenção de distribuições
+posteriores de parâmetros.
+
+```{r}
+## Usando o passo-a-passo
+g <- function(x) exp(-x) #* (x > 0) * (x < 1)
+m <- 10000
+u <- seq(0, 6, length.out = m)
+p.alpha <- g(u)/sum(g(u))
+k <- 1000
+teta.sir <- sample(u, size = k, replace = TRUE, prob = p.alpha)
+hist(teta.sir)
+sum(teta.sir > 2)/k
+pexp(2, 1, lower.tail = FALSE)
+
+## Usando a prórpria densidade
+g <- function(x) exp(-x) #* (x > 0) * (x < 1)
+m <- 10000
+u <- seq(0, 6, length.out = m)
+w <- dexp(u, 1)
+teta.sir <- sample(u, size = 10000, replace = TRUE, prob = w)
+hist(teta.sir)
+sum(teta.sir > 2)/10000
+pexp(2, 1, lower.tail = FALSE)
+integrate(function(x) exp(-x), lower = 2, upper = Inf)
+
+## Meu algoritmo
+g <- function(x) exp(-x) * (x >= 0)
+f <- function(x) dexp(x, 2)
+m <- 10000
+x <- rexp(m, 2)
+w <- g(x)/f(x)
+w.norm <- w/sum(w)
+k <- 1000
+g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
+hist(g.sample)
+sum(g.sample > 2)/k
+pexp(2, 1, lower.tail = FALSE)
+
+
+sum(g.sample > 0 & g.sample < 1)/k
+
+
+(theta <- 1 - exp(-1))
+integrate(function(x) exp(-x), lower = 0, upper = 1)
+
+
+## Usando a beta(a, b) -------------------------------------------------
+a <- 9.39
+b <- 33.67
+
+## Usando o passo-a-passo
+g <- function(x, a, b) dbeta(x, a, b)
+m <- 100000
+u <- seq(0, 1, length.out = m)
+p.alpha <- g(u, a, b)/sum(g(u, a, b))
+k <- 10000
+teta.sir <- sample(u, size = k, replace = TRUE, prob = p.alpha)
+hist(teta.sir)
+sum(teta.sir > 0.3 & teta.sir < 0.5)/k
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+
+## Usando a prórpria densidade
+g <- function(x, a, b) dbeta(x, a, b)
+m <- 100000
+u <- seq(0, 1, length.out = m)
+w <- dbeta(u, a, b)
+k <- 10000
+teta.sir <- sample(u, size = k, replace = TRUE, prob = w)
+hist(teta.sir)
+sum(teta.sir > 0.3 & teta.sir < 0.5)/k
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+
+## Meu algoritmo
+g <- function(x, a, b) dbeta(x, a, b)
+f <- function(x) dunif(x) # usando U(0,1)
+m <- 100000
+x <- runif(m)
+w <- g(x, a, b)/f(x)
+w.norm <- w/sum(w)
+k <- 10000
+g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
+hist(g.sample)
+sum(g.sample > 0.3 & g.sample < 0.5)/k
+pbeta(0.5, a, b) - pbeta(0.3, a, b)
+
+```
