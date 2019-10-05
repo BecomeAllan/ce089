@@ -433,6 +433,16 @@ $$
 onde as VAs $X_1, \ldots, X_m$ são geradas a partir da distribuição de
 $f(x)$. A função $f(x)$ é chamada de **função de importância**.
 
+O algoritmo para o método de **amostragem por importância** é o
+seguinte:
+
+1. Gerar uma amostra de $m$ observações independentes da função de
+   importância $f(x)$, $\{x_1, \ldots, x_m\}$.
+2. Calcular a razão entre $g(x)$ e $f(x)$ e determinar a média
+$\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}$
+
+A média fornece diretamente uma estimativa de integral requerida.
+
 <div class="panel panel-primary">
 <div class="panel-heading">Aproximando uma integral indefinida pela
 amostragem por importância</div>
@@ -443,7 +453,7 @@ não conseguimos usando a integração simples de Monte Carlo.
 ```{r}
 ## Define funções
 g <- function(x) exp(-x) * (x >= 2)
-f <- function(x) dexp(x, 0.5) # Prposta é Exp(0.5)
+f <- function(x) dexp(x, 0.5) # Proposta é Exp(0.5)
 ## 1. Amostra da proposta
 m <- 1e5
 x <- rexp(m, 0.5)
@@ -454,16 +464,6 @@ pexp(2, 1, lower.tail = FALSE)
 ```
 </div>
 </div>
-
-O algoritmo para o método de **amostragem por importância** é o
-seguinte:
-
-1. Gerar uma amostra de $m$ observações independentes da função de
-   importância $f(x)$, $\{x_1, \ldots, x_m\}$.
-2. Calcular a razão entre $g(x)$ e $f(x)$ e determinar a média
-$\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}$
-
-A média fornece diretamente uma estimativa de integral requerida.
 
 O algoritmo do método de **re-amostragem por importância** é uma
 extensão do algoritmo anterior e consiste nos seguintes passos:
