@@ -584,14 +584,17 @@ P[X &gt; 0.2] = \int_{0.2}^{1}
 <a class="sourceLine" id="cb5-8" title="8"><span class="co">## Solução analítica</span></a>
 <a class="sourceLine" id="cb5-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb5-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
+</div>
+</div>
+</div>
+<div id="distribuições-aproximadas" class="section level1">
+<h1><span class="header-section-number">2</span> Distribuições aproximadas</h1>
 <p>Note que nos dois exemplos acima, para cada problema de cálculo de probabilidades (integrais), precisamos aplicar o método de Monte Carlo.</p>
 <p>No entanto, suponha que precisamos fazer diversos cálculos sob uma determinada VA. Ao invés de aplicar esse método para cada cálculo, podemos pensar que seria mais fácil se pudessemos obter uma amostra da distribuição de interesse. A partir desta distribuição, qualquer cálculo necessário pode ser derivado facilmente.</p>
 <p>Essa é a ideia dos métodos a seguir. O primeiro deles, a amostragem por aceitação-rejeição já foi visto no contexto de geração de números aleatórios. A mesma ideia será usada aqui, mas agora usaremos a amostra gerada da distribuição de interesse para resolver problemas de integração.</p>
 <p>O segundo método, o de re-amostragem por importância, pode ser visto como uma extensão do método de amostragem por importância, que vimos no contexto de generalização do método simples de integração de Monte Carlo. Nesse caso, usaremos as mesmas ideias para gerar uma amostra da distribuição de interesse, e não apenas resolver uma integral.</p>
-</div>
-</div>
 <div id="amostragem-por-rejeição" class="section level2">
-<h2><span class="header-section-number">1.2</span> Amostragem por rejeição</h2>
+<h2><span class="header-section-number">2.1</span> Amostragem por rejeição</h2>
 <p>A ideia inicial do método é exatamente igual ao que já foi visto anteriormente no contexto de geração de números aleatórios de uma distribuição alvo <span class="math inline">\(f\)</span>.</p>
 <p>O seguinte algoritmo permite gerar números aleatórios de uma distribuição de probabilidade caracterizada pela função densidade <span class="math inline">\(f\)</span>:</p>
 <ol style="list-style-type: decimal">
@@ -607,7 +610,7 @@ u \leq \frac{f(y)}{M g(y)}
 M \geq \max_x \frac{f(x)}{g(x)}
 \]</span></p>
 <div id="exemplo-exponencial-1" class="section level3">
-<h3><span class="header-section-number">1.2.1</span> Exemplo (exponencial)</h3>
+<h3><span class="header-section-number">2.1.1</span> Exemplo (exponencial)</h3>
 <p>Suponha novamente que queremos obter a integral</p>
 <p><span class="math display">\[
 \theta = \int_2^4 e^{-x} dx
@@ -676,7 +679,7 @@ I(X \leq x) =
 \]</span> é uma função indicadora. Note que isso se extende para qualquer outro tipo de probabilidade, e.g. <span class="math inline">\(P[X &gt; x]\)</span>, etc.</p>
 </div>
 <div id="exemplo-beta-1" class="section level3">
-<h3><span class="header-section-number">1.2.2</span> Exemplo (beta)</h3>
+<h3><span class="header-section-number">2.1.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, queremos calcular <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, mas agora através da obtenção de uma amostra completa desta distribuição.</p>
 <p>Usando o método de aceitação-rejeição, vamos usar como distribuição proposta uma <span class="math inline">\(\text{U}(0,1)\)</span>. Portanto:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
@@ -729,7 +732,7 @@ I(X \leq x) =
 </div>
 </div>
 <div id="re-amostragem-por-importância" class="section level2">
-<h2><span class="header-section-number">1.3</span> Re-amostragem por importância</h2>
+<h2><span class="header-section-number">2.2</span> Re-amostragem por importância</h2>
 <p>O método de re-amostragem por importância (SIR - <em>Sampling Importance Resampling</em>) é uma alternativa ao método de aceitação-rejeição quando não é possível determinar um valor razoável para <span class="math inline">\(M\)</span>. A essência do algoritmo é amostrar valores segundo pesos que são computados para cada um deles.</p>
 <p>Veremos que o método nada mais é do que uma extensão do método de amostragem por importância para aproximação de integrais. No entanto, o objetivo aqui também é obter a distribuição completa da densidade alvo, e, com isso, calcular quantidades de interesse.</p>
 <p>O método de re-amostragem por importância é também muito utilizado no contexto de inferência bayesiana, na obtenção de distribuições posteriores de parâmetros.</p>
@@ -777,7 +780,7 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 </ol>
 <p>Dessa forma, <span class="math inline">\(\mathcal{X} = \{x^*_1, \ldots, x^*_k\}\)</span> será uma amostra de <span class="math inline">\(g(X)\)</span>.</p>
 <div id="exemplo-exponencial-2" class="section level3">
-<h3><span class="header-section-number">1.3.1</span> Exemplo (exponencial)</h3>
+<h3><span class="header-section-number">2.2.1</span> Exemplo (exponencial)</h3>
 <p>Seguindo com o exemplo da <span class="math inline">\(\text{Exp}(1)\)</span>, o código abaixo serve para gerar uma amostra por importância desta distribuição.</p>
 <p>A função de importância considerada aqui é uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Lembre-se que nesse caso, não é necessário que a função proposta seja maior do que a função alvo.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Define funções</span></a>
@@ -814,7 +817,7 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 <a class="sourceLine" id="cb19-11" title="11"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
 </div>
 <div id="exemplo-beta-2" class="section level3">
-<h3><span class="header-section-number">1.3.2</span> Exemplo (beta)</h3>
+<h3><span class="header-section-number">2.2.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, vamos ober uma amostra desta distribuição pelo método de re-amostragem por importância. Aqui também utilizaremos uma <span class="math inline">\(\text{U}(0,1)\)</span> como função de importância.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Define funções</span></a>
 <a class="sourceLine" id="cb20-2" title="2">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
