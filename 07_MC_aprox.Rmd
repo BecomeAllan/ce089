@@ -190,6 +190,8 @@ theta.hat <- dbeta(x, a, b)
 pbeta(0.2, a, b, lower.tail = FALSE)
 ```
 
+# Distribuições aproximadas
+
 Note que nos dois exemplos acima, para cada problema de cálculo de
 probabilidades (integrais), precisamos aplicar o método de Monte Carlo.
 
