@@ -739,6 +739,12 @@ I(X \leq x) =
 \frac{1}{m}\sum_{i=1}^{m} Y_i = \frac{1}{m}\sum_{i=1}^{m}
 \frac{g(X_i)}{f(X_i)}
 \]</span> onde as VAs <span class="math inline">\(X_1, \ldots, X_m\)</span> são geradas a partir da distribuição de <span class="math inline">\(f(x)\)</span>. A função <span class="math inline">\(f(x)\)</span> é chamada de <strong>função de importância</strong>.</p>
+<p>O algoritmo para o método de <strong>amostragem por importância</strong> é o seguinte:</p>
+<ol style="list-style-type: decimal">
+<li>Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
+<li>Calcular a razão entre <span class="math inline">\(g(x)\)</span> e <span class="math inline">\(f(x)\)</span> e determinar a média <span class="math inline">\(\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}\)</span></li>
+</ol>
+<p>A média fornece diretamente uma estimativa de integral requerida.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Aproximando uma integral indefinida pela amostragem por importância
@@ -747,7 +753,7 @@ Aproximando uma integral indefinida pela amostragem por importância
 <p>Voltando brevemente ao caso da exponencial, pela amostragem por importância, podemos agora obter uma estimativa de <span class="math inline">\(P[X &gt; 2]\)</span>, caso que não conseguimos usando a integração simples de Monte Carlo.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Define funções</span></a>
 <a class="sourceLine" id="cb16-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb16-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>) <span class="co"># Prposta é Exp(0.5)</span></a>
+<a class="sourceLine" id="cb16-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>) <span class="co"># Proposta é Exp(0.5)</span></a>
 <a class="sourceLine" id="cb16-4" title="4"><span class="co">## 1. Amostra da proposta</span></a>
 <a class="sourceLine" id="cb16-5" title="5">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
 <a class="sourceLine" id="cb16-6" title="6">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="fl">0.5</span>)</a>
@@ -759,12 +765,6 @@ Aproximando uma integral indefinida pela amostragem por importância
 <a class="sourceLine" id="cb16-12" title="12"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
 </div>
 </div>
-<p>O algoritmo para o método de <strong>amostragem por importância</strong> é o seguinte:</p>
-<ol style="list-style-type: decimal">
-<li>Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
-<li>Calcular a razão entre <span class="math inline">\(g(x)\)</span> e <span class="math inline">\(f(x)\)</span> e determinar a média <span class="math inline">\(\frac{1}{m}\sum_{i=1}^{m} \frac{g(x_i)}{f(x_i)}\)</span></li>
-</ol>
-<p>A média fornece diretamente uma estimativa de integral requerida.</p>
 <p>O algoritmo do método de <strong>re-amostragem por importância</strong> é uma extensão do algoritmo anterior e consiste nos seguintes passos:</p>
 <ol style="list-style-type: decimal">
 <li>(<em>Amostragem</em>) Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
