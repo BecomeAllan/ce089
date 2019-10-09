@@ -1576,7 +1576,8 @@ div.tocify {
 <p>Vamos entender como uma função genérica pode ser criada através de um exemplo. Usando a função <code>methods()</code>, podemos verificar quais métodos estão disponíveis para uma determinada função, por exemplo, para a função <code>mean()</code>:</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">methods</span>(mean)</a>
 <a class="sourceLine" id="cb106-2" title="2"><span class="co"># [1] mean.Date     mean.default  mean.difftime mean.POSIXct  mean.POSIXlt </span></a>
-<a class="sourceLine" id="cb106-3" title="3"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb106-3" title="3"><span class="co"># [6] mean.quosure*</span></a>
+<a class="sourceLine" id="cb106-4" title="4"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1597,7 +1598,7 @@ div.tocify {
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">mean</a>
 <a class="sourceLine" id="cb111-2" title="2"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x5c3d790&gt;</span></a>
+<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x3368f10&gt;</span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">mean.default</a>
@@ -1625,7 +1626,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x5c3f3b8&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x47e6378&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1637,7 +1638,7 @@ div.tocify {
 <p>Uma função método é sempre definida dessa forma: <code>&lt;funçãogenérica&gt;.&lt;classe&gt;</code>. Agora podemos ver novamente os métodos disponíveis para a função <code>mean()</code></p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">methods</span>(mean)</a>
 <a class="sourceLine" id="cb115-2" title="2"><span class="co"># [1] mean.Date     mean.default  mean.difftime mean.matrix   mean.POSIXct </span></a>
-<a class="sourceLine" id="cb115-3" title="3"><span class="co"># [6] mean.POSIXlt </span></a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="co"># [6] mean.POSIXlt  mean.quosure*</span></a>
 <a class="sourceLine" id="cb115-4" title="4"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
@@ -1685,7 +1686,7 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Saturday, 05 October, 2019, 00:41
+<pre><code># Wednesday, 09 October, 2019, 01:13
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1711,10 +1712,10 @@ div.tocify {
 # 
 # loaded via a namespace (and not attached):
 #  [1] microbenchmark_1.4-7 compiler_3.6.1       magrittr_1.5        
-#  [4] tools_3.6.1          htmltools_0.3.6      yaml_2.2.0          
+#  [4] tools_3.6.1          htmltools_0.4.0      yaml_2.2.0          
 #  [7] Rcpp_1.0.2           stringi_1.4.3        rmarkdown_1.16.1    
-# [10] stringr_1.4.0        xfun_0.10            digest_0.6.21       
-# [13] evaluate_0.14</code></pre>
+# [10] highr_0.8            stringr_1.4.0        xfun_0.10           
+# [13] digest_0.6.21        rlang_0.4.0          evaluate_0.14</code></pre>
 </div>
 
 <center>
