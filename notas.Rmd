@@ -9,4 +9,17 @@ output:
 source("setup_knitr.R")
 ```
 
-Em breve.
+```{r, echo=FALSE, results='hide'}
+da <- read.csv("misc/notas.csv")
+str(da)
+da <- da[order(da$Matrícula), ]
+row.names(da) <- NULL
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(da)
+```
+
+```{r, echo=FALSE}
+boxplot(da[, 2:ncol(da)], ylab = "Nota")
+```
