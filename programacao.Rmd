@@ -452,7 +452,7 @@ execução, etc), mas apenas para comparação, vamos medir o tempo de
 execução destas mesmas operações usando o `for()` e usando a regra da
 reciclagem.
 
-```{r, cache=TRUE}
+```{r}
 ## Tempo de execução usando for()
 y1 <- numeric(length(x))
 st1 <- system.time(

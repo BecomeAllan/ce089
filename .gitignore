@@ -1,6 +1,7 @@
 docs/
 cache/
 auto/
+figures/
 *_files/
 .Rhistory
 .RData
