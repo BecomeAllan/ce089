@@ -16,6 +16,9 @@ output:
   de aceitação e rejeição](04_RNG_aceitacao.html).
 - Geração de números aleatórios não uniformes: [método
  da relação entre variáveis](05_RNG_transform.html).
+- [Integração de Monte Carlo](06_MC_intro.html).
+- Distribuições aproximadas baseadas em [simulação de
+  Monte Carlo](07_MC_aprox.html).
 
 ### Slides
 
