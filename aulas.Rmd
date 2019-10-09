@@ -58,7 +58,7 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **01/10 (Ter)**: Integração de Monte Carlo. [HTML](06_MC_intro.html).
 - **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de
   Monte Carlo. [HTML](07_MC_aprox.html).
-- **08/10 (Ter)**:
+- **08/10 (Ter)**: Correção de prova e comentários sobre atividades.
 - **11/10 (Sex)**:
 - **15/10 (Ter)**:
 - **18/10 (Sex)**:
