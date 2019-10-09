@@ -605,7 +605,7 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 <a class="sourceLine" id="cb5-2" title="2"><span class="co"># [1] 0.1171233</span></a></code></pre></div>
 <p>Mas veja que existe uma distribuição de valores para compor esta estimativa média</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">hist</span>(theta.hat); <span class="kw">abline</span>(<span class="dt">v =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>A variância relacionada ao estimador pode então ser calculada como</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Variancia</span></a>
 <a class="sourceLine" id="cb7-2" title="2">(v.theta.hat &lt;-<span class="st"> </span><span class="kw">sum</span>((theta.hat <span class="op">-</span><span class="st"> </span>m.theta.hat)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>m<span class="op">^</span><span class="dv">2</span>)</a>
@@ -622,7 +622,7 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 <a class="sourceLine" id="cb8-3" title="3">res &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">runif</span>(m <span class="op">*</span><span class="st"> </span>r, a, b), <span class="dt">nrow =</span> m, <span class="dt">ncol =</span> r)</a>
 <a class="sourceLine" id="cb8-4" title="4">m.theta.sim &lt;-<span class="st"> </span><span class="kw">apply</span>(res, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">mean</span>(<span class="kw">exp</span>(<span class="op">-</span>x)) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))</a>
 <a class="sourceLine" id="cb8-5" title="5"><span class="kw">hist</span>(m.theta.sim); <span class="kw">abline</span>(<span class="dt">v =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com esse resultado, podemos inclusive fornecer um intervalo de confiança associado à nossa estimativa</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Media e veriancia</span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="kw">c</span>(m.theta.hat, v.theta.hat)</a>
@@ -643,7 +643,7 @@ P(\lim_{n \to \infty} |\bar{X}_n - \mu| &lt; \epsilon) = 1
 <a class="sourceLine" id="cb10-10" title="10"><span class="kw">abline</span>(<span class="dt">h =</span> theta, <span class="dt">col =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb10-11" title="11"><span class="kw">lines</span>(estint <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>esterr, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb10-12" title="12"><span class="kw">lines</span>(estint <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>esterr, <span class="dt">lty =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="redução-da-variância" class="section level2">
 <h2><span class="header-section-number">2.3</span> Redução da variância</h2>
@@ -718,7 +718,7 @@ f_4(x) &amp;= 4(1-x^2)^{-1}/\pi, \quad 0&lt;x&lt;1 \\
 <a class="sourceLine" id="cb11-24" title="24"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span>),</a>
 <a class="sourceLine" id="cb11-25" title="25">       <span class="dt">col =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">lwd =</span> w, <span class="dt">inset =</span> <span class="fl">0.02</span>)</a>
 <a class="sourceLine" id="cb11-26" title="26"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
 <a class="sourceLine" id="cb12-2" title="2">theta.hat &lt;-<span class="st"> </span>se &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb12-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>

@@ -625,7 +625,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <a class="sourceLine" id="cb7-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dexp</span>(x, <span class="fl">.5</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb7-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
 <a class="sourceLine" id="cb7-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora podemos prosseguir com o algoritmo da seguinte forma:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Criando os elementos necessários</span></a>
 <a class="sourceLine" id="cb8-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="dv">1</span>)</a>
@@ -649,7 +649,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <a class="sourceLine" id="cb8-20" title="20"><span class="co"># [1] 100000</span></a>
 <a class="sourceLine" id="cb8-21" title="21"><span class="kw">hist</span>(x, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb8-22" title="22"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Como agora temos a distribuição completa da <span class="math inline">\(\text{Exp}(1)\)</span>, podemos obter qualquer probabilidade (ou integral) aproximada, simplesmente através das contagens de valores no intervalo especificado. Note que a integral da distribuição, ou seja, <span class="math inline">\(\int_0^{\infty} f(x) dx\)</span> deve fechar em <strong>aproximadamente</strong> 1:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(x))<span class="op">/</span>N</a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="co"># [1] 1</span></a></code></pre></div>
@@ -691,7 +691,7 @@ I(X \leq x) =
 <a class="sourceLine" id="cb13-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dunif</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb13-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
 <a class="sourceLine" id="cb13-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Seguindo o mesmo algoritmo anterior, temos então:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">## Criando os elementos necessários</span></a>
 <a class="sourceLine" id="cb14-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
@@ -717,7 +717,7 @@ I(X \leq x) =
 <a class="sourceLine" id="cb14-22" title="22"><span class="co"># [1] 1</span></a>
 <a class="sourceLine" id="cb14-23" title="23"><span class="kw">hist</span>(x, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
 <a class="sourceLine" id="cb14-24" title="24"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora, podemos calcular qualquer probabilidade. Por exemplo:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## P[0.3 &lt; X &lt; 0.5]</span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>N</a>
@@ -799,10 +799,10 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 <a class="sourceLine" id="cb17-14" title="14"><span class="co">## Verifica a distribuição da amostra</span></a>
 <a class="sourceLine" id="cb17-15" title="15"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb17-16" title="16"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com uma amostra completa da distribuição, podemos então calcular qualquer tipo de probabilidades:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">## P[2 &lt; X &lt; 4]</span></a>
 <a class="sourceLine" id="cb19-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>k</a>
@@ -836,10 +836,10 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 <a class="sourceLine" id="cb20-15" title="15"><span class="co">## Verifica a distribuição da amostra</span></a>
 <a class="sourceLine" id="cb20-16" title="16"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
 <a class="sourceLine" id="cb20-17" title="17"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
-<p><img src="figures/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Calcula probabilidades:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">## P[0.3 &lt; X &lt; 0.5]</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
