@@ -9,6 +9,10 @@ output:
     self_contained: TRUE
 ---
 
+```{r, cache=FALSE, include=FALSE}
+knitr::opts_chunk$set(fig.path = "figures/00_intro/")
+```
+
 # Estatística computacional
 
 .pull-left[

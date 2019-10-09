@@ -2,6 +2,7 @@ docs/
 cache/
 auto/
 figures/
+slides/figures/
 *_files/
 .Rhistory
 .RData

@@ -17,6 +17,7 @@ output:
 
 ```{r, cache=FALSE, include=FALSE}
 source("../setup_knitr.R")
+opts_chunk$set(fig.path = "figures/01_tecnicas/")
 ```
 
 # Introdução
@@ -587,7 +588,7 @@ Não existe uma forma pronta de lidar com essa classe, mas você pode
 definir o que deve acontecer:
 
 ```{r}
-if(class(er) == "try-error") c(NA, NA)
+if(class(er2) == "try-error") c(NA, NA)
 ```
 
 ---

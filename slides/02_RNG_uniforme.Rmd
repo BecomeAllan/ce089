@@ -16,6 +16,7 @@ output:
 
 ```{r, cache=FALSE, include=FALSE}
 source("../setup_knitr.R")
+opts_chunk$set(fig.path = "figures/02_RNG_uniforme/")
 ```
 
 # Introdução
