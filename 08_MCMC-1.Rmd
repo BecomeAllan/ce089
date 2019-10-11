@@ -1,0 +1,184 @@
+---
+title: "Métodos de Monte Carlo via Cadeias de Markov"
+# subtitle: "Distribuições aproximadas baseadas em simulação de Monte Carlo"
+author: "Fernando P. Mayer"
+bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
+    toc_depth: 3
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+opts_chunk$set(fig.path = "figures/08_MCMC-1/")
+```
+
+# Introdução
+
+-  Introdução geral de Peng.
+
+Em situações em que $\theta$ tem dimensão elevada, o procedimento a ser
+apresentado é geralmente mais eficiente para gerar quantidades
+aleatórias.
+
+O ponto crítico do método MCMC está na formulação de probabilidades de
+transição apropriadas. O algoritmo de Metropolis-Hastings é uma forma
+conveniente de obter uma amostra simulada, a partir do uso de uma cadeia
+de Markov generalizada para um espaço de estado contínuo.
+
+Segue abaixo uma descrição das probabilidades de transição especificadas
+conforme algumas das alternativas que podem ser adotadas para
+implementar o algoritmo de Metropolis-Hastings.
+
+O procedimento mais geral será visto na sequência.
+
+## Metropolis-Hastings
+
+O algoritmo de Metropolis-Hastings gera uma cadeia de Markov $\{X_0,
+X_1, \ldots\}$ conforme definido abaixo.
+
+1. Defina uma distribuição proposta $g(\cdot|X_t)$
+2. Defina um valor inicial $X_0$, dentro do domínio de $g$
+3. Repita os seguintes passos até convergir para uma distribuição
+   estacionária:
+   a. Gere um valor **candidato** $Y=X_{t+1}$ a partir de $g(\cdot|X_t)$
+   (note que o valor candidato é dependente do valor anterior)
+   b. Gere $U$ de uma $\text{U}(0,1)$
+   c. Calcule a taxa de aceitação
+   $$
+   \alpha(X_t, Y) = \min
+   \left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right)
+   $$
+   Se
+   $$
+   U \leq \alpha(X_t, Y)
+   $$
+   aceite $Y$ e faça $X_{t+1}=Y$; caso contrário faça $X_{t+1}=X_t$
+
+Observações:
+
+- Note que só precisamos conhecer o núcleo da densidade alvo $f$, ou
+seja, não é necessário saber a constante de integração (ou de
+normalização), uma vez que, mesmo sem essa constante, a densidade de $f$
+será proporcional.
+- Se a distribuição proposta for adequada, a "cadeia" de
+  Metropolis-Hastings irá convergir para uma distribuição estacionária
+  única $\pi$.
+- O algoritmo foi desenvolvido de forma que a distribuição estacionária
+  da cadeia é de fato a distribuição alvo $f$.
+
+## Metropolis Random Walk
+
+O algoritmo de Metropolis-Hastings é uma generalização do algoritmo de
+Metropolis. Nesse caso, a particularização é que no algoritmo de
+Metropolis, a distribuição proposta deve ser obrigatoriamente
+**simétrica**.
+
+Assim como antes, considere que $y = x_{t+1}$, e que esse valor depende
+do anterior e mais um ruído
+
+$$
+x_{t+1} = x_t + \epsilon
+$$
+
+onde $\epsilon \sim h$, e $h$ é uma distribuição simétrica ao redor de
+zero. Podemos escrever essa equação como uma diferença sucessiva,
+
+$$
+x_{t+1} - x_t = \epsilon
+$$
+
+Ou seja, conhecendo $x_t$, a distribuição de $x_{t+1}$ será apenas uma
+função de $\epsilon$,
+
+$$
+g(x_{t+1}|x_t) = h(\epsilon)
+$$
+
+Como $h$ é simétrica, então
+
+$$
+g(x_{t}|x_{t+1}) = h(-\epsilon) = h(\epsilon)
+$$
+
+Sendo assim, podemos dizer que
+
+$$
+g(X|Y) = g(Y|X)
+$$
+
+Portanto, a taxa de aceitação fica agora simplificada
+
+$$
+\begin{align}
+\alpha(X_t, Y) &= \min
+\left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right) \\
+ &= \min
+\left( \frac{f(Y)}{f(X_t)}, 1 \right)
+\end{align}
+$$
+
+(Ver a definição de Rizzo)
+
+Assim, o algoritmo de Matropolis random walk é da seguinte forma:
+
+1. Simule $\epsilon \sim g$ e faça $y = x + \epsilon$
+2.
+
+1. Defina uma distribuição proposta $h$ **simétrica**
+2. Defina um valor inicial $X_0$, dentro do domínio de $h$
+3. Repita os seguintes passos até convergir para uma distribuição
+   estacionária:
+   a. Gere um valor **candidato** $Y \equiv X_{t+1} = X_t+\epsilon$
+   b. Gere $U$ de uma $\text{U}(0,1)$
+   c. Calcule a taxa de aceitação
+   $$
+   \alpha(X_t, Y) = \min
+   \left( \frac{f(Y)}{f(X_t)}, 1 \right)
+   $$
+   Se
+   $$
+   U \leq \alpha(X_t, Y)
+   $$
+   aceite $Y$ e faça $X_{t+1}=Y$; caso contrário faça $X_{t+1}=X_t$
+
+
+### Exemplo com uniforme
+
+Peng
+
+### Exemplo com normal
+
+- Rizzo
+- Comentarios da secao 3.2.1 de Ehlers
+
+## Amostrador independente
+
+- Rizzo
+
+
+```{r, include=FALSE, eval=FALSE}
+## Da aula passada
+## Define funções
+g <- function(x) exp(-x) * (x >= 0)
+## f <- function(x) dexp(x, 0.5)
+delta <- 0.5
+m <- 1e3
+x <- numeric(m)
+x[1] <- 1
+for(i in 2:m) {
+    eps <- runif(1, -delta, delta)
+    y <- x[i - 1] + eps
+    alpha <- min(g(y)/g(x[i - 1]), 1)
+    u <- runif(1)
+    if(u <= alpha) {
+        x[i] <- y
+    } else {
+        x[i] <- x[i - 1]
+    }
+}
+
+hist(x)
+plot(x, type = "l")
+```
