@@ -59,7 +59,7 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de
   Monte Carlo. [HTML](07_MC_aprox.html).
 - **08/10 (Ter)**: Correção de prova e comentários sobre atividades.
-- **11/10 (Sex)**:
+- **11/10 (Sex)**: [HTML](08_MCMC-1.html)
 - **15/10 (Ter)**:
 - **18/10 (Sex)**:
 - **22/10 (Ter)**:
