@@ -7,3 +7,6 @@ slides/figures/
 .Rhistory
 .RData
 *.out
+css/
+js/
+rwsampler1.html

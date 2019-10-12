@@ -16,11 +16,9 @@ opts_chunk$set(fig.path = "figures/08_MCMC-1/")
 
 # Introdução
 
-<!-- -  Introdução geral de Peng. -->
-
-Em situações em que $\theta$ tem dimensão elevada, o procedimento a ser
-apresentado é geralmente mais eficiente para gerar quantidades
-aleatórias.
+Em situações em que $\theta$ (ou $X$) tem dimensão elevada, o
+procedimento a ser apresentado é geralmente mais eficiente para gerar
+quantidades aleatórias.
 
 O ponto crítico do método MCMC está na formulação de probabilidades de
 transição apropriadas. O algoritmo de Metropolis-Hastings é uma forma
@@ -33,7 +31,7 @@ implementar o algoritmo de Metropolis-Hastings.
 
 O procedimento mais geral será visto na sequência.
 
-## Metropolis-Hastings
+# Metropolis-Hastings
 
 O algoritmo de Metropolis-Hastings gera uma cadeia de Markov $\{X_0,
 X_1, \ldots\}$ conforme definido abaixo.
@@ -68,7 +66,7 @@ será proporcional.
 - O algoritmo foi desenvolvido de forma que a distribuição estacionária
   da cadeia é de fato a distribuição alvo $f$.
 
-## Metropolis Random Walk
+# Metropolis Random Walk
 
 O algoritmo de Metropolis-Hastings é uma generalização do algoritmo de
 Metropolis *random walk*. Nesse caso, a particularização é que no
@@ -171,7 +169,7 @@ seguinte forma:
    $$
    aceite $Y$ e faça $X_{t+1}=Y$; caso contrário faça $X_{t+1}=X_t$
 
-### Exemplo com uniforme
+## Exemplo com uniforme
 
 Suponha que se deseja gerar valores de uma normal padrão, usando como
 distribuição proposta uma $\text{U}(-\delta, \delta)$.
@@ -275,7 +273,7 @@ acf(x2, lag.max = 50)
 par(mfrow = c(1, 1))
 ```
 
-```{r, eval=FALSE, include=FALSE}
+```{r, include=FALSE}
 ## Ilustrando o procedimento (com um exemplo bem simples). Obter
 ## realizações de uma distribuição Normal(0, 1). Definir a distribuição
 ## candidata qX(x,.) como sendo a uniforme(-delta, delta) que é
@@ -336,7 +334,9 @@ rwsampler1 <- function(nsim, x1, delta, mu, sigma,
     }
     return(out)
 }
+```
 
+```{r, include=FALSE, eval=FALSE}
 mu <- 0; sigma <- 1
 x <- rwsampler1(nsim=10, x1=-1, delta= .5, mu, sigma, plot=TRUE,
                 go="console")
@@ -346,6 +346,23 @@ x <- rwsampler1(nsim=10, x1=-1, delta=2, mu, sigma, plot=TRUE,
                 go="console")
 ## x <- rwsampler1(nsim=10, x1=-1, delta=2, mu, sigma, plot=TRUE,
 ##                 go="click")
+```
+
+```{r, include=FALSE, results='hide'}
+animation::saveHTML(
+               rwsampler1(nsim = 20, x1 = -1, delta = 2, mu = 0,
+                          sigma = 1, plot = TRUE, go = "none"),
+               img.name = "rwsampler1-",
+               imgdir = "figures/rwsampler1/",
+               htmlfile = "rwsampler1.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("rwsampler1.html", height = "715px")
 ```
 
 ```{r, eval=FALSE, include=FALSE}
@@ -438,7 +455,7 @@ curve(k*pnorm(x, 0, 1)+(1-k)*pnorm(x, 7, 1), add=TRUE, col=2); layout(1)
 prop.table(table(x<3.5))
 ```
 
-### Exemplo com normal
+## Exemplo com normal
 
 Considere gerar valores de uma distribuição $t$ de Student com $\nu$
 graus de liberdade, usando como distribuição proposta uma $\text{N}(X_t,
