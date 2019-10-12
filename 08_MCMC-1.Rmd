@@ -361,6 +361,8 @@ animation::saveHTML(
                ani.height = 600)
 ```
 
+Veja como fica uma animação com o método em funcionamento:
+
 ```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
 knitr::include_url("rwsampler1.html", height = "715px")
 ```
@@ -521,7 +523,7 @@ par(mfrow = c(1, 1))
   a maioria dos valores candidatos são rejeitados. A cadeia converge,
   mas é ineficiente.
 
-## Amostrador independente
+# Amostrador independente
 
 Outro caso particular do método geral de Metropolis-Hastings é o chamado
 amostrador independente. Nesse caso, a particularidade é que a
@@ -573,7 +575,7 @@ forma:
    $$
    aceite $Y$ e faça $X_{t+1}=Y$; caso contrário faça $X_{t+1}=X_t$
 
-### Exemplo (beta)
+## Exemplo (beta)
 
 ```{r}
 ## Gerar números de uma distribuição Beta usando a distribuição Uniforme
@@ -614,54 +616,8 @@ plot(ecdf(x))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)
 ```
 
-```{r}
-## Distribuição alvo: X ~ Beta(2, 3)
-f <- function(x) dbeta(x, shape1 = 2, shape2 = 3)
-curve(f, 0, 1)
-## Distribuição candidata (proposal): X ~ Normal(0.5, 0.25)
-g <- function(x) dnorm(x, 0.5, 0.25)
 
-## Gráfico das densidados sobrepostas.
-curve(f, 0, 1)
-curve(g, add=TRUE, col=2)
-legend("topright", legend=c("Alvo", "Candidata"), lty=1, col=1:2,
-       bty="n")
-
-N <- 500
-x2 <- numeric(N)
-x2[1] <- 0.5
-set.seed(2019-10-11)
-for(i in 2:N) {
-    y <- rnorm(1, 0.5, 0.25) # Distribuição proposta
-    alpha <- min((f(y) * g(x2[i - 1])) / (f(x2[i - 1]) * g(y)), 1)
-    u <- runif(1)
-    if(u <= alpha) {
-        x2[i] <- y
-    } else {
-        x2[i] <- x2[i - 1]
-    }
-}
-
-## Cadeia
-plot(x2, type = "l")
-
-## Compara com teorica
-plot(ecdf(x2))
-curve(pbeta(x, 2, 3), add = TRUE, col = 2)
-```
-
-Comparando as cadeias
-
-```{r}
-par(mfrow = c(2, 2))
-plot(x, type = "l")
-plot(x2, type = "l")
-acf(x)
-acf(x2)
-par(mfrow = c(1, 1))
-```
-
-```{r, eval=FALSE, include=FALSE}
+```{r, include=FALSE}
 ## Alvo: Beta.
 ## Canditada: Uniforme.
 iidsampler1 <- function(nsim, x1, plot=FALSE,
@@ -753,10 +709,11 @@ iidsampler1 <- function(nsim, x1, plot=FALSE,
     }
     return(out)
 }
+```
 
+```{r, include=FALSE, eval=FALSE}
 n <- 10
 x <- iidsampler1(n, x1=0.5, plot=TRUE, go="console")
-
 ## Gerando muitos números pelo método.
 x <- iidsampler1(5000, x1=0.5)
 par(mfrow=c(2,2))
@@ -767,12 +724,67 @@ plot(ecdf(x))            ## Acumulada teórica vs empírica.
 curve(pbeta(x, 2, 3), add=TRUE, col=2); layout(1)
 ```
 
-```{r, eval=FALSE, include=FALSE}
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               iidsampler1(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
+               img.name = "iidsampler1-",
+               imgdir = "figures/iidsampler1/",
+               htmlfile = "iidsampler1.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+Veja como fica uma animação com o método em funcionamento:
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("iidsampler1.html", height = "715px")
+```
+
+Outro exemplo:
+
+```{r}
+## Distribuição alvo: X ~ Beta(2, 3)
+f <- function(x) dbeta(x, shape1 = 2, shape2 = 3)
+curve(f, 0, 1)
+## Distribuição candidata (proposal): X ~ Normal(0.5, 0.25)
+g <- function(x) dnorm(x, 0.5, 0.25)
+
+## Gráfico das densidados sobrepostas.
+curve(f, 0, 1)
+curve(g, add=TRUE, col=2)
+legend("topright", legend=c("Alvo", "Candidata"), lty=1, col=1:2,
+       bty="n")
+
+N <- 500
+x2 <- numeric(N)
+x2[1] <- 0.5
+set.seed(2019-10-11)
+for(i in 2:N) {
+    y <- rnorm(1, 0.5, 0.25) # Distribuição proposta
+    alpha <- min((f(y) * g(x2[i - 1])) / (f(x2[i - 1]) * g(y)), 1)
+    u <- runif(1)
+    if(u <= alpha) {
+        x2[i] <- y
+    } else {
+        x2[i] <- x2[i - 1]
+    }
+}
+
+## Cadeia
+plot(x2, type = "l")
+
+## Compara com teorica
+plot(ecdf(x2))
+curve(pbeta(x, 2, 3), add = TRUE, col = 2)
+```
+
+```{r, include=FALSE}
 ## Alvo: Beta.
 ## Canditada: Normal.
-curve(dbeta(x, 2, 3), 0, 1)
-curve(dnorm(x, 0.5, 0.25), add=TRUE, lty=2)
-
+## curve(dbeta(x, 2, 3), 0, 1)
+## curve(dnorm(x, 0.5, 0.25), add=TRUE, lty=2)
 iidsampler2 <- function(nsim, x1, plot=FALSE,
                         go=c("click","console","none")){
     out <- vector(mode="numeric", length=nsim)
@@ -856,10 +868,11 @@ iidsampler2 <- function(nsim, x1, plot=FALSE,
     }
     return(out)
 }
+```
 
+```{r, eval=FALSE, include=FALSE}
 n <- 10
 x <- iidsampler2(n, x1=0.5, plot=TRUE, go="console")
-
 ## Gerando muitos números pelo método.
 x <- iidsampler2(5000, x1=0.5)
 par(mfrow=c(2,2))
@@ -869,6 +882,36 @@ acf(x)                   ## Mostra que a cadeia não é independente.
 plot(ecdf(x))            ## Acumulada teórica vs empírica.
 curve(pbeta(x, 2, 3), add=TRUE, col=2); layout(1)
 ```
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               iidsampler2(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
+               img.name = "iidsampler2-",
+               imgdir = "figures/iidsampler2/",
+               htmlfile = "iidsampler2.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+Veja como fica uma animação com o método em funcionamento:
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("iidsampler2.html", height = "715px")
+```
+
+Comparando as cadeias geradas com as duas diferentes propostas:
+
+```{r, fig.show='hold'}
+par(mfrow = c(2, 2))
+plot(x, type = "l")
+plot(x2, type = "l")
+acf(x)
+acf(x2)
+par(mfrow = c(1, 1))
+```
+
 
 ```{r, eval=FALSE, include=FALSE}
 ## Alvo: Gama.
