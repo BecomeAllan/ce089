@@ -1,6 +1,6 @@
 ---
 title: "Métodos de Monte Carlo via Cadeias de Markov"
-subtitle: "Matropolis random walk e amostrador independente"
+subtitle: "Metropolis random walk e amostrador independente"
 author: "Fernando P. Mayer"
 bibliography: ref.bib
 output:

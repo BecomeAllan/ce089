@@ -59,9 +59,11 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de
   Monte Carlo. [HTML](07_MC_aprox.html).
 - **08/10 (Ter)**: Correção de prova e comentários sobre atividades.
-- **11/10 (Sex)**: [HTML](08_MCMC-1.html)
-- **15/10 (Ter)**:
-- **18/10 (Sex)**:
+- **11/10 (Sex)**: MCMC: Metropolis random walk e amostrador
+independente. [HTML](08_MCMC-1.html) e [script](scripts/08_MCMC-1.R) com
+mais exemplos mostrados em aula.
+- **15/10 (Ter)**: MCMC: Metropolis-Hastings.
+- **18/10 (Sex)**: Atividade disponível no [Moodle][].
 - **22/10 (Ter)**:
 - **25/10 (Sex)**:
 - **29/10 (Ter)**:

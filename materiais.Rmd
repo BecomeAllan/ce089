@@ -19,6 +19,8 @@ output:
 - [Integração de Monte Carlo](06_MC_intro.html).
 - Distribuições aproximadas baseadas em [simulação de
   Monte Carlo](07_MC_aprox.html).
+- MCMC: [Metropolis random walk e amostrador
+  independente](08_MCMC-1.html).
 
 ### Slides
 
@@ -34,7 +36,8 @@ output:
 ### Scripts
 
 - Técnicas de programação. [R](slides/01_tecnicas.R).
-
+- MCMC: Metropolis random walk e amostrador independente.
+[R](scripts/08_MCMC-1.R).
 
 ## Materiais gerais
 
