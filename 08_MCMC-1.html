@@ -638,6 +638,7 @@ U \leq \alpha(X_t, Y)
 <a class="sourceLine" id="cb6-3" title="3"><span class="kw">acf</span>(x2, <span class="dt">lag.max =</span> <span class="dv">50</span>)</a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
 <iframe src="rwsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 </div>
@@ -690,8 +691,9 @@ U \leq \alpha(X_t, Y)
 <li>Com <span class="math inline">\(\sigma = 16\)</span>, a probabilidade de aceitação <span class="math inline">\(\alpha\)</span> é pequena, e a maioria dos valores candidatos são rejeitados. A cadeia converge, mas é ineficiente.</li>
 </ul>
 </div>
-<div id="amostrador-independente" class="section level2">
-<h2><span class="header-section-number">3.3</span> Amostrador independente</h2>
+</div>
+<div id="amostrador-independente" class="section level1">
+<h1><span class="header-section-number">4</span> Amostrador independente</h1>
 <p>Outro caso particular do método geral de Metropolis-Hastings é o chamado amostrador independente. Nesse caso, a particularidade é que a distribuição proposta não depende mais de valores anteriores da cadeia, ou seja,</p>
 <p><span class="math display">\[
 g(Y|X_t) = g(Y)
@@ -725,8 +727,8 @@ U \leq \alpha(X_t, Y)
 \]</span> aceite <span class="math inline">\(Y\)</span> e faça <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário faça <span class="math inline">\(X_{t+1}=X_t\)</span></li>
 </ol></li>
 </ol>
-<div id="exemplo-beta" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> Exemplo (beta)</h3>
+<div id="exemplo-beta" class="section level2">
+<h2><span class="header-section-number">4.1</span> Exemplo (beta)</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Gerar números de uma distribuição Beta usando a distribuição Uniforme</span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="co">## e/ou normal.</span></a>
 <a class="sourceLine" id="cb9-3" title="3"></a>
@@ -766,6 +768,10 @@ U \leq \alpha(X_t, Y)
 <a class="sourceLine" id="cb11-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
 <a class="sourceLine" id="cb11-4" title="4"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="iidsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+<p>Outro exemplo:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">## Distribuição alvo: X ~ Beta(2, 3)</span></a>
 <a class="sourceLine" id="cb12-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="dt">shape1 =</span> <span class="dv">2</span>, <span class="dt">shape2 =</span> <span class="dv">3</span>)</a>
 <a class="sourceLine" id="cb12-3" title="3"><span class="kw">curve</span>(f, <span class="dv">0</span>, <span class="dv">1</span>)</a>
@@ -777,7 +783,7 @@ U \leq \alpha(X_t, Y)
 <a class="sourceLine" id="cb12-9" title="9"><span class="kw">curve</span>(g, <span class="dt">add=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb12-10" title="10"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;Alvo&quot;</span>, <span class="st">&quot;Candidata&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,</a>
 <a class="sourceLine" id="cb12-11" title="11">       <span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</a></code></pre></div>
-<p><img src="figures/08_MCMC-1/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-1/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"></a>
 <a class="sourceLine" id="cb13-2" title="2">N &lt;-<span class="st"> </span><span class="dv">500</span></a>
 <a class="sourceLine" id="cb13-3" title="3">x2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
@@ -796,21 +802,23 @@ U \leq \alpha(X_t, Y)
 <a class="sourceLine" id="cb13-16" title="16"></a>
 <a class="sourceLine" id="cb13-17" title="17"><span class="co">## Cadeia</span></a>
 <a class="sourceLine" id="cb13-18" title="18"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
-<p><img src="figures/08_MCMC-1/unnamed-chunk-16-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-1/unnamed-chunk-20-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"></a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co">## Compara com teorica</span></a>
 <a class="sourceLine" id="cb14-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x2))</a>
 <a class="sourceLine" id="cb14-4" title="4"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/08_MCMC-1/unnamed-chunk-16-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Comparando as cadeias</p>
+<p><img src="figures/08_MCMC-1/unnamed-chunk-20-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="iidsampler2.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+<p>Comparando as cadeias geradas com as duas diferentes propostas:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="kw">plot</span>(x, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a>
 <a class="sourceLine" id="cb15-3" title="3"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a>
 <a class="sourceLine" id="cb15-4" title="4"><span class="kw">acf</span>(x)</a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="kw">acf</span>(x2)</a></code></pre></div>
-<p><img src="figures/08_MCMC-1/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
-</div>
+<a class="sourceLine" id="cb15-5" title="5"><span class="kw">acf</span>(x2)</a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<p><img src="figures/08_MCMC-1/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 
