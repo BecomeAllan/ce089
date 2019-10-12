@@ -348,7 +348,7 @@ x <- rwsampler1(nsim=10, x1=-1, delta=2, mu, sigma, plot=TRUE,
 ##                 go="click")
 ```
 
-```{r, include=FALSE, results='hide'}
+```{r, include=FALSE, results='hide', cache=TRUE}
 animation::saveHTML(
                rwsampler1(nsim = 20, x1 = -1, delta = 2, mu = 0,
                           sigma = 1, plot = TRUE, go = "none"),
