@@ -16,6 +16,23 @@ opts_chunk$set(fig.path = "figures/08_MCMC-2/")
 
 # Introdução
 
+O termo "Monte Carlo via Cadeia de Markov" abrange uma grande gama de
+técnicas que possuem algumas ideias em comum:
+
+1. Queremos amostrar de alguma função densidade de probabilidade
+   complicada $f$. A suposição aqui é que nós conseguimos **calcular**
+   $f$, mas não podemos amostrar dela.
+2. Sabemos que certos processos estocáticos chamados de **cadeias de
+   Markov** convergem para uma **distribuição estacionária** (se certas
+   condições forem satisfeitas). Simular desta cadeia de Markov por um
+   período longo, eventualmente nos levará a uma amostra da distribuição
+   estacionária da cadeia.
+3. Dada a forma funcional de $f$, queremos construir uma cadeia de
+   Markov que possui $f$ como sua distribuição estacionária.
+4. Queremos amostrar valores da cadeia de Markov de forma que a
+   sequência de valores $\{x_n\}$, gerada pela cadeia, irá **convergir
+   em distribuição** para a densidade $f$.
+
 Já vimos que os métodos de Monte Carlo via Cadeias de Markov (MCMC)
 servem basicamente para gerar valores de uma distribuição. No entanto,
 ao contrário dos métodos anteriores (e.g. aceitação-rejeição), os
@@ -25,8 +42,8 @@ Uma amostra com valores correlacionados não é desejável, mas mesmo
 assim, os métodos de MCMC são preferidos em situações mais complexas. O
 primeiro motivo é que, mesmo com valores correlacionados, é possível
 selecionar uma (sub) amostra de valores que não seja correlacionada. O
-segundo motivo é que as cadeias de Markov possuem diferentes
-propriedades de convergência, que podem ser exploradas para se obter
+segundo motivo é que as **cadeias de Markov possuem diferentes
+propriedades de convergência**, que podem ser exploradas para se obter
 distribuições propostas mais fáceis de tratar numericamente, quando os
 métodos mais gerais de amostragem por importância (por exemplo) não se
 aplicam diretamente.
@@ -35,8 +52,9 @@ Além disso, o conhecimento necessário da distribuição alvo que se quer
 gerar é mínimo, geralmente não é necessário saber a constante de
 integração por exemplo. Além disso, estes métodos via cadeias de Markov
 facilitam a resolução de problemas de alta dimensão, através de uma
-sequência de probelas menores que são mais fáceis de resolver (e.g.
+sequência de problemas menores que são mais fáceis de resolver (e.g.
 amostrador de Gibbs).
+
 
 # Cadeias de Markov
 
@@ -52,7 +70,7 @@ $$
 P[X_t | X_{t-1}, X_{t-2}, \ldots, X_0] = P[X_t | X_{t-1}]
 $$
 Essa relação significa que a distribuição de probabilidade de um
-processo no tempo $t$, dados todos os outros valores da cadeia, é igual
+processo no tempo $t$, dado todos os outros valores da cadeia, é igual
 à distribuição de probabilidade condicionada apenas ao valor
 imediatamente anterior (essa propriedade é conhecida como **propriedade
 de Markov**).
@@ -63,7 +81,7 @@ apenas o valor anterior.
 
 A coleção de estados que uma cadeia de Markov pode visitar é chamada de
 **espaço de estados**. A distribuição de probabilidade condicional, que
-determina se a cadeia se move de um estado para outro é chamade de
+determina se a cadeia se move de um estado para outro é chamada de
 **kernel de transição** ou **matriz de transição**, e pode ser denotada
 por
 $$
@@ -79,8 +97,7 @@ $\text{N}(X_{t-1},1)$.
 
 Considere o seguinte exemplo com 3 estados e matriz de transição $P$:
 
-```{r}
-library(diagram)
+```{r, out.width='100%'}
 estados <- c("PR", "RS", "SC")
 P <- matrix(c(.3, .3, .4, .4, .4, .2, .5, .3, .2),
              byrow = TRUE, ncol = 3)
@@ -88,7 +105,7 @@ dimnames(P) <- list(estados, estados); P
 rowSums(P)
 colSums(P)
 ## DAG
-plotmat(P)
+diagram::plotmat(t(P), relsize = .75)
 ```
 
 A interpretação das entradas da matriz é que, se estivermos no estado
@@ -97,12 +114,13 @@ $t+1$ será
 $$
 P[X_{t+1} = j | X_t = i] = P_{ij}
 $$
-Por exemplo, se estamos no PR, a probabilidade de ir para SC é 0.4.
+Por exemplo, se estamos no PR, a probabilidade de ir para SC é 0.4, ou
+seja, $P[X_{t+1} = \text{SC}|X_t = \text{PR}] = P_{13} = 0.4$.
 
-Suponha que inicialmente estamos em SC comprobabilidade 1. Então a
+Suponha que inicialmente estamos em SC com probabilidade 1. Então a
 distribuição de probabilidade inicial para os três estados é $\pi_0 =
 (0,0,1)$. Após uma iteração, a distribuição de probabilidade dos
-estados erá então
+estados será então
 $$
 \pi_1 = \pi_0 P = (0.5, 0.3, 0.2)
 $$
@@ -122,7 +140,7 @@ Se continuarmos o processo acima $n$ vezes, obtemos a distribuição de
 probabilidade para os estados após $n$ iterações, que podemos escrever
 como
 $$
-\pi_n = \pi_0 \underbrace{PPP \cdots P}_{n \text{ vezes}} = \pi_0 P^n
+\pi_n = \pi_0 \underbrace{PPP \cdots P}_{n \text{ vezes}} = \pi_0 P^{(n)}
 $$
 Por exemplo, após 50 iterações, obtemos
 ```{r}
@@ -130,24 +148,123 @@ library(expm) # potencia de matriz
 pi0 %*% (P %^% 50)
 ```
 
-Terminar:
+Para $n \to \infty$ iterações, existe uma distribuição $\pi_e$ tal que
+$$
+||\pi_e - \pi_n || \longrightarrow 0
+$$
+onde $||\cdot||$ é a distância total entre as duas densidades. Outra
+forma de definir esse fato é
+$$
+\lim_{n \to \infty} \pi_n(i) = \pi_e(i)
+$$
+para todos os estados $i$ no espaço de estados.
 
-- Basic limit theorem de peng
-- Propriedades desejadas para MCMC
-- Convergencia da cadeia conforme Kinas (outra forma de obter a
-  estacionaria)
+A distribuição $\pi_e$ é chamada de **distribuição estacionária** de uma
+cadeia de Markov, e deve satisfazer a seguinte propriedade
+$$
+\pi_e P = \pi_e
+$$
+Isso significa que, não importa onde a cadeia é iniciada ($\pi_0$), a
+distribuição $\pi_n$ eventualmente chegará na distribuição estacionária
+$\pi_e$.
 
+No exemplo anterior, temos que
+```{r}
+pi0 %*% (P %^% 5)
+pi0 %*% (P %^% 10)
+pi0 %*% (P %^% 1e2)
+pi0 %*% (P %^% 1e3)
+pi0 %*% (P %^% 1e4)
+```
+ou seja, após poucas iterações ($\sim 100$) a distribuição estacionária
+já é atingida. Note portanto que
+```{r}
+## Distribuição estacionária
+(pi_e <- pi0 %*% (P %^% 1e4))
+## Propriedade da distribuição estacionária
+pi_e %*% P
+```
 
-```{r, eval=FALSE}
+A distribuição estacionária também pode ser **aproximada** a partir da
+frequência relativa de "visitas" em cada estado após muitas iterações.
+Para isso, inicia-se a cadeia em um estado qualquer, e os movimentos
+levarão aos outros estados a cada iteração, conforme estabelecido pela
+matriz de transição. O número de vezes que um estado é visitado a longo
+prazo (muitas iterações) levará a uma aproximação da distribuição
+estacionária, através das frequências relativas.
+
+```{r}
+## Cria função para gerar cadeia
+mc <- function(n, x1, P, states) {
+    x <- character(n)
+    x[1] <- x1
+    for(i in 2:n) {
+        x[i] <- sample(states, size = 1, prob = P[x[i - 1], ])
+    }
+    return(x)
+}
+## Tamanho da cadeia
+N <- c(1e2, 1e3, 1e4, 1e5)
+res <- lapply(N, function(x) {
+    mc(n = x, x1 = "SC", P = P, states = estados)
+})
+## Proporção relativa
+t(sapply(res, function(x) prop.table(table(x))))
+## Começando em outro estado
+res <- lapply(N, function(x) {
+    mc(n = x, x1 = "RS", P = P, states = estados)
+})
+## Proporção relativa
+t(sapply(res, function(x) prop.table(table(x))))
+```
+
+Existem ainda três suposições necessárias para que os teoremas limite
+sejam verdadeiros. A cadeia deve ser:
+
+1. **Homogênea**: as probabilidades de transição de um estado para outro
+   são invariantes.
+2. **Irredutível**: cada estado pode ser atingido a partir de qualquer
+   outro em um número finito de iterações.
+3. **Aperiódica**: não deve haver estados absorventes (i.e., estados em
+   que, uma vez inseridos, não podem mais ser deixados).
+
+Em geral, os algoritmos de MCMC satisfazem estas três condições.
+
+No caso de cadeias recorrentes (ou aperiódicas), a distribuição
+estacionária também é a **distribuição limite**, no sentido de que a
+distribuição limite de $\{X_t\}$ é $\pi_e$ para qualquer valor de estado
+inicial $X_0$. Esta propriedade é chamada de **ergodicidade**, e
+obviamente é de interesse direto nos métodos de MCMC, pois eventualmente
+atingiremos a distribuição alvo, que é a distribuição estacionária.
+Particularmente, para qualquer função $h$
+$$
+\frac{1}{T} \sum_{t=1}^{T} h(X_t) \longrightarrow \text{E}_{\pi}[h(X)]
+$$
+ou seja, a Lei Forte dos Grandes Números, que é a base dos métodos de
+Monte Carlo também é aplicada nos métodos de MCMC. Essa definição também
+é conhecida como **teorema ergódico**. Isso também mostra que, embora a
+cadeia seja **dependente por definição**, a média aritmética dos valores
+da cadeia é um estimador consistente da média teórica.
+
+Veja uma animação em http://setosa.io/ev/markov-chains.
+
+```{r, eval=FALSE, include=FALSE}
+## Obtem estacionaria pelos autovetores
+## Em uma matriz de Markov, a primeira coluna sempre terá autovalor 1
+## Mas note que tem que ser o transposto dessa
+eigen(t(P))
+ev <- eigen(t(P))$vectors
+## Distribuição estacionária
+ev[, 1]/sum(ev[, 1])
+```
+
+```{r, eval=FALSE, include=FALSE}
 library(markovchain)
 ## Cria a cadeia
 (mc <- new("markovchain", states = estados, transitionMatrix = M,
            byrow = TRUE))
 steadyStates(mc)
 mc^100
-```
-
-```{r, eval=FALSE}
 (M <- matrix(c(.5, .3, .2, 0, .2, .4, .3, .1, .1, .1, .6, .2, .1, .2,
                .3, .4), byrow = TRUE, ncol = 4))
 rowSums(M)
@@ -180,7 +297,6 @@ prt0 %*% (M %^% 20)
 
 t(pe) %*% M
 
-
 eigen(M)
 ev <- eigen(M)$vectors
 ev[, 1]
@@ -189,21 +305,6 @@ ev[, 2]
 ev[, 2]/sum(ev[, 2])
 
 ```
-
-# Introdução
-
-Em situações em que $\theta$ (ou $X$) tem dimensão elevada, o
-procedimento a ser apresentado é geralmente mais eficiente para gerar
-quantidades aleatórias.
-
-O ponto crítico do método MCMC está na formulação de probabilidades de
-transição apropriadas. O algoritmo de Metropolis-Hastings é uma forma
-conveniente de obter uma amostra simulada, a partir do uso de uma cadeia
-de Markov generalizada para um espaço de estado contínuo.
-
-Segue abaixo uma descrição das probabilidades de transição especificadas
-conforme algumas das alternativas que podem ser adotadas para
-implementar o algoritmo de Metropolis-Hastings.
 
 # Metropolis-Hastings
 
@@ -242,9 +343,10 @@ será proporcional.
 
 ## Exemplo (beta)
 
-Considere o examplo da aula sobre o algoritmo de aceitação-rejeição,
-onde deseja-se gerar valores de uma distribuição $\text{Beta}(\alpha =
-2.7, \beta = 6.3)$, com uma distribuição proposta $\text{U}(0,1)$.
+Considere o examplo de aulas anteriores sobre o algoritmo de
+aceitação-rejeição, onde deseja-se gerar valores de uma distribuição
+$\text{Beta}(\alpha = 2.7, \beta = 6.3)$, com uma distribuição proposta
+$\text{U}(0,1)$.
 
 Para comparação, vamos gerar valores usando o método de
 aceitação-rejeição e agora pelo método de Metropolis-Hastings.
@@ -310,18 +412,21 @@ length(ua)/N
 k/N
 ## Compara amostras com acumulada teórica
 par(mfrow = c(1, 2))
-plot(ecdf(x.ar))
+plot(ecdf(x.ar), main = "Aceitação-rejeição")
 curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
-plot(ecdf(x))
+plot(ecdf(x), main = "Metropolis-Hastings")
 curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
 legend("right", legend = c("Empírica", "Teórica"),
        lty = 1, col = 1:2, bty = "n")
 ## Compara autocorrelação
-acf(x.ar)
-acf(x)
+acf(x.ar, main = "Aceitação-rejeição")
+acf(x, main = "Metropolis-Hastings")
+## Compara as duas cadeias
+par(mfrow = c(2, 1))
+plot.ts(x.ar[5000:5200], main = "Aceitação-rejeição")
+plot.ts(x[5000:5200], main = "Metropolis-Hastings")
 par(mfrow = c(1, 1))
 ```
-
 
 ```{r, include=FALSE, eval=FALSE}
 ## Alvo: Beta.
@@ -433,15 +538,35 @@ n <- 10
 x <- mhsampler1(n, x1 = .5, plot=TRUE, go="console")
 
 ## Gerando muitos números pelo método.
-x <- mhsampler1(5000, x1=4)
+x <- mhsampler1(5000, x1 = .5)
 par(mfrow=c(2,2))
 plot(x, type="l")        ## Traço da cadeia completa.
 plot(x[1:100], type="l") ## Traço do começo da cadeia.
 acf(x)                   ## Mostra que a cadeia não é independente.
 plot(ecdf(x))            ## Acumulada teórica vs empírica.
-curve(Fx(x, 4), add = TRUE, col = 2, from = 0)
+curve(pbeta(x, 2.7, 6.3), add = TRUE, col = 2, from = 0)
 par(mfrow=c(1,1))
 ```
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               mhsampler1(nsim = 20, x1 = .5,
+                          plot = TRUE, go = "none"),
+               img.name = "mhsampler1-",
+               imgdir = "figures/mhsampler1/",
+               htmlfile = "mhsampler1.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+Veja como fica uma animação com o método em funcionamento:
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("mhsampler1.html", height = "715px")
+```
+
 
 ## Exemplo (Rayleigh)
 
@@ -486,17 +611,17 @@ O algoritmo de Metropolis-Hastings nesse caso ficaria assim:
 1. Defina $g(\cdot|X)$ como uma densidade de $\chi^2(X)$
 2. Gere $X_0$ de $\chi^2(1)$
 3. Repita para $i=2, \ldots, N$:
-  a. Gere $Y = X_{t+1}$ de $\chi^2(X_t)$
-  b. Gere $U$ de $\text{U}(0,1)$
-  c. Calcule a taxa de aceitação
+   a. Gere $Y = X_{t+1}$ de $\chi^2(X_t)$
+   b. Gere $U$ de $\text{U}(0,1)$
+   c. Calcule a taxa de aceitação
    $$
    \alpha(X_t, Y) = \min
    \left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right)
    $$
    onde $f$ é a $\text{Rayleigh}(\sigma)$, $g(X_t|Y)$ é $\chi^2(Y)$
-  avaliada no ponto $X_t$, e $g(Y|X_t)$ é a $\chi^2(X_t)$ avaliada no
-  ponto $Y$.
-  d. Se
+   avaliada no ponto $X_t$, e $g(Y|X_t)$ é a $\chi^2(X_t)$ avaliada no
+   ponto $Y$.
+   d. Se
    $$
    U \leq \alpha(X_t, Y)
    $$
@@ -522,7 +647,7 @@ for (i in 2:N) {
         x[i] <- y
     } else {
         x[i] <- x[i - 1]
-        k <- k+1     # contagem doa aceitos
+        k <- k + 1     # contagem dos aceitos
     }
 }
 ```
@@ -670,4 +795,27 @@ acf(x)                   ## Mostra que a cadeia não é independente.
 plot(ecdf(x))            ## Acumulada teórica vs empírica.
 curve(Fx(x, 4), add = TRUE, col = 2, from = 0)
 par(mfrow=c(1,1))
+```
+
+```{r, include=FALSE}
+N <- 1e4
+## Rayleigh(4)
+sigma <- 4
+x <- numeric(N)
+x[1] <- 100
+k <- 0 # para contar quantos foram aceitos
+for (i in 2:N) {
+    y <- rchisq(1, df = x[i - 1])
+    num <- f(y, sigma) * g(x[i - 1], df = y)
+    den <- f(x[i - 1], sigma) * g(y, df = x[i - 1])
+    alpha <- num/den
+    u <- runif(1)
+    if (u <= alpha) {
+        x[i] <- y
+    } else {
+        x[i] <- x[i - 1]
+        k <- k + 1     # contagem dos aceitos
+    }
+}
+plot.ts(x)
 ```
