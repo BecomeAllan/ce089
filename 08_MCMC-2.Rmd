@@ -428,7 +428,7 @@ plot.ts(x[5000:5200], main = "Metropolis-Hastings")
 par(mfrow = c(1, 1))
 ```
 
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE}
 ## Alvo: Beta.
 ## Canditada: Uniforme.
 mhsampler1 <- function(nsim, x1, plot=FALSE,
