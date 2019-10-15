@@ -474,8 +474,8 @@ div.tocify {
 <p>Exemplo: função <code>runif()</code> (para gerar valores aleatórios de uma distribuição uniforme):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 41.318042 67.217698 72.772822 22.489741 89.509117 38.118827 36.205658</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 39.711181 55.148682  7.500413</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 79.03148 45.32487 80.44785 68.30744 37.32913 16.99343 22.16693</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 85.41575 90.76840 57.07408</span></a></code></pre></div>
 <p>Argumentos que já possuem um valor especificado (como <code>max</code> e <code>min</code>) podem ser omitidos:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>)</a></code></pre></div>
 <p>Se os argumentos forem nomeados, a ordem deles dentro da função não tem mais importância:</p>
@@ -541,7 +541,8 @@ div.tocify {
 # [21] &quot;rpart&quot;      &quot;spatial&quot;    &quot;splines&quot;    &quot;stats&quot;      &quot;stats4&quot;    
 # [26] &quot;survival&quot;   &quot;tcltk&quot;      &quot;tools&quot;      &quot;utils&quot;</code></pre>
 <p>No entanto, nem todos são carregados na inicialização do R. Por padrão, apenas os seguintes pacotes são carregados automaticamente:</p>
-<pre><code># [1] &quot;graphics&quot;  &quot;grDevices&quot; &quot;utils&quot;     &quot;datasets&quot;  &quot;methods&quot;   &quot;base&quot;</code></pre>
+<pre><code>#  [1] &quot;diagram&quot;   &quot;shape&quot;     &quot;knitr&quot;     &quot;stats&quot;     &quot;graphics&quot; 
+#  [6] &quot;grDevices&quot; &quot;utils&quot;     &quot;datasets&quot;  &quot;methods&quot;   &quot;base&quot;</code></pre>
 <p>Para listar os pacotes carregados, use a função</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">search</span>()</a></code></pre></div>
 <p>Note que o primeiro elemento, <code>.GlobalEnv</code>, será sempre carregado pois ele é o <em>ambiente</em> que irá armazenar (e deixar disponível) os objetos criados pelo usuário. Para carregar um pacote instalado, usamos a função <code>library()</code>, por exemplo</p>
@@ -656,8 +657,8 @@ div.tocify {
 <p>Objetos podem armazenar diferentes estruturas de dados:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb34-2" title="2">y</a>
-<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.472762214 0.425126800 0.333895547 0.008400026 0.772029756</span></a>
-<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [6] 0.385559209 0.558597805 0.355525410 0.747980540 0.970888800</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.90727900 0.11424054 0.87567608 0.17590699 0.45794830 0.58121393</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.44137361 0.03453294 0.27305940 0.30666967</span></a></code></pre></div>
 <p>Note que cada objeto só pode armazenar uma estrutura (um número ou uma sequência de valores) de cada vez! (Aqui, o valor <span class="math inline">\(4\)</span> que estava armazenado em <code>y</code> foi sobrescrito pelos valores acima.)</p>
 <div id="nomes-de-objetos" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nomes de objetos</h2>
@@ -1575,9 +1576,12 @@ div.tocify {
 <p>Nesta sessão vamos abordar como funcionam os métodos como definidos pelo sistema S3, por ser o mais utilizado na prática para se criar novas funções no R. Para saber mais sobre os outros métodos, consulte o livro <a href="http://adv-r.had.co.nz/OO-essentials.html">Advanced R</a>.</p>
 <p>Vamos entender como uma função genérica pode ser criada através de um exemplo. Usando a função <code>methods()</code>, podemos verificar quais métodos estão disponíveis para uma determinada função, por exemplo, para a função <code>mean()</code>:</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb106-2" title="2"><span class="co"># [1] mean.Date     mean.default  mean.difftime mean.POSIXct  mean.POSIXlt </span></a>
-<a class="sourceLine" id="cb106-3" title="3"><span class="co"># [6] mean.quosure*</span></a>
-<a class="sourceLine" id="cb106-4" title="4"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method      </span></a>
+<a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [3] mean,sparseMatrix-method mean,sparseVector-method</span></a>
+<a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [5] mean.Date                mean.default            </span></a>
+<a class="sourceLine" id="cb106-5" title="5"><span class="co">#  [7] mean.difftime            mean.POSIXct            </span></a>
+<a class="sourceLine" id="cb106-6" title="6"><span class="co">#  [9] mean.POSIXlt             mean.quosure*           </span></a>
+<a class="sourceLine" id="cb106-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1596,10 +1600,13 @@ div.tocify {
 <p>O resultado não faz sentido pois ele é específico para um objeto da classe <code>Date</code>.</p>
 <p>Tudo isso acontece por causa de um mecanismo chamado de <strong>despacho de métodos</strong> (<em>method dispatch</em>), que é responsável por identificar a classe do objeto e utilizar (“despachar”) a função método correta para aquela classe. Toda função genérica possui a mesma forma: uma chamada para a função <code>UseMethod()</code>, que especifica o nome genérico e o objeto a ser despachado. Por exemplo, veja o código fonte da função <code>mean()</code></p>
 <div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">mean</a>
-<a class="sourceLine" id="cb111-2" title="2"><span class="co"># function (x, ...) </span></a>
-<a class="sourceLine" id="cb111-3" title="3"><span class="co"># UseMethod(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-4" title="4"><span class="co"># &lt;bytecode: 0x369ef10&gt;</span></a>
-<a class="sourceLine" id="cb111-5" title="5"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
+<a class="sourceLine" id="cb111-2" title="2"><span class="co"># standardGeneric for &quot;mean&quot; defined from package &quot;base&quot;</span></a>
+<a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
+<a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
+<a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0x4ba9978&gt;</span></a>
+<a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
+<a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">mean.default</a>
 <a class="sourceLine" id="cb112-2" title="2"><span class="co"># function (x, trim = 0, na.rm = FALSE, ...) </span></a>
@@ -1626,7 +1633,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x4b1d8c8&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x58e6348&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1637,9 +1644,13 @@ div.tocify {
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">mean.matrix &lt;-<span class="st"> </span><span class="cf">function</span>(x, ...) <span class="kw">rowMeans</span>(x)</a></code></pre></div>
 <p>Uma função método é sempre definida dessa forma: <code>&lt;funçãogenérica&gt;.&lt;classe&gt;</code>. Agora podemos ver novamente os métodos disponíveis para a função <code>mean()</code></p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb115-2" title="2"><span class="co"># [1] mean.Date     mean.default  mean.difftime mean.matrix   mean.POSIXct </span></a>
-<a class="sourceLine" id="cb115-3" title="3"><span class="co"># [6] mean.POSIXlt  mean.quosure*</span></a>
-<a class="sourceLine" id="cb115-4" title="4"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method      </span></a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [3] mean,sparseMatrix-method mean,sparseVector-method</span></a>
+<a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [5] mean.Date                mean.default            </span></a>
+<a class="sourceLine" id="cb115-5" title="5"><span class="co">#  [7] mean.difftime            mean.matrix             </span></a>
+<a class="sourceLine" id="cb115-6" title="6"><span class="co">#  [9] mean.POSIXct             mean.POSIXlt            </span></a>
+<a class="sourceLine" id="cb115-7" title="7"><span class="co"># [11] mean.quosure*           </span></a>
+<a class="sourceLine" id="cb115-8" title="8"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
 <a class="sourceLine" id="cb116-2" title="2"><span class="co"># [1] &quot;matrix&quot;</span></a>
@@ -1686,7 +1697,7 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Saturday, 12 October, 2019, 02:16
+<pre><code># Tuesday, 15 October, 2019, 02:47
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1708,15 +1719,16 @@ div.tocify {
 # [1] stats     graphics  grDevices utils     datasets  methods   base     
 # 
 # other attached packages:
-# [1] knitr_1.25
+# [1] expm_0.999-4  Matrix_1.2-17 diagram_1.6.4 shape_1.4.4   knitr_1.25   
 # 
 # loaded via a namespace (and not attached):
-#  [1] Rcpp_1.0.2           codetools_0.2-16     digest_0.6.21       
-#  [4] magrittr_1.5         evaluate_0.14        highr_0.8           
-#  [7] rlang_0.4.0          stringi_1.4.3        rmarkdown_1.16.1    
-# [10] tools_3.6.1          stringr_1.4.0        xfun_0.10           
-# [13] yaml_2.2.0           compiler_3.6.1       microbenchmark_1.4-7
-# [16] htmltools_0.4.0      animation_2.6</code></pre>
+#  [1] Rcpp_1.0.2           lattice_0.20-38      codetools_0.2-16    
+#  [4] digest_0.6.21        grid_3.6.1           magrittr_1.5        
+#  [7] evaluate_0.14        highr_0.8            rlang_0.4.0         
+# [10] stringi_1.4.3        rmarkdown_1.16.1     tools_3.6.1         
+# [13] stringr_1.4.0        xfun_0.10            yaml_2.2.0          
+# [16] compiler_3.6.1       microbenchmark_1.4-7 htmltools_0.4.0     
+# [19] animation_2.6</code></pre>
 </div>
 
 <center>
