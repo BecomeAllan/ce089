@@ -62,7 +62,8 @@ debugging e error handling. [Slides](slides/01_tecnicas.html).
 - **11/10 (Sex)**: MCMC: Metropolis random walk e amostrador
 independente. [HTML](08_MCMC-1.html) e [script](scripts/08_MCMC-1.R) com
 mais exemplos mostrados em aula.
-- **15/10 (Ter)**: MCMC: Metropolis-Hastings.
+- **15/10 (Ter)**: MCMC: Cadeias de Markov e algoritmo de
+  Metropolis-Hastings. [HTML](08_MCMC-2.html).
 - **18/10 (Sex)**: Atividade disponível no [Moodle][].
 - **22/10 (Ter)**:
 - **25/10 (Sex)**:
