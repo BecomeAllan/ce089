@@ -21,6 +21,8 @@ output:
   Monte Carlo](07_MC_aprox.html).
 - MCMC: [Metropolis random walk e amostrador
   independente](08_MCMC-1.html).
+- MCMC: [Cadeias de Markov e algoritmo de
+  Metropolis-Hastings](08_MCMC-2.html).
 
 ### Slides
 

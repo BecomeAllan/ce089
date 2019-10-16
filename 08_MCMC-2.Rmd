@@ -1,6 +1,6 @@
 ---
 title: "Métodos de Monte Carlo via Cadeias de Markov"
-subtitle: "Algoritmo de Metropolis-Hastings"
+subtitle: "Cadeias de Markov e algoritmo de Metropolis-Hastings"
 author: "Fernando P. Mayer"
 bibliography: ref.bib
 output:
