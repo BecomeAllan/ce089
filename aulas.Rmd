@@ -65,7 +65,8 @@ mais exemplos mostrados em aula.
 - **15/10 (Ter)**: MCMC: Cadeias de Markov e algoritmo de
   Metropolis-Hastings. [HTML](08_MCMC-2.html).
 - **18/10 (Sex)**: Atividade disponível no [Moodle][].
-- **22/10 (Ter)**:
+- **22/10 (Ter)**: Métodos de Monte Carlo para inferência estatística:
+  estimação. [HTML](09_MC_inf.html).
 - **25/10 (Sex)**:
 - **29/10 (Ter)**:
 - **01/11 (Sex)**:
