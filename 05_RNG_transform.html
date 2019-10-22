@@ -920,12 +920,12 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean   median        uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.239  105.562  111.5346  111.289  114.9645</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2891.593 3002.382 3391.0039 3062.302 3131.6255</span></a>
-<a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    138.867   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10023.685   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean   median        uq      max</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.819  105.047  112.3083  111.515  117.1745  151.529</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2838.909 2961.310 3347.2186 3023.497 3089.5225 9884.281</span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co">#  neval</span></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#    100</span></a></code></pre></div>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
