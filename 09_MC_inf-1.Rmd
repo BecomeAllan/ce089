@@ -11,7 +11,7 @@ output:
 
 ```{r, cache=FALSE, include=FALSE}
 source("setup_knitr.R")
-opts_chunk$set(fig.path = "figures/09_MC_inf/")
+opts_chunk$set(fig.path = "figures/09_MC_inf-1/")
 ```
 
 # Introdução
