@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fernando P. Mayer" />
+
+
+<title>Métodos de Monte Carlo em inferência estatística</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-66454501-13"></script>
+<script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-66454501-13');
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CE089</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="aulas.html">Aulas</a>
+</li>
+<li>
+  <a href="referencias.html">Referências</a>
+</li>
+<li>
+  <a href="notas.html">Notas</a>
+</li>
+<li>
+  <a href="materiais.html">Materiais</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leg-ufpr/ce089">
+    <span class="fa fa-github fa-lg"></span>
+     
+    GitHub
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Métodos de Monte Carlo em inferência estatística</h1>
+<h3 class="subtitle">Estimação</h3>
+<h4 class="author">Fernando P. Mayer</h4>
+
+</div>
+
+
+<div id="introdução" class="section level1">
+<h1><span class="header-section-number">1</span> Introdução</h1>
+<ul>
+<li>Métodos de Monte Carlo representam uma série de ferramentas computacionais na estatística moderna.</li>
+<li>Os métodos de Monte Carlo podem se referir à qualquer método em inferência estatística ou análise numérica onde algum método de simulação é utilizado.</li>
+<li>Os métodos de Monte Carlo podem ser usados para:
+<ul>
+<li>Estimar parâmetros através da distribuição amostral de uma estatística</li>
+<li>Calcular o erro quadrático médio (EQM) de uma estimativa</li>
+<li>Estimar o nível de cobertura de intervalos de confiança</li>
+<li>Encontrar a taxa empírica do erro tipo I em um teste de hipótese</li>
+<li>Estimar o poder de um teste de hipótese</li>
+<li>Comparar a performance de diferentes procedimentos aplicados a um mesmo problema</li>
+</ul></li>
+<li>Na inferência estatística, sabemos que sempre existe incerteza associada a qualquer estimativa</li>
+<li>Para investigar a incerteza, o método apresentado aqui, também chamado de <strong>bootstrap paramétrico</strong>, utiliza repetidas amostragens de um modelo probabilístico</li>
+<li>Se podemos simular o processo estocástico que gerou os dados, através da geração de diferentes amostras sob as mesmas condições, esperamos ao final ter uma réplica aproximada do processo em si, refletido nas amostras</li>
+</ul>
+</div>
+<div id="métodos-de-monte-carlo-para-estimação" class="section level1">
+<h1><span class="header-section-number">2</span> Métodos de Monte Carlo para estimação</h1>
+<p>Suponha <span class="math inline">\(X_1, \ldots, X_n\)</span> uma amostra aleatória da distribuição de <span class="math inline">\(X\)</span>. Um estimador <span class="math inline">\(\hat\theta\)</span> para um parâmetro <span class="math inline">\(\theta\)</span> é a função <span class="math display">\[
+\hat\theta = T(x_1, \ldots, x_n)
+\]</span> da amostra. Seja <span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_n)&#39; \in \mathcal{R}^n\)</span>, e vamos denotar por <span class="math inline">\(\mathbf{x}^{(1)}, \mathbf{x}^{(2)}, \ldots\)</span>, uma sequência de amostras aleatórias <strong>independentes</strong> geradas a partir da distribuição de <span class="math inline">\(X\)</span>.</p>
+<p>Valores aleatórios da <strong>distribuição amostral</strong> de <span class="math inline">\(\hat\theta\)</span> podem ser obtidos através de <span class="math inline">\(N\)</span> repetidas amostras aleatórias independentes <span class="math inline">\(\mathbf{x}^{(j)}\)</span>, e calculando-se <span class="math display">\[
+\hat\theta^{(j)} = T(x_1^{(j)}, \ldots, x_n^{(j)}) \quad j = 1, \ldots,
+N
+\]</span></p>
+<p>Dessa forma, se <span class="math inline">\(\hat\theta\)</span> é uma estimativa de <span class="math inline">\(\theta\)</span> da distribuição <span class="math inline">\(f\)</span>, então as <strong>amostras de um bootstrap paramétrico</strong> de <span class="math inline">\(f_{\hat\theta}\)</span> são <span class="math display">\[
+f_{\hat\theta} \longrightarrow \mathbf{x}^{(j)} \longrightarrow
+\hat\theta^{(j)}
+\]</span></p>
+<p>A distribuição amostral de <span class="math inline">\(\hat\theta^{(j)}\)</span> deve ser próxima da distribuição amostral verdadeira para <span class="math inline">\(N\)</span> grande. A média da distribuição <span class="math display">\[
+\hat\theta_{MC} = \frac{1}{N} \sum_{j=1}^{N} \hat\theta^{(j)}
+\]</span> será então uma estimativa pontual para <span class="math inline">\(\theta\)</span>.</p>
+<p>Um dos principais objetivos de se usar métodos de Monte Carlo para estimação de algum parâmetro, é o cálculo da <strong>incerteza</strong> associada à estimativa, expressa geralmente pelo <strong>erro padrão</strong>.</p>
+<ul>
+<li>Em muitos casos, o erro padrão de uma estimativa pode ser obtido diretamente de forma analítica</li>
+<li>Em casos mais complexos, a forma analítica pode não existir e mesmo a distribuição amostral pode ser desconhecida</li>
+<li>Nesses casos, a distribuição amostral <strong>empírica</strong> construída pelo método de Monte Carlo pode ser utilizada</li>
+</ul>
+<p>Portanto, a estimativa do erro padrão pelo método de Monte Carlo é o <strong>desvio padrão empírico</strong> da amostra dos <span class="math inline">\(\hat\theta^{(j)}\)</span>, <span class="math display">\[
+ep_{MC} = \frac{1}{N-1} \sqrt{\sum_{j=1}^{N} (\hat\theta^{(j)} -
+\hat\theta_{MC})^2}
+\]</span></p>
+<!-- VER AQUI (Rizzo pg 185 e Efron 160). -->
+<div id="exemplo-estimação-de-monte-carlo-de-um-erro-padrão" class="section level2">
+<h2><span class="header-section-number">2.1</span> Exemplo: Estimação de Monte Carlo de um erro padrão</h2>
+<p>Suponha <span class="math inline">\(X_1, X_2\)</span> são duas VAs iid de uma normal padrão. Usando simulação de Monte Carlo, obtenha uma estimativa de <span class="math inline">\(\text{E}(|X_1 - X1|)\)</span>, e seu erro padrão.</p>
+<p>Para estimar <span class="math inline">\(\theta = \text{E}(g(X_1, X_2)) = \text{E}(|X_1 - X_2|)\)</span>, baseado em <span class="math inline">\(N\)</span> amostras, gere as variáveis aleatórias <span class="math inline">\(\mathbb{x}^{(j)} = (x_1^{(j)}, x_2^{(j)})\)</span> da normal padrão, <span class="math inline">\(j = 1, \ldots, N\)</span>.</p>
+<p>Calcule <span class="math inline">\(\hat\theta^{(j)} = g_j(x_1^{(j)}, x_2^{(j)}) = |x_1^{(j)} - x_2^{(j)}|\)</span>, e calcule a média.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">N &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb1-2" title="2">g &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb1-4" title="4">    x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5">    g[i] &lt;-<span class="st"> </span><span class="kw">abs</span>(x[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>x[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb1-6" title="6">}</a>
+<a class="sourceLine" id="cb1-7" title="7">(est &lt;-<span class="st"> </span><span class="kw">mean</span>(g))</a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co"># [1] 1.131141</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="kw">hist</span>(g)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Por integração, o resultado é <span class="math inline">\(\text{E}(|X_1 - X_2|) = 2/\sqrt{\pi} = 1.1284\)</span>.</p>
+<p>Em uma amostra de Monte Carlo, o tamanho da amostra é <span class="math inline">\(N\)</span>, por isso, o erro padrão da estimativa será</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Variância da distribuição amostral</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">sum</span>((g <span class="op">-</span><span class="st"> </span>est)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co"># [1] 0.7158632</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">var</span>(g)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co"># [1] 0.7158632</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">## Erro padrão = desvio padrão da distribuição amostral</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="kw">sqrt</span>(<span class="kw">sum</span>((g <span class="op">-</span><span class="st"> </span>est)<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co"># [1] 0.02676901</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="kw">sd</span>(g)<span class="op">/</span><span class="kw">sqrt</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co"># [1] 0.02676901</span></a></code></pre></div>
+<p>Pode-se mostrar que o valor exato é <span class="math inline">\(ep = \sqrt{(2 - 4/\pi)/N} = 0.0269\)</span>.</p>
+</div>
+<div id="exemplo-erro-quadrático-médio" class="section level2">
+<h2><span class="header-section-number">2.2</span> Exemplo: Erro Quadrático Médio</h2>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Erro Quadrático Médio
+</div>
+<div class="panel-body">
+<p>O Erro Quadrático Médio (EQM) de um estimador <span class="math inline">\(\hat{\theta}\)</span> de <span class="math inline">\(\theta\)</span> é dado por <span class="math display">\[\begin{align*}
+\text{EQM}[\hat{\theta}] &amp;= \text{E}[(\hat{\theta} - \theta)^2] \\
+  &amp;= \text{Var}[\hat{\theta}] + \text{B}[\hat{\theta}]^2
+\end{align*}\]</span> onde <span class="math display">\[\text{B}[\hat{\theta}] = \text{E}[\hat\theta] - \theta\]</span> é denominado de <strong>vício</strong> do estimador <span class="math inline">\(\hat\theta\)</span>. Portanto, dizemos que um estimador é <strong>não viciado</strong> para <span class="math inline">\(\theta\)</span> quando <span class="math display">\[\text{B}[\hat{\theta}] = 0 \quad \Rightarrow \quad \text{E}[\hat{\theta}] =
+\theta\]</span></p>
+<p>O EQM é comumente empregado na comparação de estimadores. Podemos dizer que <span class="math inline">\(\hat\theta_1\)</span> é <strong>melhor</strong> do que <span class="math inline">\(\hat\theta_2\)</span> se <span class="math display">\[
+\text{EQM}[\hat{\theta}_1] \leq \text{EQM}[\hat{\theta}_2]
+\]</span> para todo <span class="math inline">\(\theta\)</span>, com <span class="math inline">\(\leq\)</span> substituído por <span class="math inline">\(&lt;\)</span> pelo menos para um valor de <span class="math inline">\(\theta\)</span>.</p>
+<p>Se os estimadores são não viciados, então <span class="math display">\[
+\text{Var}[\hat{\theta}_1] \leq \text{Var}[\hat{\theta}_2]
+\]</span> Nesse caso, <span class="math inline">\(\hat{\theta}_1\)</span> é dito ser o <strong>Estimador Não Viciado de Variância Uniformemente Mínima</strong> (ENVVUM).</p>
+</div>
+</div>
+<p>Considere o problema de se obter uma estimativa de centro de uma distribuição simétrica, sem considerar a média amostral. Podemos pensar em dois estimadores: a <strong>média aparada</strong> e a <strong>mediana</strong>. Qual dos dois estimadores é “melhor” para estimar a média populacional <span class="math inline">\(\mu\)</span>?</p>
+<p>Suponha que <span class="math inline">\(X_1, \ldots, X_n\)</span> é uma amsotra aleatória de <span class="math inline">\(X\)</span>, e <span class="math inline">\(X_{(1)}, \ldots, X_{(n)}\)</span> é a correspondente <strong>amostra ordenada</strong>. A média aparada de primeiro nível é calculada retirando-se o menor e o maior valor da amostra. De maneira mais geral, a média aparada de <span class="math inline">\(k\)</span>-ésimo nível pode ser definida como <span class="math display">\[
+\overline{X}_{[-k]} = \frac{1}{n-2k} \sum_{i=k+1}^{n-k} X_{(i)}
+\]</span></p>
+<p>Vamos obter o EQM da média aparada de primeiro nível (<span class="math inline">\(\overline{X}_{[-1]}\)</span>) assumindo que <span class="math inline">\(X \sim \text{N}(0,1)\)</span>. Nesse exemplo, a média da distribuição é zero, e o parâmetro de interesse é <span class="math inline">\(\theta = \text{E}[\overline{X}] = \text{E}[\overline{X}_{[-1]}] = 0\)</span>. Considere que a média aparada de primeiro nível é <span class="math inline">\(T\)</span>. Uma estimativa de <span class="math inline">\(\text{EQM}[T]\)</span> baseado em <span class="math inline">\(N\)</span> replicações é obtida da seguinte forma:</p>
+<ol style="list-style-type: decimal">
+<li>Gera as repetições <span class="math inline">\(T^{(j)}, j=1, \ldots, N\)</span> repetindo:
+<ol style="list-style-type: lower-alpha">
+<li>Gere <span class="math inline">\(x_1^{(j)}, \ldots, x_n^{(j)}\)</span> iid da distribuição de <span class="math inline">\(X\)</span></li>
+<li>Ordene <span class="math inline">\(x_1^{(j)}, \ldots, x_n^{(j)}\)</span> em ordem crescente, <span class="math inline">\(x_{(1)}^{(j)} \leq \ldots \leq x_{(n)}^{(j)}\)</span></li>
+<li>Calcule <span class="math inline">\(T^{(j)} = \frac{1}{n-2} \sum_{i=2}^{n-1} x_{(i)}^{(j)}\)</span></li>
+</ol></li>
+<li>Calcule <span class="math inline">\(\widehat{\text{EQM}} = \frac{1}{N} \sum_{j=1}^{N} (T^{(j)} - \theta)^2 = \frac{1}{N} \sum_{j=1}^{N} (T^{(j)})^2\)</span></li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## Tamanho da amostra</span></a>
+<a class="sourceLine" id="cb3-2" title="2">n &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">## Número de repetições</span></a>
+<a class="sourceLine" id="cb3-4" title="4">N &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb3-5" title="5">tmean1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb3-7" title="7">    x &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">rnorm</span>(n))</a>
+<a class="sourceLine" id="cb3-8" title="8">    tmean1[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(x[<span class="dv">2</span><span class="op">:</span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)])<span class="op">/</span>(n <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-9" title="9">}</a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">## Estimativa pontual</span></a>
+<a class="sourceLine" id="cb3-11" title="11">(m.tmean1 &lt;-<span class="st"> </span><span class="kw">mean</span>(tmean1))</a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co"># [1] 0.006333479</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co">## Variância</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="kw">sum</span>((tmean1 <span class="op">-</span><span class="st"> </span>m.tmean1)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co"># [1] 0.05371879</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">## Erro padrão = desvio padrão da distribuição amostral</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="kw">sqrt</span>(<span class="kw">sum</span>((tmean1 <span class="op">-</span><span class="st"> </span>m.tmean1)<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="co"># [1] 0.007332978</span></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="co">## EQM</span></a>
+<a class="sourceLine" id="cb3-20" title="20">(eqm1 &lt;-<span class="st"> </span><span class="kw">mean</span>(tmean1<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb3-21" title="21"><span class="co"># [1] 0.05370518</span></a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="kw">hist</span>(tmean1)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Note que a média aparada é um estimador não viesado para a média populacional, portanto <span class="math inline">\(\text{EQM}[\theta] = \text{Var}[\theta] = \text{Var}[X]/n\)</span>, que é igual a <span class="math inline">\(1/20 = 0.05\)</span>, o que mostra que nossa estimativa está próxima.</p>
+<p>Repare que a mediana também é uma média aparada: ela “apara” todos os valores das caudas menos um (quando <span class="math inline">\(n\)</span> for ímpar), ou dois (quando <span class="math inline">\(n\)</span> for par), e calcula a média. Portanto, podemos reptir o mesmo procedimento para a mediana.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">n &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb4-2" title="2">N &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb4-3" title="3">tmean2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb4-5" title="5">    x &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">rnorm</span>(n))</a>
+<a class="sourceLine" id="cb4-6" title="6">    tmean2[i] &lt;-<span class="st"> </span><span class="kw">median</span>(x)</a>
+<a class="sourceLine" id="cb4-7" title="7">}</a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">## Estimativa pontual</span></a>
+<a class="sourceLine" id="cb4-9" title="9">(m.tmean2 &lt;-<span class="st"> </span><span class="kw">mean</span>(tmean2))</a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co"># [1] 0.006313864</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">## Variância</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="kw">sum</span>((tmean2 <span class="op">-</span><span class="st"> </span>m.tmean2)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co"># [1] 0.0701361</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">## Erro padrão = desvio padrão da distribuição amostral</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="kw">sqrt</span>(<span class="kw">sum</span>((tmean2 <span class="op">-</span><span class="st"> </span>m.tmean2)<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span>(N <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co"># [1] 0.008378921</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">## EQM</span></a>
+<a class="sourceLine" id="cb4-18" title="18">(eqm2 &lt;-<span class="st"> </span><span class="kw">mean</span>(tmean2<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb4-19" title="19"><span class="co"># [1] 0.07010583</span></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="kw">hist</span>(tmean2)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Agora podemos comparar qual dos dois estimadores é o melhor para a média populacional, através dos EQMs.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co">## Qual dos dois possui menor EQM</span></a>
+<a class="sourceLine" id="cb5-2" title="2">eqm1 <span class="op">&lt;=</span><span class="st"> </span>eqm2</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co"># [1] TRUE</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">## Eficiência relativa</span></a>
+<a class="sourceLine" id="cb5-5" title="5">eqm1<span class="op">/</span>eqm2</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co"># [1] 0.7660587</span></a></code></pre></div>
+<p>Na última linha calculamos também a <strong>eficiência relativa</strong> entre dois estimadores, ou seja, a eficiência relativa de <span class="math inline">\(\hat{\theta}_1\)</span> em relação a <span class="math inline">\(\hat{\theta}_2\)</span> é <span class="math display">\[
+\text{ER}[\hat{\theta}_1, \hat{\theta}_2] =
+\frac{\text{Var}[\hat{\theta}_1]}{\text{Var}[\hat{\theta}_2]}
+\]</span></p>
+<p>Por esses resultados concluimos que ambos estimadores, média aparada de primeiro nível e mediana, são não viesados para estimar a média populacional <span class="math inline">\(\mu\)</span>, mas a média aparada é um estimador melhor, ou mais eficiente do que a mediana.</p>
+</div>
+<div id="exemplo-estimativa-de-nível-de-confiança" class="section level2">
+<h2><span class="header-section-number">2.3</span> Exemplo: Estimativa de nível de confiança</h2>
+<p>Seja <span class="math inline">\(X_1, \ldots, X_n\)</span> uma amostra aleatória de uma <span class="math inline">\(\text{N}(\mu, \sigma^2)\)</span>, onde <span class="math inline">\(s^2\)</span> é a variância amsotral. Considere o problema de estimar um <strong>intervalo de confiança</strong> para <span class="math inline">\(s^2\)</span>.</p>
+<p>Do Teorema Central do Limite (TCL) sabemos que <span class="math inline">\(\bar{X} \sim \text{N}(\mu, \frac{\sigma^2}{n})\)</span>. Como não conhecemos <span class="math inline">\(\sigma^2\)</span>, usamos <span class="math inline">\(s^2\)</span> no lugar. Assim, temos que: <span class="math display">\[
+\widehat{Var[\bar{X}]} = \frac{s^2}{n} \quad \text{e} \quad
+\widehat{EP[\bar{X}]} = \frac{s}{\sqrt{n}}
+\]</span></p>
+<p>Para obter a variância de <span class="math inline">\(s^2\)</span>, precisamos lembrar que <span class="math display">\[
+\frac{(n-1)s^2}{\sigma^2} \sim \chi_{(n-1)}^{2}
+\]</span></p>
+<p>Lembrando também que para uma variável aleatória <span class="math inline">\(X\)</span> com distribuição qui-quadrado com <span class="math inline">\(k\)</span> graus de liberdade, <span class="math inline">\(X \sim \chi^2_k\)</span>, temos <span class="math inline">\(E[X] = k\)</span>, e <span class="math inline">\(Var[X] = 2k\)</span>. Assim, calculamos a esperança como</p>
+<p><span class="math display">\[\begin{align*}
+E\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &amp;= n-1 \\
+\frac{(n-1)}{\sigma^2} E[s^2] &amp;= n-1 \\
+E[s^2] &amp;= \frac{(n-1)\sigma^2}{(n-1)} \\
+E[s^2] &amp;= \sigma^2
+\end{align*}\]</span></p>
+<p>Portanto, confirmamos que essa é uma estimativa não viesada. Da mesma forma, calculamos a variância como:</p>
+<p><span class="math display">\[\begin{align*}
+Var\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &amp;= 2(n-1) \\
+\frac{(n-1)^2}{\sigma^4} Var[s^2] &amp;= 2(n-1) \\
+Var[s^2] &amp;= \frac{2(n-1)\sigma^4}{(n-1)^2} \\
+Var[s^2] &amp;= \frac{2\sigma^4}{n-1} = \frac{2(\sigma^2)^2}{n-1}
+\end{align*}\]</span></p>
+<p>Como usamos <span class="math inline">\(s^2\)</span> no lugar de <span class="math inline">\(\sigma^2\)</span>, temos então que</p>
+<p><span class="math display">\[
+\widehat{Var[s^2]} = \frac{2(s^2)^2}{n-1}
+\]</span></p>
+<p>O erro-padrão de <span class="math inline">\(s^2\)</span> é então a raíz quadrada desta variância, ou seja,</p>
+<p><span class="math display">\[
+\widehat{EP[s^2]} = \sqrt{\widehat{Var[s^2]}} =
+  \sqrt{\frac{2(s^2)^2}{n-1}} = s^2 \sqrt{\frac{2}{n-1}}
+\]</span></p>
+<p>Um intervalo de confiança <strong>unilateral</strong> de <span class="math inline">\(100(1-\alpha)\%\)</span> de confiança é dado por <span class="math display">\[
+\left(0, \frac{(n-1)s^2}{\chi^2_{\alpha}} \right)
+\]</span> onde <span class="math inline">\(\chi^2_{\alpha}\)</span> é o <span class="math inline">\(\alpha\)</span>-quantil de uma distribuição <span class="math inline">\(\chi^2 (n-1)\)</span>. Se a população amostrada é normal com variância <span class="math inline">\(\sigma^2\)</span>, então a probabilidade de que o intervalo contenha <span class="math inline">\(\sigma^2\)</span> é <strong>exatamente</strong> <span class="math inline">\(1-\alpha\)</span>. Por exemplo, para <span class="math inline">\(\alpha = 0.05\)</span>, <span class="math display">\[
+\begin{align*}
+P\left(\frac{(n-1)s^2}{\sigma^2} &gt; \chi^2_{.05}(n-1) \right) &amp;= 0.95 \\
+P\left(\frac{(n-1)s^2}{\chi^2_{.05}(n-1)} &gt; \sigma^2 \right) &amp;= 0.95
+\end{align*}
+\]</span></p>
+<p>Por exemplo, o cáculo do limite superior do intervalo de <span class="math inline">\(95\%\)</span> de confiança para uma amostra de tamanho <span class="math inline">\(n=20\)</span> de uma <span class="math inline">\(\text{N}(0, 4)\)</span> é</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">n &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb6-2" title="2">alpha &lt;-<span class="st"> </span><span class="fl">.05</span></a>
+<a class="sourceLine" id="cb6-3" title="3">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4">(UCL &lt;-<span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">var</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">qchisq</span>(alpha, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co"># [1] 4.388738</span></a></code></pre></div>
+<p>que contém o verdadeiro valor <span class="math inline">\(\sigma^2 = 4\)</span>. Se repetirmos esse processo várias vezes, esperamos então que aproximadamente <span class="math inline">\(95\%\)</span> das vezes, o intervalo contenha o verdadeiro valor de <span class="math inline">\(\sigma^2\)</span>, <strong>assumindo que a população amostrada é normal</strong> com variância <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>De maneira geral, um algoritmo para calcular o nível de confiança <strong>empírico</strong> para uma estimativa de algum parâmetro <span class="math inline">\(\theta\)</span> é:</p>
+<ol style="list-style-type: decimal">
+<li>Para cada repetição, indexada em <span class="math inline">\(j = 1, \ldots, N\)</span>
+<ol style="list-style-type: lower-alpha">
+<li>Gere a <span class="math inline">\(j\)</span>-ésima amostra aleatória, <span class="math inline">\(x_1^{(j)}, \ldots, x_n^{(j)}\)</span></li>
+<li>Calcule o intervalo de confiança <span class="math inline">\(C_j\)</span> para a <span class="math inline">\(j\)</span>-ésima amostra</li>
+<li>Calcule <span class="math inline">\(y_j = I(\theta \in C_j)\)</span> para a <span class="math inline">\(j\)</span>-ésima amostra</li>
+</ol></li>
+<li>Calcule o nível de confiança empírico <span class="math inline">\(\bar{y} = \frac{1}{N}\sum_{j=1}^{N} y_j\)</span></li>
+</ol>
+<p>A proporção amostral de intervalos que contém <span class="math inline">\(\theta\)</span> é então uma estimativa de Monte Carlo do verdadeiro nível de confiança <span class="math inline">\((1-\alpha)\)</span>.</p>
+<p>(Note aqui o uso da função <code>replicate()</code> no lugar do <code>for()</code>).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">n &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb7-2" title="2">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb7-3" title="3">alpha &lt;-<span class="st"> </span><span class="fl">.05</span></a>
+<a class="sourceLine" id="cb7-4" title="4">UCL &lt;-<span class="st"> </span><span class="kw">replicate</span>(m, <span class="dt">expr =</span> {</a>
+<a class="sourceLine" id="cb7-5" title="5">    x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb7-6" title="6">    (n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">var</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">qchisq</span>(alpha, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb7-7" title="7">})</a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co">## Número de intervalos que contém sigma^2 = 4</span></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="kw">sum</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co"># [1] 943</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">## Nível de confiança empírico</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="kw">sum</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co"># [1] 0.943</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="kw">mean</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co"># [1] 0.943</span></a></code></pre></div>
+<p>Veja que o nível de confiança empírico é muito próximo do nível de confiança teórico, de <span class="math inline">\(95\%\)</span>. Para 100 intervalos calculados, podemos visualizar o procedimento:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">UCL.sim &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span class="dv">100</span>, <span class="dt">expr =</span> {</a>
+<a class="sourceLine" id="cb8-2" title="2">    x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-3" title="3">    (n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">var</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">qchisq</span>(alpha, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb8-4" title="4">})</a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="kw">plot</span>(<span class="ot">NULL</span>, <span class="ot">NULL</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(UCL.sim)), <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw">segments</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb8-7" title="7">         <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb8-8" title="8">         <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb8-9" title="9">         UCL.sim)</a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Sabemos que o cálculo de intervalos de confiança para a variância é bastante sensível à fugas da normalidade. Ou seja, se a população amostrada não for normal, então o cálculo do intervalo de confiança possivelmente será afetado, refletindo no nível de confiança.</p>
+<p>Por exemplo, suponha que ao invés de normal, os dados foram obtidos a partir de uma população que segue uma distribuição <span class="math inline">\(\chi^2\)</span> com 2 graus de liberdade, que também possui variância 4, mas claramente não é normal.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">curve</span>(<span class="kw">dchisq</span>(x, <span class="dt">df =</span> <span class="dv">2</span>), <span class="dt">to =</span> <span class="dv">10</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Podemos repetir o procedimento acima, substituindo as amostras de <span class="math inline">\(X\)</span> da normal pela <span class="math inline">\(\chi^2(2)\)</span> e verificar qual seria então o nível de confiança empírico.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">n &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb10-2" title="2">m &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb10-3" title="3">alpha &lt;-<span class="st"> </span><span class="fl">.05</span></a>
+<a class="sourceLine" id="cb10-4" title="4">UCL &lt;-<span class="st"> </span><span class="kw">replicate</span>(m, <span class="dt">expr =</span> {</a>
+<a class="sourceLine" id="cb10-5" title="5">    x &lt;-<span class="st"> </span><span class="kw">rchisq</span>(n, <span class="dt">df =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-6" title="6">    (n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">var</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">qchisq</span>(alpha, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb10-7" title="7">})</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">## Número de intervalos que contém sigma^2 = 4</span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="kw">sum</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co"># [1] 788</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="co">## Nível de confiança empírico</span></a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="kw">sum</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co"># [1] 0.788</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="kw">mean</span>(UCL <span class="op">&gt;</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="co"># [1] 0.788</span></a></code></pre></div>
+<p>Veja que, embora estamos calculando intervalos <strong>teóricos</strong> de <span class="math inline">\(95\%\)</span>, o nível de confiança é na verdade bem mais baixo, o que pode levar à conclusões equivocadas nesse caso onde a população não é normal.</p>
+<p>Visualmente temos:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">UCL.sim &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span class="dv">100</span>, <span class="dt">expr =</span> {</a>
+<a class="sourceLine" id="cb11-2" title="2">    x &lt;-<span class="st"> </span><span class="kw">rchisq</span>(n, <span class="dt">df =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3">    (n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">var</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">qchisq</span>(alpha, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb11-4" title="4">})</a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="kw">plot</span>(<span class="ot">NULL</span>, <span class="ot">NULL</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(UCL.sim)), <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="kw">segments</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb11-7" title="7">         <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb11-8" title="8">         <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb11-9" title="9">         UCL.sim)</a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">4</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-1/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+<center>
+  <hr width="100%" size="3px">
+  <p> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR">
+      <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" alt="Licença Creative Commons 4.0"> </a>
+  </p>
+  <p> <font size="2"> Este conteúdo
+      está disponível por meio da Licença Creative Commons 4.0 </font>
+  </p>
+</center>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
