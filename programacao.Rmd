@@ -83,15 +83,24 @@ for(veiculos in c("carro", "ônibus", "trem", "bicicleta")){
 
 **Exemplo**: cálculo de notas de uma disciplina.
 
-```{r}
+```{r, eval=FALSE}
 ## Importa os dados
 url <- "http://leg.ufpr.br/~fernandomayer/data/notas.csv"
 notas <- read.table(url, header = TRUE, sep = ";", dec = ",")
+```
+
+```{r, include=FALSE}
+notas <- read.table("dados/notas.csv", header = TRUE,
+                    sep = ";", dec = ",")
+```
+
+```{r}
 ## Analisa a estrutura dos dados
 str(notas)
 head(notas)
 summary(notas)
 ```
+
 
 Antes de seguir adiante, veja o resultado de
 
