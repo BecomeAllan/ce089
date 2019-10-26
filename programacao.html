@@ -538,154 +538,154 @@ div.tocify {
 <p><strong>Exemplo</strong>: cálculo de notas de uma disciplina.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Importa os dados</span></a>
 <a class="sourceLine" id="cb6-2" title="2">url &lt;-<span class="st"> &quot;http://leg.ufpr.br/~fernandomayer/data/notas.csv&quot;</span></a>
-<a class="sourceLine" id="cb6-3" title="3">notas &lt;-<span class="st"> </span><span class="kw">read.table</span>(url, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="dt">dec =</span> <span class="st">&quot;,&quot;</span>)</a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="co">## Analisa a estrutura dos dados</span></a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="kw">str</span>(notas)</a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="co"># &#39;data.frame&#39;: 30 obs. of  4 variables:</span></a>
-<a class="sourceLine" id="cb6-7" title="7"><span class="co">#  $ nome  : Factor w/ 30 levels &quot;Aluno_1&quot;,&quot;Aluno_10&quot;,..: 1 12 23 25 26 27 28 29 30 2 ...</span></a>
-<a class="sourceLine" id="cb6-8" title="8"><span class="co">#  $ prova1: int  8 2 9 1 7 10 1 5 5 10 ...</span></a>
-<a class="sourceLine" id="cb6-9" title="9"><span class="co">#  $ prova2: int  4 7 2 10 6 0 8 9 6 2 ...</span></a>
-<a class="sourceLine" id="cb6-10" title="10"><span class="co">#  $ prova3: int  1 6 4 9 8 3 0 7 1 3 ...</span></a>
-<a class="sourceLine" id="cb6-11" title="11"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb6-12" title="12"><span class="co">#      nome prova1 prova2 prova3</span></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="co"># 1 Aluno_1      8      4      1</span></a>
-<a class="sourceLine" id="cb6-14" title="14"><span class="co"># 2 Aluno_2      2      7      6</span></a>
-<a class="sourceLine" id="cb6-15" title="15"><span class="co"># 3 Aluno_3      9      2      4</span></a>
-<a class="sourceLine" id="cb6-16" title="16"><span class="co"># 4 Aluno_4      1     10      9</span></a>
-<a class="sourceLine" id="cb6-17" title="17"><span class="co"># 5 Aluno_5      7      6      8</span></a>
-<a class="sourceLine" id="cb6-18" title="18"><span class="co"># 6 Aluno_6     10      0      3</span></a>
-<a class="sourceLine" id="cb6-19" title="19"><span class="kw">summary</span>(notas)</a>
-<a class="sourceLine" id="cb6-20" title="20"><span class="co">#        nome        prova1           prova2           prova3   </span></a>
-<a class="sourceLine" id="cb6-21" title="21"><span class="co">#  Aluno_1 : 1   Min.   : 0.000   Min.   : 0.000   Min.   :0.0  </span></a>
-<a class="sourceLine" id="cb6-22" title="22"><span class="co">#  Aluno_10: 1   1st Qu.: 2.000   1st Qu.: 3.000   1st Qu.:3.0  </span></a>
-<a class="sourceLine" id="cb6-23" title="23"><span class="co">#  Aluno_11: 1   Median : 4.000   Median : 6.000   Median :6.5  </span></a>
-<a class="sourceLine" id="cb6-24" title="24"><span class="co">#  Aluno_12: 1   Mean   : 4.433   Mean   : 5.433   Mean   :5.4  </span></a>
-<a class="sourceLine" id="cb6-25" title="25"><span class="co">#  Aluno_13: 1   3rd Qu.: 6.750   3rd Qu.: 8.000   3rd Qu.:8.0  </span></a>
-<a class="sourceLine" id="cb6-26" title="26"><span class="co">#  Aluno_14: 1   Max.   :10.000   Max.   :10.000   Max.   :9.0  </span></a>
-<a class="sourceLine" id="cb6-27" title="27"><span class="co">#  (Other) :24</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-3" title="3">notas &lt;-<span class="st"> </span><span class="kw">read.table</span>(url, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="dt">dec =</span> <span class="st">&quot;,&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Analisa a estrutura dos dados</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">str</span>(notas)</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co"># &#39;data.frame&#39;: 30 obs. of  4 variables:</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">#  $ nome  : Factor w/ 30 levels &quot;Aluno_1&quot;,&quot;Aluno_10&quot;,..: 1 12 23 25 26 27 28 29 30 2 ...</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">#  $ prova1: int  8 2 9 1 7 10 1 5 5 10 ...</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">#  $ prova2: int  4 7 2 10 6 0 8 9 6 2 ...</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">#  $ prova3: int  1 6 4 9 8 3 0 7 1 3 ...</span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">#      nome prova1 prova2 prova3</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co"># 1 Aluno_1      8      4      1</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co"># 2 Aluno_2      2      7      6</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co"># 3 Aluno_3      9      2      4</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co"># 4 Aluno_4      1     10      9</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co"># 5 Aluno_5      7      6      8</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co"># 6 Aluno_6     10      0      3</span></a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="kw">summary</span>(notas)</a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="co">#        nome        prova1           prova2           prova3   </span></a>
+<a class="sourceLine" id="cb7-18" title="18"><span class="co">#  Aluno_1 : 1   Min.   : 0.000   Min.   : 0.000   Min.   :0.0  </span></a>
+<a class="sourceLine" id="cb7-19" title="19"><span class="co">#  Aluno_10: 1   1st Qu.: 2.000   1st Qu.: 3.000   1st Qu.:3.0  </span></a>
+<a class="sourceLine" id="cb7-20" title="20"><span class="co">#  Aluno_11: 1   Median : 4.000   Median : 6.000   Median :6.5  </span></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="co">#  Aluno_12: 1   Mean   : 4.433   Mean   : 5.433   Mean   :5.4  </span></a>
+<a class="sourceLine" id="cb7-22" title="22"><span class="co">#  Aluno_13: 1   3rd Qu.: 6.750   3rd Qu.: 8.000   3rd Qu.:8.0  </span></a>
+<a class="sourceLine" id="cb7-23" title="23"><span class="co">#  Aluno_14: 1   Max.   :10.000   Max.   :10.000   Max.   :9.0  </span></a>
+<a class="sourceLine" id="cb7-24" title="24"><span class="co">#  (Other) :24</span></a></code></pre></div>
 <p>Antes de seguir adiante, veja o resultado de</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## for(i in 1:30){</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">##     print(notas[i, c(&quot;prova1&quot;, &quot;prova2&quot;, &quot;prova3&quot;)])</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="co">## }</span></a>
-<a class="sourceLine" id="cb7-4" title="4">notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)]</a>
-<a class="sourceLine" id="cb7-5" title="5"><span class="co">#   prova1 prova2 prova3</span></a>
-<a class="sourceLine" id="cb7-6" title="6"><span class="co"># 1      8      4      1</span></a>
-<a class="sourceLine" id="cb7-7" title="7"><span class="kw">class</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])</a>
-<a class="sourceLine" id="cb7-8" title="8"><span class="co"># [1] &quot;data.frame&quot;</span></a>
-<a class="sourceLine" id="cb7-9" title="9"><span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])</a>
-<a class="sourceLine" id="cb7-10" title="10"><span class="co"># [1] 8 4 1</span></a>
-<a class="sourceLine" id="cb7-11" title="11"><span class="kw">class</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)]))</a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="co"># [1] &quot;numeric&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## for(i in 1:30){</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">##     print(notas[i, c(&quot;prova1&quot;, &quot;prova2&quot;, &quot;prova3&quot;)])</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">## }</span></a>
+<a class="sourceLine" id="cb8-4" title="4">notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)]</a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">#   prova1 prova2 prova3</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co"># 1      8      4      1</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="kw">class</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])</a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co"># [1] &quot;data.frame&quot;</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])</a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co"># [1] 8 4 1</span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="kw">class</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)]))</a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co"># [1] &quot;numeric&quot;</span></a></code></pre></div>
 <p>Para calcular as médias das 3 provas, precisamos inicialmente de um vetor para armazenar os resultados. Esse vetor pode ser um novo objeto ou uma nova coluna no dataframe</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Aqui vamos criar uma nova coluna no dataframe, contendo apenas o</span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="co">## valor 0</span></a>
-<a class="sourceLine" id="cb8-3" title="3">notas<span class="op">$</span>media &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># note que aqui será usada a regra da reciclagem, ou</span></a>
-<a class="sourceLine" id="cb8-4" title="4">                 <span class="co"># seja, o valor zero será repetido até completar todas</span></a>
-<a class="sourceLine" id="cb8-5" title="5">                 <span class="co"># as linhas do dataframe</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="co">## Estrutura de repetição para calcular a média</span></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){</a>
-<a class="sourceLine" id="cb8-8" title="8">    <span class="co">## Aqui, cada linha i da coluna media sera substituida pelo</span></a>
-<a class="sourceLine" id="cb8-9" title="9">    <span class="co">## respectivo valor da media caculada</span></a>
-<a class="sourceLine" id="cb8-10" title="10">    notas<span class="op">$</span>media[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(notas[i, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])<span class="op">/</span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb8-11" title="11">}</a>
-<a class="sourceLine" id="cb8-12" title="12"></a>
-<a class="sourceLine" id="cb8-13" title="13"><span class="co">## Confere os resultados</span></a>
-<a class="sourceLine" id="cb8-14" title="14"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb8-15" title="15"><span class="co">#      nome prova1 prova2 prova3    media</span></a>
-<a class="sourceLine" id="cb8-16" title="16"><span class="co"># 1 Aluno_1      8      4      1 4.333333</span></a>
-<a class="sourceLine" id="cb8-17" title="17"><span class="co"># 2 Aluno_2      2      7      6 5.000000</span></a>
-<a class="sourceLine" id="cb8-18" title="18"><span class="co"># 3 Aluno_3      9      2      4 5.000000</span></a>
-<a class="sourceLine" id="cb8-19" title="19"><span class="co"># 4 Aluno_4      1     10      9 6.666667</span></a>
-<a class="sourceLine" id="cb8-20" title="20"><span class="co"># 5 Aluno_5      7      6      8 7.000000</span></a>
-<a class="sourceLine" id="cb8-21" title="21"><span class="co"># 6 Aluno_6     10      0      3 4.333333</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Aqui vamos criar uma nova coluna no dataframe, contendo apenas o</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">## valor 0</span></a>
+<a class="sourceLine" id="cb9-3" title="3">notas<span class="op">$</span>media &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># note que aqui será usada a regra da reciclagem, ou</span></a>
+<a class="sourceLine" id="cb9-4" title="4">                 <span class="co"># seja, o valor zero será repetido até completar todas</span></a>
+<a class="sourceLine" id="cb9-5" title="5">                 <span class="co"># as linhas do dataframe</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">## Estrutura de repetição para calcular a média</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){</a>
+<a class="sourceLine" id="cb9-8" title="8">    <span class="co">## Aqui, cada linha i da coluna media sera substituida pelo</span></a>
+<a class="sourceLine" id="cb9-9" title="9">    <span class="co">## respectivo valor da media caculada</span></a>
+<a class="sourceLine" id="cb9-10" title="10">    notas<span class="op">$</span>media[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(notas[i, <span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)])<span class="op">/</span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb9-11" title="11">}</a>
+<a class="sourceLine" id="cb9-12" title="12"></a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="co">## Confere os resultados</span></a>
+<a class="sourceLine" id="cb9-14" title="14"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="co">#      nome prova1 prova2 prova3    media</span></a>
+<a class="sourceLine" id="cb9-16" title="16"><span class="co"># 1 Aluno_1      8      4      1 4.333333</span></a>
+<a class="sourceLine" id="cb9-17" title="17"><span class="co"># 2 Aluno_2      2      7      6 5.000000</span></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="co"># 3 Aluno_3      9      2      4 5.000000</span></a>
+<a class="sourceLine" id="cb9-19" title="19"><span class="co"># 4 Aluno_4      1     10      9 6.666667</span></a>
+<a class="sourceLine" id="cb9-20" title="20"><span class="co"># 5 Aluno_5      7      6      8 7.000000</span></a>
+<a class="sourceLine" id="cb9-21" title="21"><span class="co"># 6 Aluno_6     10      0      3 4.333333</span></a></code></pre></div>
 <p>Agora podemos melhorar o código, tornando-o mais <strong>genérico</strong>. Dessa forma fica mais fácil fazer alterações e procurar erros. Uma forma de melhorar o código acima é generalizando alguns passos.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Armazenamos o número de linhas no dataframe</span></a>
-<a class="sourceLine" id="cb9-2" title="2">nlinhas &lt;-<span class="st"> </span><span class="kw">nrow</span>(notas)</a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co">## Identificamos as colunas de interesse no cálculo da média, e</span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co">## armazenamos em um objeto separado</span></a>
-<a class="sourceLine" id="cb9-5" title="5">provas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)</a>
-<a class="sourceLine" id="cb9-6" title="6"><span class="co">## Sabendo o número de provas, fica mais fácil dividir pelo total no</span></a>
-<a class="sourceLine" id="cb9-7" title="7"><span class="co">## cálculo da média</span></a>
-<a class="sourceLine" id="cb9-8" title="8">nprovas &lt;-<span class="st"> </span><span class="kw">length</span>(provas)</a>
-<a class="sourceLine" id="cb9-9" title="9"><span class="co">## Cria uma nova coluna apenas para comparar o cálculo com o anterior</span></a>
-<a class="sourceLine" id="cb9-10" title="10">notas<span class="op">$</span>media2 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="co">## A estrutura de repetição fica</span></a>
-<a class="sourceLine" id="cb9-12" title="12"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb9-13" title="13">    notas<span class="op">$</span>media2[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(notas[i, provas])<span class="op">/</span>nprovas</a>
-<a class="sourceLine" id="cb9-14" title="14">}</a>
-<a class="sourceLine" id="cb9-15" title="15"></a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb9-18" title="18"><span class="co">#      nome prova1 prova2 prova3    media   media2</span></a>
-<a class="sourceLine" id="cb9-19" title="19"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333</span></a>
-<a class="sourceLine" id="cb9-20" title="20"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb9-21" title="21"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb9-22" title="22"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667</span></a>
-<a class="sourceLine" id="cb9-23" title="23"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000</span></a>
-<a class="sourceLine" id="cb9-24" title="24"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333</span></a>
-<a class="sourceLine" id="cb9-25" title="25"><span class="kw">identical</span>(notas<span class="op">$</span>media, notas<span class="op">$</span>media2)</a>
-<a class="sourceLine" id="cb9-26" title="26"><span class="co"># [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## Armazenamos o número de linhas no dataframe</span></a>
+<a class="sourceLine" id="cb10-2" title="2">nlinhas &lt;-<span class="st"> </span><span class="kw">nrow</span>(notas)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co">## Identificamos as colunas de interesse no cálculo da média, e</span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co">## armazenamos em um objeto separado</span></a>
+<a class="sourceLine" id="cb10-5" title="5">provas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;prova1&quot;</span>, <span class="st">&quot;prova2&quot;</span>, <span class="st">&quot;prova3&quot;</span>)</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">## Sabendo o número de provas, fica mais fácil dividir pelo total no</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="co">## cálculo da média</span></a>
+<a class="sourceLine" id="cb10-8" title="8">nprovas &lt;-<span class="st"> </span><span class="kw">length</span>(provas)</a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">## Cria uma nova coluna apenas para comparar o cálculo com o anterior</span></a>
+<a class="sourceLine" id="cb10-10" title="10">notas<span class="op">$</span>media2 &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="co">## A estrutura de repetição fica</span></a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb10-13" title="13">    notas<span class="op">$</span>media2[i] &lt;-<span class="st"> </span><span class="kw">sum</span>(notas[i, provas])<span class="op">/</span>nprovas</a>
+<a class="sourceLine" id="cb10-14" title="14">}</a>
+<a class="sourceLine" id="cb10-15" title="15"></a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="co">#      nome prova1 prova2 prova3    media   media2</span></a>
+<a class="sourceLine" id="cb10-19" title="19"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333</span></a>
+<a class="sourceLine" id="cb10-20" title="20"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb10-22" title="22"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667</span></a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000</span></a>
+<a class="sourceLine" id="cb10-24" title="24"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333</span></a>
+<a class="sourceLine" id="cb10-25" title="25"><span class="kw">identical</span>(notas<span class="op">$</span>media, notas<span class="op">$</span>media2)</a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="co"># [1] TRUE</span></a></code></pre></div>
 <p>Ainda podemos melhorar (leia-se: <strong>otimizar</strong>) o código, se utilizarmos funções prontas do R. No caso da média isso é possível pois a função <code>mean()</code> já existe. Em seguida veremos como fazer quando o cálculo que estamos utilizando não está implementado em nenhuma função pronta do R.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## Cria uma nova coluna apenas para comparação</span></a>
-<a class="sourceLine" id="cb10-2" title="2">notas<span class="op">$</span>media3 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb10-5" title="5">    notas<span class="op">$</span>media3[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">as.numeric</span>(notas[i, provas]))</a>
-<a class="sourceLine" id="cb10-6" title="6">}</a>
-<a class="sourceLine" id="cb10-7" title="7"></a>
-<a class="sourceLine" id="cb10-8" title="8"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb10-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3</span></a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333</span></a>
-<a class="sourceLine" id="cb10-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb10-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb10-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667</span></a>
-<a class="sourceLine" id="cb10-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000</span></a>
-<a class="sourceLine" id="cb10-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333</span></a>
-<a class="sourceLine" id="cb10-17" title="17"></a>
-<a class="sourceLine" id="cb10-18" title="18"><span class="co">## A única diferença é que aqui precisamos transformar cada linha em um</span></a>
-<a class="sourceLine" id="cb10-19" title="19"><span class="co">## vetor de números com as.numeric(), pois</span></a>
-<a class="sourceLine" id="cb10-20" title="20">notas[<span class="dv">1</span>, provas]</a>
-<a class="sourceLine" id="cb10-21" title="21"><span class="co">#   prova1 prova2 prova3</span></a>
-<a class="sourceLine" id="cb10-22" title="22"><span class="co"># 1      8      4      1</span></a>
-<a class="sourceLine" id="cb10-23" title="23"><span class="co">## é um data.frame:</span></a>
-<a class="sourceLine" id="cb10-24" title="24"><span class="kw">class</span>(notas[<span class="dv">1</span>, provas])</a>
-<a class="sourceLine" id="cb10-25" title="25"><span class="co"># [1] &quot;data.frame&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## Cria uma nova coluna apenas para comparação</span></a>
+<a class="sourceLine" id="cb11-2" title="2">notas<span class="op">$</span>media3 &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
+<a class="sourceLine" id="cb11-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb11-5" title="5">    notas<span class="op">$</span>media3[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">as.numeric</span>(notas[i, provas]))</a>
+<a class="sourceLine" id="cb11-6" title="6">}</a>
+<a class="sourceLine" id="cb11-7" title="7"></a>
+<a class="sourceLine" id="cb11-8" title="8"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3</span></a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333</span></a>
+<a class="sourceLine" id="cb11-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb11-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb11-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667</span></a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000</span></a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333</span></a>
+<a class="sourceLine" id="cb11-17" title="17"></a>
+<a class="sourceLine" id="cb11-18" title="18"><span class="co">## A única diferença é que aqui precisamos transformar cada linha em um</span></a>
+<a class="sourceLine" id="cb11-19" title="19"><span class="co">## vetor de números com as.numeric(), pois</span></a>
+<a class="sourceLine" id="cb11-20" title="20">notas[<span class="dv">1</span>, provas]</a>
+<a class="sourceLine" id="cb11-21" title="21"><span class="co">#   prova1 prova2 prova3</span></a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="co"># 1      8      4      1</span></a>
+<a class="sourceLine" id="cb11-23" title="23"><span class="co">## é um data.frame:</span></a>
+<a class="sourceLine" id="cb11-24" title="24"><span class="kw">class</span>(notas[<span class="dv">1</span>, provas])</a>
+<a class="sourceLine" id="cb11-25" title="25"><span class="co"># [1] &quot;data.frame&quot;</span></a></code></pre></div>
 <p>No caso acima vimos que não era necessário calcular a média através de <code>soma/total</code> porque existe uma função pronta no R para fazer esse cálculo. Mas, e se quisessemos, por exemplo, calcular a Coeficiente de Variação (CV) entre as notas das três provas de cada aluno? Uma busca por</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">help.search</span>(<span class="st">&quot;coefficient of variation&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">help.search</span>(<span class="st">&quot;coefficient of variation&quot;</span>)</a></code></pre></div>
 <p>não retorna nenhuma função (dos pacotes básicos) para fazer esse cálculo. O motivo é simples: como é uma conta simples de fazer não há necessidade de se criar uma função extra dentro dos pacotes. No entanto, nós podemos criar uma função que calcule o CV, e usá-la para o nosso propósito</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">cv &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb12-2" title="2">    desv.pad &lt;-<span class="st"> </span><span class="kw">sd</span>(x)</a>
-<a class="sourceLine" id="cb12-3" title="3">    med &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
-<a class="sourceLine" id="cb12-4" title="4">    cv &lt;-<span class="st"> </span>desv.pad<span class="op">/</span>med</a>
-<a class="sourceLine" id="cb12-5" title="5">    <span class="kw">return</span>(cv)</a>
-<a class="sourceLine" id="cb12-6" title="6">}</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">cv &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb13-2" title="2">    desv.pad &lt;-<span class="st"> </span><span class="kw">sd</span>(x)</a>
+<a class="sourceLine" id="cb13-3" title="3">    med &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
+<a class="sourceLine" id="cb13-4" title="4">    cv &lt;-<span class="st"> </span>desv.pad<span class="op">/</span>med</a>
+<a class="sourceLine" id="cb13-5" title="5">    <span class="kw">return</span>(cv)</a>
+<a class="sourceLine" id="cb13-6" title="6">}</a></code></pre></div>
 <div class="alert alert-warning">
 <p>NOTA: na função criada acima o único argumento que usamos foi <code>x</code>, que neste caso deve ser um vetor de números para o cálculo do CV. Os argumentos colocados dentro de <code>function()</code> devem ser apropriados para o propósito de cada função.</p>
 </div>
 <p>Antes de aplicar a função dentro de um <code>for()</code> devemos testá-la para ver se ela está funcioanando de maneira correta. Por exemplo, o CV para as notas do primeiro aluno pode ser calculado “manualmente” por</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">sd</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))<span class="op">/</span><span class="kw">mean</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))</a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="co"># [1] 0.8104349</span></a></code></pre></div>
-<p>E através da função, o resultado é</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">cv</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))</a>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">sd</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))<span class="op">/</span><span class="kw">mean</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># [1] 0.8104349</span></a></code></pre></div>
+<p>E através da função, o resultado é</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">cv</span>(<span class="kw">as.numeric</span>(notas[<span class="dv">1</span>, provas]))</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co"># [1] 0.8104349</span></a></code></pre></div>
 <p>o que mostra que a função está funcionando corretamente, e podemos aplicá-la em todas as linhas usando a repetição</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## Cria uma nova coluna para o CV</span></a>
-<a class="sourceLine" id="cb15-2" title="2">notas<span class="op">$</span>CV &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb15-5" title="5">    notas<span class="op">$</span>CV[i] &lt;-<span class="st"> </span><span class="kw">cv</span>(<span class="kw">as.numeric</span>(notas[i, provas]))</a>
-<a class="sourceLine" id="cb15-6" title="6">}</a>
-<a class="sourceLine" id="cb15-7" title="7"></a>
-<a class="sourceLine" id="cb15-8" title="8"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb15-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV</span></a>
-<a class="sourceLine" id="cb15-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349</span></a>
-<a class="sourceLine" id="cb15-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503</span></a>
-<a class="sourceLine" id="cb15-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103</span></a>
-<a class="sourceLine" id="cb15-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324</span></a>
-<a class="sourceLine" id="cb15-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571</span></a>
-<a class="sourceLine" id="cb15-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Cria uma nova coluna para o CV</span></a>
+<a class="sourceLine" id="cb16-2" title="2">notas<span class="op">$</span>CV &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb16-5" title="5">    notas<span class="op">$</span>CV[i] &lt;-<span class="st"> </span><span class="kw">cv</span>(<span class="kw">as.numeric</span>(notas[i, provas]))</a>
+<a class="sourceLine" id="cb16-6" title="6">}</a>
+<a class="sourceLine" id="cb16-7" title="7"></a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV</span></a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349</span></a>
+<a class="sourceLine" id="cb16-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503</span></a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103</span></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324</span></a>
+<a class="sourceLine" id="cb16-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571</span></a>
+<a class="sourceLine" id="cb16-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157</span></a></code></pre></div>
 <p>Podemos agora querer calcular as médias ponderadas para as provas. Por exemplo:</p>
 <ul>
 <li>Prova 1: peso 3</li>
@@ -697,193 +697,193 @@ div.tocify {
 \bar{x} = \frac{1}{N} \sum_{i=1}^{n} x_i \cdot w_i
 \]</span></p>
 <p>onde <span class="math inline">\(w_i\)</span> são os pesos, e <span class="math inline">\(N = \sum_{i=1}^{n} w_i\)</span> é a soma dos pesos. Como já vimos que criar uma função é uma forma mais prática (e elegante) de executar determinada tarefa, vamos criar uma função que calcule as médias ponderadas.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">med.pond &lt;-<span class="st"> </span><span class="cf">function</span>(notas, pesos){</a>
-<a class="sourceLine" id="cb16-2" title="2">    <span class="co">## Multiplica o valor de cada prova pelo seu peso</span></a>
-<a class="sourceLine" id="cb16-3" title="3">    pond &lt;-<span class="st"> </span>notas <span class="op">*</span><span class="st"> </span>pesos</a>
-<a class="sourceLine" id="cb16-4" title="4">    <span class="co">## Calcula o valor total dos pesos</span></a>
-<a class="sourceLine" id="cb16-5" title="5">    peso.total &lt;-<span class="st"> </span><span class="kw">sum</span>(pesos)</a>
-<a class="sourceLine" id="cb16-6" title="6">    <span class="co">## Calcula a soma da ponderação</span></a>
-<a class="sourceLine" id="cb16-7" title="7">    sum.pond &lt;-<span class="st"> </span><span class="kw">sum</span>(pond)</a>
-<a class="sourceLine" id="cb16-8" title="8">    <span class="co">## Finalmente calcula a média ponderada</span></a>
-<a class="sourceLine" id="cb16-9" title="9">    saida &lt;-<span class="st"> </span>sum.pond<span class="op">/</span>peso.total</a>
-<a class="sourceLine" id="cb16-10" title="10">    <span class="kw">return</span>(saida)</a>
-<a class="sourceLine" id="cb16-11" title="11">}</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">med.pond &lt;-<span class="st"> </span><span class="cf">function</span>(notas, pesos){</a>
+<a class="sourceLine" id="cb17-2" title="2">    <span class="co">## Multiplica o valor de cada prova pelo seu peso</span></a>
+<a class="sourceLine" id="cb17-3" title="3">    pond &lt;-<span class="st"> </span>notas <span class="op">*</span><span class="st"> </span>pesos</a>
+<a class="sourceLine" id="cb17-4" title="4">    <span class="co">## Calcula o valor total dos pesos</span></a>
+<a class="sourceLine" id="cb17-5" title="5">    peso.total &lt;-<span class="st"> </span><span class="kw">sum</span>(pesos)</a>
+<a class="sourceLine" id="cb17-6" title="6">    <span class="co">## Calcula a soma da ponderação</span></a>
+<a class="sourceLine" id="cb17-7" title="7">    sum.pond &lt;-<span class="st"> </span><span class="kw">sum</span>(pond)</a>
+<a class="sourceLine" id="cb17-8" title="8">    <span class="co">## Finalmente calcula a média ponderada</span></a>
+<a class="sourceLine" id="cb17-9" title="9">    saida &lt;-<span class="st"> </span>sum.pond<span class="op">/</span>peso.total</a>
+<a class="sourceLine" id="cb17-10" title="10">    <span class="kw">return</span>(saida)</a>
+<a class="sourceLine" id="cb17-11" title="11">}</a></code></pre></div>
 <p>Antes de aplicar a função para o caso geral, sempre é importante testar e conferir o resultado em um caso menor. Podemos verificar o resultado da média ponderada para o primeiro aluno</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">sum</span>(notas[<span class="dv">1</span>, provas] <span class="op">*</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))<span class="op">/</span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="co"># [1] 4</span></a></code></pre></div>
-<p>e testar a função para o mesmo caso</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[<span class="dv">1</span>, provas], <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">sum</span>(notas[<span class="dv">1</span>, provas] <span class="op">*</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))<span class="op">/</span><span class="dv">10</span></a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="co"># [1] 4</span></a></code></pre></div>
+<p>e testar a função para o mesmo caso</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[<span class="dv">1</span>, provas], <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="co"># [1] 4</span></a></code></pre></div>
 <p>Como o resultado é o mesmo podemos aplicar a função para todas as linhas através do <code>for()</code></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">## Cria uma nova coluna para a média ponderada</span></a>
-<a class="sourceLine" id="cb19-2" title="2">notas<span class="op">$</span>MP &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb19-5" title="5">    notas<span class="op">$</span>MP[i] &lt;-<span class="st"> </span><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[i, provas], <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb19-6" title="6">}</a>
-<a class="sourceLine" id="cb19-7" title="7"></a>
-<a class="sourceLine" id="cb19-8" title="8"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb19-9" title="9"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb19-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb19-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb19-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb19-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb19-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb19-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb19-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Cria uma nova coluna para a média ponderada</span></a>
+<a class="sourceLine" id="cb20-2" title="2">notas<span class="op">$</span>MP &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb20-5" title="5">    notas<span class="op">$</span>MP[i] &lt;-<span class="st"> </span><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[i, provas], <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb20-6" title="6">}</a>
+<a class="sourceLine" id="cb20-7" title="7"></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb20-9" title="9"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb20-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb20-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb20-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb20-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb20-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb20-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a></code></pre></div>
 <div class="alert alert-warning">
 <p>NOTA: uma função para calcular a média ponderada já existe implementada no R. Veja <code>?weighted.mean()</code> e confira os resultados obtidos aqui</p>
 </div>
 <p>Repare na construção da função acima: agora usamos dois argumentos, <code>notas</code> e <code>pesos</code>, pois precisamos dos doiss vetores para calcular a média ponderada. Repare também que ambos argumentos não possuem um valor padrão. Poderíamos, por exemplo, assumir valores padrão para os pesos, e deixar para que o usuário mude apenas se achar necessário.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Atribuindo pesos iguais para as provas como padrão</span></a>
-<a class="sourceLine" id="cb20-2" title="2">med.pond &lt;-<span class="st"> </span><span class="cf">function</span>(notas, <span class="dt">pesos =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(notas))){</a>
-<a class="sourceLine" id="cb20-3" title="3">    <span class="co">## Multiplica o valor de cada prova pelo seu peso</span></a>
-<a class="sourceLine" id="cb20-4" title="4">    pond &lt;-<span class="st"> </span>notas <span class="op">*</span><span class="st"> </span>pesos</a>
-<a class="sourceLine" id="cb20-5" title="5">    <span class="co">## Calcula o valor total dos pesos</span></a>
-<a class="sourceLine" id="cb20-6" title="6">    peso.total &lt;-<span class="st"> </span><span class="kw">sum</span>(pesos)</a>
-<a class="sourceLine" id="cb20-7" title="7">    <span class="co">## Calcula a soma da ponderação</span></a>
-<a class="sourceLine" id="cb20-8" title="8">    sum.pond &lt;-<span class="st"> </span><span class="kw">sum</span>(pond)</a>
-<a class="sourceLine" id="cb20-9" title="9">    <span class="co">## Finalmente calcula a média ponderada</span></a>
-<a class="sourceLine" id="cb20-10" title="10">    saida &lt;-<span class="st"> </span>sum.pond<span class="op">/</span>peso.total</a>
-<a class="sourceLine" id="cb20-11" title="11">    <span class="kw">return</span>(saida)</a>
-<a class="sourceLine" id="cb20-12" title="12">}</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">## Atribuindo pesos iguais para as provas como padrão</span></a>
+<a class="sourceLine" id="cb21-2" title="2">med.pond &lt;-<span class="st"> </span><span class="cf">function</span>(notas, <span class="dt">pesos =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(notas))){</a>
+<a class="sourceLine" id="cb21-3" title="3">    <span class="co">## Multiplica o valor de cada prova pelo seu peso</span></a>
+<a class="sourceLine" id="cb21-4" title="4">    pond &lt;-<span class="st"> </span>notas <span class="op">*</span><span class="st"> </span>pesos</a>
+<a class="sourceLine" id="cb21-5" title="5">    <span class="co">## Calcula o valor total dos pesos</span></a>
+<a class="sourceLine" id="cb21-6" title="6">    peso.total &lt;-<span class="st"> </span><span class="kw">sum</span>(pesos)</a>
+<a class="sourceLine" id="cb21-7" title="7">    <span class="co">## Calcula a soma da ponderação</span></a>
+<a class="sourceLine" id="cb21-8" title="8">    sum.pond &lt;-<span class="st"> </span><span class="kw">sum</span>(pond)</a>
+<a class="sourceLine" id="cb21-9" title="9">    <span class="co">## Finalmente calcula a média ponderada</span></a>
+<a class="sourceLine" id="cb21-10" title="10">    saida &lt;-<span class="st"> </span>sum.pond<span class="op">/</span>peso.total</a>
+<a class="sourceLine" id="cb21-11" title="11">    <span class="kw">return</span>(saida)</a>
+<a class="sourceLine" id="cb21-12" title="12">}</a></code></pre></div>
 <p>Repare que neste caso, como os pesos são iguais, a chamada da função sem alterar o argumento <code>pesos</code> gera o mesmo resultado do cálculo da média comum.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">## Cria uma nova coluna para a média ponderada para comparação</span></a>
-<a class="sourceLine" id="cb21-2" title="2">notas<span class="op">$</span>MP2 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
-<a class="sourceLine" id="cb21-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb21-5" title="5">    notas<span class="op">$</span>MP2[i] &lt;-<span class="st"> </span><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[i, provas])</a>
-<a class="sourceLine" id="cb21-6" title="6">}</a>
-<a class="sourceLine" id="cb21-7" title="7"></a>
-<a class="sourceLine" id="cb21-8" title="8"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb21-9" title="9"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb21-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb21-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb21-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb21-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb21-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb21-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb21-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb21-17" title="17"><span class="co">#        MP2</span></a>
-<a class="sourceLine" id="cb21-18" title="18"><span class="co"># 1 4.333333</span></a>
-<a class="sourceLine" id="cb21-19" title="19"><span class="co"># 2 5.000000</span></a>
-<a class="sourceLine" id="cb21-20" title="20"><span class="co"># 3 5.000000</span></a>
-<a class="sourceLine" id="cb21-21" title="21"><span class="co"># 4 6.666667</span></a>
-<a class="sourceLine" id="cb21-22" title="22"><span class="co"># 5 7.000000</span></a>
-<a class="sourceLine" id="cb21-23" title="23"><span class="co"># 6 4.333333</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">## Cria uma nova coluna para a média ponderada para comparação</span></a>
+<a class="sourceLine" id="cb22-2" title="2">notas<span class="op">$</span>MP2 &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co">## A estrutura de repetição fica</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb22-5" title="5">    notas<span class="op">$</span>MP2[i] &lt;-<span class="st"> </span><span class="kw">med.pond</span>(<span class="dt">notas =</span> notas[i, provas])</a>
+<a class="sourceLine" id="cb22-6" title="6">}</a>
+<a class="sourceLine" id="cb22-7" title="7"></a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb22-9" title="9"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb22-10" title="10"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb22-11" title="11"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb22-12" title="12"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb22-13" title="13"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb22-14" title="14"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb22-15" title="15"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb22-16" title="16"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb22-17" title="17"><span class="co">#        MP2</span></a>
+<a class="sourceLine" id="cb22-18" title="18"><span class="co"># 1 4.333333</span></a>
+<a class="sourceLine" id="cb22-19" title="19"><span class="co"># 2 5.000000</span></a>
+<a class="sourceLine" id="cb22-20" title="20"><span class="co"># 3 5.000000</span></a>
+<a class="sourceLine" id="cb22-21" title="21"><span class="co"># 4 6.666667</span></a>
+<a class="sourceLine" id="cb22-22" title="22"><span class="co"># 5 7.000000</span></a>
+<a class="sourceLine" id="cb22-23" title="23"><span class="co"># 6 4.333333</span></a></code></pre></div>
 </div>
 <div id="estrutura-de-seleção-if" class="section level1">
 <h1><span class="header-section-number">3</span> Estrutura de seleção <code>if()</code></h1>
 <p>Uma estrutura de seleção serve para executar algum comando apenas se alguma condição (em forma de <strong>expressão condicional</strong>) seja satisfeita. Geralmente é utilizada dentro de um <code>for()</code>.</p>
 <p>No exemplo inicial poderíamos querer imprimir um resultado caso satisfaça determinada condição. Por exemplo, se o valor de <code>x</code> for menor ou igual a 105, então imprima um texto informando isso.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">x &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">:</span><span class="dv">200</span></a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){</a>
-<a class="sourceLine" id="cb22-3" title="3">    <span class="cf">if</span>(x[j] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">105</span>){</a>
-<a class="sourceLine" id="cb22-4" title="4">        <span class="kw">print</span>(<span class="st">&quot;Menor ou igual a 105&quot;</span>)</a>
-<a class="sourceLine" id="cb22-5" title="5">    }</a>
-<a class="sourceLine" id="cb22-6" title="6">}</a>
-<a class="sourceLine" id="cb22-7" title="7"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb22-8" title="8"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb22-9" title="9"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb22-10" title="10"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb22-11" title="11"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb22-12" title="12"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a></code></pre></div>
-<p>Mas também podemos considerar o que aconteceria caso contrário. Por exemplo, se o valor de <code>x</code>for maior do que 105, então imprima outro texto.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">x &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">:</span><span class="dv">200</span></a>
 <a class="sourceLine" id="cb23-2" title="2"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){</a>
 <a class="sourceLine" id="cb23-3" title="3">    <span class="cf">if</span>(x[j] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">105</span>){</a>
 <a class="sourceLine" id="cb23-4" title="4">        <span class="kw">print</span>(<span class="st">&quot;Menor ou igual a 105&quot;</span>)</a>
-<a class="sourceLine" id="cb23-5" title="5">    } <span class="cf">else</span>{</a>
-<a class="sourceLine" id="cb23-6" title="6">        <span class="kw">print</span>(<span class="st">&quot;Maior do que 105&quot;</span>)</a>
-<a class="sourceLine" id="cb23-7" title="7">    }</a>
-<a class="sourceLine" id="cb23-8" title="8">}</a>
+<a class="sourceLine" id="cb23-5" title="5">    }</a>
+<a class="sourceLine" id="cb23-6" title="6">}</a>
+<a class="sourceLine" id="cb23-7" title="7"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb23-8" title="8"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
 <a class="sourceLine" id="cb23-9" title="9"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
 <a class="sourceLine" id="cb23-10" title="10"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
 <a class="sourceLine" id="cb23-11" title="11"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb23-12" title="12"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb23-13" title="13"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb23-14" title="14"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
-<a class="sourceLine" id="cb23-15" title="15"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
-<a class="sourceLine" id="cb23-16" title="16"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
-<a class="sourceLine" id="cb23-17" title="17"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
-<a class="sourceLine" id="cb23-18" title="18"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb23-12" title="12"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a></code></pre></div>
+<p>Mas também podemos considerar o que aconteceria caso contrário. Por exemplo, se o valor de <code>x</code>for maior do que 105, então imprima outro texto.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">x &lt;-<span class="st"> </span><span class="dv">100</span><span class="op">:</span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>){</a>
+<a class="sourceLine" id="cb24-3" title="3">    <span class="cf">if</span>(x[j] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">105</span>){</a>
+<a class="sourceLine" id="cb24-4" title="4">        <span class="kw">print</span>(<span class="st">&quot;Menor ou igual a 105&quot;</span>)</a>
+<a class="sourceLine" id="cb24-5" title="5">    } <span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb24-6" title="6">        <span class="kw">print</span>(<span class="st">&quot;Maior do que 105&quot;</span>)</a>
+<a class="sourceLine" id="cb24-7" title="7">    }</a>
+<a class="sourceLine" id="cb24-8" title="8">}</a>
+<a class="sourceLine" id="cb24-9" title="9"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-10" title="10"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-11" title="11"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-12" title="12"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-13" title="13"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-14" title="14"><span class="co"># [1] &quot;Menor ou igual a 105&quot;</span></a>
+<a class="sourceLine" id="cb24-15" title="15"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
+<a class="sourceLine" id="cb24-16" title="16"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
+<a class="sourceLine" id="cb24-17" title="17"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a>
+<a class="sourceLine" id="cb24-18" title="18"><span class="co"># [1] &quot;Maior do que 105&quot;</span></a></code></pre></div>
 <p>A sintaxe será sempre no formato:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="cf">if</span>(<span class="op">&lt;</span>condição<span class="op">&gt;</span>){</a>
-<a class="sourceLine" id="cb24-2" title="2">    <span class="op">&lt;</span>comandos que satisfazem a condição<span class="op">&gt;</span></a>
-<a class="sourceLine" id="cb24-3" title="3">} <span class="cf">else</span>{</a>
-<a class="sourceLine" id="cb24-4" title="4">   <span class="op">&lt;</span>comandos que não satisfazem a condição<span class="op">&gt;</span></a>
-<a class="sourceLine" id="cb24-5" title="5">}</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="cf">if</span>(<span class="op">&lt;</span>condição<span class="op">&gt;</span>){</a>
+<a class="sourceLine" id="cb25-2" title="2">    <span class="op">&lt;</span>comandos que satisfazem a condição<span class="op">&gt;</span></a>
+<a class="sourceLine" id="cb25-3" title="3">} <span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb25-4" title="4">   <span class="op">&lt;</span>comandos que não satisfazem a condição<span class="op">&gt;</span></a>
+<a class="sourceLine" id="cb25-5" title="5">}</a></code></pre></div>
 <p>Como vimos acima, a especificação do <code>else{}</code> não é obrigatória.</p>
 <p>Voltando ao exemplo das notas, podemos adicionar uma coluna com a condição do aluno: <code>aprovado</code> ou <code>reprovado</code> de acordo com a sua nota. Para isso precisamos criar uma condição (nesse caso se a nota é maior do que 7), e verificar se ela é verdadeira.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="co">## Nova coluna para armazenar a situacao</span></a>
-<a class="sourceLine" id="cb25-2" title="2">notas<span class="op">$</span>situacao &lt;-<span class="st"> </span><span class="ot">NA</span> <span class="co"># aqui usamos NA porque o resultado será um</span></a>
-<a class="sourceLine" id="cb25-3" title="3">                     <span class="co"># caracter</span></a>
-<a class="sourceLine" id="cb25-4" title="4"><span class="co">## Estrutura de repetição</span></a>
-<a class="sourceLine" id="cb25-5" title="5"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
-<a class="sourceLine" id="cb25-6" title="6">    <span class="co">## Estrutura de seleção (usando a média ponderada)</span></a>
-<a class="sourceLine" id="cb25-7" title="7">    <span class="cf">if</span>(notas<span class="op">$</span>MP[i] <span class="op">&gt;=</span><span class="st"> </span><span class="dv">7</span>){</a>
-<a class="sourceLine" id="cb25-8" title="8">        notas<span class="op">$</span>situacao[i] &lt;-<span class="st"> &quot;aprovado&quot;</span></a>
-<a class="sourceLine" id="cb25-9" title="9">    } <span class="cf">else</span>{</a>
-<a class="sourceLine" id="cb25-10" title="10">        notas<span class="op">$</span>situacao[i] &lt;-<span class="st"> &quot;reprovado&quot;</span></a>
-<a class="sourceLine" id="cb25-11" title="11">    }</a>
-<a class="sourceLine" id="cb25-12" title="12">}</a>
-<a class="sourceLine" id="cb25-13" title="13"></a>
-<a class="sourceLine" id="cb25-14" title="14"><span class="co">## Confere</span></a>
-<a class="sourceLine" id="cb25-15" title="15"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb25-16" title="16"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb25-17" title="17"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb25-18" title="18"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb25-19" title="19"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb25-20" title="20"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb25-21" title="21"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb25-22" title="22"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb25-23" title="23"><span class="co">#        MP2  situacao</span></a>
-<a class="sourceLine" id="cb25-24" title="24"><span class="co"># 1 4.333333 reprovado</span></a>
-<a class="sourceLine" id="cb25-25" title="25"><span class="co"># 2 5.000000 reprovado</span></a>
-<a class="sourceLine" id="cb25-26" title="26"><span class="co"># 3 5.000000 reprovado</span></a>
-<a class="sourceLine" id="cb25-27" title="27"><span class="co"># 4 6.666667 reprovado</span></a>
-<a class="sourceLine" id="cb25-28" title="28"><span class="co"># 5 7.000000  aprovado</span></a>
-<a class="sourceLine" id="cb25-29" title="29"><span class="co"># 6 4.333333 reprovado</span></a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co">## Nova coluna para armazenar a situacao</span></a>
+<a class="sourceLine" id="cb26-2" title="2">notas<span class="op">$</span>situacao &lt;-<span class="st"> </span><span class="ot">NA</span> <span class="co"># aqui usamos NA porque o resultado será um</span></a>
+<a class="sourceLine" id="cb26-3" title="3">                     <span class="co"># caracter</span></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="co">## Estrutura de repetição</span></a>
+<a class="sourceLine" id="cb26-5" title="5"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nlinhas){</a>
+<a class="sourceLine" id="cb26-6" title="6">    <span class="co">## Estrutura de seleção (usando a média ponderada)</span></a>
+<a class="sourceLine" id="cb26-7" title="7">    <span class="cf">if</span>(notas<span class="op">$</span>MP[i] <span class="op">&gt;=</span><span class="st"> </span><span class="dv">7</span>){</a>
+<a class="sourceLine" id="cb26-8" title="8">        notas<span class="op">$</span>situacao[i] &lt;-<span class="st"> &quot;aprovado&quot;</span></a>
+<a class="sourceLine" id="cb26-9" title="9">    } <span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb26-10" title="10">        notas<span class="op">$</span>situacao[i] &lt;-<span class="st"> &quot;reprovado&quot;</span></a>
+<a class="sourceLine" id="cb26-11" title="11">    }</a>
+<a class="sourceLine" id="cb26-12" title="12">}</a>
+<a class="sourceLine" id="cb26-13" title="13"></a>
+<a class="sourceLine" id="cb26-14" title="14"><span class="co">## Confere</span></a>
+<a class="sourceLine" id="cb26-15" title="15"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb26-16" title="16"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb26-17" title="17"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb26-18" title="18"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb26-19" title="19"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb26-20" title="20"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb26-21" title="21"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb26-22" title="22"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb26-23" title="23"><span class="co">#        MP2  situacao</span></a>
+<a class="sourceLine" id="cb26-24" title="24"><span class="co"># 1 4.333333 reprovado</span></a>
+<a class="sourceLine" id="cb26-25" title="25"><span class="co"># 2 5.000000 reprovado</span></a>
+<a class="sourceLine" id="cb26-26" title="26"><span class="co"># 3 5.000000 reprovado</span></a>
+<a class="sourceLine" id="cb26-27" title="27"><span class="co"># 4 6.666667 reprovado</span></a>
+<a class="sourceLine" id="cb26-28" title="28"><span class="co"># 5 7.000000  aprovado</span></a>
+<a class="sourceLine" id="cb26-29" title="29"><span class="co"># 6 4.333333 reprovado</span></a></code></pre></div>
 </div>
 <div id="o-modo-do-r-vetorização" class="section level1">
 <h1><span class="header-section-number">4</span> O modo do R: vetorização</h1>
 <p>As funções vetorizadas do R, além de facilitar e resumir a execução de tarefas repetitivas, também são computacionalmente mais eficientes, <em>i.e.</em> o tempo de execução das rotinas é muito mais rápido.</p>
 <p>Já vimos que a <strong>regra da reciclagem</strong> é uma forma de vetorizar cálculos no R. Os cálculos feitos com funções vetorizadas (ou usando a regra de reciclagem) são muito mais eficientes (e preferíveis) no R. Por exemplo, podemos criar um vetor muito grande de números e querer calcular o quadrado de cada número. Se pensássemos em usar uma estrutura de repetição, o cálculo seria o seguinte:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co">## Vetor com uma sequência de 1 a 1.000.000</span></a>
-<a class="sourceLine" id="cb26-2" title="2">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">1000000</span></a>
-<a class="sourceLine" id="cb26-3" title="3"><span class="co">## Calcula o quadrado de cada número da sequência em x usando for()</span></a>
-<a class="sourceLine" id="cb26-4" title="4">y1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x)) <span class="co"># vetor de mesmo comprimento de x que vai</span></a>
-<a class="sourceLine" id="cb26-5" title="5">                         <span class="co"># receber os resultados</span></a>
-<a class="sourceLine" id="cb26-6" title="6"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
-<a class="sourceLine" id="cb26-7" title="7">    y1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb26-8" title="8">}</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="co">## Vetor com uma sequência de 1 a 1.000.000</span></a>
+<a class="sourceLine" id="cb27-2" title="2">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">1000000</span></a>
+<a class="sourceLine" id="cb27-3" title="3"><span class="co">## Calcula o quadrado de cada número da sequência em x usando for()</span></a>
+<a class="sourceLine" id="cb27-4" title="4">y1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x)) <span class="co"># vetor de mesmo comprimento de x que vai</span></a>
+<a class="sourceLine" id="cb27-5" title="5">                         <span class="co"># receber os resultados</span></a>
+<a class="sourceLine" id="cb27-6" title="6"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
+<a class="sourceLine" id="cb27-7" title="7">    y1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb27-8" title="8">}</a></code></pre></div>
 <p>Mas, da forma vetorial e usando a regra da reciclagem, a mesma operação pode ser feita apenas com</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="co">## Calcula o quadrado de cada número da sequência em x usando a regra da</span></a>
-<a class="sourceLine" id="cb27-2" title="2"><span class="co">## reciclagem</span></a>
-<a class="sourceLine" id="cb27-3" title="3">y2 &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb27-4" title="4"><span class="co">## Confere os resultados</span></a>
-<a class="sourceLine" id="cb27-5" title="5"><span class="kw">identical</span>(y1, y2)</a>
-<a class="sourceLine" id="cb27-6" title="6"><span class="co"># [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co">## Calcula o quadrado de cada número da sequência em x usando a regra da</span></a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="co">## reciclagem</span></a>
+<a class="sourceLine" id="cb28-3" title="3">y2 &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb28-4" title="4"><span class="co">## Confere os resultados</span></a>
+<a class="sourceLine" id="cb28-5" title="5"><span class="kw">identical</span>(y1, y2)</a>
+<a class="sourceLine" id="cb28-6" title="6"><span class="co"># [1] TRUE</span></a></code></pre></div>
 <p>Note que os resultados são exatamente iguais, mas então porque se prefere o formato vetorial? Primeiro porque é muito mais simples de escrever, e segundo (e principalmente) porque a forma vetorizada é muito mais <strong>eficiente computacionalmente</strong>. A eficiência computacional pode ser medida de várias formas (alocação de memória, tempo de execução, etc), mas apenas para comparação, vamos medir o tempo de execução destas mesmas operações usando o <code>for()</code> e usando a regra da reciclagem.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co">## Tempo de execução usando for()</span></a>
-<a class="sourceLine" id="cb28-2" title="2">y1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x))</a>
-<a class="sourceLine" id="cb28-3" title="3">st1 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
-<a class="sourceLine" id="cb28-4" title="4">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
-<a class="sourceLine" id="cb28-5" title="5">        y1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb28-6" title="6">    }</a>
-<a class="sourceLine" id="cb28-7" title="7">)</a>
-<a class="sourceLine" id="cb28-8" title="8">st1</a>
-<a class="sourceLine" id="cb28-9" title="9"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb28-10" title="10"><span class="co">#   0.078   0.000   0.078</span></a>
-<a class="sourceLine" id="cb28-11" title="11"></a>
-<a class="sourceLine" id="cb28-12" title="12"><span class="co">## Tempo de execução usando a regra da reciclagem</span></a>
-<a class="sourceLine" id="cb28-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
-<a class="sourceLine" id="cb28-14" title="14">    y2 &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb28-15" title="15">)</a>
-<a class="sourceLine" id="cb28-16" title="16">st2</a>
-<a class="sourceLine" id="cb28-17" title="17"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb28-18" title="18"><span class="co">#   0.003   0.000   0.003</span></a></code></pre></div>
-<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.078/0.003 = 26 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co">## Tempo de execução usando for()</span></a>
+<a class="sourceLine" id="cb29-2" title="2">y1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x))</a>
+<a class="sourceLine" id="cb29-3" title="3">st1 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb29-4" title="4">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
+<a class="sourceLine" id="cb29-5" title="5">        y1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb29-6" title="6">    }</a>
+<a class="sourceLine" id="cb29-7" title="7">)</a>
+<a class="sourceLine" id="cb29-8" title="8">st1</a>
+<a class="sourceLine" id="cb29-9" title="9"><span class="co">#    user  system elapsed </span></a>
+<a class="sourceLine" id="cb29-10" title="10"><span class="co">#   0.077   0.000   0.077</span></a>
+<a class="sourceLine" id="cb29-11" title="11"></a>
+<a class="sourceLine" id="cb29-12" title="12"><span class="co">## Tempo de execução usando a regra da reciclagem</span></a>
+<a class="sourceLine" id="cb29-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
+<a class="sourceLine" id="cb29-14" title="14">    y2 &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb29-15" title="15">)</a>
+<a class="sourceLine" id="cb29-16" title="16">st2</a>
+<a class="sourceLine" id="cb29-17" title="17"><span class="co">#    user  system elapsed </span></a>
+<a class="sourceLine" id="cb29-18" title="18"><span class="co">#   0.002   0.000   0.003</span></a></code></pre></div>
+<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.077/0.003 = 25.67 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Uma nota de precaução
@@ -895,65 +895,48 @@ Uma nota de precaução
 <li>Crie um objeto com tamanho suficiente para armazenar <em>todos</em> os resultados do loop <strong>antes</strong> de executá-lo</li>
 </ol>
 <p>Veja este exemplo:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co">## Vetor com uma sequência de 1 a 1.000.000</span></a>
-<a class="sourceLine" id="cb29-2" title="2">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">1000000</span></a>
-<a class="sourceLine" id="cb29-3" title="3"></a>
-<a class="sourceLine" id="cb29-4" title="4"><span class="co">## Cria um objeto de armazenamento com o mesmo tamanho do resultado</span></a>
-<a class="sourceLine" id="cb29-5" title="5">st1 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb29-6" title="6">    out1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x))</a>
-<a class="sourceLine" id="cb29-7" title="7">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
-<a class="sourceLine" id="cb29-8" title="8">        out1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb29-9" title="9">    }</a>
-<a class="sourceLine" id="cb29-10" title="10">})</a>
-<a class="sourceLine" id="cb29-11" title="11"></a>
-<a class="sourceLine" id="cb29-12" title="12"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e vai &quot;crescendo&quot; esse vetor</span></a>
-<a class="sourceLine" id="cb29-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb29-14" title="14">    out2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb29-15" title="15">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
-<a class="sourceLine" id="cb29-16" title="16">        out2[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb29-17" title="17">    }</a>
-<a class="sourceLine" id="cb29-18" title="18">})</a>
-<a class="sourceLine" id="cb29-19" title="19"></a>
-<a class="sourceLine" id="cb29-20" title="20"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e cresce o vetor usando a função c()</span></a>
-<a class="sourceLine" id="cb29-21" title="21"><span class="co">## NUNCA faça isso!!</span></a>
-<a class="sourceLine" id="cb29-22" title="22">st3 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
-<a class="sourceLine" id="cb29-23" title="23">    out3 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb29-24" title="24">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
-<a class="sourceLine" id="cb29-25" title="25">        out3 &lt;-<span class="st"> </span><span class="kw">c</span>(out3, x[i]<span class="op">^</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb29-26" title="26">    }</a>
-<a class="sourceLine" id="cb29-27" title="27">})</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co">## Vetor com uma sequência de 1 a 1.000.000</span></a>
+<a class="sourceLine" id="cb30-2" title="2">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">1000000</span></a>
+<a class="sourceLine" id="cb30-3" title="3"></a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="co">## Cria um objeto de armazenamento com o mesmo tamanho do resultado</span></a>
+<a class="sourceLine" id="cb30-5" title="5">st1 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb30-6" title="6">    out1 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="kw">length</span>(x))</a>
+<a class="sourceLine" id="cb30-7" title="7">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
+<a class="sourceLine" id="cb30-8" title="8">        out1[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb30-9" title="9">    }</a>
+<a class="sourceLine" id="cb30-10" title="10">})</a>
+<a class="sourceLine" id="cb30-11" title="11"></a>
+<a class="sourceLine" id="cb30-12" title="12"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e vai &quot;crescendo&quot; esse vetor</span></a>
+<a class="sourceLine" id="cb30-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb30-14" title="14">    out2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb30-15" title="15">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
+<a class="sourceLine" id="cb30-16" title="16">        out2[i] &lt;-<span class="st"> </span>x[i]<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb30-17" title="17">    }</a>
+<a class="sourceLine" id="cb30-18" title="18">})</a>
+<a class="sourceLine" id="cb30-19" title="19"></a>
+<a class="sourceLine" id="cb30-20" title="20"><span class="co">## Cria um objeto de tamanho &quot;zero&quot; e cresce o vetor usando a função c()</span></a>
+<a class="sourceLine" id="cb30-21" title="21"><span class="co">## NUNCA faça isso!!</span></a>
+<a class="sourceLine" id="cb30-22" title="22">st3 &lt;-<span class="st"> </span><span class="kw">system.time</span>({</a>
+<a class="sourceLine" id="cb30-23" title="23">    out3 &lt;-<span class="st"> </span><span class="kw">numeric</span>(<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb30-24" title="24">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x)){</a>
+<a class="sourceLine" id="cb30-25" title="25">        out3 &lt;-<span class="st"> </span><span class="kw">c</span>(out3, x[i]<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb30-26" title="26">    }</a>
+<a class="sourceLine" id="cb30-27" title="27">})</a></code></pre></div>
 <p>Veja que os objetos criados são de fato idênticos, mas os tempos de execução são bem diferentes</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw">identical</span>(out1, out2, out3)</a>
-<a class="sourceLine" id="cb30-2" title="2"><span class="co"># [1] TRUE</span></a>
-<a class="sourceLine" id="cb30-3" title="3"><span class="kw">rbind</span>(st1, st2, st3)[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb30-4" title="4"><span class="co">#     user.self sys.self  elapsed</span></a>
-<a class="sourceLine" id="cb30-5" title="5"><span class="co"># st1     0.071    0.003    0.074</span></a>
-<a class="sourceLine" id="cb30-6" title="6"><span class="co"># st2     0.255    0.016    0.272</span></a>
-<a class="sourceLine" id="cb30-7" title="7"><span class="co"># st3  1179.823  147.493 1330.463</span></a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="kw">identical</span>(out1, out2, out3)</a>
+<a class="sourceLine" id="cb31-2" title="2"><span class="co"># [1] TRUE</span></a>
+<a class="sourceLine" id="cb31-3" title="3"><span class="kw">rbind</span>(st1, st2, st3)[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]</a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="co">#     user.self sys.self  elapsed</span></a>
+<a class="sourceLine" id="cb31-5" title="5"><span class="co"># st1     0.071    0.003    0.074</span></a>
+<a class="sourceLine" id="cb31-6" title="6"><span class="co"># st2     0.255    0.016    0.272</span></a>
+<a class="sourceLine" id="cb31-7" title="7"><span class="co"># st3  1179.823  147.493 1330.463</span></a></code></pre></div>
 <p>Essa simples diferença gera um aumento de tempo de execução da segunda forma, em relação à primeira, de aproximadamente 0.272/0.074 = 3.68 vezes. Já utilizando a terceira forma, “crescendo” o vetor com a função <code>c()</code>, o aumento de tempo (em relação ao primeiro) é de aproximadamente 1330.463/0.074 = 17979 vezes! Isso acontece porque o vetor <code>out</code> precisa ter seu tamanho aumentado com um elemento a cada iteração. Para fazer isso, o R precisa encontrar um espaço na memória que possa armazenar o objeto maior. É necessário então copiar o vetor de saída e apagar sua versão anterior antes de seguir para o próximo loop. Ao final, foi necessário escrever um milhão de vezes na memória do computador.</p>
 <p>Já no primeiro caso, o tamanho do vetor de armazenamento nunca muda, e a memória para esse vetor já foi alocada previamente, de uma única vez.</p>
 <p><img src="img/R_club.jpg" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <p>Voltando ao exemplo das notas, por exemplo, o cálculo da média simples poderia ser feita diretamente com a função <code>apply()</code></p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">notas<span class="op">$</span>media.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb31-2" title="2"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb31-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb31-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb31-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb31-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb31-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb31-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb31-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb31-10" title="10"><span class="co">#        MP2  situacao media.apply</span></a>
-<a class="sourceLine" id="cb31-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333</span></a>
-<a class="sourceLine" id="cb31-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000</span></a>
-<a class="sourceLine" id="cb31-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000</span></a>
-<a class="sourceLine" id="cb31-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667</span></a>
-<a class="sourceLine" id="cb31-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000</span></a>
-<a class="sourceLine" id="cb31-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333</span></a></code></pre></div>
-<p>As médias ponderadas poderiam ser calculadas da mesma forma, e usando a função que criamos anteriormente</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">notas<span class="op">$</span>MP.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> med.pond)</a>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">notas<span class="op">$</span>media.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> mean)</a>
 <a class="sourceLine" id="cb32-2" title="2"><span class="kw">head</span>(notas)</a>
 <a class="sourceLine" id="cb32-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
 <a class="sourceLine" id="cb32-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
@@ -962,37 +945,33 @@ Uma nota de precaução
 <a class="sourceLine" id="cb32-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
 <a class="sourceLine" id="cb32-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
 <a class="sourceLine" id="cb32-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb32-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply</span></a>
-<a class="sourceLine" id="cb32-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333 4.333333</span></a>
-<a class="sourceLine" id="cb32-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb32-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000 5.000000</span></a>
-<a class="sourceLine" id="cb32-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667 6.666667</span></a>
-<a class="sourceLine" id="cb32-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000 7.000000</span></a>
-<a class="sourceLine" id="cb32-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333 4.333333</span></a></code></pre></div>
+<a class="sourceLine" id="cb32-10" title="10"><span class="co">#        MP2  situacao media.apply</span></a>
+<a class="sourceLine" id="cb32-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333</span></a>
+<a class="sourceLine" id="cb32-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000</span></a>
+<a class="sourceLine" id="cb32-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000</span></a>
+<a class="sourceLine" id="cb32-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667</span></a>
+<a class="sourceLine" id="cb32-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000</span></a>
+<a class="sourceLine" id="cb32-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333</span></a></code></pre></div>
+<p>As médias ponderadas poderiam ser calculadas da mesma forma, e usando a função que criamos anteriormente</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">notas<span class="op">$</span>MP.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> med.pond)</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb33-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb33-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb33-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb33-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb33-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb33-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb33-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb33-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply</span></a>
+<a class="sourceLine" id="cb33-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333 4.333333</span></a>
+<a class="sourceLine" id="cb33-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb33-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000 5.000000</span></a>
+<a class="sourceLine" id="cb33-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667 6.666667</span></a>
+<a class="sourceLine" id="cb33-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000 7.000000</span></a>
+<a class="sourceLine" id="cb33-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333 4.333333</span></a></code></pre></div>
 <p>Mas note que como temos o argumento <code>pesos</code> especificado com um padrão, devemos alterar na própria função <code>apply()</code></p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">notas<span class="op">$</span>MP.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb33-2" title="2">                        <span class="dt">FUN =</span> med.pond, <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb33-3" title="3"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb33-4" title="4"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb33-5" title="5"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb33-6" title="6"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb33-7" title="7"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb33-8" title="8"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb33-9" title="9"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb33-10" title="10"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb33-11" title="11"><span class="co">#        MP2  situacao media.apply MP.apply</span></a>
-<a class="sourceLine" id="cb33-12" title="12"><span class="co"># 1 4.333333 reprovado    4.333333      4.0</span></a>
-<a class="sourceLine" id="cb33-13" title="13"><span class="co"># 2 5.000000 reprovado    5.000000      5.1</span></a>
-<a class="sourceLine" id="cb33-14" title="14"><span class="co"># 3 5.000000 reprovado    5.000000      4.9</span></a>
-<a class="sourceLine" id="cb33-15" title="15"><span class="co"># 4 6.666667 reprovado    6.666667      6.9</span></a>
-<a class="sourceLine" id="cb33-16" title="16"><span class="co"># 5 7.000000  aprovado    7.000000      7.1</span></a>
-<a class="sourceLine" id="cb33-17" title="17"><span class="co"># 6 4.333333 reprovado    4.333333      4.2</span></a></code></pre></div>
-<div class="alert alert-warning">
-<p>NOTA: veja que isso é possível devido à presença do argumento <code>...</code> na função <code>apply()</code>, que permite passar argumentos de outras funções dentro dela.</p>
-</div>
-<p>Também poderíamos usar a função <code>weighted.mean()</code> implementada no R</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">notas<span class="op">$</span>MP2.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb34-2" title="2">                         <span class="dt">FUN =</span> weighted.mean, <span class="dt">w =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">notas<span class="op">$</span>MP.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb34-2" title="2">                        <span class="dt">FUN =</span> med.pond, <span class="dt">pesos =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
 <a class="sourceLine" id="cb34-3" title="3"><span class="kw">head</span>(notas)</a>
 <a class="sourceLine" id="cb34-4" title="4"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
 <a class="sourceLine" id="cb34-5" title="5"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
@@ -1001,138 +980,159 @@ Uma nota de precaução
 <a class="sourceLine" id="cb34-8" title="8"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
 <a class="sourceLine" id="cb34-9" title="9"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
 <a class="sourceLine" id="cb34-10" title="10"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb34-11" title="11"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply</span></a>
-<a class="sourceLine" id="cb34-12" title="12"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0</span></a>
-<a class="sourceLine" id="cb34-13" title="13"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1</span></a>
-<a class="sourceLine" id="cb34-14" title="14"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9</span></a>
-<a class="sourceLine" id="cb34-15" title="15"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9</span></a>
-<a class="sourceLine" id="cb34-16" title="16"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1</span></a>
-<a class="sourceLine" id="cb34-17" title="17"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-11" title="11"><span class="co">#        MP2  situacao media.apply MP.apply</span></a>
+<a class="sourceLine" id="cb34-12" title="12"><span class="co"># 1 4.333333 reprovado    4.333333      4.0</span></a>
+<a class="sourceLine" id="cb34-13" title="13"><span class="co"># 2 5.000000 reprovado    5.000000      5.1</span></a>
+<a class="sourceLine" id="cb34-14" title="14"><span class="co"># 3 5.000000 reprovado    5.000000      4.9</span></a>
+<a class="sourceLine" id="cb34-15" title="15"><span class="co"># 4 6.666667 reprovado    6.666667      6.9</span></a>
+<a class="sourceLine" id="cb34-16" title="16"><span class="co"># 5 7.000000  aprovado    7.000000      7.1</span></a>
+<a class="sourceLine" id="cb34-17" title="17"><span class="co"># 6 4.333333 reprovado    4.333333      4.2</span></a></code></pre></div>
+<div class="alert alert-warning">
+<p>NOTA: veja que isso é possível devido à presença do argumento <code>...</code> na função <code>apply()</code>, que permite passar argumentos de outras funções dentro dela.</p>
+</div>
+<p>Também poderíamos usar a função <code>weighted.mean()</code> implementada no R</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">notas<span class="op">$</span>MP2.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb35-2" title="2">                         <span class="dt">FUN =</span> weighted.mean, <span class="dt">w =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb35-4" title="4"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb35-5" title="5"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb35-6" title="6"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb35-7" title="7"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb35-8" title="8"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb35-9" title="9"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb35-10" title="10"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb35-11" title="11"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply</span></a>
+<a class="sourceLine" id="cb35-12" title="12"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0</span></a>
+<a class="sourceLine" id="cb35-13" title="13"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1</span></a>
+<a class="sourceLine" id="cb35-14" title="14"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9</span></a>
+<a class="sourceLine" id="cb35-15" title="15"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9</span></a>
+<a class="sourceLine" id="cb35-16" title="16"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1</span></a>
+<a class="sourceLine" id="cb35-17" title="17"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2</span></a></code></pre></div>
 <p>O Coeficiente de Variação poderia ser calculado usando nossa função <code>cv()</code></p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">notas<span class="op">$</span>CV.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> cv)</a>
-<a class="sourceLine" id="cb35-2" title="2"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb35-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb35-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb35-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb35-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb35-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb35-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb35-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb35-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply  CV.apply</span></a>
-<a class="sourceLine" id="cb35-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0 0.8104349</span></a>
-<a class="sourceLine" id="cb35-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1 0.5291503</span></a>
-<a class="sourceLine" id="cb35-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9 0.7211103</span></a>
-<a class="sourceLine" id="cb35-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9 0.7399324</span></a>
-<a class="sourceLine" id="cb35-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1 0.1428571</span></a>
-<a class="sourceLine" id="cb35-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2 1.1842157</span></a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">notas<span class="op">$</span>CV.apply &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> cv)</a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb36-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb36-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb36-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb36-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb36-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb36-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb36-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply  CV.apply</span></a>
+<a class="sourceLine" id="cb36-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0 0.8104349</span></a>
+<a class="sourceLine" id="cb36-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1 0.5291503</span></a>
+<a class="sourceLine" id="cb36-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9 0.7211103</span></a>
+<a class="sourceLine" id="cb36-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9 0.7399324</span></a>
+<a class="sourceLine" id="cb36-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1 0.1428571</span></a>
+<a class="sourceLine" id="cb36-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2 1.1842157</span></a></code></pre></div>
 <p>Finalmente, a estrutura de repetição <code>if()</code> também possui uma forma vetorizada através da função <code>ifelse()</code>. Essa função funciona da seguinte forma:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">ifelse</span>(<span class="op">&lt;</span>condição<span class="op">&gt;</span>, <span class="op">&lt;</span>valor se verdadeiro<span class="op">&gt;</span>, <span class="op">&lt;</span>valor se falso<span class="op">&gt;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw">ifelse</span>(<span class="op">&lt;</span>condição<span class="op">&gt;</span>, <span class="op">&lt;</span>valor se verdadeiro<span class="op">&gt;</span>, <span class="op">&lt;</span>valor se falso<span class="op">&gt;</span>)</a></code></pre></div>
 <p>Dessa forma, a atribuição da situação dos alunos poderia ser feita da seguinte forma:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">notas<span class="op">$</span>situacao2 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(notas<span class="op">$</span>MP <span class="op">&gt;=</span><span class="st"> </span><span class="dv">7</span>, <span class="st">&quot;aprovado&quot;</span>, <span class="st">&quot;reprovado&quot;</span>)</a>
-<a class="sourceLine" id="cb37-2" title="2"><span class="kw">head</span>(notas)</a>
-<a class="sourceLine" id="cb37-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
-<a class="sourceLine" id="cb37-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
-<a class="sourceLine" id="cb37-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
-<a class="sourceLine" id="cb37-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
-<a class="sourceLine" id="cb37-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
-<a class="sourceLine" id="cb37-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
-<a class="sourceLine" id="cb37-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
-<a class="sourceLine" id="cb37-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply  CV.apply situacao2</span></a>
-<a class="sourceLine" id="cb37-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0 0.8104349 reprovado</span></a>
-<a class="sourceLine" id="cb37-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1 0.5291503 reprovado</span></a>
-<a class="sourceLine" id="cb37-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9 0.7211103 reprovado</span></a>
-<a class="sourceLine" id="cb37-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9 0.7399324 reprovado</span></a>
-<a class="sourceLine" id="cb37-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1 0.1428571  aprovado</span></a>
-<a class="sourceLine" id="cb37-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2 1.1842157 reprovado</span></a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">notas<span class="op">$</span>situacao2 &lt;-<span class="st"> </span><span class="kw">ifelse</span>(notas<span class="op">$</span>MP <span class="op">&gt;=</span><span class="st"> </span><span class="dv">7</span>, <span class="st">&quot;aprovado&quot;</span>, <span class="st">&quot;reprovado&quot;</span>)</a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="kw">head</span>(notas)</a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="co">#      nome prova1 prova2 prova3    media   media2   media3        CV  MP</span></a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="co"># 1 Aluno_1      8      4      1 4.333333 4.333333 4.333333 0.8104349 4.0</span></a>
+<a class="sourceLine" id="cb38-5" title="5"><span class="co"># 2 Aluno_2      2      7      6 5.000000 5.000000 5.000000 0.5291503 5.1</span></a>
+<a class="sourceLine" id="cb38-6" title="6"><span class="co"># 3 Aluno_3      9      2      4 5.000000 5.000000 5.000000 0.7211103 4.9</span></a>
+<a class="sourceLine" id="cb38-7" title="7"><span class="co"># 4 Aluno_4      1     10      9 6.666667 6.666667 6.666667 0.7399324 6.9</span></a>
+<a class="sourceLine" id="cb38-8" title="8"><span class="co"># 5 Aluno_5      7      6      8 7.000000 7.000000 7.000000 0.1428571 7.1</span></a>
+<a class="sourceLine" id="cb38-9" title="9"><span class="co"># 6 Aluno_6     10      0      3 4.333333 4.333333 4.333333 1.1842157 4.2</span></a>
+<a class="sourceLine" id="cb38-10" title="10"><span class="co">#        MP2  situacao media.apply MP.apply MP2.apply  CV.apply situacao2</span></a>
+<a class="sourceLine" id="cb38-11" title="11"><span class="co"># 1 4.333333 reprovado    4.333333      4.0       4.0 0.8104349 reprovado</span></a>
+<a class="sourceLine" id="cb38-12" title="12"><span class="co"># 2 5.000000 reprovado    5.000000      5.1       5.1 0.5291503 reprovado</span></a>
+<a class="sourceLine" id="cb38-13" title="13"><span class="co"># 3 5.000000 reprovado    5.000000      4.9       4.9 0.7211103 reprovado</span></a>
+<a class="sourceLine" id="cb38-14" title="14"><span class="co"># 4 6.666667 reprovado    6.666667      6.9       6.9 0.7399324 reprovado</span></a>
+<a class="sourceLine" id="cb38-15" title="15"><span class="co"># 5 7.000000  aprovado    7.000000      7.1       7.1 0.1428571  aprovado</span></a>
+<a class="sourceLine" id="cb38-16" title="16"><span class="co"># 6 4.333333 reprovado    4.333333      4.2       4.2 1.1842157 reprovado</span></a></code></pre></div>
 </div>
 <div id="a-família-de-funções-apply" class="section level1">
 <h1><span class="header-section-number">5</span> A família de funções <code>*apply()</code></h1>
 <p>As funções da chamada família <code>*apply()</code> são as implementações básicas de operações vetorizadas no R. Sempre que possível é desejável utilizar estas funções no lugar das estruturas de repetição. Em qualquer situação, a performance destas funções (em tempo computacional) será sempre superior</p>
 <p>A função <code>apply()</code>, como já vista acima, é capaz de fazer operações nas linhas (<code>MARGIN = 1</code>) e também nas colunas (<code>MARGIN = 2</code>).</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="co">## Médias por LINHA: média das 3 provas para cada aluno</span></a>
-<a class="sourceLine" id="cb38-2" title="2"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb38-3" title="3"><span class="co">#  [1] 4.333333 5.000000 5.000000 6.666667 7.000000 4.333333 3.000000</span></a>
-<a class="sourceLine" id="cb38-4" title="4"><span class="co">#  [8] 7.000000 4.000000 5.000000 2.666667 4.000000 6.000000 5.666667</span></a>
-<a class="sourceLine" id="cb38-5" title="5"><span class="co"># [15] 6.000000 4.333333 4.666667 6.333333 5.000000 4.333333 6.333333</span></a>
-<a class="sourceLine" id="cb38-6" title="6"><span class="co"># [22] 4.666667 3.666667 3.333333 2.666667 7.000000 5.666667 8.000000</span></a>
-<a class="sourceLine" id="cb38-7" title="7"><span class="co"># [29] 3.666667 7.333333</span></a>
-<a class="sourceLine" id="cb38-8" title="8"><span class="co">## Médias por COLUNA: média de cada uma das 3 provas para todos os</span></a>
-<a class="sourceLine" id="cb38-9" title="9"><span class="co">## alunos</span></a>
-<a class="sourceLine" id="cb38-10" title="10"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">2</span>, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb38-11" title="11"><span class="co">#   prova1   prova2   prova3 </span></a>
-<a class="sourceLine" id="cb38-12" title="12"><span class="co"># 4.433333 5.433333 5.400000</span></a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="co">## Médias por LINHA: média das 3 provas para cada aluno</span></a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb39-3" title="3"><span class="co">#  [1] 4.333333 5.000000 5.000000 6.666667 7.000000 4.333333 3.000000</span></a>
+<a class="sourceLine" id="cb39-4" title="4"><span class="co">#  [8] 7.000000 4.000000 5.000000 2.666667 4.000000 6.000000 5.666667</span></a>
+<a class="sourceLine" id="cb39-5" title="5"><span class="co"># [15] 6.000000 4.333333 4.666667 6.333333 5.000000 4.333333 6.333333</span></a>
+<a class="sourceLine" id="cb39-6" title="6"><span class="co"># [22] 4.666667 3.666667 3.333333 2.666667 7.000000 5.666667 8.000000</span></a>
+<a class="sourceLine" id="cb39-7" title="7"><span class="co"># [29] 3.666667 7.333333</span></a>
+<a class="sourceLine" id="cb39-8" title="8"><span class="co">## Médias por COLUNA: média de cada uma das 3 provas para todos os</span></a>
+<a class="sourceLine" id="cb39-9" title="9"><span class="co">## alunos</span></a>
+<a class="sourceLine" id="cb39-10" title="10"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">2</span>, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb39-11" title="11"><span class="co">#   prova1   prova2   prova3 </span></a>
+<a class="sourceLine" id="cb39-12" title="12"><span class="co"># 4.433333 5.433333 5.400000</span></a></code></pre></div>
 <p>As funções <code>sapply()</code> e <code>lapply()</code> são semelhantes à <code>apply()</code>, mas operam somente nas colunas.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="co">## sapply simpilifica o resultado para um vetor</span></a>
-<a class="sourceLine" id="cb39-2" title="2"><span class="kw">sapply</span>(notas[, provas],  mean)</a>
-<a class="sourceLine" id="cb39-3" title="3"><span class="co">#   prova1   prova2   prova3 </span></a>
-<a class="sourceLine" id="cb39-4" title="4"><span class="co"># 4.433333 5.433333 5.400000</span></a>
-<a class="sourceLine" id="cb39-5" title="5"><span class="co">## lapply retorna o resultado em formato de lista</span></a>
-<a class="sourceLine" id="cb39-6" title="6"><span class="kw">lapply</span>(notas[, provas],  mean)</a>
-<a class="sourceLine" id="cb39-7" title="7"><span class="co"># $prova1</span></a>
-<a class="sourceLine" id="cb39-8" title="8"><span class="co"># [1] 4.433333</span></a>
-<a class="sourceLine" id="cb39-9" title="9"><span class="co"># </span></a>
-<a class="sourceLine" id="cb39-10" title="10"><span class="co"># $prova2</span></a>
-<a class="sourceLine" id="cb39-11" title="11"><span class="co"># [1] 5.433333</span></a>
-<a class="sourceLine" id="cb39-12" title="12"><span class="co"># </span></a>
-<a class="sourceLine" id="cb39-13" title="13"><span class="co"># $prova3</span></a>
-<a class="sourceLine" id="cb39-14" title="14"><span class="co"># [1] 5.4</span></a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="co">## sapply simpilifica o resultado para um vetor</span></a>
+<a class="sourceLine" id="cb40-2" title="2"><span class="kw">sapply</span>(notas[, provas],  mean)</a>
+<a class="sourceLine" id="cb40-3" title="3"><span class="co">#   prova1   prova2   prova3 </span></a>
+<a class="sourceLine" id="cb40-4" title="4"><span class="co"># 4.433333 5.433333 5.400000</span></a>
+<a class="sourceLine" id="cb40-5" title="5"><span class="co">## lapply retorna o resultado em formato de lista</span></a>
+<a class="sourceLine" id="cb40-6" title="6"><span class="kw">lapply</span>(notas[, provas],  mean)</a>
+<a class="sourceLine" id="cb40-7" title="7"><span class="co"># $prova1</span></a>
+<a class="sourceLine" id="cb40-8" title="8"><span class="co"># [1] 4.433333</span></a>
+<a class="sourceLine" id="cb40-9" title="9"><span class="co"># </span></a>
+<a class="sourceLine" id="cb40-10" title="10"><span class="co"># $prova2</span></a>
+<a class="sourceLine" id="cb40-11" title="11"><span class="co"># [1] 5.433333</span></a>
+<a class="sourceLine" id="cb40-12" title="12"><span class="co"># </span></a>
+<a class="sourceLine" id="cb40-13" title="13"><span class="co"># $prova3</span></a>
+<a class="sourceLine" id="cb40-14" title="14"><span class="co"># [1] 5.4</span></a></code></pre></div>
 <p>A função <code>tapply()</code> é similar às anteriores (opera somente nas colunas), mas permite separar o resultado por alguma outr variável (<code>INDEX</code>).</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="co">## Média da prova 1 por situação</span></a>
-<a class="sourceLine" id="cb40-2" title="2"><span class="kw">tapply</span>(notas<span class="op">$</span>prova1,  notas<span class="op">$</span>situacao,  mean)</a>
-<a class="sourceLine" id="cb40-3" title="3"><span class="co">#  aprovado reprovado </span></a>
-<a class="sourceLine" id="cb40-4" title="4"><span class="co">#      5.00      4.32</span></a>
-<a class="sourceLine" id="cb40-5" title="5"><span class="co">## Média da prova 2 por situação</span></a>
-<a class="sourceLine" id="cb40-6" title="6"><span class="kw">tapply</span>(notas<span class="op">$</span>prova2,  notas<span class="op">$</span>situacao,  mean)</a>
-<a class="sourceLine" id="cb40-7" title="7"><span class="co">#  aprovado reprovado </span></a>
-<a class="sourceLine" id="cb40-8" title="8"><span class="co">#       8.6       4.8</span></a>
-<a class="sourceLine" id="cb40-9" title="9"><span class="co">## Média da prova 3 por situação</span></a>
-<a class="sourceLine" id="cb40-10" title="10"><span class="kw">tapply</span>(notas<span class="op">$</span>prova3,  notas<span class="op">$</span>situacao,  mean)</a>
-<a class="sourceLine" id="cb40-11" title="11"><span class="co">#  aprovado reprovado </span></a>
-<a class="sourceLine" id="cb40-12" title="12"><span class="co">#      8.20      4.84</span></a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="co">## Média da prova 1 por situação</span></a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="kw">tapply</span>(notas<span class="op">$</span>prova1,  notas<span class="op">$</span>situacao,  mean)</a>
+<a class="sourceLine" id="cb41-3" title="3"><span class="co">#  aprovado reprovado </span></a>
+<a class="sourceLine" id="cb41-4" title="4"><span class="co">#      5.00      4.32</span></a>
+<a class="sourceLine" id="cb41-5" title="5"><span class="co">## Média da prova 2 por situação</span></a>
+<a class="sourceLine" id="cb41-6" title="6"><span class="kw">tapply</span>(notas<span class="op">$</span>prova2,  notas<span class="op">$</span>situacao,  mean)</a>
+<a class="sourceLine" id="cb41-7" title="7"><span class="co">#  aprovado reprovado </span></a>
+<a class="sourceLine" id="cb41-8" title="8"><span class="co">#       8.6       4.8</span></a>
+<a class="sourceLine" id="cb41-9" title="9"><span class="co">## Média da prova 3 por situação</span></a>
+<a class="sourceLine" id="cb41-10" title="10"><span class="kw">tapply</span>(notas<span class="op">$</span>prova3,  notas<span class="op">$</span>situacao,  mean)</a>
+<a class="sourceLine" id="cb41-11" title="11"><span class="co">#  aprovado reprovado </span></a>
+<a class="sourceLine" id="cb41-12" title="12"><span class="co">#      8.20      4.84</span></a></code></pre></div>
 <p>No entanto, a função <code>tapply()</code> aceita somente uma variável por vez. Se quisermos, por exemplo, obter a média por situação das 3 provas de uma só vez, podemos usar a função <code>aggregate()</code>.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="co">## Mesmo resultado da tapply, mas agora em formato de data frame</span></a>
-<a class="sourceLine" id="cb41-2" title="2"><span class="kw">aggregate</span>(prova1 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb41-3" title="3"><span class="co">#    situacao prova1</span></a>
-<a class="sourceLine" id="cb41-4" title="4"><span class="co"># 1  aprovado   5.00</span></a>
-<a class="sourceLine" id="cb41-5" title="5"><span class="co"># 2 reprovado   4.32</span></a>
-<a class="sourceLine" id="cb41-6" title="6"><span class="kw">aggregate</span>(prova2 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb41-7" title="7"><span class="co">#    situacao prova2</span></a>
-<a class="sourceLine" id="cb41-8" title="8"><span class="co"># 1  aprovado    8.6</span></a>
-<a class="sourceLine" id="cb41-9" title="9"><span class="co"># 2 reprovado    4.8</span></a>
-<a class="sourceLine" id="cb41-10" title="10"><span class="kw">aggregate</span>(prova3 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb41-11" title="11"><span class="co">#    situacao prova3</span></a>
-<a class="sourceLine" id="cb41-12" title="12"><span class="co"># 1  aprovado   8.20</span></a>
-<a class="sourceLine" id="cb41-13" title="13"><span class="co"># 2 reprovado   4.84</span></a>
-<a class="sourceLine" id="cb41-14" title="14"><span class="co">## Mas aqui podemos passar as 3 colunas de uma vez</span></a>
-<a class="sourceLine" id="cb41-15" title="15"><span class="kw">aggregate</span>(<span class="kw">cbind</span>(prova1, prova2, prova3) <span class="op">~</span><span class="st"> </span>situacao,</a>
-<a class="sourceLine" id="cb41-16" title="16">          <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb41-17" title="17"><span class="co">#    situacao prova1 prova2 prova3</span></a>
-<a class="sourceLine" id="cb41-18" title="18"><span class="co"># 1  aprovado   5.00    8.6   8.20</span></a>
-<a class="sourceLine" id="cb41-19" title="19"><span class="co"># 2 reprovado   4.32    4.8   4.84</span></a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="co">## Mesmo resultado da tapply, mas agora em formato de data frame</span></a>
+<a class="sourceLine" id="cb42-2" title="2"><span class="kw">aggregate</span>(prova1 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb42-3" title="3"><span class="co">#    situacao prova1</span></a>
+<a class="sourceLine" id="cb42-4" title="4"><span class="co"># 1  aprovado   5.00</span></a>
+<a class="sourceLine" id="cb42-5" title="5"><span class="co"># 2 reprovado   4.32</span></a>
+<a class="sourceLine" id="cb42-6" title="6"><span class="kw">aggregate</span>(prova2 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb42-7" title="7"><span class="co">#    situacao prova2</span></a>
+<a class="sourceLine" id="cb42-8" title="8"><span class="co"># 1  aprovado    8.6</span></a>
+<a class="sourceLine" id="cb42-9" title="9"><span class="co"># 2 reprovado    4.8</span></a>
+<a class="sourceLine" id="cb42-10" title="10"><span class="kw">aggregate</span>(prova3 <span class="op">~</span><span class="st"> </span>situacao, <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb42-11" title="11"><span class="co">#    situacao prova3</span></a>
+<a class="sourceLine" id="cb42-12" title="12"><span class="co"># 1  aprovado   8.20</span></a>
+<a class="sourceLine" id="cb42-13" title="13"><span class="co"># 2 reprovado   4.84</span></a>
+<a class="sourceLine" id="cb42-14" title="14"><span class="co">## Mas aqui podemos passar as 3 colunas de uma vez</span></a>
+<a class="sourceLine" id="cb42-15" title="15"><span class="kw">aggregate</span>(<span class="kw">cbind</span>(prova1, prova2, prova3) <span class="op">~</span><span class="st"> </span>situacao,</a>
+<a class="sourceLine" id="cb42-16" title="16">          <span class="dt">data =</span> notas, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb42-17" title="17"><span class="co">#    situacao prova1 prova2 prova3</span></a>
+<a class="sourceLine" id="cb42-18" title="18"><span class="co"># 1  aprovado   5.00    8.6   8.20</span></a>
+<a class="sourceLine" id="cb42-19" title="19"><span class="co"># 2 reprovado   4.32    4.8   4.84</span></a></code></pre></div>
 </div>
 <div id="outras-estruturas-while-e-repeat" class="section level1">
 <h1><span class="header-section-number">6</span> Outras estruturas: while e repeat</h1>
 <p>O <code>while</code> executa comandos enquanto uma determinada condição permanece verdadeira.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="co">## Calcule a soma em 1,2,3... até que o soma seja maior do que 1000</span></a>
-<a class="sourceLine" id="cb42-2" title="2">n &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb42-3" title="3">soma &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb42-4" title="4"><span class="cf">while</span>(soma <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1000</span>){</a>
-<a class="sourceLine" id="cb42-5" title="5">    n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb42-6" title="6">    soma &lt;-<span class="st"> </span>soma <span class="op">+</span><span class="st"> </span>n</a>
-<a class="sourceLine" id="cb42-7" title="7">}</a>
-<a class="sourceLine" id="cb42-8" title="8">soma</a>
-<a class="sourceLine" id="cb42-9" title="9"><span class="co"># [1] 1035</span></a></code></pre></div>
-<p>O <code>repeat</code> é ainda mais básico, e irá executar comandos até que você explicitamente pare a execução com o comando <code>break</code>.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1"><span class="co">## Mesmo exemplo</span></a>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1"><span class="co">## Calcule a soma em 1,2,3... até que o soma seja maior do que 1000</span></a>
 <a class="sourceLine" id="cb43-2" title="2">n &lt;-<span class="st"> </span><span class="dv">0</span></a>
 <a class="sourceLine" id="cb43-3" title="3">soma &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb43-4" title="4"><span class="cf">repeat</span>{</a>
+<a class="sourceLine" id="cb43-4" title="4"><span class="cf">while</span>(soma <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1000</span>){</a>
 <a class="sourceLine" id="cb43-5" title="5">    n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
 <a class="sourceLine" id="cb43-6" title="6">    soma &lt;-<span class="st"> </span>soma <span class="op">+</span><span class="st"> </span>n</a>
-<a class="sourceLine" id="cb43-7" title="7">    <span class="cf">if</span>(soma <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>) <span class="cf">break</span></a>
-<a class="sourceLine" id="cb43-8" title="8">}</a>
-<a class="sourceLine" id="cb43-9" title="9">soma</a>
-<a class="sourceLine" id="cb43-10" title="10"><span class="co"># [1] 1035</span></a></code></pre></div>
+<a class="sourceLine" id="cb43-7" title="7">}</a>
+<a class="sourceLine" id="cb43-8" title="8">soma</a>
+<a class="sourceLine" id="cb43-9" title="9"><span class="co"># [1] 1035</span></a></code></pre></div>
+<p>O <code>repeat</code> é ainda mais básico, e irá executar comandos até que você explicitamente pare a execução com o comando <code>break</code>.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="co">## Mesmo exemplo</span></a>
+<a class="sourceLine" id="cb44-2" title="2">n &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb44-3" title="3">soma &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb44-4" title="4"><span class="cf">repeat</span>{</a>
+<a class="sourceLine" id="cb44-5" title="5">    n &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb44-6" title="6">    soma &lt;-<span class="st"> </span>soma <span class="op">+</span><span class="st"> </span>n</a>
+<a class="sourceLine" id="cb44-7" title="7">    <span class="cf">if</span>(soma <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>) <span class="cf">break</span></a>
+<a class="sourceLine" id="cb44-8" title="8">}</a>
+<a class="sourceLine" id="cb44-9" title="9">soma</a>
+<a class="sourceLine" id="cb44-10" title="10"><span class="co"># [1] 1035</span></a></code></pre></div>
 </div>
 
 <center>
