@@ -67,7 +67,8 @@ mais exemplos mostrados em aula.
 - **18/10 (Sex)**: Atividade disponível no [Moodle][].
 - **22/10 (Ter)**: Métodos de Monte Carlo para inferência estatística:
   estimação. [HTML](09_MC_inf-1.html).
-- **25/10 (Sex)**: [HTML](09_MC_inf-2.html).
+- **25/10 (Sex)**: Propriedades de estimadores pontuais por simulação de
+  Monte Carlo. Taxa empírica do erro tipo I. [HTML](09_MC_inf-2.html).
 - **29/10 (Ter)**:
 - **01/11 (Sex)**:
 - **05/11 (Ter)**:
