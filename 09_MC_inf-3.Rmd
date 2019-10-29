@@ -16,6 +16,49 @@ opts_chunk$set(fig.path = "figures/09_MC_inf-3/")
 
 # Introdução
 
+Besag e Clifford (1989) definiram que um teste de Monte Carlo
+generalizado é um que possui as seguintes características:
+
+1. Um conjunto de dados observado, é apenas um entre muitos conjuntos
+   que poderiam ter ocorrido
+2. Todos os possíveis conjuntos de dados podem ser gerados a partir de
+   uma série de mudanças incrementais nos dados (**randomização**)
+   - Aqui vamos assumir que todos os possíveis conjuntos de dados podem
+     ser gerados a partir de algum modelo probabilístico (Monte Carlo)
+3. A hipótese nula de interesse afirma que todos os possíveis conjuntos
+   de dados possuem a mesma probabilidade de ocorrência
+4. Todo conjunto de dados possível pode ser resumido por alguma
+   estatística de teste $S$
+
+- Um teste de hipótese consiste em calcular uma medida (**estatística de
+  teste**) e verificar o quanto ela é provável dentro do cenário de
+  ocorrências puramente ao acaso, supondo que a hipótese nula é
+  verdadeira.
+  - Se a conclusão for de que é um valor dos mais prováveis, então não
+  existem evidências para rejeitar a hipótese nula.
+  - Se for dos resultados mais extremos, então existem evidências de que
+    a hipótese nula não é verdadeira
+
+Partindo dessa ideia, um teste de hipótese de Monte Carlo pode ser
+formulado da seguinte maneira:
+
+1. Calcule a estatística de teste para a amostra
+2. Supondo que a hipótese nula é verdadeira, simule valores com as
+   mesmas características do modelo probabilístico sendo testado (sob
+   $H_0$)
+3. Repita o passo (2) um número $N$ grande de vezes, e calcule a
+   estatística de teste em todos os passos
+4. Com a distribuição dos $N$ valores da estatística de teste (supondo
+   $H_0$) verdadeira, **calcule a proporção de valores iguais ou mais
+   extremos** que a estatística de teste da amostra
+
+- O último passo pode ser interpretado como o $p$-valor de Monte Carlo, ou
+$p$-valor empírico.
+  - Proporções altas mostram que a estatística de teste amostral não é
+    tão extrema, o que favorece $H_0$
+  - Proporções baixas indicam que a estatística de teste é extrema
+    (pouca probabilidade de ocorrer simplesmente ao acaso), por isso a
+    hipótese nula deve ser pouco plausível
 
 # Nível descritivo
 
