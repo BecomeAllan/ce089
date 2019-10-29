@@ -344,6 +344,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -470,13 +476,14 @@ div.tocify {
 
 <div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
-<div id="nível-descritivo" class="section level2 unnumbered">
-<h2>Nível descritivo</h2>
+</div>
+<div id="nível-descritivo" class="section level1">
+<h1><span class="header-section-number">2</span> Nível descritivo</h1>
 <ul>
 <li>Em geral, <span class="math inline">\(\alpha\)</span> é pré-fixado para construir a regra de decisão.</li>
 <li>Uma alternativa é deixar em aberto a escolha de <span class="math inline">\(\alpha\)</span> para quem for tomar a decisão.</li>
-<li>A ideia é calcular, <strong>supondo que a hipóese nula é verdadeira</strong>, a probabilidade de se obter estimativas mais extremas do que aquela fornecida pela amostra.</li>
-<li>Essa probabilidade é chamada de <strong>nível descritivo</strong>, denotada por <span class="math inline">\(\alpha^*\)</span> (ou <span class="math inline">\(P\)</span>-valor).</li>
+<li>A ideia é calcular, <strong>supondo que a hipótese nula é verdadeira</strong>, a probabilidade de se obter estimativas <strong>iguais ou mais extremas do que aquela fornecida pela amostra</strong>.</li>
+<li>Essa probabilidade é chamada de <strong>nível descritivo</strong>, denotada por <span class="math inline">\(\alpha^*\)</span> (ou <span class="math inline">\(p\)</span>-valor).</li>
 <li>Valores pequenos de <span class="math inline">\(\alpha^*\)</span> evidenciam que a hipótese nula é falsa.</li>
 <li>O conceito de “pequeno” fica para quem decide qual <span class="math inline">\(\alpha\)</span> deve usar para comparar com <span class="math inline">\(\alpha^*\)</span>.</li>
 </ul>
@@ -496,516 +503,442 @@ verdadeira}) \quad \text{se }  \bar{x}_{obs} &gt; \mu_0 \\
 \end{align*}\]</span></p>
 <p>Como estamos calculando a probabilidade para apenas uma das caudas, então esse valor é multiplicado por 2.</p>
 </div>
-<div id="th-para-a-média" class="section level2">
-<h2><span class="header-section-number">1.1</span> TH para a média</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Com variancia conhecida ---------------------------------------------</span></a>
+<div id="teste-de-hipótese-para-a-média" class="section level1">
+<h1><span class="header-section-number">3</span> Teste de hipótese para a média</h1>
+<div id="variância-conhecida" class="section level2">
+<h2><span class="header-section-number">3.1</span> Variância conhecida</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Simula X ~ N(10, 1)</span></a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="kw">set.seed</span>(<span class="dv">2019-10-29</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">n &lt;-<span class="st"> </span><span class="dv">300</span></a>
+<a class="sourceLine" id="cb1-3" title="3">n &lt;-<span class="st"> </span><span class="dv">30</span></a>
 <a class="sourceLine" id="cb1-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw">hist</span>(x)</a></code></pre></div>
+<a class="sourceLine" id="cb1-5" title="5">(med &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co"># [1] 10.08421</span></a>
+<a class="sourceLine" id="cb1-7" title="7">(s2 &lt;-<span class="st"> </span><span class="kw">var</span>(x))</a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co"># [1] 1.158774</span></a>
+<a class="sourceLine" id="cb1-9" title="9"></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">## Teste para</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">## H0: mu = 10</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">## Ha: mu != 10</span></a>
+<a class="sourceLine" id="cb1-13" title="13">mu0 &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">## Estatistica de teste</span></a>
+<a class="sourceLine" id="cb1-15" title="15">(zcalc &lt;-<span class="st"> </span>(med <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co"># [1] 0.4612242</span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">## Valor critico</span></a>
+<a class="sourceLine" id="cb1-18" title="18">(zcrit &lt;-<span class="st"> </span><span class="kw">qnorm</span>(.<span class="dv">025</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co"># [1] -1.959964</span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(zcalc, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co"># [1] 0.6446378</span></a>
+<a class="sourceLine" id="cb1-23" title="23"></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="co">## Usando simulacao de Monte Carlo</span></a>
+<a class="sourceLine" id="cb1-25" title="25">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb1-26" title="26"><span class="co">## Siulando direto da distribuicao amostral, sob H0</span></a>
+<a class="sourceLine" id="cb1-27" title="27">am &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> mu0, <span class="dt">sd =</span> <span class="dv">1</span><span class="op">/</span><span class="kw">sqrt</span>(n))</a>
+<a class="sourceLine" id="cb1-28" title="28"><span class="co">## Simula da populacao e calcula as medias, sob H0</span></a>
+<a class="sourceLine" id="cb1-29" title="29">am2 &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">mean</span>(<span class="kw">rnorm</span>(n, mu0, <span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb1-30" title="30"><span class="co">## Visualização</span></a>
+<a class="sourceLine" id="cb1-31" title="31"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb1-32" title="32"><span class="kw">hist</span>(am, <span class="dt">main =</span> <span class="st">&quot;Distribuição amostral&quot;</span>)</a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="kw">abline</span>(<span class="dt">v =</span> med, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="kw">hist</span>(am2, <span class="dt">main =</span> <span class="st">&quot;Média de amostras&quot;</span>)</a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="kw">abline</span>(<span class="dt">v =</span> med, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">(med &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="co"># [1] 10.02135</span></a>
-<a class="sourceLine" id="cb2-3" title="3">(s2 &lt;-<span class="st"> </span><span class="kw">var</span>(x))</a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co"># [1] 1.122788</span></a>
-<a class="sourceLine" id="cb2-5" title="5"></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="kw">t.test</span>(<span class="dt">x =</span> x, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">mu =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co"># </span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="co">#   One Sample t-test</span></a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co"># </span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co"># data:  x</span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co"># t = 0.34905, df = 299, p-value = 0.7273</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="co"># alternative hypothesis: true mean is not equal to 10</span></a>
-<a class="sourceLine" id="cb2-13" title="13"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb2-14" title="14"><span class="co">#   9.900962 10.141746</span></a>
-<a class="sourceLine" id="cb2-15" title="15"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb2-16" title="16"><span class="co"># mean of x </span></a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="co">#  10.02135</span></a>
-<a class="sourceLine" id="cb2-18" title="18">mu0 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb2-19" title="19"></a>
-<a class="sourceLine" id="cb2-20" title="20">(zcalc &lt;-<span class="st"> </span>(med <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n))</a>
-<a class="sourceLine" id="cb2-21" title="21"><span class="co"># [1] 0.3698622</span></a>
-<a class="sourceLine" id="cb2-22" title="22">(zcrit &lt;-<span class="st"> </span><span class="kw">qnorm</span>(.<span class="dv">025</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb2-23" title="23"><span class="co"># [1] -1.959964</span></a>
-<a class="sourceLine" id="cb2-24" title="24"><span class="kw">pnorm</span>(zcalc, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-25" title="25"><span class="co"># [1] 0.3557426</span></a>
-<a class="sourceLine" id="cb2-26" title="26"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pnorm</span>(zcalc, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb2-27" title="27"><span class="co"># [1] 0.7114852</span></a>
-<a class="sourceLine" id="cb2-28" title="28"><span class="kw">t.test</span>(<span class="dt">x =</span> x, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">mu =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-29" title="29"><span class="co"># </span></a>
-<a class="sourceLine" id="cb2-30" title="30"><span class="co">#   One Sample t-test</span></a>
-<a class="sourceLine" id="cb2-31" title="31"><span class="co"># </span></a>
-<a class="sourceLine" id="cb2-32" title="32"><span class="co"># data:  x</span></a>
-<a class="sourceLine" id="cb2-33" title="33"><span class="co"># t = 0.34905, df = 299, p-value = 0.7273</span></a>
-<a class="sourceLine" id="cb2-34" title="34"><span class="co"># alternative hypothesis: true mean is not equal to 10</span></a>
-<a class="sourceLine" id="cb2-35" title="35"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb2-36" title="36"><span class="co">#   9.900962 10.141746</span></a>
-<a class="sourceLine" id="cb2-37" title="37"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb2-38" title="38"><span class="co"># mean of x </span></a>
-<a class="sourceLine" id="cb2-39" title="39"><span class="co">#  10.02135</span></a>
-<a class="sourceLine" id="cb2-40" title="40"></a>
-<a class="sourceLine" id="cb2-41" title="41">calc.med &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb2-42" title="42">    <span class="kw">mean</span>(x)</a>
-<a class="sourceLine" id="cb2-43" title="43">}</a>
-<a class="sourceLine" id="cb2-44" title="44"></a>
-<a class="sourceLine" id="cb2-45" title="45">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb2-46" title="46">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">calc.med</span>(<span class="kw">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>)))</a>
-<a class="sourceLine" id="cb2-47" title="47"><span class="co">## am &lt;- rnorm(N, mean = mu0, sd = 1/sqrt(n))</span></a>
-<a class="sourceLine" id="cb2-48" title="48"><span class="kw">hist</span>(am)</a>
-<a class="sourceLine" id="cb2-49" title="49"><span class="kw">abline</span>(<span class="dt">v =</span> med, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co"># [1] 0.6336</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am2 <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co"># [1] 0.646</span></a>
+<a class="sourceLine" id="cb2-7" title="7"></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">## Padroniza a distribuição para N(0,1)</span></a>
+<a class="sourceLine" id="cb2-9" title="9">zpad &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="kw">hist</span>(zpad)</a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="kw">abline</span>(<span class="dt">v =</span> zcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-2-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co"># [1] 0.7154</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am <span class="op">&gt;</span><span class="st"> </span>med)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="co"># [1] 0.7154</span></a>
-<a class="sourceLine" id="cb3-6" title="6"></a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="co">## Padroniza a distribuição das propoções amostrais</span></a>
-<a class="sourceLine" id="cb3-8" title="8">tt &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n)</a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="kw">hist</span>(tt, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="kw">abline</span>(<span class="dt">v =</span> zcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-2-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">## Proporcao da amostra abaixo de theta0 ~ &quot;p-valor&quot;</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(tt <span class="op">&gt;=</span><span class="st"> </span>zcalc)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co"># [1] 0.7154</span></a>
-<a class="sourceLine" id="cb4-5" title="5"></a>
-<a class="sourceLine" id="cb4-6" title="6"></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">## COm variancia desconhecida ------------------------------------------</span></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="kw">set.seed</span>(<span class="dv">2019-10-29</span>)</a>
-<a class="sourceLine" id="cb4-9" title="9">n &lt;-<span class="st"> </span><span class="dv">30</span></a>
-<a class="sourceLine" id="cb4-10" title="10">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="kw">hist</span>(x)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-2-4.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">(med &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="co"># [1] 10.08421</span></a>
-<a class="sourceLine" id="cb5-3" title="3">(s2 &lt;-<span class="st"> </span><span class="kw">var</span>(x))</a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="co"># [1] 1.158774</span></a>
-<a class="sourceLine" id="cb5-5" title="5"></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="kw">t.test</span>(<span class="dt">x =</span> x, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">mu =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co"># </span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">#   One Sample t-test</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="co"># </span></a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co"># data:  x</span></a>
-<a class="sourceLine" id="cb5-11" title="11"><span class="co"># t = 0.42846, df = 29, p-value = 0.6715</span></a>
-<a class="sourceLine" id="cb5-12" title="12"><span class="co"># alternative hypothesis: true mean is not equal to 10</span></a>
-<a class="sourceLine" id="cb5-13" title="13"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb5-14" title="14"><span class="co">#   9.68225 10.48617</span></a>
-<a class="sourceLine" id="cb5-15" title="15"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb5-16" title="16"><span class="co"># mean of x </span></a>
-<a class="sourceLine" id="cb5-17" title="17"><span class="co">#  10.08421</span></a>
-<a class="sourceLine" id="cb5-18" title="18">mu0 &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb5-19" title="19"></a>
-<a class="sourceLine" id="cb5-20" title="20">(tcalc &lt;-<span class="st"> </span>(med <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(s2<span class="op">/</span>n))</a>
-<a class="sourceLine" id="cb5-21" title="21"><span class="co"># [1] 0.4284624</span></a>
-<a class="sourceLine" id="cb5-22" title="22">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb5-23" title="23"><span class="co"># [1] -2.04523</span></a>
-<a class="sourceLine" id="cb5-24" title="24"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb5-25" title="25"><span class="co"># [1] 0.6714802</span></a>
-<a class="sourceLine" id="cb5-26" title="26"></a>
-<a class="sourceLine" id="cb5-27" title="27">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb5-28" title="28">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">calc.med</span>(<span class="kw">rnorm</span>(n, <span class="dv">10</span>, <span class="kw">sqrt</span>(s2))))</a>
-<a class="sourceLine" id="cb5-29" title="29"><span class="co">## am &lt;- rnorm(N, mean = mu0, sd = sqrt(s2/n))</span></a>
-<a class="sourceLine" id="cb5-30" title="30"><span class="kw">hist</span>(am)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-2-5.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"></a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co"># [1] 0.6816</span></a>
-<a class="sourceLine" id="cb6-4" title="4"></a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="co">## Padroniza a distribuição das propoções amostrais</span></a>
-<a class="sourceLine" id="cb6-6" title="6">tt &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(s2<span class="op">/</span>n)</a>
-<a class="sourceLine" id="cb6-7" title="7"><span class="kw">hist</span>(tt, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb6-8" title="8"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-2-6.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">## Proporcao da amostra abaixo de theta0 ~ &quot;p-valor&quot;</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(tt <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="co"># [1] 0.6816</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(zpad <span class="op">&gt;=</span><span class="st"> </span>zcalc)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co"># [1] 0.6336</span></a></code></pre></div>
 </div>
-<div id="comparação-de-duas-médias" class="section level2">
-<h2><span class="header-section-number">1.2</span> Comparação de duas médias</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Comparacao de duas medias - exemplo do Manly</span></a>
-<a class="sourceLine" id="cb8-2" title="2">machos &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">120</span>, <span class="dv">107</span>, <span class="dv">110</span>, <span class="dv">116</span>, <span class="dv">114</span>, <span class="dv">111</span>, <span class="dv">113</span>, <span class="dv">117</span>, <span class="dv">114</span>, <span class="dv">112</span>)</a>
-<a class="sourceLine" id="cb8-3" title="3">femeas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">110</span>, <span class="dv">111</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">110</span>, <span class="dv">105</span>, <span class="dv">107</span>, <span class="dv">106</span>, <span class="dv">111</span>, <span class="dv">111</span>)</a>
-<a class="sourceLine" id="cb8-4" title="4">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">comp =</span> <span class="kw">c</span>(machos, femeas),</a>
-<a class="sourceLine" id="cb8-5" title="5">                 <span class="dt">sexo =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;M&quot;</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="st">&quot;F&quot;</span>, <span class="dv">10</span>)))</a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="kw">densityplot</span>(<span class="op">~</span>comp, <span class="dt">groups =</span> sexo, <span class="dt">data =</span> da, <span class="dt">auto.key =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div id="variância-desconhecida" class="section level2">
+<h2><span class="header-section-number">3.2</span> Variância desconhecida</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">## Simula de N(10, 1), mas agora asumindo que a variância é desconhecida</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">set.seed</span>(<span class="dv">2019-10-29</span>)</a>
+<a class="sourceLine" id="cb4-3" title="3">n &lt;-<span class="st"> </span><span class="dv">30</span></a>
+<a class="sourceLine" id="cb4-4" title="4">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5">(med &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co"># [1] 10.08421</span></a>
+<a class="sourceLine" id="cb4-7" title="7">(s2 &lt;-<span class="st"> </span><span class="kw">var</span>(x))</a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co"># [1] 1.158774</span></a>
+<a class="sourceLine" id="cb4-9" title="9"></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">## Teste para</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">## H0: mu = 10</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">## Ha: mu != 10</span></a>
+<a class="sourceLine" id="cb4-13" title="13">mu0 &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="kw">t.test</span>(<span class="dt">x =</span> x, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>, <span class="dt">mu =</span> mu0)</a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co"># </span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">#   One Sample t-test</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co"># </span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co"># data:  x</span></a>
+<a class="sourceLine" id="cb4-19" title="19"><span class="co"># t = 0.42846, df = 29, p-value = 0.6715</span></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="co"># alternative hypothesis: true mean is not equal to 10</span></a>
+<a class="sourceLine" id="cb4-21" title="21"><span class="co"># 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb4-22" title="22"><span class="co">#   9.68225 10.48617</span></a>
+<a class="sourceLine" id="cb4-23" title="23"><span class="co"># sample estimates:</span></a>
+<a class="sourceLine" id="cb4-24" title="24"><span class="co"># mean of x </span></a>
+<a class="sourceLine" id="cb4-25" title="25"><span class="co">#  10.08421</span></a>
+<a class="sourceLine" id="cb4-26" title="26"><span class="co">## Estatística de teste</span></a>
+<a class="sourceLine" id="cb4-27" title="27">(tcalc &lt;-<span class="st"> </span>(med <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(s2<span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb4-28" title="28"><span class="co"># [1] 0.4284624</span></a>
+<a class="sourceLine" id="cb4-29" title="29"><span class="co">## Valor crítico</span></a>
+<a class="sourceLine" id="cb4-30" title="30">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb4-31" title="31"><span class="co"># [1] -2.04523</span></a>
+<a class="sourceLine" id="cb4-32" title="32"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb4-33" title="33"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb4-34" title="34"><span class="co"># [1] 0.6714802</span></a>
+<a class="sourceLine" id="cb4-35" title="35"></a>
+<a class="sourceLine" id="cb4-36" title="36"><span class="co">## Teste por simulação de Monte Carlo</span></a>
+<a class="sourceLine" id="cb4-37" title="37">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb4-38" title="38"><span class="co">## Simula direto da distribuição amostral da média</span></a>
+<a class="sourceLine" id="cb4-39" title="39">am &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> mu0, <span class="dt">sd =</span> <span class="kw">sqrt</span>(s2<span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb4-40" title="40"><span class="co">## Calcula média de amostras de tamanho n da população, com a variância</span></a>
+<a class="sourceLine" id="cb4-41" title="41"><span class="co">## estimada a partir dos dados</span></a>
+<a class="sourceLine" id="cb4-42" title="42">am2 &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">mean</span>(<span class="kw">rnorm</span>(n, mu0, <span class="kw">sqrt</span>(s2))))</a>
+<a class="sourceLine" id="cb4-43" title="43"><span class="co">## Visualização</span></a>
+<a class="sourceLine" id="cb4-44" title="44"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb4-45" title="45"><span class="kw">hist</span>(am, <span class="dt">main =</span> <span class="st">&quot;Distribuição amostral&quot;</span>)</a>
+<a class="sourceLine" id="cb4-46" title="46"><span class="kw">abline</span>(<span class="dt">v =</span> med, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb4-47" title="47"><span class="kw">hist</span>(am2, <span class="dt">main =</span> <span class="st">&quot;Média de amostras&quot;</span>)</a>
+<a class="sourceLine" id="cb4-48" title="48"><span class="kw">abline</span>(<span class="dt">v =</span> med, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean)</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="co">#     F     M </span></a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co"># 108.6 113.4</span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="kw">diff</span>(<span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean))</a>
-<a class="sourceLine" id="cb9-5" title="5"><span class="co">#   M </span></a>
-<a class="sourceLine" id="cb9-6" title="6"><span class="co"># 4.8</span></a>
-<a class="sourceLine" id="cb9-7" title="7"><span class="kw">sd</span>(machos)</a>
-<a class="sourceLine" id="cb9-8" title="8"><span class="co"># [1] 3.717825</span></a>
-<a class="sourceLine" id="cb9-9" title="9"></a>
-<a class="sourceLine" id="cb9-10" title="10">(m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(machos))</a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="co"># [1] 113.4</span></a>
-<a class="sourceLine" id="cb9-12" title="12">(m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(femeas))</a>
-<a class="sourceLine" id="cb9-13" title="13"><span class="co"># [1] 108.6</span></a>
-<a class="sourceLine" id="cb9-14" title="14"></a>
-<a class="sourceLine" id="cb9-15" title="15">(med.amostral &lt;-<span class="st"> </span>m1 <span class="op">-</span><span class="st"> </span>m2)</a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="co"># [1] 4.8</span></a>
-<a class="sourceLine" id="cb9-17" title="17"></a>
-<a class="sourceLine" id="cb9-18" title="18">n1 &lt;-<span class="st"> </span><span class="kw">length</span>(machos)</a>
-<a class="sourceLine" id="cb9-19" title="19">v1 &lt;-<span class="st"> </span><span class="kw">var</span>(machos)</a>
-<a class="sourceLine" id="cb9-20" title="20">n2 &lt;-<span class="st"> </span><span class="kw">length</span>(femeas)</a>
-<a class="sourceLine" id="cb9-21" title="21">v2 &lt;-<span class="st"> </span><span class="kw">var</span>(femeas)</a>
-<a class="sourceLine" id="cb9-22" title="22">(s.pond &lt;-<span class="st"> </span><span class="kw">sqrt</span>(((n1 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v1 <span class="op">+</span><span class="st"> </span>(n2 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v2)<span class="op">/</span>(n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)))</a>
-<a class="sourceLine" id="cb9-23" title="23"><span class="co"># [1] 3.080404</span></a>
-<a class="sourceLine" id="cb9-24" title="24"></a>
-<a class="sourceLine" id="cb9-25" title="25"></a>
-<a class="sourceLine" id="cb9-26" title="26"><span class="kw">t.test</span>(<span class="dt">x =</span> machos, <span class="dt">y =</span> femeas, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
-<a class="sourceLine" id="cb9-27" title="27">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb9-28" title="28"><span class="co"># </span></a>
-<a class="sourceLine" id="cb9-29" title="29"><span class="co">#   Two Sample t-test</span></a>
-<a class="sourceLine" id="cb9-30" title="30"><span class="co"># </span></a>
-<a class="sourceLine" id="cb9-31" title="31"><span class="co"># data:  machos and femeas</span></a>
-<a class="sourceLine" id="cb9-32" title="32"><span class="co"># t = 3.4843, df = 18, p-value = 0.001324</span></a>
-<a class="sourceLine" id="cb9-33" title="33"><span class="co"># alternative hypothesis: true difference in means is greater than 0</span></a>
-<a class="sourceLine" id="cb9-34" title="34"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb9-35" title="35"><span class="co">#  2.411156      Inf</span></a>
-<a class="sourceLine" id="cb9-36" title="36"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb9-37" title="37"><span class="co"># mean of x mean of y </span></a>
-<a class="sourceLine" id="cb9-38" title="38"><span class="co">#     113.4     108.6</span></a>
-<a class="sourceLine" id="cb9-39" title="39"></a>
-<a class="sourceLine" id="cb9-40" title="40">mu0 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb9-41" title="41"></a>
-<a class="sourceLine" id="cb9-42" title="42">(tcalc &lt;-<span class="st"> </span>(m1 <span class="op">-</span><span class="st"> </span>m2)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb9-43" title="43"><span class="co"># [1] 3.484324</span></a>
-<a class="sourceLine" id="cb9-44" title="44">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb9-45" title="45"><span class="co"># [1] 2.100922</span></a>
-<a class="sourceLine" id="cb9-46" title="46"><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb9-47" title="47"><span class="co"># [1] 0.001323634</span></a>
-<a class="sourceLine" id="cb9-48" title="48"></a>
-<a class="sourceLine" id="cb9-49" title="49">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb9-50" title="50"><span class="co">## Usando a distribuicao amostral</span></a>
-<a class="sourceLine" id="cb9-51" title="51">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb9-52" title="52"><span class="co">## Usando media dos machos</span></a>
-<a class="sourceLine" id="cb9-53" title="53">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m1, s.pond), da<span class="op">$</span>sexo, mean)))</a>
-<a class="sourceLine" id="cb9-54" title="54"><span class="co">## Usando media das femeas</span></a>
-<a class="sourceLine" id="cb9-55" title="55">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m2, s.pond), da<span class="op">$</span>sexo, mean)))</a>
-<a class="sourceLine" id="cb9-56" title="56"></a>
-<a class="sourceLine" id="cb9-57" title="57"><span class="kw">hist</span>(am)</a>
-<a class="sourceLine" id="cb9-58" title="58"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co"># [1] 0.6566</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(am2 <span class="op">&gt;=</span><span class="st"> </span>med)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co"># [1] 0.6678</span></a>
+<a class="sourceLine" id="cb5-7" title="7"></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">## Padroniza a distribuição para t(n - 1)</span></a>
+<a class="sourceLine" id="cb5-9" title="9">tpad &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span><span class="kw">sqrt</span>(s2<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="kw">hist</span>(tpad)</a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"></a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw">format</span>(<span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N, <span class="dt">sci =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co"># [1] &quot;0.0001&quot;</span></a>
-<a class="sourceLine" id="cb10-4" title="4"></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="co">## Padroniza a distribuição das propoções amostrais</span></a>
-<a class="sourceLine" id="cb10-6" title="6">tt &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2))</a>
-<a class="sourceLine" id="cb10-7" title="7"><span class="kw">hist</span>(tt, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb10-8" title="8"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="co">## Proporcao da amostra abaixo de theta0 ~ &quot;p-valor&quot;</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="kw">sum</span>(tt <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co"># [1] 1e-04</span></a>
-<a class="sourceLine" id="cb11-5" title="5"></a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="co">##----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="co">## Exemplo onde a diferenca nao eh tao grande</span></a>
-<a class="sourceLine" id="cb11-8" title="8"><span class="co">## Comparacao de duas medias - exemplo do Manly</span></a>
-<a class="sourceLine" id="cb11-9" title="9"><span class="kw">set.seed</span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb11-10" title="10">machos &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">120</span>, <span class="dv">107</span>, <span class="dv">110</span>, <span class="dv">116</span>, <span class="dv">114</span>, <span class="dv">111</span>, <span class="dv">113</span>, <span class="dv">117</span>, <span class="dv">114</span>, <span class="dv">112</span>)</a>
-<a class="sourceLine" id="cb11-11" title="11">femeas &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="kw">mean</span>(machos) <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">sd =</span> <span class="kw">sd</span>(machos))</a>
-<a class="sourceLine" id="cb11-12" title="12">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">comp =</span> <span class="kw">c</span>(machos, femeas),</a>
-<a class="sourceLine" id="cb11-13" title="13">                 <span class="dt">sexo =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;M&quot;</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="st">&quot;F&quot;</span>, <span class="dv">10</span>)))</a>
-<a class="sourceLine" id="cb11-14" title="14"><span class="kw">densityplot</span>(<span class="op">~</span>comp, <span class="dt">groups =</span> sexo, <span class="dt">data =</span> da, <span class="dt">auto.key =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-4.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean)</a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="co">#       F       M </span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="co"># 112.185 113.400</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="kw">diff</span>(<span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean))</a>
-<a class="sourceLine" id="cb12-5" title="5"><span class="co">#        M </span></a>
-<a class="sourceLine" id="cb12-6" title="6"><span class="co"># 1.214975</span></a>
-<a class="sourceLine" id="cb12-7" title="7"></a>
-<a class="sourceLine" id="cb12-8" title="8">(m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(machos))</a>
-<a class="sourceLine" id="cb12-9" title="9"><span class="co"># [1] 113.4</span></a>
-<a class="sourceLine" id="cb12-10" title="10">(m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(femeas))</a>
-<a class="sourceLine" id="cb12-11" title="11"><span class="co"># [1] 112.185</span></a>
-<a class="sourceLine" id="cb12-12" title="12"></a>
-<a class="sourceLine" id="cb12-13" title="13">(med.amostral &lt;-<span class="st"> </span>m1 <span class="op">-</span><span class="st"> </span>m2)</a>
-<a class="sourceLine" id="cb12-14" title="14"><span class="co"># [1] 1.214975</span></a>
-<a class="sourceLine" id="cb12-15" title="15"></a>
-<a class="sourceLine" id="cb12-16" title="16">n1 &lt;-<span class="st"> </span><span class="kw">length</span>(machos)</a>
-<a class="sourceLine" id="cb12-17" title="17">v1 &lt;-<span class="st"> </span><span class="kw">var</span>(machos)</a>
-<a class="sourceLine" id="cb12-18" title="18">n2 &lt;-<span class="st"> </span><span class="kw">length</span>(femeas)</a>
-<a class="sourceLine" id="cb12-19" title="19">v2 &lt;-<span class="st"> </span><span class="kw">var</span>(femeas)</a>
-<a class="sourceLine" id="cb12-20" title="20">(s.pond &lt;-<span class="st"> </span><span class="kw">sqrt</span>(((n1 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v1 <span class="op">+</span><span class="st"> </span>(n2 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v2)<span class="op">/</span>(n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)))</a>
-<a class="sourceLine" id="cb12-21" title="21"><span class="co"># [1] 3.690024</span></a>
-<a class="sourceLine" id="cb12-22" title="22"></a>
-<a class="sourceLine" id="cb12-23" title="23"></a>
-<a class="sourceLine" id="cb12-24" title="24"><span class="kw">t.test</span>(<span class="dt">x =</span> machos, <span class="dt">y =</span> femeas, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
-<a class="sourceLine" id="cb12-25" title="25">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb12-26" title="26"><span class="co"># </span></a>
-<a class="sourceLine" id="cb12-27" title="27"><span class="co">#   Two Sample t-test</span></a>
-<a class="sourceLine" id="cb12-28" title="28"><span class="co"># </span></a>
-<a class="sourceLine" id="cb12-29" title="29"><span class="co"># data:  machos and femeas</span></a>
-<a class="sourceLine" id="cb12-30" title="30"><span class="co"># t = 0.73625, df = 18, p-value = 0.2355</span></a>
-<a class="sourceLine" id="cb12-31" title="31"><span class="co"># alternative hypothesis: true difference in means is greater than 0</span></a>
-<a class="sourceLine" id="cb12-32" title="32"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb12-33" title="33"><span class="co">#  -1.646627       Inf</span></a>
-<a class="sourceLine" id="cb12-34" title="34"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb12-35" title="35"><span class="co"># mean of x mean of y </span></a>
-<a class="sourceLine" id="cb12-36" title="36"><span class="co">#   113.400   112.185</span></a>
-<a class="sourceLine" id="cb12-37" title="37"></a>
-<a class="sourceLine" id="cb12-38" title="38"><span class="kw">t.test</span>(<span class="dt">x =</span> machos, <span class="dt">y =</span> femeas, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
-<a class="sourceLine" id="cb12-39" title="39">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)<span class="op">$</span>statistic</a>
-<a class="sourceLine" id="cb12-40" title="40"><span class="co">#         t </span></a>
-<a class="sourceLine" id="cb12-41" title="41"><span class="co"># 0.7362465</span></a>
-<a class="sourceLine" id="cb12-42" title="42"></a>
-<a class="sourceLine" id="cb12-43" title="43">mu0 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb12-44" title="44"></a>
-<a class="sourceLine" id="cb12-45" title="45">(tcalc &lt;-<span class="st"> </span>(m1 <span class="op">-</span><span class="st"> </span>m2)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb12-46" title="46"><span class="co"># [1] 0.7362465</span></a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(tpad <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co"># [1] 0.6566</span></a></code></pre></div>
+</div>
+<div id="comparação-de-duas-médias-variâncias-iguais" class="section level2">
+<h2><span class="header-section-number">3.3</span> Comparação de duas médias (variâncias iguais)</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Exemplo adaptado de Manly (1997)</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">## Comparação do comprimento da mandíbula de chacais machos e fêmeas</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">set.seed</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4">machos &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">120</span>, <span class="dv">107</span>, <span class="dv">110</span>, <span class="dv">116</span>, <span class="dv">114</span>, <span class="dv">111</span>, <span class="dv">113</span>, <span class="dv">117</span>, <span class="dv">114</span>, <span class="dv">112</span>)</a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">## Simula diferença para as femeas</span></a>
+<a class="sourceLine" id="cb7-6" title="6">femeas &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="kw">mean</span>(machos) <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">sd =</span> <span class="kw">sd</span>(machos))</a>
+<a class="sourceLine" id="cb7-7" title="7">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">comp =</span> <span class="kw">c</span>(machos, femeas),</a>
+<a class="sourceLine" id="cb7-8" title="8">                 <span class="dt">sexo =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;M&quot;</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="st">&quot;F&quot;</span>, <span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="kw">densityplot</span>(<span class="op">~</span>comp, <span class="dt">groups =</span> sexo, <span class="dt">data =</span> da, <span class="dt">auto.key =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Média por sexo</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#       F       M </span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co"># 112.185 113.400</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">## Diferença das médias</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw">diff</span>(<span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">#        M </span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co"># 1.214975</span></a>
+<a class="sourceLine" id="cb8-9" title="9"></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">## Média de cada sexo</span></a>
+<a class="sourceLine" id="cb8-11" title="11">(m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(machos))</a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co"># [1] 113.4</span></a>
+<a class="sourceLine" id="cb8-13" title="13">(m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(femeas))</a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co"># [1] 112.185</span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">## Diferença entre as médias amostrais</span></a>
+<a class="sourceLine" id="cb8-16" title="16">(med.amostral &lt;-<span class="st"> </span>m1 <span class="op">-</span><span class="st"> </span>m2)</a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="co"># [1] 1.214975</span></a>
+<a class="sourceLine" id="cb8-18" title="18"><span class="co">## Calcula o desvio padrão ponderado</span></a>
+<a class="sourceLine" id="cb8-19" title="19">n1 &lt;-<span class="st"> </span><span class="kw">length</span>(machos)</a>
+<a class="sourceLine" id="cb8-20" title="20">v1 &lt;-<span class="st"> </span><span class="kw">var</span>(machos)</a>
+<a class="sourceLine" id="cb8-21" title="21">n2 &lt;-<span class="st"> </span><span class="kw">length</span>(femeas)</a>
+<a class="sourceLine" id="cb8-22" title="22">v2 &lt;-<span class="st"> </span><span class="kw">var</span>(femeas)</a>
+<a class="sourceLine" id="cb8-23" title="23">(s.pond &lt;-<span class="st"> </span><span class="kw">sqrt</span>(((n1 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v1 <span class="op">+</span><span class="st"> </span>(n2 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v2)<span class="op">/</span>(n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)))</a>
+<a class="sourceLine" id="cb8-24" title="24"><span class="co"># [1] 3.690024</span></a>
+<a class="sourceLine" id="cb8-25" title="25"></a>
+<a class="sourceLine" id="cb8-26" title="26"><span class="co">## Teste de hipótese para</span></a>
+<a class="sourceLine" id="cb8-27" title="27"><span class="co">## H0: mu1 &lt;= mu2</span></a>
+<a class="sourceLine" id="cb8-28" title="28"><span class="co">## Ha: mu1 &gt; mu2</span></a>
+<a class="sourceLine" id="cb8-29" title="29">mu0 &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb8-30" title="30"><span class="kw">t.test</span>(<span class="dt">x =</span> machos, <span class="dt">y =</span> femeas, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
+<a class="sourceLine" id="cb8-31" title="31">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>, <span class="dt">mu =</span> mu0)</a>
+<a class="sourceLine" id="cb8-32" title="32"><span class="co"># </span></a>
+<a class="sourceLine" id="cb8-33" title="33"><span class="co">#   Two Sample t-test</span></a>
+<a class="sourceLine" id="cb8-34" title="34"><span class="co"># </span></a>
+<a class="sourceLine" id="cb8-35" title="35"><span class="co"># data:  machos and femeas</span></a>
+<a class="sourceLine" id="cb8-36" title="36"><span class="co"># t = 0.73625, df = 18, p-value = 0.2355</span></a>
+<a class="sourceLine" id="cb8-37" title="37"><span class="co"># alternative hypothesis: true difference in means is greater than 0</span></a>
+<a class="sourceLine" id="cb8-38" title="38"><span class="co"># 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb8-39" title="39"><span class="co">#  -1.646627       Inf</span></a>
+<a class="sourceLine" id="cb8-40" title="40"><span class="co"># sample estimates:</span></a>
+<a class="sourceLine" id="cb8-41" title="41"><span class="co"># mean of x mean of y </span></a>
+<a class="sourceLine" id="cb8-42" title="42"><span class="co">#   113.400   112.185</span></a>
+<a class="sourceLine" id="cb8-43" title="43"><span class="co">## Estatística de teste</span></a>
+<a class="sourceLine" id="cb8-44" title="44">(tcalc &lt;-<span class="st"> </span>(m1 <span class="op">-</span><span class="st"> </span>m2)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
+<a class="sourceLine" id="cb8-45" title="45"><span class="co"># [1] 0.7362465</span></a>
+<a class="sourceLine" id="cb8-46" title="46"><span class="co">## Valor crítico</span></a>
+<a class="sourceLine" id="cb8-47" title="47">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb8-48" title="48"><span class="co"># [1] 2.100922</span></a>
+<a class="sourceLine" id="cb8-49" title="49"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb8-50" title="50"><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-51" title="51"><span class="co"># [1] 0.2355338</span></a>
+<a class="sourceLine" id="cb8-52" title="52"></a>
+<a class="sourceLine" id="cb8-53" title="53"><span class="co">## Teste por simulação de Monte Carlo</span></a>
+<a class="sourceLine" id="cb8-54" title="54">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb8-55" title="55"><span class="co">## Simula direto da distribuição amostral</span></a>
+<a class="sourceLine" id="cb8-56" title="56">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">rnorm</span>(<span class="dv">1</span>, mu0, s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
+<a class="sourceLine" id="cb8-57" title="57"><span class="co">## Para simular direto dos dados, partimos da hipótese nula de que as</span></a>
+<a class="sourceLine" id="cb8-58" title="58"><span class="co">## duas médias são iguais, e as variâncias são as mesmas. Nesse caso,</span></a>
+<a class="sourceLine" id="cb8-59" title="59"><span class="co">## podemos simular assumindo que a média é igual à média dos machos, e</span></a>
+<a class="sourceLine" id="cb8-60" title="60"><span class="co">## da mesma forma, podemos assumir que a média da população é igual a</span></a>
+<a class="sourceLine" id="cb8-61" title="61"><span class="co">## média das fêmeas.</span></a>
+<a class="sourceLine" id="cb8-62" title="62"><span class="co">## Usando media dos machos: obtém a diferença das médias entre machos e</span></a>
+<a class="sourceLine" id="cb8-63" title="63"><span class="co">## fêmeas, assumindo que a média na população é igual a média dos machos</span></a>
+<a class="sourceLine" id="cb8-64" title="64">am.machos &lt;-<span class="st"> </span><span class="kw">replicate</span>(</a>
+<a class="sourceLine" id="cb8-65" title="65">    N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m1, s.pond), da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb8-66" title="66">)</a>
+<a class="sourceLine" id="cb8-67" title="67"><span class="co">## Usando media das femeas: obtém a diferença das médias entre machos e</span></a>
+<a class="sourceLine" id="cb8-68" title="68"><span class="co">## fêmeas, assumindo que a média na população é igual a média dos fêmeas</span></a>
+<a class="sourceLine" id="cb8-69" title="69">am.femeas &lt;-<span class="st"> </span><span class="kw">replicate</span>(</a>
+<a class="sourceLine" id="cb8-70" title="70">    N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m2, s.pond), da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb8-71" title="71">)</a>
+<a class="sourceLine" id="cb8-72" title="72"></a>
+<a class="sourceLine" id="cb8-73" title="73"><span class="co">## Visualização</span></a>
+<a class="sourceLine" id="cb8-74" title="74"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb8-75" title="75"><span class="kw">hist</span>(am, <span class="dt">main =</span> <span class="st">&quot;Distribuição amostral&quot;</span>)</a>
+<a class="sourceLine" id="cb8-76" title="76"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-77" title="77"><span class="kw">hist</span>(am.machos, <span class="dt">main =</span> <span class="st">&quot;Média de amostras (machos)&quot;</span>)</a>
+<a class="sourceLine" id="cb8-78" title="78"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-79" title="79"><span class="kw">hist</span>(am.femeas, <span class="dt">main =</span> <span class="st">&quot;Média de amostras (fêmeas)&quot;</span>)</a>
+<a class="sourceLine" id="cb8-80" title="80"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co"># [1] 0.2342</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="kw">sum</span>(am.machos <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co"># [1] 0.225</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="kw">sum</span>(am.femeas <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="co"># [1] 0.2361</span></a>
+<a class="sourceLine" id="cb9-9" title="9"></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co">## Padroniza a distribuição para t(n1 + n2 - 2)</span></a>
+<a class="sourceLine" id="cb9-11" title="11">tpad &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2))</a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="kw">hist</span>(tpad)</a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-4-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">sum</span>(tpad <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="co"># [1] 0.2342</span></a></code></pre></div>
+<div id="quando-o-método-pode-não-ser-muito-bom" class="section level4 unnumbered">
+<h4>Quando o método pode não ser muito bom</h4>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## Exemplo original do Manly (1997)</span></a>
+<a class="sourceLine" id="cb11-2" title="2">machos &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">120</span>, <span class="dv">107</span>, <span class="dv">110</span>, <span class="dv">116</span>, <span class="dv">114</span>, <span class="dv">111</span>, <span class="dv">113</span>, <span class="dv">117</span>, <span class="dv">114</span>, <span class="dv">112</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3">femeas &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">110</span>, <span class="dv">111</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">110</span>, <span class="dv">105</span>, <span class="dv">107</span>, <span class="dv">106</span>, <span class="dv">111</span>, <span class="dv">111</span>)</a>
+<a class="sourceLine" id="cb11-4" title="4">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">comp =</span> <span class="kw">c</span>(machos, femeas),</a>
+<a class="sourceLine" id="cb11-5" title="5">                 <span class="dt">sexo =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;M&quot;</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="st">&quot;F&quot;</span>, <span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="kw">densityplot</span>(<span class="op">~</span>comp, <span class="dt">groups =</span> sexo, <span class="dt">data =</span> da, <span class="dt">auto.key =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">## Média por sexo</span></a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean)</a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="co">#     F     M </span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co"># 108.6 113.4</span></a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="co">## Diferença das médias</span></a>
+<a class="sourceLine" id="cb12-6" title="6"><span class="kw">diff</span>(<span class="kw">tapply</span>(da<span class="op">$</span>comp, da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb12-7" title="7"><span class="co">#   M </span></a>
+<a class="sourceLine" id="cb12-8" title="8"><span class="co"># 4.8</span></a>
+<a class="sourceLine" id="cb12-9" title="9"></a>
+<a class="sourceLine" id="cb12-10" title="10"><span class="co">## Média de cada sexo</span></a>
+<a class="sourceLine" id="cb12-11" title="11">(m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(machos))</a>
+<a class="sourceLine" id="cb12-12" title="12"><span class="co"># [1] 113.4</span></a>
+<a class="sourceLine" id="cb12-13" title="13">(m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(femeas))</a>
+<a class="sourceLine" id="cb12-14" title="14"><span class="co"># [1] 108.6</span></a>
+<a class="sourceLine" id="cb12-15" title="15"><span class="co">## Diferença entre as médias amostrais</span></a>
+<a class="sourceLine" id="cb12-16" title="16">(med.amostral &lt;-<span class="st"> </span>m1 <span class="op">-</span><span class="st"> </span>m2)</a>
+<a class="sourceLine" id="cb12-17" title="17"><span class="co"># [1] 4.8</span></a>
+<a class="sourceLine" id="cb12-18" title="18"><span class="co">## Calcula o desvio padrão ponderado</span></a>
+<a class="sourceLine" id="cb12-19" title="19">n1 &lt;-<span class="st"> </span><span class="kw">length</span>(machos)</a>
+<a class="sourceLine" id="cb12-20" title="20">v1 &lt;-<span class="st"> </span><span class="kw">var</span>(machos)</a>
+<a class="sourceLine" id="cb12-21" title="21">n2 &lt;-<span class="st"> </span><span class="kw">length</span>(femeas)</a>
+<a class="sourceLine" id="cb12-22" title="22">v2 &lt;-<span class="st"> </span><span class="kw">var</span>(femeas)</a>
+<a class="sourceLine" id="cb12-23" title="23">(s.pond &lt;-<span class="st"> </span><span class="kw">sqrt</span>(((n1 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v1 <span class="op">+</span><span class="st"> </span>(n2 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v2)<span class="op">/</span>(n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)))</a>
+<a class="sourceLine" id="cb12-24" title="24"><span class="co"># [1] 3.080404</span></a>
+<a class="sourceLine" id="cb12-25" title="25"></a>
+<a class="sourceLine" id="cb12-26" title="26"><span class="co">## Teste de hipótese para</span></a>
+<a class="sourceLine" id="cb12-27" title="27"><span class="co">## H0: mu1 &lt;= mu2</span></a>
+<a class="sourceLine" id="cb12-28" title="28"><span class="co">## Ha: mu1 &gt; mu2</span></a>
+<a class="sourceLine" id="cb12-29" title="29">mu0 &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb12-30" title="30"><span class="kw">t.test</span>(<span class="dt">x =</span> machos, <span class="dt">y =</span> femeas, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>,</a>
+<a class="sourceLine" id="cb12-31" title="31">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>, <span class="dt">mu =</span> mu0)</a>
+<a class="sourceLine" id="cb12-32" title="32"><span class="co"># </span></a>
+<a class="sourceLine" id="cb12-33" title="33"><span class="co">#   Two Sample t-test</span></a>
+<a class="sourceLine" id="cb12-34" title="34"><span class="co"># </span></a>
+<a class="sourceLine" id="cb12-35" title="35"><span class="co"># data:  machos and femeas</span></a>
+<a class="sourceLine" id="cb12-36" title="36"><span class="co"># t = 3.4843, df = 18, p-value = 0.001324</span></a>
+<a class="sourceLine" id="cb12-37" title="37"><span class="co"># alternative hypothesis: true difference in means is greater than 0</span></a>
+<a class="sourceLine" id="cb12-38" title="38"><span class="co"># 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb12-39" title="39"><span class="co">#  2.411156      Inf</span></a>
+<a class="sourceLine" id="cb12-40" title="40"><span class="co"># sample estimates:</span></a>
+<a class="sourceLine" id="cb12-41" title="41"><span class="co"># mean of x mean of y </span></a>
+<a class="sourceLine" id="cb12-42" title="42"><span class="co">#     113.4     108.6</span></a>
+<a class="sourceLine" id="cb12-43" title="43"><span class="co">## Estatística de teste</span></a>
+<a class="sourceLine" id="cb12-44" title="44">(tcalc &lt;-<span class="st"> </span>(m1 <span class="op">-</span><span class="st"> </span>m2)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
+<a class="sourceLine" id="cb12-45" title="45"><span class="co"># [1] 3.484324</span></a>
+<a class="sourceLine" id="cb12-46" title="46"><span class="co">## Valor crítico</span></a>
 <a class="sourceLine" id="cb12-47" title="47">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb12-48" title="48"><span class="co"># [1] 2.100922</span></a>
-<a class="sourceLine" id="cb12-49" title="49"><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb12-50" title="50"><span class="co"># [1] 0.2355338</span></a>
-<a class="sourceLine" id="cb12-51" title="51"></a>
-<a class="sourceLine" id="cb12-52" title="52">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb12-53" title="53">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb12-54" title="54"><span class="co">## Usando media dos machos</span></a>
-<a class="sourceLine" id="cb12-55" title="55">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m1, s.pond), da<span class="op">$</span>sexo, mean)))</a>
-<a class="sourceLine" id="cb12-56" title="56"><span class="co">## Usando media das femeas</span></a>
-<a class="sourceLine" id="cb12-57" title="57">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m2, s.pond), da<span class="op">$</span>sexo, mean)))</a>
-<a class="sourceLine" id="cb12-58" title="58"></a>
-<a class="sourceLine" id="cb12-59" title="59"><span class="kw">hist</span>(am)</a>
-<a class="sourceLine" id="cb12-60" title="60"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-5.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="co"># [1] 0.2361</span></a>
-<a class="sourceLine" id="cb13-4" title="4"></a>
-<a class="sourceLine" id="cb13-5" title="5"><span class="co">## Padroniza a distribuição das propoções amostrais</span></a>
-<a class="sourceLine" id="cb13-6" title="6">tt &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2))</a>
-<a class="sourceLine" id="cb13-7" title="7"><span class="kw">hist</span>(tt, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb13-8" title="8"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-6.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="co">## Proporcao da amostra abaixo de theta0 ~ &quot;p-valor&quot;</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="kw">sum</span>(tt <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co"># [1] 0.2361</span></a>
-<a class="sourceLine" id="cb14-5" title="5"></a>
-<a class="sourceLine" id="cb14-6" title="6"></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">##----------------------------------------------------------------------</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">## Exemplo do Walmes</span></a>
-<a class="sourceLine" id="cb14-9" title="9"><span class="kw">set.seed</span>(<span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb14-10" title="10">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">local=</span><span class="kw">gl</span>(<span class="dv">2</span>, <span class="dv">30</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;N&quot;</span>,<span class="st">&quot;S&quot;</span>)))</a>
-<a class="sourceLine" id="cb14-11" title="11">da<span class="op">$</span>bico &lt;-<span class="st"> </span><span class="kw">with</span>(da, <span class="kw">rnorm</span>(<span class="kw">length</span>(local),</a>
-<a class="sourceLine" id="cb14-12" title="12">                          <span class="dt">mean=</span><span class="dv">49</span><span class="op">+</span><span class="dv">2</span><span class="op">*</span><span class="kw">as.integer</span>(local),</a>
-<a class="sourceLine" id="cb14-13" title="13">                          <span class="dt">sd=</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb14-14" title="14"></a>
-<a class="sourceLine" id="cb14-15" title="15"><span class="kw">densityplot</span>(<span class="op">~</span>bico, <span class="dt">groups =</span> local, <span class="dt">data =</span> da, <span class="dt">auto.key =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-7.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">tapply</span>(da<span class="op">$</span>bico, da<span class="op">$</span>local, mean)</a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co">#        N        S </span></a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="co"># 51.97437 52.92697</span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="kw">diff</span>(<span class="kw">tapply</span>(da<span class="op">$</span>bico, da<span class="op">$</span>local, mean))</a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="co">#         S </span></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co"># 0.9525919</span></a>
-<a class="sourceLine" id="cb15-7" title="7"></a>
-<a class="sourceLine" id="cb15-8" title="8">(m1 &lt;-<span class="st"> </span><span class="kw">mean</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;N&quot;</span>]))</a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="co"># [1] 51.97437</span></a>
-<a class="sourceLine" id="cb15-10" title="10">(m2 &lt;-<span class="st"> </span><span class="kw">mean</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;S&quot;</span>]))</a>
-<a class="sourceLine" id="cb15-11" title="11"><span class="co"># [1] 52.92697</span></a>
-<a class="sourceLine" id="cb15-12" title="12"></a>
-<a class="sourceLine" id="cb15-13" title="13"></a>
-<a class="sourceLine" id="cb15-14" title="14">(med.amostral &lt;-<span class="st"> </span>m1 <span class="op">-</span><span class="st"> </span>m2)</a>
-<a class="sourceLine" id="cb15-15" title="15"><span class="co"># [1] -0.9525919</span></a>
-<a class="sourceLine" id="cb15-16" title="16"></a>
-<a class="sourceLine" id="cb15-17" title="17">n1 &lt;-<span class="st"> </span><span class="kw">length</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;N&quot;</span>])</a>
-<a class="sourceLine" id="cb15-18" title="18">v1 &lt;-<span class="st"> </span><span class="kw">var</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;N&quot;</span>])</a>
-<a class="sourceLine" id="cb15-19" title="19">n2 &lt;-<span class="st"> </span><span class="kw">length</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;S&quot;</span>])</a>
-<a class="sourceLine" id="cb15-20" title="20">v2 &lt;-<span class="st"> </span><span class="kw">var</span>(da<span class="op">$</span>bico[da<span class="op">$</span>local <span class="op">==</span><span class="st"> &quot;S&quot;</span>])</a>
-<a class="sourceLine" id="cb15-21" title="21">(s.pond &lt;-<span class="st"> </span><span class="kw">sqrt</span>(((n1 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v1 <span class="op">+</span><span class="st"> </span>(n2 <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>v2)<span class="op">/</span>(n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)))</a>
-<a class="sourceLine" id="cb15-22" title="22"><span class="co"># [1] 1.757892</span></a>
-<a class="sourceLine" id="cb15-23" title="23"></a>
-<a class="sourceLine" id="cb15-24" title="24"></a>
-<a class="sourceLine" id="cb15-25" title="25"><span class="kw">t.test</span>(bico <span class="op">~</span><span class="st"> </span>local, <span class="dt">data =</span> da, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>,</a>
-<a class="sourceLine" id="cb15-26" title="26">       <span class="dt">var.equal =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-27" title="27"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-28" title="28"><span class="co">#   Two Sample t-test</span></a>
-<a class="sourceLine" id="cb15-29" title="29"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-30" title="30"><span class="co"># data:  bico by local</span></a>
-<a class="sourceLine" id="cb15-31" title="31"><span class="co"># t = -2.0987, df = 58, p-value = 0.0201</span></a>
-<a class="sourceLine" id="cb15-32" title="32"><span class="co"># alternative hypothesis: true difference in means is less than 0</span></a>
-<a class="sourceLine" id="cb15-33" title="33"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb15-34" title="34"><span class="co">#        -Inf -0.1938978</span></a>
-<a class="sourceLine" id="cb15-35" title="35"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb15-36" title="36"><span class="co"># mean in group N mean in group S </span></a>
-<a class="sourceLine" id="cb15-37" title="37"><span class="co">#        51.97437        52.92697</span></a>
-<a class="sourceLine" id="cb15-38" title="38"></a>
-<a class="sourceLine" id="cb15-39" title="39">mu0 &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb15-40" title="40"></a>
-<a class="sourceLine" id="cb15-41" title="41">(tcalc &lt;-<span class="st"> </span>(m1 <span class="op">-</span><span class="st"> </span>m2)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb15-42" title="42"><span class="co"># [1] -2.098748</span></a>
-<a class="sourceLine" id="cb15-43" title="43">(tcrit &lt;-<span class="st"> </span><span class="kw">qt</span>(.<span class="dv">025</span>, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb15-44" title="44"><span class="co"># [1] -2.001717</span></a>
-<a class="sourceLine" id="cb15-45" title="45"><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-46" title="46"><span class="co"># [1] 0.02010167</span></a>
-<a class="sourceLine" id="cb15-47" title="47"></a>
-<a class="sourceLine" id="cb15-48" title="48">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb15-49" title="49">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
-<a class="sourceLine" id="cb15-50" title="50"><span class="co">## Usando media dos machos</span></a>
-<a class="sourceLine" id="cb15-51" title="51">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">60</span>, m1, s.pond), da<span class="op">$</span>local, mean)))</a>
-<a class="sourceLine" id="cb15-52" title="52"><span class="co">## Usando media das femeas</span></a>
-<a class="sourceLine" id="cb15-53" title="53">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">60</span>, m2, s.pond), da<span class="op">$</span>local, mean)))</a>
-<a class="sourceLine" id="cb15-54" title="54"></a>
-<a class="sourceLine" id="cb15-55" title="55"><span class="kw">hist</span>(am)</a>
-<a class="sourceLine" id="cb15-56" title="56"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-8.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"></a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="kw">sum</span>(am <span class="op">&lt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="co"># [1] 0.0156</span></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="kw">sum</span>(am <span class="op">&lt;</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb16-5" title="5"><span class="co"># [1] 0.0156</span></a>
-<a class="sourceLine" id="cb16-6" title="6"></a>
-<a class="sourceLine" id="cb16-7" title="7"><span class="co">## Padroniza a distribuição das propoções amostrais</span></a>
-<a class="sourceLine" id="cb16-8" title="8">tt &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2))</a>
-<a class="sourceLine" id="cb16-9" title="9"><span class="kw">hist</span>(tt, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb16-10" title="10"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-3-9.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"></a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="co">## Proporcao da amostra abaixo de theta0 ~ &quot;p-valor&quot;</span></a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="kw">sum</span>(tt <span class="op">&lt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="co"># [1] 0.0156</span></a></code></pre></div>
-</div>
-<div id="proporção" class="section level2">
-<h2><span class="header-section-number">1.3</span> Proporção</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co">## Lançamento de uma moeda.</span></a>
-<a class="sourceLine" id="cb18-2" title="2"></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="co">## x &lt;- scan()</span></a>
-<a class="sourceLine" id="cb18-4" title="4"><span class="co">## dput(x)</span></a>
-<a class="sourceLine" id="cb18-5" title="5"></a>
-<a class="sourceLine" id="cb18-6" title="6"><span class="co">## Laçamento da moeda pelo Leonardo.</span></a>
-<a class="sourceLine" id="cb18-7" title="7">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</a>
-<a class="sourceLine" id="cb18-8" title="8">       <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb18-9" title="9">       <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>,</a>
-<a class="sourceLine" id="cb18-10" title="10">       <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb18-11" title="11"></a>
-<a class="sourceLine" id="cb18-12" title="12"><span class="co">## Proporção amostral.</span></a>
-<a class="sourceLine" id="cb18-13" title="13"><span class="kw">sum</span>(x)<span class="op">/</span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb18-14" title="14"><span class="co"># [1] 0.4571429</span></a>
-<a class="sourceLine" id="cb18-15" title="15"></a>
-<a class="sourceLine" id="cb18-16" title="16"><span class="co">## Número de trocas de face.</span></a>
-<a class="sourceLine" id="cb18-17" title="17">o &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">diff</span>(x))); o</a>
-<a class="sourceLine" id="cb18-18" title="18"><span class="co"># [1] 27</span></a>
-<a class="sourceLine" id="cb18-19" title="19"></a>
-<a class="sourceLine" id="cb18-20" title="20"><span class="co">## Laçamento de uma moeda verdadeira (p=0.5, lanç indep = sem memória)</span></a>
-<a class="sourceLine" id="cb18-21" title="21"><span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">70</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb18-22" title="22"><span class="co">#  [1] 1 0 0 1 1 1 0 1 1 1 1 0 0 0 1 1 0 1 0 0 0 1 0 1 0 0 1 1 1 1 0 0 0 0 1</span></a>
-<a class="sourceLine" id="cb18-23" title="23"><span class="co"># [36] 1 1 0 1 0 1 0 0 0 1 0 0 0 0 1 1 1 0 1 1 1 1 0 1 1 1 1 0 0 0 1 1 0 1 1</span></a>
-<a class="sourceLine" id="cb18-24" title="24"><span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">diff</span>(<span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">70</span>, <span class="dt">replace=</span><span class="ot">TRUE</span>))))</a>
-<a class="sourceLine" id="cb18-25" title="25"><span class="co"># [1] 30</span></a>
-<a class="sourceLine" id="cb18-26" title="26"></a>
-<a class="sourceLine" id="cb18-27" title="27"><span class="co">## Função que lança uma moeda verdadeira e retorna o número de</span></a>
-<a class="sourceLine" id="cb18-28" title="28"><span class="co">## trocas. Ela reproduz o experimento sob a hipótese nula, ou seja, com</span></a>
-<a class="sourceLine" id="cb18-29" title="29"><span class="co">## p=0.5 e lançamentos independentes (sem memória).</span></a>
-<a class="sourceLine" id="cb18-30" title="30"></a>
-<a class="sourceLine" id="cb18-31" title="31">moeda &lt;-<span class="st"> </span><span class="cf">function</span>(n){</a>
-<a class="sourceLine" id="cb18-32" title="32">    <span class="co">## sum(abs(diff(rbinom(n, 1, 0.5))))</span></a>
-<a class="sourceLine" id="cb18-33" title="33">    <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">diff</span>(<span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, n, <span class="dt">replace=</span><span class="ot">TRUE</span>))))</a>
-<a class="sourceLine" id="cb18-34" title="34">}</a>
-<a class="sourceLine" id="cb18-35" title="35"></a>
-<a class="sourceLine" id="cb18-36" title="36"><span class="kw">moeda</span>(<span class="dv">70</span>)</a>
-<a class="sourceLine" id="cb18-37" title="37"><span class="co"># [1] 37</span></a>
-<a class="sourceLine" id="cb18-38" title="38"></a>
-<a class="sourceLine" id="cb18-39" title="39"><span class="co">## Faz várias execuções do experimento aleatório.</span></a>
-<a class="sourceLine" id="cb18-40" title="40">r &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span class="dv">100000</span>, <span class="kw">moeda</span>(<span class="dv">70</span>))</a>
-<a class="sourceLine" id="cb18-41" title="41"></a>
-<a class="sourceLine" id="cb18-42" title="42"><span class="co">## A distribuição amostral da estatística número de trocas.</span></a>
-<a class="sourceLine" id="cb18-43" title="43"><span class="kw">hist</span>(r, <span class="dt">breaks=</span><span class="kw">seq</span>(<span class="kw">min</span>(r), <span class="kw">max</span>(r)<span class="op">+</span><span class="dv">1</span>, <span class="dt">by=</span><span class="dv">1</span>)<span class="op">-</span><span class="fl">0.5</span>, <span class="dt">prob=</span><span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb18-44" title="44">     <span class="dt">xlab=</span><span class="st">&quot;Número de trocas em 70 lançamentos&quot;</span>,</a>
-<a class="sourceLine" id="cb18-45" title="45">     <span class="dt">ylab=</span><span class="st">&quot;Densidade&quot;</span>, <span class="dt">main=</span><span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb18-46" title="46"><span class="kw">abline</span>(<span class="dt">v=</span>o, <span class="dt">col=</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb18-47" title="47"><span class="kw">text</span>(<span class="dt">x=</span>o, <span class="dt">y=</span><span class="kw">par</span>()<span class="op">$</span>usr[<span class="dv">4</span>], <span class="dt">label=</span><span class="st">&quot;Estatística observada&quot;</span>, <span class="dt">srt=</span><span class="dv">90</span>,</a>
-<a class="sourceLine" id="cb18-48" title="48">     <span class="dt">adj=</span><span class="kw">c</span>(<span class="fl">1.25</span>,<span class="op">-</span><span class="fl">0.25</span>))</a></code></pre></div>
-<p><img src="figures/09_MC_inf-3/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"></a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="kw">plot</span>(<span class="kw">ecdf</span>(r))</a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="kw">abline</span>(<span class="dt">v=</span>o, <span class="dt">col=</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="kw">text</span>(<span class="dt">x=</span>o, <span class="dt">y=</span><span class="kw">par</span>()<span class="op">$</span>usr[<span class="dv">4</span>], <span class="dt">label=</span><span class="st">&quot;Estatística observada&quot;</span>, <span class="dt">srt=</span><span class="dv">90</span>,</a>
-<a class="sourceLine" id="cb19-5" title="5">     <span class="dt">adj=</span><span class="kw">c</span>(<span class="fl">1.25</span>,<span class="op">-</span><span class="fl">0.25</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb12-49" title="49"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb12-50" title="50"><span class="kw">pt</span>(tcalc, <span class="dt">df =</span> n1 <span class="op">+</span><span class="st"> </span>n2 <span class="op">-</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb12-51" title="51"><span class="co"># [1] 0.001323634</span></a>
+<a class="sourceLine" id="cb12-52" title="52"></a>
+<a class="sourceLine" id="cb12-53" title="53"><span class="co">## Teste por simulação de Monte Carlo</span></a>
+<a class="sourceLine" id="cb12-54" title="54">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb12-55" title="55"><span class="co">## Simula direto da distribuição amostral</span></a>
+<a class="sourceLine" id="cb12-56" title="56">am &lt;-<span class="st"> </span><span class="kw">replicate</span>(N, <span class="kw">rnorm</span>(<span class="dv">1</span>, mu0, s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2)))</a>
+<a class="sourceLine" id="cb12-57" title="57"><span class="co">## Usando media dos machos</span></a>
+<a class="sourceLine" id="cb12-58" title="58">am.machos &lt;-<span class="st"> </span><span class="kw">replicate</span>(</a>
+<a class="sourceLine" id="cb12-59" title="59">    N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m1, s.pond), da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb12-60" title="60">)</a>
+<a class="sourceLine" id="cb12-61" title="61"><span class="co">## Usando media das femeas</span></a>
+<a class="sourceLine" id="cb12-62" title="62">am.femeas &lt;-<span class="st"> </span><span class="kw">replicate</span>(</a>
+<a class="sourceLine" id="cb12-63" title="63">    N, <span class="kw">diff</span>(<span class="kw">tapply</span>(<span class="kw">rnorm</span>(<span class="dv">20</span>, m2, s.pond), da<span class="op">$</span>sexo, mean))</a>
+<a class="sourceLine" id="cb12-64" title="64">)</a>
+<a class="sourceLine" id="cb12-65" title="65"></a>
+<a class="sourceLine" id="cb12-66" title="66"><span class="co">## Visualização</span></a>
+<a class="sourceLine" id="cb12-67" title="67"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb12-68" title="68"><span class="kw">hist</span>(am, <span class="dt">main =</span> <span class="st">&quot;Distribuição amostral&quot;</span>)</a>
+<a class="sourceLine" id="cb12-69" title="69"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb12-70" title="70"><span class="kw">hist</span>(am.machos, <span class="dt">main =</span> <span class="st">&quot;Média de amostras (machos)&quot;</span>)</a>
+<a class="sourceLine" id="cb12-71" title="71"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb12-72" title="72"><span class="kw">hist</span>(am.femeas, <span class="dt">main =</span> <span class="st">&quot;Média de amostras (fêmeas)&quot;</span>)</a>
+<a class="sourceLine" id="cb12-73" title="73"><span class="kw">abline</span>(<span class="dt">v =</span> med.amostral, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-5-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"></a>
-<a class="sourceLine" id="cb20-2" title="2"><span class="co">## Como a v.a. é discreta.</span></a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="kw">sum</span>(r<span class="op">&lt;=</span>o)<span class="op">/</span><span class="kw">length</span>(r)</a>
-<a class="sourceLine" id="cb20-4" title="4"><span class="co"># [1] 0.04623</span></a>
-<a class="sourceLine" id="cb20-5" title="5"><span class="kw">sum</span>(r<span class="op">&lt;</span>o)<span class="op">/</span><span class="kw">length</span>(r)</a>
-<a class="sourceLine" id="cb20-6" title="6"><span class="co"># [1] 0.0273</span></a>
-<a class="sourceLine" id="cb20-7" title="7"></a>
-<a class="sourceLine" id="cb20-8" title="8"><span class="kw">pbinom</span>(o, <span class="dv">70</span>, <span class="dt">prob =</span> <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb20-9" title="9"><span class="co"># [1] 0.03611896</span></a>
-<a class="sourceLine" id="cb20-10" title="10"><span class="kw">prop.test</span>(<span class="dt">x =</span> <span class="dv">27</span>, <span class="dt">n =</span> <span class="dv">70</span>, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)</a>
-<a class="sourceLine" id="cb20-11" title="11"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-12" title="12"><span class="co">#   1-sample proportions test with continuity correction</span></a>
-<a class="sourceLine" id="cb20-13" title="13"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-14" title="14"><span class="co"># data:  27 out of 70, null probability 0.5</span></a>
-<a class="sourceLine" id="cb20-15" title="15"><span class="co"># X-squared = 3.2143, df = 1, p-value = 0.0365</span></a>
-<a class="sourceLine" id="cb20-16" title="16"><span class="co"># alternative hypothesis: true p is less than 0.5</span></a>
-<a class="sourceLine" id="cb20-17" title="17"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb20-18" title="18"><span class="co">#  0.0000000 0.4911405</span></a>
-<a class="sourceLine" id="cb20-19" title="19"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb20-20" title="20"><span class="co">#         p </span></a>
-<a class="sourceLine" id="cb20-21" title="21"><span class="co"># 0.3857143</span></a>
-<a class="sourceLine" id="cb20-22" title="22"><span class="kw">binom.test</span>(<span class="dt">x =</span> <span class="dv">27</span>, <span class="dt">n =</span> <span class="dv">70</span>, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)</a>
-<a class="sourceLine" id="cb20-23" title="23"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-24" title="24"><span class="co">#   Exact binomial test</span></a>
-<a class="sourceLine" id="cb20-25" title="25"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-26" title="26"><span class="co"># data:  27 and 70</span></a>
-<a class="sourceLine" id="cb20-27" title="27"><span class="co"># number of successes = 27, number of trials = 70, p-value = 0.03612</span></a>
-<a class="sourceLine" id="cb20-28" title="28"><span class="co"># alternative hypothesis: true probability of success is less than 0.5</span></a>
-<a class="sourceLine" id="cb20-29" title="29"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb20-30" title="30"><span class="co">#  0.000000 0.490866</span></a>
-<a class="sourceLine" id="cb20-31" title="31"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb20-32" title="32"><span class="co"># probability of success </span></a>
-<a class="sourceLine" id="cb20-33" title="33"><span class="co">#              0.3857143</span></a>
-<a class="sourceLine" id="cb20-34" title="34"></a>
-<a class="sourceLine" id="cb20-35" title="35"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(r<span class="op">&lt;=</span>o)<span class="op">/</span><span class="kw">length</span>(r)</a>
-<a class="sourceLine" id="cb20-36" title="36"><span class="co"># [1] 0.09246</span></a>
-<a class="sourceLine" id="cb20-37" title="37"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(r<span class="op">&lt;</span>o)<span class="op">/</span><span class="kw">length</span>(r)</a>
-<a class="sourceLine" id="cb20-38" title="38"><span class="co"># [1] 0.0546</span></a>
-<a class="sourceLine" id="cb20-39" title="39"><span class="kw">prop.test</span>(<span class="dt">x =</span> <span class="dv">27</span>, <span class="dt">n =</span> <span class="dv">70</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
-<a class="sourceLine" id="cb20-40" title="40"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-41" title="41"><span class="co">#   1-sample proportions test with continuity correction</span></a>
-<a class="sourceLine" id="cb20-42" title="42"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-43" title="43"><span class="co"># data:  27 out of 70, null probability 0.5</span></a>
-<a class="sourceLine" id="cb20-44" title="44"><span class="co"># X-squared = 3.2143, df = 1, p-value = 0.073</span></a>
-<a class="sourceLine" id="cb20-45" title="45"><span class="co"># alternative hypothesis: true p is not equal to 0.5</span></a>
-<a class="sourceLine" id="cb20-46" title="46"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb20-47" title="47"><span class="co">#  0.2740797 0.5099641</span></a>
-<a class="sourceLine" id="cb20-48" title="48"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb20-49" title="49"><span class="co">#         p </span></a>
-<a class="sourceLine" id="cb20-50" title="50"><span class="co"># 0.3857143</span></a>
-<a class="sourceLine" id="cb20-51" title="51"><span class="kw">binom.test</span>(<span class="dt">x =</span> <span class="dv">27</span>, <span class="dt">n =</span> <span class="dv">70</span>, <span class="dt">alternative =</span> <span class="st">&quot;two.sided&quot;</span>)</a>
-<a class="sourceLine" id="cb20-52" title="52"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-53" title="53"><span class="co">#   Exact binomial test</span></a>
-<a class="sourceLine" id="cb20-54" title="54"><span class="co"># </span></a>
-<a class="sourceLine" id="cb20-55" title="55"><span class="co"># data:  27 and 70</span></a>
-<a class="sourceLine" id="cb20-56" title="56"><span class="co"># number of successes = 27, number of trials = 70, p-value = 0.07224</span></a>
-<a class="sourceLine" id="cb20-57" title="57"><span class="co"># alternative hypothesis: true probability of success is not equal to 0.5</span></a>
-<a class="sourceLine" id="cb20-58" title="58"><span class="co"># 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb20-59" title="59"><span class="co">#  0.2717200 0.5097006</span></a>
-<a class="sourceLine" id="cb20-60" title="60"><span class="co"># sample estimates:</span></a>
-<a class="sourceLine" id="cb20-61" title="61"><span class="co"># probability of success </span></a>
-<a class="sourceLine" id="cb20-62" title="62"><span class="co">#              0.3857143</span></a>
-<a class="sourceLine" id="cb20-63" title="63"></a>
-<a class="sourceLine" id="cb20-64" title="64"><span class="co">## A distribuição do número de trocas sob H0 é uma Binomial.</span></a>
-<a class="sourceLine" id="cb20-65" title="65">i &lt;-<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">69</span></a>
-<a class="sourceLine" id="cb20-66" title="66">p &lt;-<span class="st"> </span><span class="kw">pbinom</span>(i, <span class="dt">size=</span><span class="dv">69</span>, <span class="dt">p=</span><span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb20-67" title="67"></a>
-<a class="sourceLine" id="cb20-68" title="68"><span class="kw">plot</span>(<span class="kw">ecdf</span>(r), <span class="dt">verticals=</span><span class="ot">TRUE</span>, <span class="dt">cex=</span><span class="ot">NA</span>, <span class="dt">main=</span><span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb20-69" title="69">     <span class="dt">xlab=</span><span class="st">&quot;Número de trocas em 70 lançamentos&quot;</span>,</a>
-<a class="sourceLine" id="cb20-70" title="70">     <span class="dt">ylab=</span><span class="st">&quot;Probabilidade acumulada&quot;</span>)</a>
-<a class="sourceLine" id="cb20-71" title="71"><span class="kw">lines</span>(p<span class="op">~</span>i, <span class="dt">type=</span><span class="st">&quot;s&quot;</span>, <span class="dt">col=</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb20-72" title="72"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>,</a>
-<a class="sourceLine" id="cb20-73" title="73">       <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;Distribuição empírica&quot;</span>, <span class="st">&quot;Distribuição teórica&quot;),</span></a>
-<a class="sourceLine" id="cb20-74" title="74"><span class="st">       col=1:2, lty=1, bty=&quot;</span>n<span class="st">&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb13-2" title="2"></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="kw">sum</span>(am <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="co"># [1] 3e-04</span></a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="kw">sum</span>(am.machos <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="co"># [1] 1e-04</span></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="kw">sum</span>(am.femeas <span class="op">&gt;=</span><span class="st"> </span>med.amostral)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co"># [1] 0</span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="co">## Isso mostra que a simulação pode não conseguir representar casos</span></a>
+<a class="sourceLine" id="cb13-11" title="11"><span class="co">## extremos, embora a conclusão não seria alterada.</span></a>
+<a class="sourceLine" id="cb13-12" title="12"></a>
+<a class="sourceLine" id="cb13-13" title="13"><span class="co">## Padroniza a distribuição para t(n1 + n2 - 2)</span></a>
+<a class="sourceLine" id="cb13-14" title="14">tpad &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>mu0)<span class="op">/</span>(s.pond <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">/</span>n1 <span class="op">+</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span>n2))</a>
+<a class="sourceLine" id="cb13-15" title="15"><span class="kw">hist</span>(tpad)</a>
+<a class="sourceLine" id="cb13-16" title="16"><span class="kw">abline</span>(<span class="dt">v =</span> tcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="figures/09_MC_inf-3/unnamed-chunk-5-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="kw">sum</span>(tpad <span class="op">&gt;=</span><span class="st"> </span>tcalc)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co"># [1] 3e-04</span></a></code></pre></div>
 </div>
+</div>
+</div>
+<div id="teste-de-hipótese-para-a-proporção" class="section level1">
+<h1><span class="header-section-number">4</span> Teste de hipótese para a proporção</h1>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## Dados: y = 32 sucessos em n = 250 tentativas</span></a>
+<a class="sourceLine" id="cb15-2" title="2">n &lt;-<span class="st"> </span><span class="dv">250</span></a>
+<a class="sourceLine" id="cb15-3" title="3">y &lt;-<span class="st"> </span><span class="dv">32</span></a>
+<a class="sourceLine" id="cb15-4" title="4"></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">## Proporção amostral</span></a>
+<a class="sourceLine" id="cb15-6" title="6">(theta.hat &lt;-<span class="st"> </span>y<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="co"># [1] 0.128</span></a>
+<a class="sourceLine" id="cb15-8" title="8"></a>
+<a class="sourceLine" id="cb15-9" title="9"><span class="co">## Teste de hipótese</span></a>
+<a class="sourceLine" id="cb15-10" title="10"><span class="co">## H0: theta = 0.15</span></a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="co">## Ha: theta &lt; 0.15</span></a>
+<a class="sourceLine" id="cb15-12" title="12">theta0 &lt;-<span class="st"> </span><span class="fl">0.15</span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="co">## A aproximação pela normal funciona bem quando</span></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co">## np &gt;= 5 e n(1-p) &gt;=5</span></a>
+<a class="sourceLine" id="cb15-15" title="15">n <span class="op">*</span><span class="st"> </span>theta.hat</a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="co"># [1] 32</span></a>
+<a class="sourceLine" id="cb15-17" title="17">n <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta.hat)</a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co"># [1] 218</span></a>
+<a class="sourceLine" id="cb15-19" title="19"><span class="co">## Estatistica de teste (aproximação pela normal)</span></a>
+<a class="sourceLine" id="cb15-20" title="20">(zcalc &lt;-<span class="st"> </span>(theta.hat <span class="op">-</span><span class="st"> </span>theta0)<span class="op">/</span><span class="kw">sqrt</span>((theta0 <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta0))<span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="co"># [1] -0.9741764</span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="co">## Com alpha = 0.05, o valor cítico é</span></a>
+<a class="sourceLine" id="cb15-23" title="23">(zcrit &lt;-<span class="st"> </span><span class="kw">qnorm</span>(.<span class="dv">05</span>))</a>
+<a class="sourceLine" id="cb15-24" title="24"><span class="co"># [1] -1.644854</span></a>
+<a class="sourceLine" id="cb15-25" title="25"><span class="co">## p-valor</span></a>
+<a class="sourceLine" id="cb15-26" title="26"><span class="kw">pnorm</span>(zcalc)</a>
+<a class="sourceLine" id="cb15-27" title="27"><span class="co"># [1] 0.1649845</span></a>
+<a class="sourceLine" id="cb15-28" title="28"><span class="kw">pbinom</span>(y, <span class="dt">size =</span> n, <span class="dt">prob =</span> theta0) <span class="co"># teste exato</span></a>
+<a class="sourceLine" id="cb15-29" title="29"><span class="co"># [1] 0.1890489</span></a>
+<a class="sourceLine" id="cb15-30" title="30"><span class="kw">binom.test</span>(<span class="dt">x =</span> <span class="dv">32</span>, <span class="dt">n =</span> <span class="dv">250</span>, <span class="dt">p =</span> <span class="fl">0.15</span>, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)</a>
+<a class="sourceLine" id="cb15-31" title="31"><span class="co"># </span></a>
+<a class="sourceLine" id="cb15-32" title="32"><span class="co">#   Exact binomial test</span></a>
+<a class="sourceLine" id="cb15-33" title="33"><span class="co"># </span></a>
+<a class="sourceLine" id="cb15-34" title="34"><span class="co"># data:  32 and 250</span></a>
+<a class="sourceLine" id="cb15-35" title="35"><span class="co"># number of successes = 32, number of trials = 250, p-value = 0.189</span></a>
+<a class="sourceLine" id="cb15-36" title="36"><span class="co"># alternative hypothesis: true probability of success is less than 0.15</span></a>
+<a class="sourceLine" id="cb15-37" title="37"><span class="co"># 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb15-38" title="38"><span class="co">#  0.0000000 0.1680901</span></a>
+<a class="sourceLine" id="cb15-39" title="39"><span class="co"># sample estimates:</span></a>
+<a class="sourceLine" id="cb15-40" title="40"><span class="co"># probability of success </span></a>
+<a class="sourceLine" id="cb15-41" title="41"><span class="co">#                  0.128</span></a>
+<a class="sourceLine" id="cb15-42" title="42"><span class="co">## Aproximação (com correção de continuidade)</span></a>
+<a class="sourceLine" id="cb15-43" title="43"><span class="kw">prop.test</span>(<span class="dt">x =</span> <span class="dv">32</span>, <span class="dt">n =</span> <span class="dv">250</span>, <span class="dt">p =</span> <span class="fl">0.15</span>, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)</a>
+<a class="sourceLine" id="cb15-44" title="44"><span class="co"># </span></a>
+<a class="sourceLine" id="cb15-45" title="45"><span class="co">#   1-sample proportions test with continuity correction</span></a>
+<a class="sourceLine" id="cb15-46" title="46"><span class="co"># </span></a>
+<a class="sourceLine" id="cb15-47" title="47"><span class="co"># data:  32 out of 250, null probability 0.15</span></a>
+<a class="sourceLine" id="cb15-48" title="48"><span class="co"># X-squared = 0.78431, df = 1, p-value = 0.1879</span></a>
+<a class="sourceLine" id="cb15-49" title="49"><span class="co"># alternative hypothesis: true p is less than 0.15</span></a>
+<a class="sourceLine" id="cb15-50" title="50"><span class="co"># 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb15-51" title="51"><span class="co">#  0.0000000 0.1689838</span></a>
+<a class="sourceLine" id="cb15-52" title="52"><span class="co"># sample estimates:</span></a>
+<a class="sourceLine" id="cb15-53" title="53"><span class="co">#     p </span></a>
+<a class="sourceLine" id="cb15-54" title="54"><span class="co"># 0.128</span></a>
+<a class="sourceLine" id="cb15-55" title="55"></a>
+<a class="sourceLine" id="cb15-56" title="56"><span class="co">## Teste por simulação de Monte Carlo</span></a>
+<a class="sourceLine" id="cb15-57" title="57">N &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb15-58" title="58"><span class="co">## Simula direto da distribuição amostral da proporção (aproximada pela</span></a>
+<a class="sourceLine" id="cb15-59" title="59"><span class="co">## normal)</span></a>
+<a class="sourceLine" id="cb15-60" title="60">am &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dt">mean =</span> theta0, <span class="dt">sd =</span> <span class="kw">sqrt</span>((theta0 <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta0))<span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb15-61" title="61"><span class="co">## Simula direto da população, sob theta0</span></a>
+<a class="sourceLine" id="cb15-62" title="62">am2 &lt;-<span class="st"> </span><span class="kw">rbinom</span>(N, <span class="dt">size =</span> n, <span class="dt">prob =</span> theta0)</a>
+<a class="sourceLine" id="cb15-63" title="63"><span class="co">## Calcula a proporção amostral</span></a>
+<a class="sourceLine" id="cb15-64" title="64">am2 &lt;-<span class="st"> </span>am2<span class="op">/</span>n</a>
+<a class="sourceLine" id="cb15-65" title="65"></a>
+<a class="sourceLine" id="cb15-66" title="66"><span class="co">## Visualização</span></a>
+<a class="sourceLine" id="cb15-67" title="67"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb15-68" title="68"><span class="kw">hist</span>(am, <span class="dt">main =</span> <span class="st">&quot;Distribuição amostral&quot;</span>, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb15-69" title="69"><span class="co">## Aproximação pela normal</span></a>
+<a class="sourceLine" id="cb15-70" title="70"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, theta0, <span class="kw">sqrt</span>((theta0 <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta0))<span class="op">/</span>n)),</a>
+<a class="sourceLine" id="cb15-71" title="71">      <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="fl">.3</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-72" title="72"><span class="kw">abline</span>(<span class="dt">v =</span> theta.hat, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-73" title="73"><span class="kw">hist</span>(am2, <span class="dt">main =</span> <span class="st">&quot;Proporções de amostras&quot;</span>, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb15-74" title="74"><span class="co">## Aproximação pela normal</span></a>
+<a class="sourceLine" id="cb15-75" title="75"><span class="kw">curve</span>(<span class="kw">dnorm</span>(x, theta0, <span class="kw">sqrt</span>((theta0 <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta0))<span class="op">/</span>n)),</a>
+<a class="sourceLine" id="cb15-76" title="76">      <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="fl">.3</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb15-77" title="77"><span class="kw">abline</span>(<span class="dt">v =</span> theta.hat, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb16-2" title="2"></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="kw">sum</span>(am <span class="op">&lt;=</span><span class="st"> </span>theta.hat)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb16-5" title="5"><span class="co"># [1] 0.1641</span></a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="kw">sum</span>(am2 <span class="op">&lt;=</span><span class="st"> </span>theta.hat)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="co"># [1] 0.1855</span></a>
+<a class="sourceLine" id="cb16-8" title="8"></a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="co">## Padroniza a distribuição para N(0,1)</span></a>
+<a class="sourceLine" id="cb16-10" title="10">zpad &lt;-<span class="st"> </span>(am <span class="op">-</span><span class="st"> </span>theta0)<span class="op">/</span><span class="kw">sqrt</span>((theta0 <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta0))<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="kw">hist</span>(zpad, <span class="dt">freq =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb16-12" title="12"><span class="kw">curve</span>(dnorm, <span class="dv">-3</span>, <span class="dv">3</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="kw">abline</span>(<span class="dt">v =</span> zcalc, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/09_MC_inf-3/unnamed-chunk-6-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## p-valor empírico</span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="kw">sum</span>(zpad <span class="op">&lt;=</span><span class="st"> </span>zcalc)<span class="op">/</span>N</a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="co"># [1] 0.1641</span></a></code></pre></div>
 </div>
 
 <center>
