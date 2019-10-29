@@ -476,6 +476,37 @@ div.tocify {
 
 <div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
+<p>Besag e Clifford (1989) definiram que um teste de Monte Carlo generalizado é um que possui as seguintes características:</p>
+<ol style="list-style-type: decimal">
+<li>Um conjunto de dados observado, é apenas um entre muitos conjuntos que poderiam ter ocorrido</li>
+<li>Todos os possíveis conjuntos de dados podem ser gerados a partir de uma série de mudanças incrementais nos dados (<strong>randomização</strong>)
+<ul>
+<li>Aqui vamos assumir que todos os possíveis conjuntos de dados podem ser gerados a partir de algum modelo probabilístico (Monte Carlo)</li>
+</ul></li>
+<li>A hipótese nula de interesse afirma que todos os possíveis conjuntos de dados possuem a mesma probabilidade de ocorrência</li>
+<li>Todo conjunto de dados possível pode ser resumido por alguma estatística de teste <span class="math inline">\(S\)</span></li>
+</ol>
+<ul>
+<li>Um teste de hipótese consiste em calcular uma medida (<strong>estatística de teste</strong>) e verificar o quanto ela é provável dentro do cenário de ocorrências puramente ao acaso, supondo que a hipótese nula é verdadeira.
+<ul>
+<li>Se a conclusão for de que é um valor dos mais prováveis, então não existem evidências para rejeitar a hipótese nula.</li>
+<li>Se for dos resultados mais extremos, então existem evidências de que a hipótese nula não é verdadeira</li>
+</ul></li>
+</ul>
+<p>Partindo dessa ideia, um teste de hipótese de Monte Carlo pode ser formulado da seguinte maneira:</p>
+<ol style="list-style-type: decimal">
+<li>Calcule a estatística de teste para a amostra</li>
+<li>Supondo que a hipótese nula é verdadeira, simule valores com as mesmas características do modelo probabilístico sendo testado (sob <span class="math inline">\(H_0\)</span>)</li>
+<li>Repita o passo (2) um número <span class="math inline">\(N\)</span> grande de vezes, e calcule a estatística de teste em todos os passos</li>
+<li>Com a distribuição dos <span class="math inline">\(N\)</span> valores da estatística de teste (supondo <span class="math inline">\(H_0\)</span>) verdadeira, <strong>calcule a proporção de valores iguais ou mais extremos</strong> que a estatística de teste da amostra</li>
+</ol>
+<ul>
+<li>O último passo pode ser interpretado como o <span class="math inline">\(p\)</span>-valor de Monte Carlo, ou <span class="math inline">\(p\)</span>-valor empírico.
+<ul>
+<li>Proporções altas mostram que a estatística de teste amostral não é tão extrema, o que favorece <span class="math inline">\(H_0\)</span></li>
+<li>Proporções baixas indicam que a estatística de teste é extrema (pouca probabilidade de ocorrer simplesmente ao acaso), por isso a hipótese nula deve ser pouco plausível</li>
+</ul></li>
+</ul>
 </div>
 <div id="nível-descritivo" class="section level1">
 <h1><span class="header-section-number">2</span> Nível descritivo</h1>
