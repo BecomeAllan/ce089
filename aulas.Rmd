@@ -69,7 +69,8 @@ mais exemplos mostrados em aula.
   estimação. [HTML](09_MC_inf-1.html).
 - **25/10 (Sex)**: Propriedades de estimadores pontuais por simulação de
   Monte Carlo. Taxa empírica do erro tipo I. [HTML](09_MC_inf-2.html).
-- **29/10 (Ter)**:
+- **29/10 (Ter)**: Testes de hipótese via simulação de Monte Carlo.
+  [HTML](09_MC_inf-3.html).
 - **01/11 (Sex)**:
 - **05/11 (Ter)**:
 - **08/11 (Sex)**:
