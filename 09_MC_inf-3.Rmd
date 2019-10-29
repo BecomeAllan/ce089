@@ -83,7 +83,7 @@ N <- 10000
 ## Siulando direto da distribuicao amostral, sob H0
 am <- rnorm(N, mean = mu0, sd = 1/sqrt(n))
 ## Simula da populacao e calcula as medias, sob H0
-am2 <- replicate(N, calc.med(rnorm(n, mu0, 1)))
+am2 <- replicate(N, mean(rnorm(n, mu0, 1)))
 ## Visualização
 par(mfrow = c(1, 2))
 hist(am, main = "Distribuição amostral")
