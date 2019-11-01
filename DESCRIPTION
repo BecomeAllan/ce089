@@ -2,5 +2,5 @@ Package: placeholder
 Type: Book
 Title: Does not matter.
 Version: 0.0.1
-Imports: rmarkdown, microbenchmark, animation, expm, diagram, latticeExtra, plyr
+Imports: rmarkdown, microbenchmark, animation, expm, diagram, latticeExtra, plyr, bootstrap
 Remotes: rstudio/rmarkdown
