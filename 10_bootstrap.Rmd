@@ -16,7 +16,28 @@ opts_chunk$set(fig.path = "figures/10_bootstrap/")
 
 # Introdução
 
-Justificativas
+- Os métodos de Bootstrap são uma classe de métodos de Monte Carlo não
+paramétricos, que estimam a distribuição de uma população por
+reamostragem
+
+- Métodos de reamostragem tratam a amostra observada como uma população
+  finita
+  - A distribuição da população finita representada pela amostra
+  observada, pode ser pode ser entendida como uma pseudo-população, com
+  características similares às da população original
+
+- Amostra aleatórias são geradas (reamostragem) a partir da amostra
+  original, para estimar características populacionais e fazer
+  inferência sobre a população amostrada
+  - Através da reamostragem, a distribuição amostral de uma estatística
+    pode ser estimada, e as propriedades de um estimador podem então ser
+    calculadas através do erro padrão e cálculos de viés
+
+- Métodos de bootstrap são utilizados quando a distribuição da população
+  alvo não é especificada (ou conhecida), e a amsotra é a única
+  informação disponível
+
+**Justificativas**
 
 - Métodos computacionalmente intensivos para inferência
 estatística são usados quando as abordagens tradicionais não são
@@ -27,11 +48,11 @@ adequadas.
 - Tais métodos se baseiam em reamostragem e/ou simulação.
 - Podem ser aplicados em muitos contextos.
 
-Bootstrap: visão geral
+**Bootstrap: visão geral**
 
 - Boostrap foi apresentado de forma sistematizada por Efron (1979).
 - O termo bootstrap foi usado por Efron (1979) com o mesmo espírito que
-  Tukey (1958) usou Jackknife.
+  Tukey (1958) usou Jackknife (canivete suiço)
 - O método já havia sido usado em circustâncias anteriores.
 - Bootstrap é um **método de reamostragem** que pode usado para
 avaliar propriedades de estimadores e fazer inferência.
@@ -43,9 +64,9 @@ empírica** dos dados como se fosse a verdadeira distribuição.
   - Substituir ou aprimorar a adequação de abordagens assintóticas em
   amostras pequenas: intervalos de confiança, testes de hipótese.
 
-Funcionamento
+**Funcionamento**
 
-- Considere uma amostra de observações iid $x_i$, $i = 1, ..., n.$
+- Considere uma amostra de observações iid $x_i$, $i = 1, \ldots, n$
 - Usando a distribuição empírica, cada valor $x_i$ tem igual
 probabilidade $1/n$ de ocorrer.
 - Considere que $\theta$ seja um parâmetro de interesse que dispõe
@@ -53,12 +74,25 @@ de um estimador $\hat{\theta} = f(X_1, ..., X_n)$.
 - Uma **amostra bootstrap** é um conjunto de valores extraídos ao
 acaso **com reposição** da amostra original.
 - A estimativa de $\theta$ na $b$-ésima reamostra bootstrap é
-$\hat{\theta}_b^\star$.
-- A estimativa pontual bootstrap é o valor médio
+$\hat{\theta}^{b}$.
+
+**Algoritmo**
+
+Para cada estimativa de bootstrap indexada $b = 1, \ldots, B$:
+
+1. Gere uma amostra $x^{\star} = (x_1^{\star}, \ldots, x_n^{\star})$,
+através de amostragem **com reposição** de amostra observada $x_1,
+\ldots, x_n$
+2. Calcule a $b$-ésima estimativa $\hat{\theta}^{(b)}$ da $b$-ésima
+amostra de bootstrap
+
+A estimativa pontual bootstrap é o valor médio
 $$
-\hat{\theta}^\star = \frac{1}{B} \sum_{b = 1}^{B} \hat{\theta}_b^\star
+\overline{\hat{\theta}^\star} = \frac{1}{B} \sum_{b = 1}^{B}
+\hat{\theta}^{(b)}
 $$
 
+### Exemplo da aula anterior {-}
 
 ```{r}
 ## Exemplo adaptado de Manly (1997)
@@ -176,20 +210,163 @@ abline(v = med.amostral, col = 2)
 sum(am >= med.amostral)/N
 ```
 
+### Uma nota de precaução {-}
+
 ```{r}
+## Amostra de uma Poisson(2)
 x <- c(2, 2, 1, 1, 5, 4, 4, 3, 1, 2)
+## Distribuição empírica
 prop.table(table(x))
+## Distribuição empírica acumulada
 cumsum(prop.table(table(x)))
 
+## Amostra via bootstrap
+## Um passo
 am <- sample(x, replace = TRUE)
 prop.table(table(am))
 cumsum(prop.table(table(am)))
 
-am <- sample(x, size = 1000, replace = TRUE)
+## B passos
+B <- 1000
+am <- sample(x, size = B, replace = TRUE)
 prop.table(table(am))
 cumsum(prop.table(table(am)))
 
+## Qual o problema então?
+## Distribuição empírica
 plot(0:5, c(0, prop.table(table(am))), type = "h")
+## Distribuição teórica
 points((0:5) + .1, dpois(0:5, 2), type = "h", col = 2)
+```
 
+# Estimativa de erro padrão via bootstrap
+
+A estimativa do erro padrão de um estimador $\hat{\theta}$ via bootstrap
+é o desvio padrão amostral das estimativas de bootstrap
+$\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(B)}$
+
+$$
+se(\hat{\theta}^{\star}) = \sqrt{\frac{1}{B-1}
+\sum_{b=1}^{B} (\hat{\theta}^{(b)} - \overline{\hat{\theta}^{\star}})}
+$$
+
+```{r}
+## Estimativa de erro padrão via bootstrap
+library(bootstrap) # para carregar os dados
+## Uma amostra dos dados originais
+str(law)
+plot(law$LSAT, law$GPA)
+cor(law$LSAT, law$GPA)
+## Dados originais
+str(law82)
+plot(law82$LSAT, law82$GPA)
+cor(law82$LSAT, law82$GPA)
+
+## Definições
+B <- 200
+n <- nrow(law)
+R <- numeric(B)
+
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA[i]
+    R[b] <- cor(LSAT, GPA)
+}
+
+## Resultado
+mean(R)
+(se.R <- sd(R))
+hist(R)
+```
+
+```{r}
+## Usando a função boot::boot()
+
+## Define a função que calcula a estatística de interesse
+r <- function(x, i) {
+    cor(x[i, 1], x[i, 2])
+}
+
+## Roda o processo
+library(boot)
+obj <- boot(data = law, statistic = r, R = 2000)
+obj
+str(obj)
+plot(obj)
+
+## Acessa os valores calculados
+y <- as.vector(obj$t)
+mean(y)
+sd(y)
+```
+
+```{r}
+## Usando a função bootstrap::bootstrap()
+
+## Define a função que calcula a estatística
+r <- function(x, xdata) {
+    cor(xdata[x, 1], xdata[x, 2])
+}
+
+## Procedimento
+n <- nrow(law)
+obj2 <- bootstrap(x = 1:n, nboot = 2000, theta = r, law)
+mean(obj2$thetastar)
+sd(obj2$thetastar)
+```
+
+# Estimativa do viés via bootstrap
+
+Se $\hat{\theta}$ é um estimador não viesado para $\theta$, então
+$\text{E}[\hat{\theta}] = \theta$. O viés de um estimador
+$\hat{\theta}$ de $\theta$ é
+
+$$
+\text{B}[\hat{\theta}] = \text{E}[\hat{\theta} - \theta] =
+\text{E}[\hat{\theta}] - \theta
+$$
+
+- A estimativa de viés via bootstrap usa as estimativas de bootstrap de
+$\hat{\theta}$ para construir a distribuição amostral de $\hat{\theta}$.
+
+- Para a população finita $x = (x_1, \ldots, x_n)$, o parâmetro é
+$\hat{\theta}(x)$, e existem $B$ estimativas $\hat{\theta}^{(b)}$
+independentes e identicamente distribuídas.
+
+- A média amostral de $\{\hat{\theta}^{(b)}\}$ é não viesada para o
+  valor esperado $\text{E}[\hat{\theta}^{\star}]$, então a estimativa de
+  viés via bootsrap é
+$$
+\widehat{\text{B}}[\hat{\theta}] = \overline{\hat{\theta}^{\star}} -
+  \hat{\theta}
+$$
+onde $\hat{\theta} = \hat{\theta}(x)$ é a estimativa calculada da
+  amostra original.
+
+- Valores positivos de viés indicam que, em média, \hat{\theta} tende a
+  sobrestimar $\theta$.
+
+
+```{r}
+## Estimativa do viés via bootstrap
+
+## Estatística amostral
+(theta.hat <- cor(law$LSAT, law$GPA))
+
+## Definições
+B <- 2000
+n <- nrow(law)
+theta.b <- numeric(B)
+
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA[i]
+    theta.b[b] <- cor(LSAT, GPA)
+}
+
+## Viés
+mean(theta.b) - theta.hat
 ```
