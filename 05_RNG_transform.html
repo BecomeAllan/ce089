@@ -926,12 +926,12 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean    median        uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  100.961  105.6155  110.2951  108.7095  114.6685</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2853.363 2965.4410 3333.2556 3016.7890 3074.3625</span></a>
-<a class="sourceLine" id="cb14-6" title="6"><span class="co">#       max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#   134.136   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  9512.785   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean    median       uq</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  103.731  107.489  120.3908  121.6725  130.162</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2974.847 3079.985 3572.8724 3200.2905 3343.693</span></a>
+<a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    181.874   100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10881.824   100</span></a></code></pre></div>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
