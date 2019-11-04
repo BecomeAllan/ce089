@@ -1,0 +1,17 @@
+---
+title: "Métodos de reamostragem"
+subtitle: "Jackknife"
+author: "Fernando P. Mayer"
+bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
+    toc_depth: 3
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+opts_chunk$set(fig.path = "figures/11_jackknife/")
+```
+
+# Introdução
