@@ -73,8 +73,9 @@ mais exemplos mostrados em aula.
   [HTML](09_MC_inf-3.html).
 - **01/11 (Sex)**: Métodos de reamostragem: bootstrap.
   [HTML](10_bootstrap.html).
-- **05/11 (Ter)**: Métodos de reamostragem: jackknife.
-- **08/11 (Sex)**: Aplicações dos métodos de boostrap e jackknife.
+- **05/11 (Ter)**: Intervalos de confiança via bootstrap.
+  [HTML](10_bootstrap.html).
+- **08/11 (Sex)**: Jackknife e aplicações.
 - **12/11 (Ter)**: Atividade disponível no [Moodle][].
 - **15/11 (Sex)**: **Feriado**.
 - **19/11 (Ter)**: Testes de permutação.

@@ -27,6 +27,8 @@ output:
   [estimação intervalar](09_MC_inf-1.html).
 - Métodos de Monte Carlo para inferência estatística:
   [estimação pontual](09_MC_inf-2.html).
+- Testes de hipótese via [simulação de Monte Carlo](09_MC_inf-3.html).
+- Métodos de reamostragem: [bootstrap](10_bootstrap.html).
 
 ### Slides
 
