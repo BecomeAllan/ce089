@@ -608,7 +608,7 @@ par(mfrow = c(1, 2))
 ## Distribuição amostral
 hist(ci$stat)
 ## Distribuição "estudentizada" de referência
-hist(ci$t.stats); abline(v = Qt, col = 2)
+hist(ci$t.stats); abline(v = ci$Qt, col = 2)
 par(mfrow = c(1, 1))
 ```
 
@@ -620,7 +620,7 @@ Observações:
 
 ### Outro exemplo
 
-```{r}
+```{r, eval=FALSE}
 ### Example 8.5 (Bootstrap estimate of bias of a ratio estimate)
 data(patch, package = "bootstrap")
 patch
