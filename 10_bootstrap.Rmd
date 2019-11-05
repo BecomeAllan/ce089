@@ -475,8 +475,6 @@ boot.ci(boot.obj, type = "basic")
 ## Percentil
 quantile(boot.obj$t, probs = alpha, type = 6)
 boot.ci(boot.obj, type = "perc")
-
-boot.ci(boot.obj, type = "stud")
 ```
 
 Observações:
