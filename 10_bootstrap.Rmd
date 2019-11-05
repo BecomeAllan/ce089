@@ -395,7 +395,7 @@ $$
 
 - Esse intervalo é fácil de calcular, mas fizemos diversas suposições:
   - A distribuição de $\hat{\theta}$ é normal
-  - OU $\hat{\theta}$ é uma média e o tamanho da amostra é grande
+    - OU $\hat{\theta}$ é uma média e o tamanho da amostra é grande
   - Também assumimos que $\hat{\theta}$ é não viesado para $\theta$
   - Assumimos que $se(\hat{\theta})$ é um parâmetro conhecido, mas no
     bootstrap $se(\hat{\theta})$ é estimado (é o desvio padrão das
@@ -411,7 +411,7 @@ $$
 - O intervalo básico de bootstrap $100(1-\alpha)\%$ de confiança é
 $$
 ( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
-  \quad 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2} )
+  \quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
 $$
 onde $\hat{\theta}^{\star}_{\alpha}$ denota o $\alpha$-quantil das
 estimativas de bootstrap $\hat{\theta}^{\star}$.
@@ -420,17 +420,17 @@ estimativas de bootstrap $\hat{\theta}^{\star}$.
 
 - O intervalo percentil de bootstrap usa a distribuição empírica das
   estimativas de bootstrap como distribuição de referência
-- Os quantis da distribuição empírica são estimadores da distribuição
-  amostral de $\hat{\theta}$
+- Os quantis da distribuição empírica são estimadores dos quantis da
+  distribuição amostral de $\hat{\theta}$
   - Estas quantidades (aleatórias) devem devem ser mais próximas das
     verdadeiras quando esta distribuição amostral é normal
 - Suponha que $\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{B}$ são as
   estimativas de bootstrap de $\hat{\theta}$
 - A partir da distribuição empírica das estimativas, determine os
-  quantis $\alpha/2$ e $1-\alpha/2$ de $\hat{\theta}$, ou seja
+  quantis $\alpha/2$ e $1-\alpha/2$ de $\hat{\theta}$
 - Portanto o intervalo percentil de bootstrap $100(1-\alpha)\%$ é
 $$
-(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2}
+(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2})
 $$
 - Pode-se mostrar que o intervalo percentil de bootstrap possui
   vantagens teóricas e maior taxa de cobertura, quando comparado aos
@@ -438,7 +438,6 @@ $$
 - A função `boot::boot.ci()` calcula estes três tipos de intervalos
 
 ```{r}
-## load("dados/law.rda")
 ## Exemplo para correlação
 
 ## Define a função que calcula a estatística de interesse
@@ -520,23 +519,23 @@ $t^{\star}_{1-\alpha/2}$ são calculados conforme o algoritmo abaixo.
 
 1. Calcule a estatística observada $\hat{\theta}$.
 2. Para cada amostra indexada $b = 1, \ldots, B$:
-  a. Amostre com reposição de $x$ para gerar a $b$-ésima amostra
-  $x^{(b)} = (x_{1}^{(b)}, \ldots, x_{n}^{(b)})$
-  b. Calcule $\hat{\theta}^{(b)}$ da $b$-ésima amostra $x^{(b)}$
-  c. Calcule a estimativa de erro padrão
-  $\widehat{se}(\hat{\theta}^{(b)})$ (NOTE que essa é uma estimativa
-  separada para cada amostra de bootstrap $x^{b}$, e não $x$)
-  d. Calcule a $b$-ésima estimativa da estatística $t$
-  $$
-  t^(b) = \frac{\hat{\theta}^{(b)} -
-  \hat{\theta}}{\widehat{se}(\hat{\theta}^{(b)})}
-  $$
+   a. Amostre com reposição de $x$ para gerar a $b$-ésima amostra
+   $x^{(b)} = (x_{1}^{(b)}, \ldots, x_{n}^{(b)})$
+   b. Calcule $\hat{\theta}^{(b)}$ da $b$-ésima amostra $x^{(b)}$
+   c. Calcule a estimativa de erro padrão
+   $\widehat{se}(\hat{\theta}^{(b)})$ (NOTE que essa é uma estimativa
+   separada para cada amostra de bootstrap $x^{(b)}$, e não $x$)
+   d. Calcule a $b$-ésima estimativa da estatística $t$
+   $$
+   t^{(b)} = \frac{\hat{\theta}^{(b)} -
+   \hat{\theta}}{\widehat{se}(\hat{\theta}^{(b)})}
+   $$
 3. A amostra de estimativas $t^{(1)}, \ldots, t^{(B)}$ é a distribuição
    de referência para o intervalo $t$. Encontre os quantis amostrais
    $t^{\star}_{\alpha/2}$ e $t^{\star}_{1-\alpha/2}$ da amostra ordenada
    $t^{(b)}$
-4. Calcule $\widehat{se}(\hat{\theta}$, ou seja, o desvio padrão
-   amostral das estimativas $\hat{\theta}^{(b)})$
+4. Calcule $\widehat{se}(\hat{\theta})$, ou seja, o desvio padrão
+   amostral das estimativas $\hat{\theta}^{(b)}$
 5. Calcule os limites de confiança
 $$
 (\hat{\theta} - t^{\star}_{1-\alpha/2} \widehat{se}(\hat{\theta}), \quad
@@ -588,9 +587,10 @@ boot.t.ci <- function(x, B = 500, R = 100, level = .95, statistic){
     ## "estudentizada"
     Qt <- quantile(t.stats, c(alpha/2, 1 - alpha/2), type = 1)
     ## Calcule limites do intervalo (inverte os nomes)
-    names(Qt) <- rev(names(Qt))
     CI <- rev(stat0 - Qt * se0)
-    return(list(CI = CI, stat = stat, t.stats = t.stats, Qt = Qt))
+    names(CI) <- rev(names(CI))
+    return(list(CI = CI, stat = stat,
+                t.stats = t.stats, Qt = Qt))
 }
 ```
 
@@ -618,84 +618,87 @@ Observações:
 - O intervalo $t$ de bootstrap é o que possui maior amplitude entre
   todos
 
-### Outro exemplo
+## Outro exemplo {-}
 
-```{r, eval=FALSE}
-### Example 8.5 (Bootstrap estimate of bias of a ratio estimate)
+A base de dados `patch` do pacote `bootstrap` contém dados de 8
+pacientes que usaram adesivos (*patches*) contendo um certo hormônio que
+é injetado na corrente sanguínea. Cada indivíduo teve seu nível de
+hormônio medido após usar três diferentes adesivos: placebo, "antigo"
+(já utilizado), e "novo" (nova versão).
+
+O objetivo do estudo é mostrar que existe bioequivalência, ou seja, que
+os adesivos novos são bioequivalentes aos antigos e podem ser liberados
+para uso.
+
+O parâmetro de interesse é definida como
+$$
+\theta = \frac{\text{E}[\text{novo}] - \text{E}[\text{velho}]}
+{\text{E}[\text{velho}] - \text{E}[\text{placebo}]}
+$$
+
+Se $|\theta| \leq 0.2$, então isso indica que existe bioequivalência
+entre os adesivos.
+
+Os dados são
+
+```{r}
 data(patch, package = "bootstrap")
 patch
+```
 
-n <- nrow(patch)  #in bootstrap package
+Onde:
+
+- $z = \text{velho} - \text{placebo}$
+- $y = \text{novo} - \text{velho}$
+
+Portanto, a estatística de interesse é
+$$
+\hat{\theta} = \frac{\bar{Y}}{\bar{Z}}
+$$
+
+```{r}
+## Estimativas básicas
+(theta.hat <- mean(patch$y)/mean(patch$z))
+
+## Bootstrap para erro padrão
+n <- nrow(patch)
 B <- 2000
 theta.b <- numeric(B)
-theta.hat <- mean(patch$y) / mean(patch$z)
-
-                                        #bootstrap
 for (b in 1:B) {
     i <- sample(1:n, size = n, replace = TRUE)
     y <- patch$y[i]
     z <- patch$z[i]
-    theta.b[b] <- mean(y) / mean(z)
+    theta.b[b] <- mean(y)/mean(z)
 }
-bias <- mean(theta.b) - theta.hat
-se <- sd(theta.b)
-print(list(est=theta.hat, bias = bias,
-           se = se, cv = bias/se))
 
-### Example 8.9 (Bootstrap confidence intervals for patch ratio statistic)
+## Estimativas
+mean(theta.b)
+(bias <- mean(theta.b) - theta.hat)
+(se <- sd(theta.b))
 
-library(boot)       #for boot and boot.ci
-data(patch, package = "bootstrap")
-
+## Intervalos de confiança para a estimativa
+## Usando o pacote boot
 theta.boot <- function(dat, ind) {
-                                        #function to compute the statistic
     y <- dat[ind, 1]
     z <- dat[ind, 2]
-    mean(y) / mean(z)
-    }
-
-y <- patch$y
-z <- patch$z
-dat <- cbind(y, z)
-boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
-
-print(boot.obj)
-print(boot.ci(boot.obj,
-              type = c("basic", "norm", "perc")))
-
-
-                                        #calculations for bootstrap confidence intervals
-alpha <- c(.025, .975)
-
-                                        #normal
-print(boot.obj$t0 + qnorm(alpha) * sd(boot.obj$t))
-
-                                        #basic
-print(2*boot.obj$t0 -
-      quantile(boot.obj$t, rev(alpha), type=1))
-
-                                        #percentile
-print(quantile(boot.obj$t, alpha, type=6))
-
-
-### Example 8.10 (Bootstrap confidence intervals for the correlation
-### statistic)
-
-library(boot)
-data(law, package = "bootstrap")
-boot.obj <- boot(law, R = 2000,
-                 statistic = function(x, i){cor(x[i,1], x[i,2])})
-print(boot.ci(boot.obj, type=c("basic","norm","perc")))
-
-### Example 8.12 (Bootstrap t confidence interval for patch ratio statistic)
-
-    #boot package and patch data were loaded in Example 8.10
-    #library(boot)       #for boot and boot.ci
-    #data(patch, package = "bootstrap")
+    mean(y)/mean(z)
+}
 
 dat <- cbind(patch$y, patch$z)
-stat <- function(dat) {
-    mean(dat[, 1]) / mean(dat[, 2]) }
-ci <- boot.t.ci(dat, statistic = stat, B=2000, R=200)
-print(ci)
+boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
+boot.obj
+boot.ci(boot.obj, type = c("basic", "norm", "perc"))
+
+## Intervalo t de bootstrap
+ci <- boot.t.ci(dat, statistic = theta.boot, B = 2000, R = 200)
+## Resultados
+ci$CI
+ci$Qt
+## Distribuições
+par(mfrow = c(1, 2))
+## Distribuição amostral
+hist(ci$stat)
+## Distribuição "estudentizada" de referência
+hist(ci$t.stats); abline(v = ci$Qt, col = 2)
+par(mfrow = c(1, 1))
 ```
