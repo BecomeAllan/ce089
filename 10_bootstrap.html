@@ -822,7 +822,7 @@ se(\hat{\theta}^{\star}) = \sqrt{\frac{1}{B-1}
 <a class="sourceLine" id="cb11-36" title="36"><span class="co">#  $ seed     : int [1:626] 10403 432 1781087344 386800285 1300146352 -1043896737 -961725389 1610237524 1487280467 -2089005861 ...</span></a>
 <a class="sourceLine" id="cb11-37" title="37"><span class="co">#  $ statistic:function (x, i)  </span></a>
 <a class="sourceLine" id="cb11-38" title="38"><span class="co">#   ..- attr(*, &quot;srcref&quot;)= &#39;srcref&#39; int [1:8] 4 6 6 1 6 1 4 6</span></a>
-<a class="sourceLine" id="cb11-39" title="39"><span class="co">#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0xdcc3fe8&gt; </span></a>
+<a class="sourceLine" id="cb11-39" title="39"><span class="co">#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0xc51fbe8&gt; </span></a>
 <a class="sourceLine" id="cb11-40" title="40"><span class="co">#  $ sim      : chr &quot;ordinary&quot;</span></a>
 <a class="sourceLine" id="cb11-41" title="41"><span class="co">#  $ call     : language boot(data = law, statistic = r, R = 2000)</span></a>
 <a class="sourceLine" id="cb11-42" title="42"><span class="co">#  $ stype    : chr &quot;i&quot;</span></a>
@@ -908,8 +908,10 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 \]</span></p></li>
 <li>Esse intervalo é fácil de calcular, mas fizemos diversas suposições:
 <ul>
-<li>A distribuição de <span class="math inline">\(\hat{\theta}\)</span> é normal</li>
+<li>A distribuição de <span class="math inline">\(\hat{\theta}\)</span> é normal
+<ul>
 <li>OU <span class="math inline">\(\hat{\theta}\)</span> é uma média e o tamanho da amostra é grande</li>
+</ul></li>
 <li>Também assumimos que <span class="math inline">\(\hat{\theta}\)</span> é não viesado para <span class="math inline">\(\theta\)</span></li>
 <li>Assumimos que <span class="math inline">\(se(\hat{\theta})\)</span> é um parâmetro conhecido, mas no bootstrap <span class="math inline">\(se(\hat{\theta})\)</span> é estimado (é o desvio padrão das amostras de bootstrap)</li>
 </ul></li>
@@ -922,7 +924,7 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <li>Os quantis da amostra transformada <span class="math inline">\(\hat{\theta}^{\star} - \hat{\theta}\)</span> são utilizados para a determinação dos limites de confiança</li>
 <li>O intervalo básico de bootstrap <span class="math inline">\(100(1-\alpha)\%\)</span> de confiança é <span class="math display">\[
 ( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
-\quad 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2} )
+\quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
 \]</span> onde <span class="math inline">\(\hat{\theta}^{\star}_{\alpha}\)</span> denota o <span class="math inline">\(\alpha\)</span>-quantil das estimativas de bootstrap <span class="math inline">\(\hat{\theta}^{\star}\)</span>.</li>
 </ul>
 </div>
@@ -930,46 +932,45 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <h2><span class="header-section-number">4.3</span> Intervalo percentil de bootstrap</h2>
 <ul>
 <li>O intervalo percentil de bootstrap usa a distribuição empírica das estimativas de bootstrap como distribuição de referência</li>
-<li>Os quantis da distribuição empírica são estimadores da distribuição amostral de <span class="math inline">\(\hat{\theta}\)</span>
+<li>Os quantis da distribuição empírica são estimadores dos quantis da distribuição amostral de <span class="math inline">\(\hat{\theta}\)</span>
 <ul>
 <li>Estas quantidades (aleatórias) devem devem ser mais próximas das verdadeiras quando esta distribuição amostral é normal</li>
 </ul></li>
 <li>Suponha que <span class="math inline">\(\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{B}\)</span> são as estimativas de bootstrap de <span class="math inline">\(\hat{\theta}\)</span></li>
-<li>A partir da distribuição empírica das estimativas, determine os quantis <span class="math inline">\(\alpha/2\)</span> e <span class="math inline">\(1-\alpha/2\)</span> de <span class="math inline">\(\hat{\theta}\)</span>, ou seja</li>
+<li>A partir da distribuição empírica das estimativas, determine os quantis <span class="math inline">\(\alpha/2\)</span> e <span class="math inline">\(1-\alpha/2\)</span> de <span class="math inline">\(\hat{\theta}\)</span></li>
 <li>Portanto o intervalo percentil de bootstrap <span class="math inline">\(100(1-\alpha)\%\)</span> é <span class="math display">\[
-(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2}
+(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2})
 \]</span></li>
 <li>Pode-se mostrar que o intervalo percentil de bootstrap possui vantagens teóricas e maior taxa de cobertura, quando comparado aos intervalos normal e básico</li>
 <li>A função <code>boot::boot.ci()</code> calcula estes três tipos de intervalos</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## load(&quot;dados/law.rda&quot;)</span></a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co">## Exemplo para correlação</span></a>
-<a class="sourceLine" id="cb15-3" title="3"></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="co">## Define a função que calcula a estatística de interesse</span></a>
-<a class="sourceLine" id="cb15-5" title="5">r &lt;-<span class="st"> </span><span class="cf">function</span>(x, i) {</a>
-<a class="sourceLine" id="cb15-6" title="6">    <span class="kw">cor</span>(x[i, <span class="dv">1</span>], x[i, <span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb15-7" title="7">}</a>
-<a class="sourceLine" id="cb15-8" title="8"></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="co">## Roda o processo</span></a>
-<a class="sourceLine" id="cb15-10" title="10">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> law, <span class="dt">statistic =</span> r, <span class="dt">R =</span> <span class="dv">2000</span>)</a>
-<a class="sourceLine" id="cb15-11" title="11"><span class="co">## Resumo</span></a>
-<a class="sourceLine" id="cb15-12" title="12">boot.obj</a>
-<a class="sourceLine" id="cb15-13" title="13"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-14" title="14"><span class="co"># ORDINARY NONPARAMETRIC BOOTSTRAP</span></a>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## Exemplo para correlação</span></a>
+<a class="sourceLine" id="cb15-2" title="2"></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="co">## Define a função que calcula a estatística de interesse</span></a>
+<a class="sourceLine" id="cb15-4" title="4">r &lt;-<span class="st"> </span><span class="cf">function</span>(x, i) {</a>
+<a class="sourceLine" id="cb15-5" title="5">    <span class="kw">cor</span>(x[i, <span class="dv">1</span>], x[i, <span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb15-6" title="6">}</a>
+<a class="sourceLine" id="cb15-7" title="7"></a>
+<a class="sourceLine" id="cb15-8" title="8"><span class="co">## Roda o processo</span></a>
+<a class="sourceLine" id="cb15-9" title="9">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(<span class="dt">data =</span> law, <span class="dt">statistic =</span> r, <span class="dt">R =</span> <span class="dv">2000</span>)</a>
+<a class="sourceLine" id="cb15-10" title="10"><span class="co">## Resumo</span></a>
+<a class="sourceLine" id="cb15-11" title="11">boot.obj</a>
+<a class="sourceLine" id="cb15-12" title="12"><span class="co"># </span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="co"># ORDINARY NONPARAMETRIC BOOTSTRAP</span></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co"># </span></a>
 <a class="sourceLine" id="cb15-15" title="15"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-16" title="16"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-17" title="17"><span class="co"># Call:</span></a>
-<a class="sourceLine" id="cb15-18" title="18"><span class="co"># boot(data = law, statistic = r, R = 2000)</span></a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="co"># Call:</span></a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="co"># boot(data = law, statistic = r, R = 2000)</span></a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co"># </span></a>
 <a class="sourceLine" id="cb15-19" title="19"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-20" title="20"><span class="co"># </span></a>
-<a class="sourceLine" id="cb15-21" title="21"><span class="co"># Bootstrap Statistics :</span></a>
-<a class="sourceLine" id="cb15-22" title="22"><span class="co">#      original       bias    std. error</span></a>
-<a class="sourceLine" id="cb15-23" title="23"><span class="co"># t1* 0.7763745 -0.002348834   0.1330581</span></a>
-<a class="sourceLine" id="cb15-24" title="24"><span class="co">## Estatśitica amostral</span></a>
-<a class="sourceLine" id="cb15-25" title="25">boot.obj<span class="op">$</span>t0</a>
-<a class="sourceLine" id="cb15-26" title="26"><span class="co"># [1] 0.7763745</span></a>
-<a class="sourceLine" id="cb15-27" title="27"><span class="co">## Distribuição das estimativas de bootstrap</span></a>
-<a class="sourceLine" id="cb15-28" title="28"><span class="kw">plot</span>(boot.obj)</a></code></pre></div>
+<a class="sourceLine" id="cb15-20" title="20"><span class="co"># Bootstrap Statistics :</span></a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="co">#      original       bias    std. error</span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="co"># t1* 0.7763745 -0.002348834   0.1330581</span></a>
+<a class="sourceLine" id="cb15-23" title="23"><span class="co">## Estatśitica amostral</span></a>
+<a class="sourceLine" id="cb15-24" title="24">boot.obj<span class="op">$</span>t0</a>
+<a class="sourceLine" id="cb15-25" title="25"><span class="co"># [1] 0.7763745</span></a>
+<a class="sourceLine" id="cb15-26" title="26"><span class="co">## Distribuição das estimativas de bootstrap</span></a>
+<a class="sourceLine" id="cb15-27" title="27"><span class="kw">plot</span>(boot.obj)</a></code></pre></div>
 <p><img src="figures/10_bootstrap/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">boot.ci</span>(boot.obj, <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;basic&quot;</span>, <span class="st">&quot;norm&quot;</span>, <span class="st">&quot;perc&quot;</span>))</a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co"># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></a>
@@ -1070,20 +1071,18 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 \]</span> onde <span class="math inline">\(\widehat{se}(\hat{\theta})\)</span>, <span class="math inline">\(t^{\star}_{\alpha/2}\)</span>, e <span class="math inline">\(t^{\star}_{1-\alpha/2}\)</span> são calculados conforme o algoritmo abaixo.</p>
 <ol style="list-style-type: decimal">
 <li>Calcule a estatística observada <span class="math inline">\(\hat{\theta}\)</span>.</li>
-<li>Para cada amostra indexada <span class="math inline">\(b = 1, \ldots, B\)</span>:</li>
-</ol>
+<li>Para cada amostra indexada <span class="math inline">\(b = 1, \ldots, B\)</span>:
 <ol style="list-style-type: lower-alpha">
 <li>Amostre com reposição de <span class="math inline">\(x\)</span> para gerar a <span class="math inline">\(b\)</span>-ésima amostra <span class="math inline">\(x^{(b)} = (x_{1}^{(b)}, \ldots, x_{n}^{(b)})\)</span></li>
 <li>Calcule <span class="math inline">\(\hat{\theta}^{(b)}\)</span> da <span class="math inline">\(b\)</span>-ésima amostra <span class="math inline">\(x^{(b)}\)</span></li>
-<li>Calcule a estimativa de erro padrão <span class="math inline">\(\widehat{se}(\hat{\theta}^{(b)})\)</span> (NOTE que essa é uma estimativa separada para cada amostra de bootstrap <span class="math inline">\(x^{b}\)</span>, e não <span class="math inline">\(x\)</span>)</li>
+<li>Calcule a estimativa de erro padrão <span class="math inline">\(\widehat{se}(\hat{\theta}^{(b)})\)</span> (NOTE que essa é uma estimativa separada para cada amostra de bootstrap <span class="math inline">\(x^{(b)}\)</span>, e não <span class="math inline">\(x\)</span>)</li>
 <li>Calcule a <span class="math inline">\(b\)</span>-ésima estimativa da estatística <span class="math inline">\(t\)</span> <span class="math display">\[
-  t^(b) = \frac{\hat{\theta}^{(b)} -
-  \hat{\theta}}{\widehat{se}(\hat{\theta}^{(b)})}
-  \]</span></li>
-</ol>
-<ol start="3" style="list-style-type: decimal">
+t^{(b)} = \frac{\hat{\theta}^{(b)} -
+\hat{\theta}}{\widehat{se}(\hat{\theta}^{(b)})}
+\]</span></li>
+</ol></li>
 <li>A amostra de estimativas <span class="math inline">\(t^{(1)}, \ldots, t^{(B)}\)</span> é a distribuição de referência para o intervalo <span class="math inline">\(t\)</span>. Encontre os quantis amostrais <span class="math inline">\(t^{\star}_{\alpha/2}\)</span> e <span class="math inline">\(t^{\star}_{1-\alpha/2}\)</span> da amostra ordenada <span class="math inline">\(t^{(b)}\)</span></li>
-<li>Calcule <span class="math inline">\(\widehat{se}(\hat{\theta}\)</span>, ou seja, o desvio padrão amostral das estimativas <span class="math inline">\(\hat{\theta}^{(b)})\)</span></li>
+<li>Calcule <span class="math inline">\(\widehat{se}(\hat{\theta})\)</span>, ou seja, o desvio padrão amostral das estimativas <span class="math inline">\(\hat{\theta}^{(b)}\)</span></li>
 <li>Calcule os limites de confiança <span class="math display">\[
 (\hat{\theta} - t^{\star}_{1-\alpha/2} \widehat{se}(\hat{\theta}), \quad
 \hat{\theta} - t^{\star}_{\alpha/2} \widehat{se}(\hat{\theta}) )
@@ -1131,10 +1130,11 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <a class="sourceLine" id="cb17-37" title="37">    <span class="co">## &quot;estudentizada&quot;</span></a>
 <a class="sourceLine" id="cb17-38" title="38">    Qt &lt;-<span class="st"> </span><span class="kw">quantile</span>(t.stats, <span class="kw">c</span>(alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>), <span class="dt">type =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb17-39" title="39">    <span class="co">## Calcule limites do intervalo (inverte os nomes)</span></a>
-<a class="sourceLine" id="cb17-40" title="40">    <span class="kw">names</span>(Qt) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">names</span>(Qt))</a>
-<a class="sourceLine" id="cb17-41" title="41">    CI &lt;-<span class="st"> </span><span class="kw">rev</span>(stat0 <span class="op">-</span><span class="st"> </span>Qt <span class="op">*</span><span class="st"> </span>se0)</a>
-<a class="sourceLine" id="cb17-42" title="42">    <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">CI =</span> CI, <span class="dt">stat =</span> stat, <span class="dt">t.stats =</span> t.stats, <span class="dt">Qt =</span> Qt))</a>
-<a class="sourceLine" id="cb17-43" title="43">}</a></code></pre></div>
+<a class="sourceLine" id="cb17-40" title="40">    CI &lt;-<span class="st"> </span><span class="kw">rev</span>(stat0 <span class="op">-</span><span class="st"> </span>Qt <span class="op">*</span><span class="st"> </span>se0)</a>
+<a class="sourceLine" id="cb17-41" title="41">    <span class="kw">names</span>(CI) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">names</span>(CI))</a>
+<a class="sourceLine" id="cb17-42" title="42">    <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">CI =</span> CI, <span class="dt">stat =</span> stat,</a>
+<a class="sourceLine" id="cb17-43" title="43">                <span class="dt">t.stats =</span> t.stats, <span class="dt">Qt =</span> Qt))</a>
+<a class="sourceLine" id="cb17-44" title="44">}</a></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co">## Aplica a função</span></a>
 <a class="sourceLine" id="cb18-2" title="2">ci &lt;-<span class="st"> </span><span class="kw">boot.t.ci</span>(law, <span class="dt">statistic =</span> r, <span class="dt">B =</span> <span class="dv">2000</span>, <span class="dt">R =</span> <span class="dv">200</span>)</a>
 <a class="sourceLine" id="cb18-3" title="3"></a>
@@ -1143,7 +1143,7 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <a class="sourceLine" id="cb18-6" title="6"><span class="co">#       2.5%      97.5% </span></a>
 <a class="sourceLine" id="cb18-7" title="7"><span class="co"># -0.2041483  0.9812997</span></a>
 <a class="sourceLine" id="cb18-8" title="8">ci<span class="op">$</span>Qt</a>
-<a class="sourceLine" id="cb18-9" title="9"><span class="co">#     97.5%      2.5% </span></a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="co">#      2.5%     97.5% </span></a>
 <a class="sourceLine" id="cb18-10" title="10"><span class="co"># -1.569855  7.511420</span></a>
 <a class="sourceLine" id="cb18-11" title="11"><span class="kw">length</span>(ci<span class="op">$</span>stat)</a>
 <a class="sourceLine" id="cb18-12" title="12"><span class="co"># [1] 2000</span></a>
@@ -1162,85 +1162,110 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <li>Note que o limite inferior do intervalo é bem menor do que os demais</li>
 <li>O intervalo <span class="math inline">\(t\)</span> de bootstrap é o que possui maior amplitude entre todos</li>
 </ul>
-<div id="outro-exemplo" class="section level3">
-<h3><span class="header-section-number">4.4.1</span> Outro exemplo</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">### Example 8.5 (Bootstrap estimate of bias of a ratio estimate)</span></a>
-<a class="sourceLine" id="cb20-2" title="2"><span class="kw">data</span>(patch, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
-<a class="sourceLine" id="cb20-3" title="3">patch</a>
-<a class="sourceLine" id="cb20-4" title="4"></a>
-<a class="sourceLine" id="cb20-5" title="5">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(patch)  <span class="co">#in bootstrap package</span></a>
-<a class="sourceLine" id="cb20-6" title="6">B &lt;-<span class="st"> </span><span class="dv">2000</span></a>
-<a class="sourceLine" id="cb20-7" title="7">theta.b &lt;-<span class="st"> </span><span class="kw">numeric</span>(B)</a>
-<a class="sourceLine" id="cb20-8" title="8">theta.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(patch<span class="op">$</span>y) <span class="op">/</span><span class="st"> </span><span class="kw">mean</span>(patch<span class="op">$</span>z)</a>
-<a class="sourceLine" id="cb20-9" title="9"></a>
-<a class="sourceLine" id="cb20-10" title="10">                                        <span class="co">#bootstrap</span></a>
-<a class="sourceLine" id="cb20-11" title="11"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
-<a class="sourceLine" id="cb20-12" title="12">    i &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb20-13" title="13">    y &lt;-<span class="st"> </span>patch<span class="op">$</span>y[i]</a>
-<a class="sourceLine" id="cb20-14" title="14">    z &lt;-<span class="st"> </span>patch<span class="op">$</span>z[i]</a>
-<a class="sourceLine" id="cb20-15" title="15">    theta.b[b] &lt;-<span class="st"> </span><span class="kw">mean</span>(y) <span class="op">/</span><span class="st"> </span><span class="kw">mean</span>(z)</a>
-<a class="sourceLine" id="cb20-16" title="16">}</a>
-<a class="sourceLine" id="cb20-17" title="17">bias &lt;-<span class="st"> </span><span class="kw">mean</span>(theta.b) <span class="op">-</span><span class="st"> </span>theta.hat</a>
-<a class="sourceLine" id="cb20-18" title="18">se &lt;-<span class="st"> </span><span class="kw">sd</span>(theta.b)</a>
-<a class="sourceLine" id="cb20-19" title="19"><span class="kw">print</span>(<span class="kw">list</span>(<span class="dt">est=</span>theta.hat, <span class="dt">bias =</span> bias,</a>
-<a class="sourceLine" id="cb20-20" title="20">           <span class="dt">se =</span> se, <span class="dt">cv =</span> bias<span class="op">/</span>se))</a>
-<a class="sourceLine" id="cb20-21" title="21"></a>
-<a class="sourceLine" id="cb20-22" title="22"><span class="co">### Example 8.9 (Bootstrap confidence intervals for patch ratio statistic)</span></a>
-<a class="sourceLine" id="cb20-23" title="23"></a>
-<a class="sourceLine" id="cb20-24" title="24"><span class="kw">library</span>(boot)       <span class="co">#for boot and boot.ci</span></a>
-<a class="sourceLine" id="cb20-25" title="25"><span class="kw">data</span>(patch, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
-<a class="sourceLine" id="cb20-26" title="26"></a>
-<a class="sourceLine" id="cb20-27" title="27">theta.boot &lt;-<span class="st"> </span><span class="cf">function</span>(dat, ind) {</a>
-<a class="sourceLine" id="cb20-28" title="28">                                        <span class="co">#function to compute the statistic</span></a>
-<a class="sourceLine" id="cb20-29" title="29">    y &lt;-<span class="st"> </span>dat[ind, <span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb20-30" title="30">    z &lt;-<span class="st"> </span>dat[ind, <span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb20-31" title="31">    <span class="kw">mean</span>(y) <span class="op">/</span><span class="st"> </span><span class="kw">mean</span>(z)</a>
-<a class="sourceLine" id="cb20-32" title="32">    }</a>
-<a class="sourceLine" id="cb20-33" title="33"></a>
-<a class="sourceLine" id="cb20-34" title="34">y &lt;-<span class="st"> </span>patch<span class="op">$</span>y</a>
-<a class="sourceLine" id="cb20-35" title="35">z &lt;-<span class="st"> </span>patch<span class="op">$</span>z</a>
-<a class="sourceLine" id="cb20-36" title="36">dat &lt;-<span class="st"> </span><span class="kw">cbind</span>(y, z)</a>
-<a class="sourceLine" id="cb20-37" title="37">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(dat, <span class="dt">statistic =</span> theta.boot, <span class="dt">R =</span> <span class="dv">2000</span>)</a>
-<a class="sourceLine" id="cb20-38" title="38"></a>
-<a class="sourceLine" id="cb20-39" title="39"><span class="kw">print</span>(boot.obj)</a>
-<a class="sourceLine" id="cb20-40" title="40"><span class="kw">print</span>(<span class="kw">boot.ci</span>(boot.obj,</a>
-<a class="sourceLine" id="cb20-41" title="41">              <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;basic&quot;</span>, <span class="st">&quot;norm&quot;</span>, <span class="st">&quot;perc&quot;</span>)))</a>
-<a class="sourceLine" id="cb20-42" title="42"></a>
-<a class="sourceLine" id="cb20-43" title="43">                                        <span class="co">#calculations for bootstrap confidence intervals</span></a>
-<a class="sourceLine" id="cb20-44" title="44">alpha &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>)</a>
-<a class="sourceLine" id="cb20-45" title="45"></a>
-<a class="sourceLine" id="cb20-46" title="46">                                        <span class="co">#normal</span></a>
-<a class="sourceLine" id="cb20-47" title="47"><span class="kw">print</span>(boot.obj<span class="op">$</span>t0 <span class="op">+</span><span class="st"> </span><span class="kw">qnorm</span>(alpha) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(boot.obj<span class="op">$</span>t))</a>
-<a class="sourceLine" id="cb20-48" title="48"></a>
-<a class="sourceLine" id="cb20-49" title="49">                                        <span class="co">#basic</span></a>
-<a class="sourceLine" id="cb20-50" title="50"><span class="kw">print</span>(<span class="dv">2</span><span class="op">*</span>boot.obj<span class="op">$</span>t0 <span class="op">-</span></a>
-<a class="sourceLine" id="cb20-51" title="51"><span class="st">      </span><span class="kw">quantile</span>(boot.obj<span class="op">$</span>t, <span class="kw">rev</span>(alpha), <span class="dt">type=</span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb20-52" title="52"></a>
-<a class="sourceLine" id="cb20-53" title="53">                                        <span class="co">#percentile</span></a>
-<a class="sourceLine" id="cb20-54" title="54"><span class="kw">print</span>(<span class="kw">quantile</span>(boot.obj<span class="op">$</span>t, alpha, <span class="dt">type=</span><span class="dv">6</span>))</a>
-<a class="sourceLine" id="cb20-55" title="55"></a>
-<a class="sourceLine" id="cb20-56" title="56"></a>
-<a class="sourceLine" id="cb20-57" title="57"><span class="co">### Example 8.10 (Bootstrap confidence intervals for the correlation</span></a>
-<a class="sourceLine" id="cb20-58" title="58"><span class="co">### statistic)</span></a>
-<a class="sourceLine" id="cb20-59" title="59"></a>
-<a class="sourceLine" id="cb20-60" title="60"><span class="kw">library</span>(boot)</a>
-<a class="sourceLine" id="cb20-61" title="61"><span class="kw">data</span>(law, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
-<a class="sourceLine" id="cb20-62" title="62">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(law, <span class="dt">R =</span> <span class="dv">2000</span>,</a>
-<a class="sourceLine" id="cb20-63" title="63">                 <span class="dt">statistic =</span> <span class="cf">function</span>(x, i){<span class="kw">cor</span>(x[i,<span class="dv">1</span>], x[i,<span class="dv">2</span>])})</a>
-<a class="sourceLine" id="cb20-64" title="64"><span class="kw">print</span>(<span class="kw">boot.ci</span>(boot.obj, <span class="dt">type=</span><span class="kw">c</span>(<span class="st">&quot;basic&quot;</span>,<span class="st">&quot;norm&quot;</span>,<span class="st">&quot;perc&quot;</span>)))</a>
-<a class="sourceLine" id="cb20-65" title="65"></a>
-<a class="sourceLine" id="cb20-66" title="66"><span class="co">### Example 8.12 (Bootstrap t confidence interval for patch ratio statistic)</span></a>
-<a class="sourceLine" id="cb20-67" title="67"></a>
-<a class="sourceLine" id="cb20-68" title="68">    <span class="co">#boot package and patch data were loaded in Example 8.10</span></a>
-<a class="sourceLine" id="cb20-69" title="69">    <span class="co">#library(boot)       #for boot and boot.ci</span></a>
-<a class="sourceLine" id="cb20-70" title="70">    <span class="co">#data(patch, package = &quot;bootstrap&quot;)</span></a>
-<a class="sourceLine" id="cb20-71" title="71"></a>
-<a class="sourceLine" id="cb20-72" title="72">dat &lt;-<span class="st"> </span><span class="kw">cbind</span>(patch<span class="op">$</span>y, patch<span class="op">$</span>z)</a>
-<a class="sourceLine" id="cb20-73" title="73">stat &lt;-<span class="st"> </span><span class="cf">function</span>(dat) {</a>
-<a class="sourceLine" id="cb20-74" title="74">    <span class="kw">mean</span>(dat[, <span class="dv">1</span>]) <span class="op">/</span><span class="st"> </span><span class="kw">mean</span>(dat[, <span class="dv">2</span>]) }</a>
-<a class="sourceLine" id="cb20-75" title="75">ci &lt;-<span class="st"> </span><span class="kw">boot.t.ci</span>(dat, <span class="dt">statistic =</span> stat, <span class="dt">B=</span><span class="dv">2000</span>, <span class="dt">R=</span><span class="dv">200</span>)</a>
-<a class="sourceLine" id="cb20-76" title="76"><span class="kw">print</span>(ci)</a></code></pre></div>
 </div>
+<div id="outro-exemplo" class="section level2 unnumbered">
+<h2>Outro exemplo</h2>
+<p>A base de dados <code>patch</code> do pacote <code>bootstrap</code> contém dados de 8 pacientes que usaram adesivos (<em>patches</em>) contendo um certo hormônio que é injetado na corrente sanguínea. Cada indivíduo teve seu nível de hormônio medido após usar três diferentes adesivos: placebo, “antigo” (já utilizado), e “novo” (nova versão).</p>
+<p>O objetivo do estudo é mostrar que existe bioequivalência, ou seja, que os adesivos novos são bioequivalentes aos antigos e podem ser liberados para uso.</p>
+<p>O parâmetro de interesse é definida como <span class="math display">\[
+\theta = \frac{\text{E}[\text{novo}] - \text{E}[\text{velho}]}
+{\text{E}[\text{velho}] - \text{E}[\text{placebo}]}
+\]</span></p>
+<p>Se <span class="math inline">\(|\theta| \leq 0.2\)</span>, então isso indica que existe bioequivalência entre os adesivos.</p>
+<p>Os dados são</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">data</span>(patch, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2">patch</a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">#   subject placebo oldpatch newpatch     z     y</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co"># 1       1    9243    17649    16449  8406 -1200</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="co"># 2       2    9671    12013    14614  2342  2601</span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="co"># 3       3   11792    19979    17274  8187 -2705</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="co"># 4       4   13357    21816    23798  8459  1982</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co"># 5       5    9055    13850    12560  4795 -1290</span></a>
+<a class="sourceLine" id="cb20-9" title="9"><span class="co"># 6       6    6290     9806    10157  3516   351</span></a>
+<a class="sourceLine" id="cb20-10" title="10"><span class="co"># 7       7   12412    17208    16570  4796  -638</span></a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="co"># 8       8   18806    29044    26325 10238 -2719</span></a></code></pre></div>
+<p>Onde:</p>
+<ul>
+<li><span class="math inline">\(z = \text{velho} - \text{placebo}\)</span></li>
+<li><span class="math inline">\(y = \text{novo} - \text{velho}\)</span></li>
+</ul>
+<p>Portanto, a estatística de interesse é <span class="math display">\[
+\hat{\theta} = \frac{\bar{Y}}{\bar{Z}}
+\]</span></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">## Estimativas básicas</span></a>
+<a class="sourceLine" id="cb21-2" title="2">(theta.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(patch<span class="op">$</span>y)<span class="op">/</span><span class="kw">mean</span>(patch<span class="op">$</span>z))</a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="co"># [1] -0.0713061</span></a>
+<a class="sourceLine" id="cb21-4" title="4"></a>
+<a class="sourceLine" id="cb21-5" title="5"><span class="co">## Bootstrap para erro padrão</span></a>
+<a class="sourceLine" id="cb21-6" title="6">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(patch)</a>
+<a class="sourceLine" id="cb21-7" title="7">B &lt;-<span class="st"> </span><span class="dv">2000</span></a>
+<a class="sourceLine" id="cb21-8" title="8">theta.b &lt;-<span class="st"> </span><span class="kw">numeric</span>(B)</a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
+<a class="sourceLine" id="cb21-10" title="10">    i &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb21-11" title="11">    y &lt;-<span class="st"> </span>patch<span class="op">$</span>y[i]</a>
+<a class="sourceLine" id="cb21-12" title="12">    z &lt;-<span class="st"> </span>patch<span class="op">$</span>z[i]</a>
+<a class="sourceLine" id="cb21-13" title="13">    theta.b[b] &lt;-<span class="st"> </span><span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z)</a>
+<a class="sourceLine" id="cb21-14" title="14">}</a>
+<a class="sourceLine" id="cb21-15" title="15"></a>
+<a class="sourceLine" id="cb21-16" title="16"><span class="co">## Estimativas</span></a>
+<a class="sourceLine" id="cb21-17" title="17"><span class="kw">mean</span>(theta.b)</a>
+<a class="sourceLine" id="cb21-18" title="18"><span class="co"># [1] -0.06407866</span></a>
+<a class="sourceLine" id="cb21-19" title="19">(bias &lt;-<span class="st"> </span><span class="kw">mean</span>(theta.b) <span class="op">-</span><span class="st"> </span>theta.hat)</a>
+<a class="sourceLine" id="cb21-20" title="20"><span class="co"># [1] 0.007227438</span></a>
+<a class="sourceLine" id="cb21-21" title="21">(se &lt;-<span class="st"> </span><span class="kw">sd</span>(theta.b))</a>
+<a class="sourceLine" id="cb21-22" title="22"><span class="co"># [1] 0.1034864</span></a>
+<a class="sourceLine" id="cb21-23" title="23"></a>
+<a class="sourceLine" id="cb21-24" title="24"><span class="co">## Intervalos de confiança para a estimativa</span></a>
+<a class="sourceLine" id="cb21-25" title="25"><span class="co">## Usando o pacote boot</span></a>
+<a class="sourceLine" id="cb21-26" title="26">theta.boot &lt;-<span class="st"> </span><span class="cf">function</span>(dat, ind) {</a>
+<a class="sourceLine" id="cb21-27" title="27">    y &lt;-<span class="st"> </span>dat[ind, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb21-28" title="28">    z &lt;-<span class="st"> </span>dat[ind, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb21-29" title="29">    <span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z)</a>
+<a class="sourceLine" id="cb21-30" title="30">}</a>
+<a class="sourceLine" id="cb21-31" title="31"></a>
+<a class="sourceLine" id="cb21-32" title="32">dat &lt;-<span class="st"> </span><span class="kw">cbind</span>(patch<span class="op">$</span>y, patch<span class="op">$</span>z)</a>
+<a class="sourceLine" id="cb21-33" title="33">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(dat, <span class="dt">statistic =</span> theta.boot, <span class="dt">R =</span> <span class="dv">2000</span>)</a>
+<a class="sourceLine" id="cb21-34" title="34">boot.obj</a>
+<a class="sourceLine" id="cb21-35" title="35"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-36" title="36"><span class="co"># ORDINARY NONPARAMETRIC BOOTSTRAP</span></a>
+<a class="sourceLine" id="cb21-37" title="37"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-38" title="38"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-39" title="39"><span class="co"># Call:</span></a>
+<a class="sourceLine" id="cb21-40" title="40"><span class="co"># boot(data = dat, statistic = theta.boot, R = 2000)</span></a>
+<a class="sourceLine" id="cb21-41" title="41"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-42" title="42"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-43" title="43"><span class="co"># Bootstrap Statistics :</span></a>
+<a class="sourceLine" id="cb21-44" title="44"><span class="co">#       original     bias    std. error</span></a>
+<a class="sourceLine" id="cb21-45" title="45"><span class="co"># t1* -0.0713061 0.00984133   0.1030833</span></a>
+<a class="sourceLine" id="cb21-46" title="46"><span class="kw">boot.ci</span>(boot.obj, <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;basic&quot;</span>, <span class="st">&quot;norm&quot;</span>, <span class="st">&quot;perc&quot;</span>))</a>
+<a class="sourceLine" id="cb21-47" title="47"><span class="co"># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></a>
+<a class="sourceLine" id="cb21-48" title="48"><span class="co"># Based on 2000 bootstrap replicates</span></a>
+<a class="sourceLine" id="cb21-49" title="49"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-50" title="50"><span class="co"># CALL : </span></a>
+<a class="sourceLine" id="cb21-51" title="51"><span class="co"># boot.ci(boot.out = boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</span></a>
+<a class="sourceLine" id="cb21-52" title="52"><span class="co"># </span></a>
+<a class="sourceLine" id="cb21-53" title="53"><span class="co"># Intervals : </span></a>
+<a class="sourceLine" id="cb21-54" title="54"><span class="co"># Level      Normal              Basic              Percentile     </span></a>
+<a class="sourceLine" id="cb21-55" title="55"><span class="co"># 95%   (-0.2832,  0.1209 )   (-0.3126,  0.0941 )   (-0.2367,  0.1700 )  </span></a>
+<a class="sourceLine" id="cb21-56" title="56"><span class="co"># Calculations and Intervals on Original Scale</span></a>
+<a class="sourceLine" id="cb21-57" title="57"></a>
+<a class="sourceLine" id="cb21-58" title="58"><span class="co">## Intervalo t de bootstrap</span></a>
+<a class="sourceLine" id="cb21-59" title="59">ci &lt;-<span class="st"> </span><span class="kw">boot.t.ci</span>(dat, <span class="dt">statistic =</span> theta.boot, <span class="dt">B =</span> <span class="dv">2000</span>, <span class="dt">R =</span> <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb21-60" title="60"><span class="co">## Resultados</span></a>
+<a class="sourceLine" id="cb21-61" title="61">ci<span class="op">$</span>CI</a>
+<a class="sourceLine" id="cb21-62" title="62"><span class="co">#       2.5%      97.5% </span></a>
+<a class="sourceLine" id="cb21-63" title="63"><span class="co"># -0.2633727  0.4707715</span></a>
+<a class="sourceLine" id="cb21-64" title="64">ci<span class="op">$</span>Qt</a>
+<a class="sourceLine" id="cb21-65" title="65"><span class="co">#      2.5%     97.5% </span></a>
+<a class="sourceLine" id="cb21-66" title="66"><span class="co"># -5.185837  1.837424</span></a>
+<a class="sourceLine" id="cb21-67" title="67"><span class="co">## Distribuições</span></a>
+<a class="sourceLine" id="cb21-68" title="68"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb21-69" title="69"><span class="co">## Distribuição amostral</span></a>
+<a class="sourceLine" id="cb21-70" title="70"><span class="kw">hist</span>(ci<span class="op">$</span>stat)</a>
+<a class="sourceLine" id="cb21-71" title="71"><span class="co">## Distribuição &quot;estudentizada&quot; de referência</span></a>
+<a class="sourceLine" id="cb21-72" title="72"><span class="kw">hist</span>(ci<span class="op">$</span>t.stats); <span class="kw">abline</span>(<span class="dt">v =</span> ci<span class="op">$</span>Qt, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/10_bootstrap/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 </div>
 
