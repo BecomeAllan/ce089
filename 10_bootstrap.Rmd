@@ -373,6 +373,255 @@ mean(theta.b) - theta.hat
 
 # Intervalos de confiança via Bootstrap
 
+Existem diversas abordagens para o cálculo de intervalos de confiança
+via bootstrap. Os principais serão descritos abaixo.
+
+## Intervalo normal padrão
+
+- É o método mais simples.
+- Suponha que conhecemos $\hat{\theta}$ e seu erro padrão
+  $se(\hat{\theta})$
+- Se $\hat{\theta}$ é uma média, e o tamanho da amostra é grande, então
+  o Teorema do Limite Central implica que
+$$
+Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
+$$
+possui distribuição aproximadamente normal padrão.
+- Portanto, se $\hat{\theta}$ é um estimador não viesado para $\theta$,
+  então um intervalo $100(1-\alpha)\%$ para $\theta$ é
+$$
+\hat{\theta} \pm z_{\alpha/2} se(\hat{\theta})
+$$
+
+- Esse intervalo é fácil de calcular, mas fizemos diversas suposições:
+  - A distribuição de $\hat{\theta}$ é normal
+  - OU $\hat{\theta}$ é uma média e o tamanho da amostra é grande
+  - Também assumimos que $\hat{\theta}$ é não viesado para $\theta$
+  - Assumimos que $se(\hat{\theta})$ é um parâmetro conhecido, mas no
+    bootstrap $se(\hat{\theta})$ é estimado (é o desvio padrão das
+    amostras de bootstrap)
+
+## Intervalo básico de boostrap
+
+- O intervalo básico de bootstrap transforma a distribuição das
+  estimativas de boostrap, através da subtração da estatística observada
+- Os quantis da amostra transformada $\hat{\theta}^{\star} -
+  \hat{\theta}$ são utilizados para a determinação dos limites de
+  confiança
+- O intervalo básico de bootstrap $100(1-\alpha)\%$ de confiança é
+$$
+( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
+  \quad 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2} )
+$$
+onde $\hat{\theta}^{\star}_{\alpha}$ denota o $\alpha$-quantil das
+estimativas de bootstrap $\hat{\theta}^{\star}$.
+
+## Intervalo percentil de bootstrap
+
+- O intervalo percentil de bootstrap usa a distribuição empírica das
+  estimativas de bootstrap como distribuição de referência
+- Os quantis da distribuição empírica são estimadores da distribuição
+  amostral de $\hat{\theta}$
+  - Estas quantidades (aleatórias) devem devem ser mais próximas das
+    verdadeiras quando esta distribuição amostral é normal
+- Suponha que $\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{B}$ são as
+  estimativas de bootstrap de $\hat{\theta}$
+- A partir da distribuição empírica das estimativas, determine os
+  quantis $\alpha/2$ e $1-\alpha/2$ de $\hat{\theta}$, ou seja
+- Portanto o intervalo percentil de bootstrap $100(1-\alpha)\%$ é
+$$
+(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2}
+$$
+- Pode-se mostrar que o intervalo percentil de bootstrap possui
+  vantagens teóricas e maior taxa de cobertura, quando comparado aos
+  intervalos normal e básico
+- A função `boot::boot.ci()` calcula estes três tipos de intervalos
+
+```{r}
+## load("dados/law.rda")
+## Exemplo para correlação
+
+## Define a função que calcula a estatística de interesse
+r <- function(x, i) {
+    cor(x[i, 1], x[i, 2])
+}
+
+## Roda o processo
+boot.obj <- boot(data = law, statistic = r, R = 2000)
+## Resumo
+boot.obj
+## Estatśitica amostral
+boot.obj$t0
+## Distribuição das estimativas de bootstrap
+plot(boot.obj)
+boot.ci(boot.obj, type = c("basic", "norm", "perc"))
+
+## Calcule intervalos manualmente
+## Define intervalo com alpha = 0.05
+alpha <- c(.025, .975)
+
+## Normal
+(theta.hat <- boot.obj$t0)
+(se.theta <- sd(boot.obj$t))
+theta.hat + qnorm(alpha) * se.theta
+## Note que é diferente do resultado da função pois a função corrige
+## pelo viés internamente
+boot.ci(boot.obj, type = "norm")
+
+## Básico
+2 * theta.hat - quantile(boot.obj$t, probs = rev(alpha), type = 6)
+boot.ci(boot.obj, type = "basic")
+
+## Percentil
+quantile(boot.obj$t, probs = alpha, type = 6)
+boot.ci(boot.obj, type = "perc")
+
+boot.ci(boot.obj, type = "stud")
+```
+
+Observações:
+
+1. A função `quantile()` possui 9 formas diferentes de calcular os
+   quantis, por isso aqui foi escolhido `type = 6` para ficar mais
+   próximo do que é usado internamente na função `boot::boot.ci()`
+2. O intervalo normal fornecido pela função é corrigido pelo viés (*bias
+   corrected* ou intervalo BCa)
+3. A grande diferença entre os limites dos intervalos normal e percentil
+   é que a distribuição amostral da correlação não é normal (veja
+   gráfico acima)
+   - Quanto mais próxima a distribuição amostral de uma estatística for
+     da normal, mais próximos serão o resultado destes dois intervalos
+4. Note que o limite superior de alguns intervalos são maiores do que 1,
+   o que para uma correlação não faz sentido.
+
+## Intervalo $t$ de bootstrap
+
+- No intervalo normal (acima), assumimos que
+$$
+Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
+ \sim \text{N}(0,1)
+$$
+Mas:
+  - A distribuição normal para $Z$ não é necessariamente correta, pois
+    $se(\hat{\theta})$ é estimado (e não conhecido)
+  - Alternativamente poderiamos usar uma distribuição $t$, mas a
+    distribuição amostral de $\widehat{se}(\hat{\theta})$ é desconhecida
+- O intervalo $t$ de bootstrap **não** usa uma distribuição $t$ de
+  Student como referência
+- No entanto, uma distribuição "tipo $t$" (estudentizada) é gerada por
+  reamostragem
+
+Suponha que $x = (x_1, \ldots, x_n)$ é uma amostra observada. O
+intervalo $100(1-\alpha)\%$ $t$ de bootstrap é
+$$
+(\hat{\theta} - t^{\star}_{1-\alpha/2} \widehat{se}(\hat{\theta}), \quad
+\hat{\theta} - t^{\star}_{\alpha/2} \widehat{se}(\hat{\theta}) )
+$$
+onde $\widehat{se}(\hat{\theta})$, $t^{\star}_{\alpha/2}$, e
+$t^{\star}_{1-\alpha/2}$ são calculados conforme o algoritmo abaixo.
+
+1. Calcule a estatística observada $\hat{\theta}$.
+2. Para cada amostra indexada $b = 1, \ldots, B$:
+  a. Amostre com reposição de $x$ para gerar a $b$-ésima amostra
+  $x^{(b)} = (x_{1}^{(b)}, \ldots, x_{n}^{(b)})$
+  b. Calcule $\hat{\theta}^{(b)}$ da $b$-ésima amostra $x^{(b)}$
+  c. Calcule a estimativa de erro padrão
+  $\widehat{se}(\hat{\theta}^{(b)})$ (NOTE que essa é uma estimativa
+  separada para cada amostra de bootstrap $x^{b}$, e não $x$)
+  d. Calcule a $b$-ésima estimativa da estatística $t$
+  $$
+  t^(b) = \frac{\hat{\theta}^{(b)} -
+  \hat{\theta}}{\widehat{se}(\hat{\theta}^{(b)})}
+  $$
+3. A amostra de estimativas $t^{(1)}, \ldots, t^{(B)}$ é a distribuição
+   de referência para o intervalo $t$. Encontre os quantis amostrais
+   $t^{\star}_{\alpha/2}$ e $t^{\star}_{1-\alpha/2}$ da amostra ordenada
+   $t^{(b)}$
+4. Calcule $\widehat{se}(\hat{\theta}$, ou seja, o desvio padrão
+   amostral das estimativas $\hat{\theta}^{(b)})$
+5. Calcule os limites de confiança
+$$
+(\hat{\theta} - t^{\star}_{1-\alpha/2} \widehat{se}(\hat{\theta}), \quad
+\hat{\theta} - t^{\star}_{\alpha/2} \widehat{se}(\hat{\theta}) )
+$$
+
+- Uma desvantagem deste método é que as estimativas
+  $\widehat{se}(\hat{\theta}^{(b)})$ são também obtidas via bootstrap,
+  ou seja, é um **bootstrap dentro de outro bootstrap**, o que torna o
+  método muito mais caro computacionalmente.
+
+```{r}
+## Define função geral para calcular o intervalo t de bootstrap
+boot.t.ci <- function(x, B = 500, R = 100, level = .95, statistic){
+    ## B = número de estimativas bootstrap (geral)
+    ## R = número de estimativas bootstrap para o erro padrão
+    x <- as.matrix(x);  n <- nrow(x)
+    stat <- numeric(B); se <- numeric(B)
+    ## Função local para calcular o erro padrão de cada amostra
+    ## bootstrap x^{(b)} => bootstrap dentro de bootstrap
+    boot.se <- function(x, R, f) {
+        x <- as.matrix(x); m <- nrow(x)
+        th <- replicate(R, expr = {
+            i <- sample(1:m, size = m, replace = TRUE)
+            ## f() é uma função = estatística calculada de interesse
+            f(x[i, ])
+        })
+        return(sd(th))
+    }
+    ## Bootstrap geral
+    for (b in 1:B) {
+        j <- sample(1:n, size = n, replace = TRUE)
+        y <- x[j, ]
+        ## Calcula a estatística de interesse
+        stat[b] <- statistic(y)
+        ## Calcula o erro padrão baseado na amostra x^{(b)}. Aqui é
+        ## feito um bootstrap dentro do outro
+        se[b] <- boot.se(y, R = R, f = statistic)
+    }
+    ## Estatística amostral
+    stat0 <- statistic(x)
+    ## Estatística "estudentizada"
+    t.stats <- (stat - stat0)/se
+    ## Erro padrão das estimativas de bootstrap
+    se0 <- sd(stat)
+    ## Define alpha com base no nível de confiança
+    alpha <- 1 - level
+    ## Determina os quantis da distribuição da estatística
+    ## "estudentizada"
+    Qt <- quantile(t.stats, c(alpha/2, 1 - alpha/2), type = 1)
+    ## Calcule limites do intervalo (inverte os nomes)
+    names(Qt) <- rev(names(Qt))
+    CI <- rev(stat0 - Qt * se0)
+    return(list(CI = CI, stat = stat, t.stats = t.stats, Qt = Qt))
+}
+```
+
+```{r}
+## Aplica a função
+ci <- boot.t.ci(law, statistic = r, B = 2000, R = 200)
+
+## Resultados
+ci$CI
+ci$Qt
+length(ci$stat)
+length(ci$t.stats)
+## Distribuições
+par(mfrow = c(1, 2))
+## Distribuição amostral
+hist(ci$stat)
+## Distribuição "estudentizada" de referência
+hist(ci$t.stats); abline(v = Qt, col = 2)
+par(mfrow = c(1, 1))
+```
+
+Observações:
+
+- Note que o limite inferior do intervalo é bem menor do que os demais
+- O intervalo $t$ de bootstrap é o que possui maior amplitude entre
+  todos
+
+### Outro exemplo
+
 ```{r}
 ### Example 8.5 (Bootstrap estimate of bias of a ratio estimate)
 data(patch, package = "bootstrap")
@@ -394,9 +643,7 @@ bias <- mean(theta.b) - theta.hat
 se <- sd(theta.b)
 print(list(est=theta.hat, bias = bias,
            se = se, cv = bias/se))
-```
 
-```{r}
 ### Example 8.9 (Bootstrap confidence intervals for patch ratio statistic)
 
 library(boot)       #for boot and boot.ci
@@ -441,43 +688,6 @@ data(law, package = "bootstrap")
 boot.obj <- boot(law, R = 2000,
                  statistic = function(x, i){cor(x[i,1], x[i,2])})
 print(boot.ci(boot.obj, type=c("basic","norm","perc")))
-
-
-### Example 8.11 (Bootstrap t confidence interval)
-
-boot.t.ci <-
-    function(x, B = 500, R = 100, level = .95, statistic){
-                                        #compute the bootstrap t CI
-        x <- as.matrix(x);  n <- nrow(x)
-        stat <- numeric(B); se <- numeric(B)
-
-        boot.se <- function(x, R, f) {
-                                        #local function to compute the
-                                        #bootstrap
-                                        #estimate of standard error for statistic f(x)
-            x <- as.matrix(x); m <- nrow(x)
-            th <- replicate(R, expr = {
-                i <- sample(1:m, size = m, replace = TRUE)
-                f(x[i, ])
-            })
-            return(sd(th))
-        }
-
-        for (b in 1:B) {
-            j <- sample(1:n, size = n, replace = TRUE)
-            y <- x[j, ]
-            stat[b] <- statistic(y)
-            se[b] <- boot.se(y, R = R, f = statistic)
-        }
-        stat0 <- statistic(x)
-        t.stats <- (stat - stat0) / se
-        se0 <- sd(stat)
-        alpha <- 1 - level
-        Qt <- quantile(t.stats, c(alpha/2, 1-alpha/2), type = 1)
-        names(Qt) <- rev(names(Qt))
-        CI <- rev(stat0 - Qt * se0)
-    }
-
 
 ### Example 8.12 (Bootstrap t confidence interval for patch ratio statistic)
 
