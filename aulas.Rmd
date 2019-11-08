@@ -75,7 +75,8 @@ mais exemplos mostrados em aula.
   [HTML](10_bootstrap.html).
 - **05/11 (Ter)**: Intervalos de confiança via bootstrap.
   [HTML](10_bootstrap.html).
-- **08/11 (Sex)**: Jackknife e aplicações.
+- **08/11 (Sex)**: Jackknife e validação cruzada.
+  [HTML](11_jackknife.html).
 - **12/11 (Ter)**: Atividade disponível no [Moodle][].
 - **15/11 (Sex)**: **Feriado**.
 - **19/11 (Ter)**: Testes de permutação.
