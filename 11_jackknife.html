@@ -476,252 +476,446 @@ div.tocify {
 
 <div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
+<ul>
+<li>Canivete suiço.</li>
+<li>Equipado com várias ferramentas, fácil transporte.</li>
+<li>Mas ferramentas especializadas são melhores que as do canivete.</li>
+<li>Proposto por Tukey.</li>
+<li>É um procedimento não paramétrico pois nenhuma suposição é feita sobre a distribuição dos dados.</li>
+<li>É facilmente automatizável. Um único algoritmo pode ser escrito tendo como argumentos os dados e a estatística de interesse.</li>
+<li>O método é baseado em amostras de tamanho <span class="math inline">\(n - 1\)</span>. Existe a suposição implicita de comportamento suave com o tamanho da amostra.</li>
+<li>Ao contrário do bootstrap, é um procedimento <strong>determinístico</strong>, ou seja, os resultados de um jackknife sempre serão os mesmos para a mesma amostra.</li>
+</ul>
 </div>
 <div id="jackknife" class="section level1">
 <h1><span class="header-section-number">2</span> Jackknife</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Example 8.6 (Jackknife estimate of bias)</span></a>
-<a class="sourceLine" id="cb1-2" title="2"></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">data</span>(patch, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
-<a class="sourceLine" id="cb1-4" title="4">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(patch)</a>
-<a class="sourceLine" id="cb1-5" title="5">y &lt;-<span class="st"> </span>patch<span class="op">$</span>y</a>
-<a class="sourceLine" id="cb1-6" title="6">z &lt;-<span class="st"> </span>patch<span class="op">$</span>z</a>
-<a class="sourceLine" id="cb1-7" title="7">(theta.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z))</a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co"># [1] -0.0713061</span></a>
-<a class="sourceLine" id="cb1-9" title="9"></a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="co">## compute the jackknife replicates, leave-one-out estimates</span></a>
-<a class="sourceLine" id="cb1-11" title="11">theta.jack &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
-<a class="sourceLine" id="cb1-13" title="13">    theta.jack[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(y[<span class="op">-</span>i])<span class="op">/</span><span class="kw">mean</span>(z[<span class="op">-</span>i])</a>
-<a class="sourceLine" id="cb1-14" title="14">}</a>
-<a class="sourceLine" id="cb1-15" title="15">(bias &lt;-<span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(<span class="kw">mean</span>(theta.jack) <span class="op">-</span><span class="st"> </span>theta.hat))</a>
-<a class="sourceLine" id="cb1-16" title="16"><span class="co"># [1] 0.008002488</span></a>
-<a class="sourceLine" id="cb1-17" title="17"></a>
-<a class="sourceLine" id="cb1-18" title="18"><span class="co">## Example 8.7 (Jackknife estimate of standard error)</span></a>
-<a class="sourceLine" id="cb1-19" title="19"></a>
-<a class="sourceLine" id="cb1-20" title="20">(se &lt;-<span class="st"> </span><span class="kw">sqrt</span>((n<span class="dv">-1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>((theta.jack <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(theta.jack))<span class="op">^</span><span class="dv">2</span>)))</a>
-<a class="sourceLine" id="cb1-21" title="21"><span class="co"># [1] 0.1055278</span></a>
-<a class="sourceLine" id="cb1-22" title="22"></a>
-<a class="sourceLine" id="cb1-23" title="23"><span class="co">## Example 8.8 (Failure of jackknife)</span></a>
+<p>O jackknife é um procedimento do tipo <em>leave-one-out</em> (um caso particular de validação cruzada).</p>
+<p>Seja <span class="math inline">\(x = (x_1, \ldots, x_n)\)</span> uma amostra observada, e defina a <span class="math inline">\(i\)</span>-ésima amostra de jackkinfe <span class="math inline">\(x_{(i)}\)</span> como o subconjunto de <span class="math inline">\(x\)</span>, que “deixa de fora” a <span class="math inline">\(i\)</span>-ésima observação, ou seja, <span class="math display">\[
+x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
+\]</span> Se <span class="math inline">\(\hat{\theta} = T_n(x)\)</span>, então a <span class="math inline">\(i\)</span>-ésima estimativa de jackknife é <span class="math inline">\(\hat{\theta}_{(i)} = T_{n-1}(x_{(i)})\)</span>.</p>
+<p>A ideia é fundamentada no estimador da média <span class="math display">\[
+  \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i.
+\]</span></p>
+<p>A média com a <span class="math inline">\(i\)</span>-ésima observação removida, <span class="math inline">\(X_{(i)}\)</span>, é <span class="math display">\[
+  \bar{X}_{(i)} = \frac{1}{n - 1}
+  \left( \sum_{i=1}^{n} X_i \right) - X_{i}
+\]</span></p>
+<p>Combinando as expressões anteriores, pode-se determinar o valor de <span class="math inline">\(X_i\)</span> por <span class="math display">\[
+  X_i = n\bar{X} - (n - 1) \bar{X}_{(i)}.
+\]</span></p>
+<p>Essa expressão não tem valor para o caso da média, que serviu apenas de inspiração. Mas tem utilidade para outros parâmetros/estatísticas.</p>
+<p>Suponha que <span class="math inline">\(\theta\)</span> seja um parâmetro a ser estimado a partir de uma função dos dados (amostra de tamanho <span class="math inline">\(n\)</span>) <span class="math display">\[
+  \hat{\theta} = T(X_1, X_2, \ldots, X_n).
+\]</span></p>
+<p>A quantidade <span class="math display">\[
+  \hat{\theta}_i^{\star} = n \hat{\theta} - (n - 1) \hat{\theta}_{(i)}
+\]</span></p>
+<p>é denominada de <strong>pseudo-valor</strong> e se baseia nas diferença ponderadas entra a estimativa (<span class="math inline">\(\hat{\theta}\)</span>) e todas as observações e na <strong>estimativa parcial</strong>, ou seja, aquela sem a <span class="math inline">\(i\)</span>-ésima observação (<span class="math inline">\(\hat{\theta}_{(i)}\)</span>).</p>
+<p>O estimador pontual de Jackknife é definido por <span class="math display">\[
+  \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
+  \hat{\theta}_{(i)}^{\star},
+\]</span> ou seja, é a <strong>média dos pseudo-valores</strong>.</p>
+<p>Os valores <span class="math inline">\(\hat{\theta}\)</span> e <span class="math inline">\(\hat{\theta}^{\star}\)</span> não são necessariamente iguais nos casos gerais.</p>
+<p>Se for assumido que os valores <span class="math inline">\(\theta_{(i)}^{\star}\)</span>, <span class="math inline">\(i = 1, \ldots, n\)</span>, são independentes, a variância do estimador de Jackknife é dada por <span class="math display">\[
+\text{Var}(\hat{\theta}^{\star}) = \frac{s^2}{n},
+  \quad s^2 = \frac{1}{n - 1}
+  \sum_{i = 1}^n (\hat{\theta}_{(i)}^{*} - \hat{\theta}^{\star})^2.
+\]</span> Portanto o erro padrão será <span class="math display">\[
+\text{EP}_{jack} = \sqrt{\text{Var}(\hat{\theta}^{\star})} =
+\sqrt{\frac{s^2}{n}}
+\]</span></p>
+<p>Nesse mesmo sentido, assumindo independência entre os valores <span class="math inline">\(\theta_{(i)}^{\star}\)</span>, um intervalo de confiança <strong>aproximado</strong> de <span class="math inline">\(100(1-\alpha)\%\)</span> para <span class="math inline">\(\theta\)</span> pode ser definido como <span class="math display">\[
+\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
+\]</span></p>
+<div id="exemplo-média-amostral" class="section level2">
+<h2><span class="header-section-number">2.1</span> Exemplo: média amostral</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Simula valores de uma normal</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb1-4" title="4">(n &lt;-<span class="st"> </span><span class="kw">length</span>(x))</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co"># [1] 30</span></a>
+<a class="sourceLine" id="cb1-6" title="6">(xbar &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co"># [1] 99.76448</span></a>
+<a class="sourceLine" id="cb1-8" title="8">(s2 &lt;-<span class="st"> </span><span class="kw">var</span>(x))</a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co"># [1] 24.06053</span></a>
+<a class="sourceLine" id="cb1-10" title="10">(ep &lt;-<span class="st"> </span><span class="kw">sqrt</span>(s2<span class="op">/</span>n))</a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co"># [1] 0.8955544</span></a>
+<a class="sourceLine" id="cb1-12" title="12"></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">## Estimativas parciais</span></a>
+<a class="sourceLine" id="cb1-14" title="14">theta.jack &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb1-16" title="16">    theta.jack[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(x[<span class="op">-</span>i])</a>
+<a class="sourceLine" id="cb1-17" title="17">}</a>
+<a class="sourceLine" id="cb1-18" title="18">theta.jack</a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co">#  [1]  99.85299  99.79605  99.48762  99.74420  99.73407  99.46066  99.67689</span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="co">#  [8]  99.97447  99.87478  99.83320  99.54531  99.69432  99.68726  99.73728</span></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="co"># [15]  99.85219  99.44827  99.67052 100.09543  99.63544  99.83788  99.94047</span></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co"># [22]  99.79394  99.93326  99.88203  99.86413 100.04717  99.61191  99.72992</span></a>
+<a class="sourceLine" id="cb1-23" title="23"><span class="co"># [29]  99.95259  99.54018</span></a>
 <a class="sourceLine" id="cb1-24" title="24"></a>
-<a class="sourceLine" id="cb1-25" title="25"><span class="kw">set.seed</span>(<span class="dv">123</span>) <span class="co">#for the specific example given</span></a>
-<a class="sourceLine" id="cb1-26" title="26">n &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb1-27" title="27">x &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, <span class="dt">size =</span> n)</a>
-<a class="sourceLine" id="cb1-28" title="28"></a>
-<a class="sourceLine" id="cb1-29" title="29"><span class="co">## jackknife estimate of se</span></a>
-<a class="sourceLine" id="cb1-30" title="30">M &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
-<a class="sourceLine" id="cb1-31" title="31"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {        <span class="co">#leave one out</span></a>
-<a class="sourceLine" id="cb1-32" title="32">    y &lt;-<span class="st"> </span>x[<span class="op">-</span>i]</a>
-<a class="sourceLine" id="cb1-33" title="33">    M[i] &lt;-<span class="st"> </span><span class="kw">median</span>(y)</a>
-<a class="sourceLine" id="cb1-34" title="34">}</a>
-<a class="sourceLine" id="cb1-35" title="35">Mbar &lt;-<span class="st"> </span><span class="kw">mean</span>(M)</a>
-<a class="sourceLine" id="cb1-36" title="36"><span class="kw">sqrt</span>((n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)<span class="op">/</span>n <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>((M <span class="op">-</span><span class="st"> </span>Mbar)<span class="op">^</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb1-37" title="37"><span class="co"># [1] 10.5</span></a>
-<a class="sourceLine" id="cb1-38" title="38"></a>
-<a class="sourceLine" id="cb1-39" title="39"><span class="co">## bootstrap estimate of se</span></a>
-<a class="sourceLine" id="cb1-40" title="40">Mb &lt;-<span class="st"> </span><span class="kw">replicate</span>(<span class="dv">1000</span>, <span class="dt">expr =</span> {</a>
-<a class="sourceLine" id="cb1-41" title="41">    y &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-42" title="42">    <span class="kw">median</span>(y)</a>
-<a class="sourceLine" id="cb1-43" title="43">})</a>
-<a class="sourceLine" id="cb1-44" title="44"><span class="kw">sd</span>(Mb)</a>
-<a class="sourceLine" id="cb1-45" title="45"><span class="co"># [1] 8.864812</span></a>
-<a class="sourceLine" id="cb1-46" title="46">x</a>
-<a class="sourceLine" id="cb1-47" title="47"><span class="co">#  [1] 31 79 51 14 67 42 50 43 97 25</span></a>
-<a class="sourceLine" id="cb1-48" title="48">M</a>
-<a class="sourceLine" id="cb1-49" title="49"><span class="co">#  [1] 50 43 43 50 43 50 43 50 43 50</span></a>
-<a class="sourceLine" id="cb1-50" title="50">Mb</a>
-<a class="sourceLine" id="cb1-51" title="51"><span class="co">#    [1] 51.0 50.0 67.0 55.0 42.0 50.5 50.5 42.5 46.5 42.5 50.5 36.5 36.5</span></a>
-<a class="sourceLine" id="cb1-52" title="52"><span class="co">#   [14] 46.5 46.5 42.5 46.0 46.5 31.0 46.5 58.5 58.5 46.5 46.5 51.0 50.0</span></a>
-<a class="sourceLine" id="cb1-53" title="53"><span class="co">#   [27] 51.0 36.5 43.0 46.0 59.0 37.0 67.0 42.5 42.5 46.5 46.5 46.0 50.5</span></a>
-<a class="sourceLine" id="cb1-54" title="54"><span class="co">#   [40] 42.0 40.5 46.5 42.5 46.5 43.0 46.5 36.5 43.0 50.5 46.5 50.0 47.0</span></a>
-<a class="sourceLine" id="cb1-55" title="55"><span class="co">#   [53] 28.0 50.5 55.0 43.0 46.5 46.5 43.0 36.5 50.5 58.5 42.5 46.5 43.0</span></a>
-<a class="sourceLine" id="cb1-56" title="56"><span class="co">#   [66] 31.0 50.0 59.0 50.5 50.5 46.5 50.0 42.5 43.0 43.0 59.0 46.0 50.0</span></a>
-<a class="sourceLine" id="cb1-57" title="57"><span class="co">#   [79] 42.0 59.0 59.0 50.0 50.0 50.5 46.5 51.0 50.5 51.0 46.5 55.0 46.5</span></a>
-<a class="sourceLine" id="cb1-58" title="58"><span class="co">#   [92] 50.5 42.5 43.0 51.0 43.0 50.5 36.5 51.0 50.5 47.0 42.0 50.5 50.0</span></a>
-<a class="sourceLine" id="cb1-59" title="59"><span class="co">#  [105] 50.5 43.0 51.0 37.0 65.0 50.5 42.5 59.0 43.0 42.0 55.0 19.5 41.0</span></a>
-<a class="sourceLine" id="cb1-60" title="60"><span class="co">#  [118] 31.0 59.0 36.5 50.5 46.5 36.5 43.0 42.5 42.5 55.0 46.0 42.0 40.5</span></a>
-<a class="sourceLine" id="cb1-61" title="61"><span class="co">#  [131] 59.0 42.5 40.5 50.0 50.5 51.0 46.5 50.0 42.0 50.5 43.0 46.5 42.0</span></a>
-<a class="sourceLine" id="cb1-62" title="62"><span class="co">#  [144] 50.5 46.5 50.0 82.0 50.5 43.0 50.5 46.0 46.5 59.0 50.5 50.5 43.0</span></a>
-<a class="sourceLine" id="cb1-63" title="63"><span class="co">#  [157] 73.0 59.0 67.0 42.0 47.0 50.0 46.0 50.0 59.0 46.5 46.5 36.5 46.5</span></a>
-<a class="sourceLine" id="cb1-64" title="64"><span class="co">#  [170] 50.5 37.0 50.5 42.0 47.0 46.5 51.0 43.0 67.0 50.5 55.0 31.0 50.0</span></a>
-<a class="sourceLine" id="cb1-65" title="65"><span class="co">#  [183] 43.0 47.0 50.5 67.0 50.5 50.0 37.0 50.5 40.5 46.0 46.0 50.0 46.5</span></a>
-<a class="sourceLine" id="cb1-66" title="66"><span class="co">#  [196] 46.0 58.5 42.0 25.0 46.5 50.0 42.5 51.0 50.5 36.5 42.5 46.5 46.5</span></a>
-<a class="sourceLine" id="cb1-67" title="67"><span class="co">#  [209] 43.0 50.5 42.5 50.0 46.5 31.0 31.0 50.0 46.0 46.5 43.0 42.5 46.5</span></a>
-<a class="sourceLine" id="cb1-68" title="68"><span class="co">#  [222] 42.0 42.5 51.0 42.5 46.5 43.0 42.5 47.0 43.0 34.0 46.5 25.0 67.0</span></a>
-<a class="sourceLine" id="cb1-69" title="69"><span class="co">#  [235] 51.0 36.5 46.5 46.5 41.0 55.0 67.0 40.5 51.0 37.0 46.0 50.5 47.0</span></a>
-<a class="sourceLine" id="cb1-70" title="70"><span class="co">#  [248] 67.0 73.0 59.0 46.0 47.0 37.0 51.0 31.0 50.0 59.0 46.5 31.0 46.5</span></a>
-<a class="sourceLine" id="cb1-71" title="71"><span class="co">#  [261] 25.0 46.0 51.0 46.0 46.5 50.0 79.0 25.0 43.0 43.0 51.0 42.5 47.0</span></a>
-<a class="sourceLine" id="cb1-72" title="72"><span class="co">#  [274] 46.0 42.0 43.0 42.5 42.0 36.5 42.5 31.0 79.0 42.5 59.0 46.5 50.0</span></a>
-<a class="sourceLine" id="cb1-73" title="73"><span class="co">#  [287] 50.5 31.0 28.0 50.5 50.0 59.0 28.0 51.0 42.5 42.5 37.0 73.0 50.0</span></a>
-<a class="sourceLine" id="cb1-74" title="74"><span class="co">#  [300] 42.5 46.0 40.5 43.0 37.0 50.0 46.5 31.0 43.0 46.0 36.5 46.5 46.5</span></a>
-<a class="sourceLine" id="cb1-75" title="75"><span class="co">#  [313] 59.0 50.0 36.5 65.0 50.0 50.0 42.0 34.0 64.5 61.0 79.0 36.5 42.0</span></a>
-<a class="sourceLine" id="cb1-76" title="76"><span class="co">#  [326] 42.5 28.0 31.0 46.0 50.5 43.0 59.0 50.0 54.5 42.5 43.0 46.5 67.0</span></a>
-<a class="sourceLine" id="cb1-77" title="77"><span class="co">#  [339] 43.0 50.5 51.0 51.0 50.5 46.0 42.5 55.0 37.5 46.0 50.0 46.5 46.5</span></a>
-<a class="sourceLine" id="cb1-78" title="78"><span class="co">#  [352] 42.5 50.0 42.5 50.5 46.0 31.0 46.5 42.5 47.0 50.0 46.5 59.0 46.0</span></a>
-<a class="sourceLine" id="cb1-79" title="79"><span class="co">#  [365] 59.0 46.5 47.0 50.5 43.0 51.0 73.0 51.0 50.0 65.0 46.5 51.0 46.5</span></a>
-<a class="sourceLine" id="cb1-80" title="80"><span class="co">#  [378] 37.0 46.5 43.0 43.0 31.0 36.5 42.5 43.0 50.5 42.5 42.5 50.5 73.0</span></a>
-<a class="sourceLine" id="cb1-81" title="81"><span class="co">#  [391] 50.5 67.0 46.0 37.0 46.0 42.5 46.5 43.0 50.0 28.0 36.5 46.5 42.5</span></a>
-<a class="sourceLine" id="cb1-82" title="82"><span class="co">#  [404] 51.0 43.0 46.5 50.0 50.5 50.5 42.5 36.5 40.5 50.0 42.5 43.0 36.5</span></a>
-<a class="sourceLine" id="cb1-83" title="83"><span class="co">#  [417] 79.0 47.0 67.0 25.0 42.5 43.0 46.5 46.5 67.0 46.5 59.0 50.5 59.0</span></a>
-<a class="sourceLine" id="cb1-84" title="84"><span class="co">#  [430] 42.0 50.0 58.5 55.0 46.0 43.0 50.5 46.5 36.5 50.5 46.5 42.0 55.0</span></a>
-<a class="sourceLine" id="cb1-85" title="85"><span class="co">#  [443] 47.0 42.5 73.0 31.0 43.0 50.0 51.0 42.5 36.5 42.5 34.0 47.0 31.0</span></a>
-<a class="sourceLine" id="cb1-86" title="86"><span class="co">#  [456] 36.5 40.5 46.5 46.5 50.5 46.5 50.5 42.5 59.0 43.0 67.0 50.0 43.0</span></a>
-<a class="sourceLine" id="cb1-87" title="87"><span class="co">#  [469] 67.0 43.0 50.0 50.0 59.0 50.0 46.0 50.0 50.0 43.0 36.5 46.0 50.5</span></a>
-<a class="sourceLine" id="cb1-88" title="88"><span class="co">#  [482] 36.5 43.0 43.0 47.0 42.0 46.0 37.0 46.5 42.0 59.0 42.0 47.0 47.0</span></a>
-<a class="sourceLine" id="cb1-89" title="89"><span class="co">#  [495] 54.5 42.5 46.5 51.0 67.0 36.5 82.0 51.0 50.0 42.5 46.5 50.0 51.0</span></a>
-<a class="sourceLine" id="cb1-90" title="90"><span class="co">#  [508] 46.5 50.5 58.5 59.0 50.5 51.0 42.0 59.0 31.0 47.0 50.5 36.5 50.0</span></a>
-<a class="sourceLine" id="cb1-91" title="91"><span class="co">#  [521] 50.5 46.5 50.0 36.5 59.0 58.5 47.0 40.5 59.0 51.0 58.5 42.0 42.5</span></a>
-<a class="sourceLine" id="cb1-92" title="92"><span class="co">#  [534] 51.0 43.0 37.5 42.5 43.0 51.0 46.0 46.0 65.0 46.0 42.0 50.5 36.5</span></a>
-<a class="sourceLine" id="cb1-93" title="93"><span class="co">#  [547] 51.0 46.0 33.5 42.5 42.0 51.0 37.0 46.5 37.0 67.0 43.0 50.0 40.5</span></a>
-<a class="sourceLine" id="cb1-94" title="94"><span class="co">#  [560] 51.0 51.0 50.5 36.5 67.0 42.5 36.5 42.5 36.5 50.5 46.5 46.5 33.5</span></a>
-<a class="sourceLine" id="cb1-95" title="95"><span class="co">#  [573] 46.5 42.5 40.5 37.0 46.5 46.5 46.5 46.5 51.0 43.0 25.0 43.0 50.5</span></a>
-<a class="sourceLine" id="cb1-96" title="96"><span class="co">#  [586] 50.0 43.0 50.5 51.0 46.5 47.0 31.0 46.5 28.0 37.0 37.0 43.0 46.5</span></a>
-<a class="sourceLine" id="cb1-97" title="97"><span class="co">#  [599] 41.0 46.5 43.0 42.0 67.0 50.0 59.0 49.0 50.5 43.0 50.5 42.5 58.5</span></a>
-<a class="sourceLine" id="cb1-98" title="98"><span class="co">#  [612] 28.0 46.5 47.0 42.5 47.0 67.0 47.0 43.0 51.0 47.0 36.5 46.5 51.0</span></a>
-<a class="sourceLine" id="cb1-99" title="99"><span class="co">#  [625] 51.0 59.0 51.0 36.5 42.0 47.0 50.0 36.5 42.0 43.0 54.5 46.5 31.0</span></a>
-<a class="sourceLine" id="cb1-100" title="100"><span class="co">#  [638] 67.0 46.5 37.0 42.5 46.5 46.5 46.5 50.5 50.5 46.5 46.0 37.5 50.0</span></a>
-<a class="sourceLine" id="cb1-101" title="101"><span class="co">#  [651] 46.5 42.5 46.5 46.5 42.0 58.5 46.0 42.5 46.0 59.0 33.5 46.0 42.5</span></a>
-<a class="sourceLine" id="cb1-102" title="102"><span class="co">#  [664] 43.0 51.0 42.5 50.5 46.5 43.0 46.0 42.5 47.0 31.0 51.0 31.0 46.5</span></a>
-<a class="sourceLine" id="cb1-103" title="103"><span class="co">#  [677] 58.5 58.5 51.0 46.0 40.5 43.0 50.0 42.0 79.0 67.0 46.0 37.0 36.5</span></a>
-<a class="sourceLine" id="cb1-104" title="104"><span class="co">#  [690] 59.0 50.5 31.0 59.0 50.5 50.0 42.5 51.0 46.0 46.5 58.5 42.5 36.5</span></a>
-<a class="sourceLine" id="cb1-105" title="105"><span class="co">#  [703] 51.0 43.0 46.5 50.5 51.0 42.5 28.0 42.5 36.5 36.5 43.0 47.0 51.0</span></a>
-<a class="sourceLine" id="cb1-106" title="106"><span class="co">#  [716] 28.0 46.5 43.0 47.0 37.0 25.0 42.0 58.5 59.0 47.0 43.0 46.5 42.5</span></a>
-<a class="sourceLine" id="cb1-107" title="107"><span class="co">#  [729] 51.0 59.0 36.5 43.0 50.5 46.5 43.0 58.5 58.5 67.0 36.5 46.5 42.0</span></a>
-<a class="sourceLine" id="cb1-108" title="108"><span class="co">#  [742] 42.5 58.5 50.0 50.0 47.0 88.0 46.5 36.5 50.5 50.0 46.5 46.5 67.0</span></a>
-<a class="sourceLine" id="cb1-109" title="109"><span class="co">#  [755] 50.0 42.5 46.5 43.0 46.0 51.0 59.0 73.0 67.0 50.5 43.0 51.0 46.5</span></a>
-<a class="sourceLine" id="cb1-110" title="110"><span class="co">#  [768] 50.5 51.0 50.0 43.0 42.0 46.5 31.0 50.0 50.0 36.5 46.5 50.5 46.5</span></a>
-<a class="sourceLine" id="cb1-111" title="111"><span class="co">#  [781] 50.5 42.5 50.5 50.0 42.5 47.0 50.0 50.0 46.5 59.0 36.5 50.5 51.0</span></a>
-<a class="sourceLine" id="cb1-112" title="112"><span class="co">#  [794] 46.0 43.0 67.0 59.0 47.0 50.5 73.0 42.0 36.5 50.0 59.0 50.0 46.5</span></a>
-<a class="sourceLine" id="cb1-113" title="113"><span class="co">#  [807] 42.5 58.5 42.0 50.5 46.5 50.5 50.5 42.5 36.5 42.0 43.0 42.0 46.5</span></a>
-<a class="sourceLine" id="cb1-114" title="114"><span class="co">#  [820] 36.5 46.5 42.0 36.5 42.5 67.0 42.5 43.0 46.5 50.5 42.0 58.5 43.0</span></a>
-<a class="sourceLine" id="cb1-115" title="115"><span class="co">#  [833] 42.0 46.5 50.0 43.0 50.5 36.5 46.5 42.0 43.0 42.5 42.0 59.0 67.0</span></a>
-<a class="sourceLine" id="cb1-116" title="116"><span class="co">#  [846] 73.0 50.0 42.5 55.0 46.5 46.5 46.0 43.0 42.5 50.5 46.5 50.5 42.5</span></a>
-<a class="sourceLine" id="cb1-117" title="117"><span class="co">#  [859] 59.0 37.0 46.5 51.0 41.0 67.0 31.0 36.5 42.0 46.0 50.5 50.5 46.5</span></a>
-<a class="sourceLine" id="cb1-118" title="118"><span class="co">#  [872] 59.0 46.5 42.5 46.0 46.5 33.5 37.0 47.0 42.5 36.5 42.0 46.5 42.5</span></a>
-<a class="sourceLine" id="cb1-119" title="119"><span class="co">#  [885] 42.0 42.5 42.5 46.0 46.5 50.0 50.0 31.0 46.5 73.0 46.5 46.5 43.0</span></a>
-<a class="sourceLine" id="cb1-120" title="120"><span class="co">#  [898] 51.0 43.0 36.5 28.0 42.5 51.0 51.0 46.5 73.0 46.5 64.5 47.0 43.0</span></a>
-<a class="sourceLine" id="cb1-121" title="121"><span class="co">#  [911] 58.5 42.0 46.5 46.5 51.0 47.0 46.5 74.0 37.0 43.0 58.5 43.0 42.5</span></a>
-<a class="sourceLine" id="cb1-122" title="122"><span class="co">#  [924] 50.0 67.0 51.0 46.5 42.0 43.0 46.5 50.5 31.0 31.0 40.5 47.0 28.0</span></a>
-<a class="sourceLine" id="cb1-123" title="123"><span class="co">#  [937] 28.0 50.5 46.5 54.5 46.5 54.5 31.0 46.5 50.5 51.0 43.0 43.0 51.0</span></a>
-<a class="sourceLine" id="cb1-124" title="124"><span class="co">#  [950] 59.0 50.0 47.0 73.0 51.0 46.0 50.5 42.0 42.0 51.0 50.5 59.0 65.0</span></a>
-<a class="sourceLine" id="cb1-125" title="125"><span class="co">#  [963] 46.5 51.0 46.0 46.5 65.0 50.5 40.5 42.5 73.0 59.0 46.5 59.0 46.5</span></a>
-<a class="sourceLine" id="cb1-126" title="126"><span class="co">#  [976] 67.0 50.0 43.0 43.0 47.0 40.5 46.5 42.0 50.5 36.5 59.0 46.0 46.0</span></a>
-<a class="sourceLine" id="cb1-127" title="127"><span class="co">#  [989] 67.0 42.5 59.0 42.0 42.0 42.5 50.0 31.0 50.5 50.5 36.5 31.0</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-25" title="25"><span class="co">## Conceito: reproduzir o valor</span></a>
+<a class="sourceLine" id="cb1-26" title="26">x[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-27" title="27"><span class="co"># [1] 97.19762</span></a>
+<a class="sourceLine" id="cb1-28" title="28">n <span class="op">*</span><span class="st"> </span>xbar <span class="op">-</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>theta.jack[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb1-29" title="29"><span class="co"># [1] 97.19762</span></a>
+<a class="sourceLine" id="cb1-30" title="30"></a>
+<a class="sourceLine" id="cb1-31" title="31"><span class="co">## Pseudo valores</span></a>
+<a class="sourceLine" id="cb1-32" title="32">(pv &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>xbar <span class="op">-</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>theta.jack)</a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="co">#  [1]  97.19762  98.84911 107.79354 100.35254 100.64644 108.57532 102.30458</span></a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="co">#  [8]  93.67469  96.56574  97.77169 106.12041 101.79907 102.00386 100.55341</span></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="co"># [15]  97.22079 108.93457 102.48925  90.16691 103.50678  97.63604  94.66088</span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="co"># [22]  98.91013  94.86998  96.35554  96.87480  91.56653 104.18894 100.76687</span></a>
+<a class="sourceLine" id="cb1-37" title="37"><span class="co"># [29]  94.30932 106.26907</span></a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="kw">mean</span>(pv)</a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="co"># [1] 99.76448</span></a>
+<a class="sourceLine" id="cb1-40" title="40">xbar <span class="co"># média da amostra</span></a>
+<a class="sourceLine" id="cb1-41" title="41"><span class="co"># [1] 99.76448</span></a>
+<a class="sourceLine" id="cb1-42" title="42"></a>
+<a class="sourceLine" id="cb1-43" title="43"><span class="co">## Erro padrão</span></a>
+<a class="sourceLine" id="cb1-44" title="44"><span class="co">## Usando os pseudo-valores</span></a>
+<a class="sourceLine" id="cb1-45" title="45"><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb1-46" title="46"><span class="co"># [1] 0.8955544</span></a>
+<a class="sourceLine" id="cb1-47" title="47">ep <span class="co"># erro padrão da amostra</span></a>
+<a class="sourceLine" id="cb1-48" title="48"><span class="co"># [1] 0.8955544</span></a>
+<a class="sourceLine" id="cb1-49" title="49"></a>
+<a class="sourceLine" id="cb1-50" title="50"><span class="co">## Resultados</span></a>
+<a class="sourceLine" id="cb1-51" title="51"><span class="kw">round</span>(<span class="kw">cbind</span>(<span class="dt">Amostra =</span> x, <span class="st">&quot;Pseudo-valores&quot;</span> =<span class="st"> </span>pv,</a>
+<a class="sourceLine" id="cb1-52" title="52">            <span class="st">&quot;Estimativas parciais&quot;</span> =<span class="st"> </span>theta.jack), <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-53" title="53"><span class="co">#       Amostra Pseudo-valores Estimativas parciais</span></a>
+<a class="sourceLine" id="cb1-54" title="54"><span class="co">#  [1,]   97.20          97.20                99.85</span></a>
+<a class="sourceLine" id="cb1-55" title="55"><span class="co">#  [2,]   98.85          98.85                99.80</span></a>
+<a class="sourceLine" id="cb1-56" title="56"><span class="co">#  [3,]  107.79         107.79                99.49</span></a>
+<a class="sourceLine" id="cb1-57" title="57"><span class="co">#  [4,]  100.35         100.35                99.74</span></a>
+<a class="sourceLine" id="cb1-58" title="58"><span class="co">#  [5,]  100.65         100.65                99.73</span></a>
+<a class="sourceLine" id="cb1-59" title="59"><span class="co">#  [6,]  108.58         108.58                99.46</span></a>
+<a class="sourceLine" id="cb1-60" title="60"><span class="co">#  [7,]  102.30         102.30                99.68</span></a>
+<a class="sourceLine" id="cb1-61" title="61"><span class="co">#  [8,]   93.67          93.67                99.97</span></a>
+<a class="sourceLine" id="cb1-62" title="62"><span class="co">#  [9,]   96.57          96.57                99.87</span></a>
+<a class="sourceLine" id="cb1-63" title="63"><span class="co"># [10,]   97.77          97.77                99.83</span></a>
+<a class="sourceLine" id="cb1-64" title="64"><span class="co"># [11,]  106.12         106.12                99.55</span></a>
+<a class="sourceLine" id="cb1-65" title="65"><span class="co"># [12,]  101.80         101.80                99.69</span></a>
+<a class="sourceLine" id="cb1-66" title="66"><span class="co"># [13,]  102.00         102.00                99.69</span></a>
+<a class="sourceLine" id="cb1-67" title="67"><span class="co"># [14,]  100.55         100.55                99.74</span></a>
+<a class="sourceLine" id="cb1-68" title="68"><span class="co"># [15,]   97.22          97.22                99.85</span></a>
+<a class="sourceLine" id="cb1-69" title="69"><span class="co"># [16,]  108.93         108.93                99.45</span></a>
+<a class="sourceLine" id="cb1-70" title="70"><span class="co"># [17,]  102.49         102.49                99.67</span></a>
+<a class="sourceLine" id="cb1-71" title="71"><span class="co"># [18,]   90.17          90.17               100.10</span></a>
+<a class="sourceLine" id="cb1-72" title="72"><span class="co"># [19,]  103.51         103.51                99.64</span></a>
+<a class="sourceLine" id="cb1-73" title="73"><span class="co"># [20,]   97.64          97.64                99.84</span></a>
+<a class="sourceLine" id="cb1-74" title="74"><span class="co"># [21,]   94.66          94.66                99.94</span></a>
+<a class="sourceLine" id="cb1-75" title="75"><span class="co"># [22,]   98.91          98.91                99.79</span></a>
+<a class="sourceLine" id="cb1-76" title="76"><span class="co"># [23,]   94.87          94.87                99.93</span></a>
+<a class="sourceLine" id="cb1-77" title="77"><span class="co"># [24,]   96.36          96.36                99.88</span></a>
+<a class="sourceLine" id="cb1-78" title="78"><span class="co"># [25,]   96.87          96.87                99.86</span></a>
+<a class="sourceLine" id="cb1-79" title="79"><span class="co"># [26,]   91.57          91.57               100.05</span></a>
+<a class="sourceLine" id="cb1-80" title="80"><span class="co"># [27,]  104.19         104.19                99.61</span></a>
+<a class="sourceLine" id="cb1-81" title="81"><span class="co"># [28,]  100.77         100.77                99.73</span></a>
+<a class="sourceLine" id="cb1-82" title="82"><span class="co"># [29,]   94.31          94.31                99.95</span></a>
+<a class="sourceLine" id="cb1-83" title="83"><span class="co"># [30,]  106.27         106.27                99.54</span></a></code></pre></div>
+</div>
+<div id="exemplo-desvio-padrão-amostral" class="section level2">
+<h2><span class="header-section-number">2.2</span> Exemplo: desvio padrão amostral</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">## Valores de X ~ Exp(1). E[X] = 1 e Var[X] = 1</span></a>
+<a class="sourceLine" id="cb2-3" title="3">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">3.56</span>, <span class="fl">0.69</span>, <span class="fl">0.1</span>, <span class="fl">1.84</span>, <span class="fl">3.93</span>, <span class="fl">1.25</span>, <span class="fl">0.18</span>, <span class="fl">1.13</span>, <span class="fl">0.27</span>, <span class="fl">0.5</span>, <span class="fl">0.67</span>,</a>
+<a class="sourceLine" id="cb2-4" title="4">       <span class="fl">0.01</span>, <span class="fl">0.61</span>, <span class="fl">0.82</span>, <span class="fl">1.7</span>, <span class="fl">0.39</span>, <span class="fl">0.11</span>, <span class="fl">1.2</span>, <span class="fl">1.21</span>, <span class="fl">0.72</span>)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">hist</span>(x)</a></code></pre></div>
+<p><img src="figures/11_jackknife/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">(n &lt;-<span class="st"> </span><span class="kw">length</span>(x))</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co"># [1] 20</span></a>
+<a class="sourceLine" id="cb3-3" title="3">(xbar &lt;-<span class="st"> </span><span class="kw">mean</span>(x))</a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co"># [1] 1.0445</span></a>
+<a class="sourceLine" id="cb3-5" title="5">(sx &lt;-<span class="st"> </span><span class="kw">sd</span>(x))</a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co"># [1] 1.05968</span></a>
+<a class="sourceLine" id="cb3-7" title="7"></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">## Obter uma estimativa do erro padrão para o desvio padrão</span></a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">## Estimativas parciais</span></a>
+<a class="sourceLine" id="cb3-11" title="11">theta.jack &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb3-13" title="13">    theta.jack[i] &lt;-<span class="st"> </span><span class="kw">sd</span>(x[<span class="op">-</span>i])</a>
+<a class="sourceLine" id="cb3-14" title="14">}</a>
+<a class="sourceLine" id="cb3-15" title="15">theta.jack</a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">#  [1] 0.9029186 1.0853369 1.0644890 1.0715868 0.8357022 1.0875825 1.0684568</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="co">#  [8] 1.0885209 1.0724860 1.0807253 1.0849440 1.0595853 1.0836350 1.0873628</span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="co"># [15] 1.0771155 1.0771511 1.0650050 1.0880677 1.0879814 1.0858855</span></a>
+<a class="sourceLine" id="cb3-19" title="19"></a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="co">## Pseudo valores</span></a>
+<a class="sourceLine" id="cb3-21" title="21">(pv &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>sx <span class="op">-</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>theta.jack)</a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="co">#  [1] 4.0381381 0.5721907 0.9683003 0.8334424 5.3152487 0.5295241 0.8929116</span></a>
+<a class="sourceLine" id="cb3-23" title="23"><span class="co">#  [8] 0.5116940 0.8163565 0.6598100 0.5796552 1.0614703 0.6045255 0.5336979</span></a>
+<a class="sourceLine" id="cb3-24" title="24"><span class="co"># [15] 0.7283971 0.7277214 0.9584962 0.5203059 0.5219449 0.5617665</span></a>
+<a class="sourceLine" id="cb3-25" title="25"><span class="kw">mean</span>(pv)</a>
+<a class="sourceLine" id="cb3-26" title="26"><span class="co"># [1] 1.09678</span></a>
+<a class="sourceLine" id="cb3-27" title="27">sx <span class="co"># desvio padrão amostral</span></a>
+<a class="sourceLine" id="cb3-28" title="28"><span class="co"># [1] 1.05968</span></a>
+<a class="sourceLine" id="cb3-29" title="29"></a>
+<a class="sourceLine" id="cb3-30" title="30"><span class="co">## Erro padrão</span></a>
+<a class="sourceLine" id="cb3-31" title="31"><span class="co">## Usando os pseudo-valores</span></a>
+<a class="sourceLine" id="cb3-32" title="32"><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb3-33" title="33"><span class="co"># [1] 0.2802791</span></a>
+<a class="sourceLine" id="cb3-34" title="34"></a>
+<a class="sourceLine" id="cb3-35" title="35"><span class="co">## Resultados</span></a>
+<a class="sourceLine" id="cb3-36" title="36"><span class="kw">round</span>(<span class="kw">cbind</span>(<span class="dt">Amostra =</span> x, <span class="st">&quot;Pseudo-valores&quot;</span> =<span class="st"> </span>pv,</a>
+<a class="sourceLine" id="cb3-37" title="37">            <span class="st">&quot;Estimativas parciais&quot;</span> =<span class="st"> </span>theta.jack), <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-38" title="38"><span class="co">#       Amostra Pseudo-valores Estimativas parciais</span></a>
+<a class="sourceLine" id="cb3-39" title="39"><span class="co">#  [1,]    3.56           4.04                 0.90</span></a>
+<a class="sourceLine" id="cb3-40" title="40"><span class="co">#  [2,]    0.69           0.57                 1.09</span></a>
+<a class="sourceLine" id="cb3-41" title="41"><span class="co">#  [3,]    0.10           0.97                 1.06</span></a>
+<a class="sourceLine" id="cb3-42" title="42"><span class="co">#  [4,]    1.84           0.83                 1.07</span></a>
+<a class="sourceLine" id="cb3-43" title="43"><span class="co">#  [5,]    3.93           5.32                 0.84</span></a>
+<a class="sourceLine" id="cb3-44" title="44"><span class="co">#  [6,]    1.25           0.53                 1.09</span></a>
+<a class="sourceLine" id="cb3-45" title="45"><span class="co">#  [7,]    0.18           0.89                 1.07</span></a>
+<a class="sourceLine" id="cb3-46" title="46"><span class="co">#  [8,]    1.13           0.51                 1.09</span></a>
+<a class="sourceLine" id="cb3-47" title="47"><span class="co">#  [9,]    0.27           0.82                 1.07</span></a>
+<a class="sourceLine" id="cb3-48" title="48"><span class="co"># [10,]    0.50           0.66                 1.08</span></a>
+<a class="sourceLine" id="cb3-49" title="49"><span class="co"># [11,]    0.67           0.58                 1.08</span></a>
+<a class="sourceLine" id="cb3-50" title="50"><span class="co"># [12,]    0.01           1.06                 1.06</span></a>
+<a class="sourceLine" id="cb3-51" title="51"><span class="co"># [13,]    0.61           0.60                 1.08</span></a>
+<a class="sourceLine" id="cb3-52" title="52"><span class="co"># [14,]    0.82           0.53                 1.09</span></a>
+<a class="sourceLine" id="cb3-53" title="53"><span class="co"># [15,]    1.70           0.73                 1.08</span></a>
+<a class="sourceLine" id="cb3-54" title="54"><span class="co"># [16,]    0.39           0.73                 1.08</span></a>
+<a class="sourceLine" id="cb3-55" title="55"><span class="co"># [17,]    0.11           0.96                 1.07</span></a>
+<a class="sourceLine" id="cb3-56" title="56"><span class="co"># [18,]    1.20           0.52                 1.09</span></a>
+<a class="sourceLine" id="cb3-57" title="57"><span class="co"># [19,]    1.21           0.52                 1.09</span></a>
+<a class="sourceLine" id="cb3-58" title="58"><span class="co"># [20,]    0.72           0.56                 1.09</span></a></code></pre></div>
+</div>
+<div id="exemplo-correlação" class="section level2">
+<h2><span class="header-section-number">2.3</span> Exemplo: correlação</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">## Estimativa de erro padrão via bootstrap</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">data</span>(law, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">str</span>(law)</a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co"># &#39;data.frame&#39;: 15 obs. of  2 variables:</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#  $ LSAT: num  576 635 558 578 666 580 555 661 651 605 ...</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#  $ GPA : num  3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="kw">plot</span>(law<span class="op">$</span>LSAT, law<span class="op">$</span>GPA)</a></code></pre></div>
+<p><img src="figures/11_jackknife/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">(rho &lt;-<span class="st"> </span><span class="kw">cor</span>(law<span class="op">$</span>LSAT, law<span class="op">$</span>GPA))</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co"># [1] 0.7763745</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">## Definições</span></a>
+<a class="sourceLine" id="cb5-4" title="4">B &lt;-<span class="st"> </span><span class="dv">2000</span></a>
+<a class="sourceLine" id="cb5-5" title="5">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(law)</a>
+<a class="sourceLine" id="cb5-6" title="6">R &lt;-<span class="st"> </span><span class="kw">numeric</span>(B)</a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">## Bootstrap para a estimativa do erro padrão do R (correlação amostral)</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
+<a class="sourceLine" id="cb5-9" title="9">    i &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-10" title="10">    LSAT &lt;-<span class="st"> </span>law<span class="op">$</span>LSAT[i]</a>
+<a class="sourceLine" id="cb5-11" title="11">    GPA &lt;-<span class="st"> </span>law<span class="op">$</span>GPA[i]</a>
+<a class="sourceLine" id="cb5-12" title="12">    R[b] &lt;-<span class="st"> </span><span class="kw">cor</span>(LSAT, GPA)</a>
+<a class="sourceLine" id="cb5-13" title="13">}</a>
+<a class="sourceLine" id="cb5-14" title="14"><span class="co">## Resultado</span></a>
+<a class="sourceLine" id="cb5-15" title="15"><span class="kw">mean</span>(R)</a>
+<a class="sourceLine" id="cb5-16" title="16"><span class="co"># [1] 0.7754856</span></a>
+<a class="sourceLine" id="cb5-17" title="17">(se.R &lt;-<span class="st"> </span><span class="kw">sd</span>(R))</a>
+<a class="sourceLine" id="cb5-18" title="18"><span class="co"># [1] 0.1305849</span></a>
+<a class="sourceLine" id="cb5-19" title="19"></a>
+<a class="sourceLine" id="cb5-20" title="20"><span class="co">## Usando jackknife</span></a>
+<a class="sourceLine" id="cb5-21" title="21">theta.jack &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
+<a class="sourceLine" id="cb5-22" title="22"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb5-23" title="23">    theta.jack[j] &lt;-<span class="st"> </span><span class="kw">cor</span>(law<span class="op">$</span>LSAT[<span class="op">-</span>j], law<span class="op">$</span>GPA[<span class="op">-</span>j])</a>
+<a class="sourceLine" id="cb5-24" title="24">}</a>
+<a class="sourceLine" id="cb5-25" title="25"><span class="co">## Estimativas parciais</span></a>
+<a class="sourceLine" id="cb5-26" title="26">theta.jack</a>
+<a class="sourceLine" id="cb5-27" title="27"><span class="co">#  [1] 0.8929471 0.7637068 0.7549984 0.7760968 0.7313197 0.7799687 0.7845360</span></a>
+<a class="sourceLine" id="cb5-28" title="28"><span class="co">#  [8] 0.7361618 0.7517391 0.7761231 0.8181007 0.7857184 0.7403509 0.7670413</span></a>
+<a class="sourceLine" id="cb5-29" title="29"><span class="co"># [15] 0.7798725</span></a>
+<a class="sourceLine" id="cb5-30" title="30"></a>
+<a class="sourceLine" id="cb5-31" title="31"><span class="co">## Pseudo valores</span></a>
+<a class="sourceLine" id="cb5-32" title="32"><span class="co">## Note que alguns valores estão fora do intervalo [-1,1]</span></a>
+<a class="sourceLine" id="cb5-33" title="33">(pv &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>rho <span class="op">-</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>theta.jack)</a>
+<a class="sourceLine" id="cb5-34" title="34"><span class="co">#  [1] -0.8556427  0.9537216  1.0756402  0.7802626  1.4071420  0.7260560</span></a>
+<a class="sourceLine" id="cb5-35" title="35"><span class="co">#  [7]  0.6621137  1.3393518  1.1212703  0.7798940  0.1922075  0.6455592</span></a>
+<a class="sourceLine" id="cb5-36" title="36"><span class="co"># [13]  1.2807048  0.9070386  0.7274020</span></a>
+<a class="sourceLine" id="cb5-37" title="37"><span class="kw">mean</span>(pv)</a>
+<a class="sourceLine" id="cb5-38" title="38"><span class="co"># [1] 0.7828481</span></a>
+<a class="sourceLine" id="cb5-39" title="39">rho <span class="co"># valor da amostra</span></a>
+<a class="sourceLine" id="cb5-40" title="40"><span class="co"># [1] 0.7763745</span></a>
+<a class="sourceLine" id="cb5-41" title="41"></a>
+<a class="sourceLine" id="cb5-42" title="42"><span class="co">## Erro padrão</span></a>
+<a class="sourceLine" id="cb5-43" title="43"><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb5-44" title="44"><span class="co"># [1] 0.1425186</span></a>
+<a class="sourceLine" id="cb5-45" title="45">se.R <span class="co"># via bootstrap</span></a>
+<a class="sourceLine" id="cb5-46" title="46"><span class="co"># [1] 0.1305849</span></a>
+<a class="sourceLine" id="cb5-47" title="47"><span class="co">## sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</span></a>
+<a class="sourceLine" id="cb5-48" title="48"></a>
+<a class="sourceLine" id="cb5-49" title="49"><span class="co">## Intervalo de confiança Jackknife (supõe independência e normalidade).</span></a>
+<a class="sourceLine" id="cb5-50" title="50"><span class="kw">mean</span>(pv) <span class="op">+</span><span class="st"> </span><span class="kw">qt</span>(<span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>), <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb5-51" title="51"><span class="co"># [1] 0.4771761 1.0885202</span></a>
+<a class="sourceLine" id="cb5-52" title="52"><span class="kw">cor.test</span>(law<span class="op">$</span>LSAT, law<span class="op">$</span>GPA)<span class="op">$</span>conf.int <span class="co"># teórico</span></a>
+<a class="sourceLine" id="cb5-53" title="53"><span class="co"># [1] 0.4385108 0.9219648</span></a>
+<a class="sourceLine" id="cb5-54" title="54"><span class="co"># attr(,&quot;conf.level&quot;)</span></a>
+<a class="sourceLine" id="cb5-55" title="55"><span class="co"># [1] 0.95</span></a></code></pre></div>
+</div>
+<div id="exemplo-razão-de-médias" class="section level2">
+<h2><span class="header-section-number">2.4</span> Exemplo: razão de médias</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">data</span>(patch, <span class="dt">package =</span> <span class="st">&quot;bootstrap&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2">n &lt;-<span class="st"> </span><span class="kw">nrow</span>(patch)</a>
+<a class="sourceLine" id="cb6-3" title="3">y &lt;-<span class="st"> </span>patch<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb6-4" title="4">z &lt;-<span class="st"> </span>patch<span class="op">$</span>z</a>
+<a class="sourceLine" id="cb6-5" title="5">(theta.hat &lt;-<span class="st"> </span><span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z))</a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co"># [1] -0.0713061</span></a>
+<a class="sourceLine" id="cb6-7" title="7"></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">## Estimativas parciais: jackknife</span></a>
+<a class="sourceLine" id="cb6-9" title="9">theta.jack &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb6-11" title="11">    theta.jack[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(y[<span class="op">-</span>i])<span class="op">/</span><span class="kw">mean</span>(z[<span class="op">-</span>i])</a>
+<a class="sourceLine" id="cb6-12" title="12">}</a>
+<a class="sourceLine" id="cb6-13" title="13"></a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">## Pseudo valores</span></a>
+<a class="sourceLine" id="cb6-15" title="15">(pv &lt;-<span class="st"> </span>n <span class="op">*</span><span class="st"> </span>theta.hat <span class="op">-</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>theta.jack)</a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="co"># [1] -0.17061885  0.32904914 -0.42025606  0.35670355 -0.21575610  0.01788742</span></a>
+<a class="sourceLine" id="cb6-17" title="17"><span class="co"># [7] -0.11640789 -0.41506989</span></a>
+<a class="sourceLine" id="cb6-18" title="18"><span class="kw">mean</span>(pv)</a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="co"># [1] -0.07930858</span></a>
+<a class="sourceLine" id="cb6-20" title="20">theta.hat <span class="co"># amostral</span></a>
+<a class="sourceLine" id="cb6-21" title="21"><span class="co"># [1] -0.0713061</span></a>
+<a class="sourceLine" id="cb6-22" title="22"></a>
+<a class="sourceLine" id="cb6-23" title="23"><span class="co">## Erro padrão de jackknife</span></a>
+<a class="sourceLine" id="cb6-24" title="24"><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb6-25" title="25"><span class="co"># [1] 0.1055278</span></a>
+<a class="sourceLine" id="cb6-26" title="26"></a>
+<a class="sourceLine" id="cb6-27" title="27"><span class="co">## Via bootstrap</span></a>
+<a class="sourceLine" id="cb6-28" title="28">B &lt;-<span class="st"> </span><span class="dv">2000</span></a>
+<a class="sourceLine" id="cb6-29" title="29">theta.b &lt;-<span class="st"> </span><span class="kw">numeric</span>(B)</a>
+<a class="sourceLine" id="cb6-30" title="30"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>B) {</a>
+<a class="sourceLine" id="cb6-31" title="31">    i &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb6-32" title="32">    y &lt;-<span class="st"> </span>patch<span class="op">$</span>y[i]</a>
+<a class="sourceLine" id="cb6-33" title="33">    z &lt;-<span class="st"> </span>patch<span class="op">$</span>z[i]</a>
+<a class="sourceLine" id="cb6-34" title="34">    theta.b[b] &lt;-<span class="st"> </span><span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z)</a>
+<a class="sourceLine" id="cb6-35" title="35">}</a>
+<a class="sourceLine" id="cb6-36" title="36"><span class="co">## Estimativas</span></a>
+<a class="sourceLine" id="cb6-37" title="37">(se &lt;-<span class="st"> </span><span class="kw">sd</span>(theta.b))</a>
+<a class="sourceLine" id="cb6-38" title="38"><span class="co"># [1] 0.09987555</span></a>
+<a class="sourceLine" id="cb6-39" title="39"></a>
+<a class="sourceLine" id="cb6-40" title="40"><span class="co">## Intervalos de confiança para a estimativa</span></a>
+<a class="sourceLine" id="cb6-41" title="41"><span class="co">## Via bootstrap</span></a>
+<a class="sourceLine" id="cb6-42" title="42">theta.boot &lt;-<span class="st"> </span><span class="cf">function</span>(dat, ind) {</a>
+<a class="sourceLine" id="cb6-43" title="43">    y &lt;-<span class="st"> </span>dat[ind, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb6-44" title="44">    z &lt;-<span class="st"> </span>dat[ind, <span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb6-45" title="45">    <span class="kw">mean</span>(y)<span class="op">/</span><span class="kw">mean</span>(z)</a>
+<a class="sourceLine" id="cb6-46" title="46">}</a>
+<a class="sourceLine" id="cb6-47" title="47">dat &lt;-<span class="st"> </span><span class="kw">cbind</span>(patch<span class="op">$</span>y, patch<span class="op">$</span>z)</a>
+<a class="sourceLine" id="cb6-48" title="48">boot.obj &lt;-<span class="st"> </span><span class="kw">boot</span>(dat, <span class="dt">statistic =</span> theta.boot, <span class="dt">R =</span> <span class="dv">2000</span>)</a>
+<a class="sourceLine" id="cb6-49" title="49"><span class="kw">boot.ci</span>(boot.obj, <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;basic&quot;</span>, <span class="st">&quot;norm&quot;</span>, <span class="st">&quot;perc&quot;</span>))</a>
+<a class="sourceLine" id="cb6-50" title="50"><span class="co"># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></a>
+<a class="sourceLine" id="cb6-51" title="51"><span class="co"># Based on 2000 bootstrap replicates</span></a>
+<a class="sourceLine" id="cb6-52" title="52"><span class="co"># </span></a>
+<a class="sourceLine" id="cb6-53" title="53"><span class="co"># CALL : </span></a>
+<a class="sourceLine" id="cb6-54" title="54"><span class="co"># boot.ci(boot.out = boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</span></a>
+<a class="sourceLine" id="cb6-55" title="55"><span class="co"># </span></a>
+<a class="sourceLine" id="cb6-56" title="56"><span class="co"># Intervals : </span></a>
+<a class="sourceLine" id="cb6-57" title="57"><span class="co"># Level      Normal              Basic              Percentile     </span></a>
+<a class="sourceLine" id="cb6-58" title="58"><span class="co"># 95%   (-0.2805,  0.1223 )   (-0.3094,  0.0890 )   (-0.2316,  0.1668 )  </span></a>
+<a class="sourceLine" id="cb6-59" title="59"><span class="co"># Calculations and Intervals on Original Scale</span></a>
+<a class="sourceLine" id="cb6-60" title="60"><span class="co">## Via jackknife</span></a>
+<a class="sourceLine" id="cb6-61" title="61"><span class="kw">mean</span>(pv) <span class="op">+</span><span class="st"> </span><span class="kw">qt</span>(<span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>), <span class="dt">df =</span> n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">var</span>(pv)<span class="op">/</span>n)</a>
+<a class="sourceLine" id="cb6-62" title="62"><span class="co"># [1] -0.3288421  0.1702250</span></a></code></pre></div>
+</div>
 </div>
 <div id="validação-cruzada" class="section level1">
 <h1><span class="header-section-number">3</span> Validação cruzada</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">### Example 8.16 (Model selection)</span></a>
-<a class="sourceLine" id="cb2-2" title="2"></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw">data</span>(<span class="st">&quot;ironslag&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;DAAG&quot;</span>)</a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="kw">str</span>(ironslag)</a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co"># &#39;data.frame&#39;: 53 obs. of  2 variables:</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#  $ chemical: num  24 16 24 18 18 10 14 16 18 20 ...</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">#  $ magnetic: num  25 22 17 21 20 13 16 14 19 10 ...</span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a></code></pre></div>
-<p><img src="figures/11_jackknife/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">a &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">40</span>, <span class="fl">.1</span>)     <span class="co">#sequence for plotting fits</span></a>
-<a class="sourceLine" id="cb3-2" title="2"></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb3-4" title="4">L1 &lt;-<span class="st"> </span><span class="kw">lm</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Linear&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
-<a class="sourceLine" id="cb3-6" title="6">yhat1 &lt;-<span class="st"> </span>L1<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L1<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a</a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="kw">lines</span>(a, yhat1, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-8" title="8"></a>
-<a class="sourceLine" id="cb3-9" title="9">L2 &lt;-<span class="st"> </span><span class="kw">lm</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(chemical<span class="op">^</span><span class="dv">2</span>), ironslag)</a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Quadratic&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
-<a class="sourceLine" id="cb3-11" title="11">yhat2 &lt;-<span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a <span class="op">+</span><span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>a<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="kw">lines</span>(a, yhat2, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-13" title="13"></a>
-<a class="sourceLine" id="cb3-14" title="14">L3 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Exponential&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
-<a class="sourceLine" id="cb3-16" title="16">logyhat3 &lt;-<span class="st"> </span>L3<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L3<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a</a>
-<a class="sourceLine" id="cb3-17" title="17">yhat3 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat3)</a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="kw">lines</span>(a, yhat3, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb3-19" title="19"></a>
-<a class="sourceLine" id="cb3-20" title="20">L4 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(chemical), ironslag)</a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="kw">plot</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(chemical), ironslag,</a>
-<a class="sourceLine" id="cb3-22" title="22">     <span class="dt">main =</span> <span class="st">&quot;Log-Log&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
-<a class="sourceLine" id="cb3-23" title="23">logyhat4 &lt;-<span class="st"> </span>L4<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L4<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(a)</a>
-<a class="sourceLine" id="cb3-24" title="24"><span class="kw">lines</span>(<span class="kw">log</span>(a), logyhat4, <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
-<p><img src="figures/11_jackknife/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">## Example 8.17 (Model selection: Cross validation)</span></a>
-<a class="sourceLine" id="cb4-3" title="3"></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co"># Example 8.16, cont.</span></a>
-<a class="sourceLine" id="cb4-5" title="5">n &lt;-<span class="st"> </span><span class="kw">length</span>(ironslag<span class="op">$</span>magnetic)</a>
-<a class="sourceLine" id="cb4-6" title="6">e1 &lt;-<span class="st"> </span>e2 &lt;-<span class="st"> </span>e3 &lt;-<span class="st"> </span>e4 &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
-<a class="sourceLine" id="cb4-7" title="7"></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co">## for n-fold cross validation</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">## fit models on leave-one-out samples</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
-<a class="sourceLine" id="cb4-11" title="11">    y &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[<span class="op">-</span>k]</a>
-<a class="sourceLine" id="cb4-12" title="12">    x &lt;-<span class="st"> </span>ironslag<span class="op">$</span>chemical[<span class="op">-</span>k]</a>
-<a class="sourceLine" id="cb4-13" title="13">    <span class="co">## Linear</span></a>
-<a class="sourceLine" id="cb4-14" title="14">    J1 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)</a>
-<a class="sourceLine" id="cb4-15" title="15">    yhat1 &lt;-<span class="st"> </span>J1<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J1<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]</a>
-<a class="sourceLine" id="cb4-16" title="16">    e1[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat1</a>
-<a class="sourceLine" id="cb4-17" title="17">    <span class="co">## Quadrático</span></a>
-<a class="sourceLine" id="cb4-18" title="18">    J2 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(x<span class="op">^</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb4-19" title="19">    yhat2 &lt;-<span class="st"> </span>J2<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J2<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k] <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-20" title="20"><span class="st">        </span>J2<span class="op">$</span>coef[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb4-21" title="21">    e2[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat2</a>
-<a class="sourceLine" id="cb4-22" title="22">    <span class="co">## Exponencial</span></a>
-<a class="sourceLine" id="cb4-23" title="23">    J3 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(y) <span class="op">~</span><span class="st"> </span>x)</a>
-<a class="sourceLine" id="cb4-24" title="24">    logyhat3 &lt;-<span class="st"> </span>J3<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J3<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]</a>
-<a class="sourceLine" id="cb4-25" title="25">    yhat3 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat3)</a>
-<a class="sourceLine" id="cb4-26" title="26">    e3[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat3</a>
-<a class="sourceLine" id="cb4-27" title="27">    <span class="co">## Log-log</span></a>
-<a class="sourceLine" id="cb4-28" title="28">    J4 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(y) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(x))</a>
-<a class="sourceLine" id="cb4-29" title="29">    logyhat4 &lt;-<span class="st"> </span>J4<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J4<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(ironslag<span class="op">$</span>chemical[k])</a>
-<a class="sourceLine" id="cb4-30" title="30">    yhat4 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat4)</a>
-<a class="sourceLine" id="cb4-31" title="31">    e4[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat4</a>
-<a class="sourceLine" id="cb4-32" title="32">}</a>
-<a class="sourceLine" id="cb4-33" title="33"></a>
-<a class="sourceLine" id="cb4-34" title="34"><span class="kw">c</span>(<span class="kw">mean</span>(e1<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e2<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e3<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e4<span class="op">^</span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb4-35" title="35"><span class="co"># [1] 19.55644 17.85248 18.44188 20.45424</span></a>
-<a class="sourceLine" id="cb4-36" title="36"></a>
-<a class="sourceLine" id="cb4-37" title="37"><span class="co">#selected model, fitted in Example 8.16</span></a>
-<a class="sourceLine" id="cb4-38" title="38"><span class="kw">summary</span>(L2)</a>
-<a class="sourceLine" id="cb4-39" title="39"><span class="co"># </span></a>
-<a class="sourceLine" id="cb4-40" title="40"><span class="co"># Call:</span></a>
-<a class="sourceLine" id="cb4-41" title="41"><span class="co"># lm(formula = magnetic ~ chemical + I(chemical^2), data = ironslag)</span></a>
-<a class="sourceLine" id="cb4-42" title="42"><span class="co"># </span></a>
-<a class="sourceLine" id="cb4-43" title="43"><span class="co"># Residuals:</span></a>
-<a class="sourceLine" id="cb4-44" title="44"><span class="co">#     Min      1Q  Median      3Q     Max </span></a>
-<a class="sourceLine" id="cb4-45" title="45"><span class="co"># -8.4335 -2.7006 -0.2754  2.5446 12.2665 </span></a>
-<a class="sourceLine" id="cb4-46" title="46"><span class="co"># </span></a>
-<a class="sourceLine" id="cb4-47" title="47"><span class="co"># Coefficients:</span></a>
-<a class="sourceLine" id="cb4-48" title="48"><span class="co">#               Estimate Std. Error t value Pr(&gt;|t|)   </span></a>
-<a class="sourceLine" id="cb4-49" title="49"><span class="co"># (Intercept)   24.49262    9.14657   2.678   0.0100 **</span></a>
-<a class="sourceLine" id="cb4-50" title="50"><span class="co"># chemical      -1.39334    0.88852  -1.568   0.1232   </span></a>
-<a class="sourceLine" id="cb4-51" title="51"><span class="co"># I(chemical^2)  0.05452    0.02081   2.620   0.0116 * </span></a>
-<a class="sourceLine" id="cb4-52" title="52"><span class="co"># ---</span></a>
-<a class="sourceLine" id="cb4-53" title="53"><span class="co"># Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
-<a class="sourceLine" id="cb4-54" title="54"><span class="co"># </span></a>
-<a class="sourceLine" id="cb4-55" title="55"><span class="co"># Residual standard error: 4.098 on 50 degrees of freedom</span></a>
-<a class="sourceLine" id="cb4-56" title="56"><span class="co"># Multiple R-squared:  0.5931,  Adjusted R-squared:  0.5768 </span></a>
-<a class="sourceLine" id="cb4-57" title="57"><span class="co"># F-statistic: 36.44 on 2 and 50 DF,  p-value: 1.728e-10</span></a>
-<a class="sourceLine" id="cb4-58" title="58"><span class="kw">anova</span>(L2)</a>
-<a class="sourceLine" id="cb4-59" title="59"><span class="co"># Analysis of Variance Table</span></a>
-<a class="sourceLine" id="cb4-60" title="60"><span class="co"># </span></a>
-<a class="sourceLine" id="cb4-61" title="61"><span class="co"># Response: magnetic</span></a>
-<a class="sourceLine" id="cb4-62" title="62"><span class="co">#               Df  Sum Sq Mean Sq F value    Pr(&gt;F)    </span></a>
-<a class="sourceLine" id="cb4-63" title="63"><span class="co"># chemical       1 1108.74 1108.74 66.0134 1.067e-10 ***</span></a>
-<a class="sourceLine" id="cb4-64" title="64"><span class="co"># I(chemical^2)  1  115.29  115.29  6.8643   0.01161 *  </span></a>
-<a class="sourceLine" id="cb4-65" title="65"><span class="co"># Residuals     50  839.78   16.80                      </span></a>
-<a class="sourceLine" id="cb4-66" title="66"><span class="co"># ---</span></a>
-<a class="sourceLine" id="cb4-67" title="67"><span class="co"># Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
-<a class="sourceLine" id="cb4-68" title="68"></a>
-<a class="sourceLine" id="cb4-69" title="69"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb4-70" title="70"><span class="kw">plot</span>(L1<span class="op">$</span>fit, L1<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Linear&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-71" title="71"><span class="kw">qqnorm</span>(L1<span class="op">$</span>res); <span class="kw">qqline</span>(L1<span class="op">$</span>res)</a>
-<a class="sourceLine" id="cb4-72" title="72"><span class="kw">plot</span>(L2<span class="op">$</span>fit, L2<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Quadrático&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-73" title="73"><span class="kw">qqnorm</span>(L2<span class="op">$</span>res); <span class="kw">qqline</span>(L2<span class="op">$</span>res)</a>
-<a class="sourceLine" id="cb4-74" title="74"><span class="kw">plot</span>(L3<span class="op">$</span>fit, L3<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Exponencial&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-75" title="75"><span class="kw">qqnorm</span>(L3<span class="op">$</span>res); <span class="kw">qqline</span>(L3<span class="op">$</span>res)</a>
-<a class="sourceLine" id="cb4-76" title="76"><span class="kw">plot</span>(L4<span class="op">$</span>fit, L4<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;log-log&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb4-77" title="77"><span class="kw">qqnorm</span>(L4<span class="op">$</span>res); <span class="kw">qqline</span>(L4<span class="op">$</span>res)</a></code></pre></div>
-<p><img src="figures/11_jackknife/unnamed-chunk-3-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<p>A validação cruzada é um método de particionamento de dados que pode ser usado para verificar:</p>
+<ul>
+<li>A estabilidade de estimativas de parâmetros</li>
+<li>A acurácia de algoritmos de classificação
+<ul>
+<li>O modelo é estimado no conjunto de “treinamento”, e verificado no conjunto de “teste”</li>
+</ul></li>
+<li>A adequabilidade de um modelo ajustado
+<ul>
+<li>O ajuste de qualquer modelo pode ser verificado também através de um conjunto de teste</li>
+</ul></li>
+</ul>
+<p>O jackknife pode ser considerado como um caso particular de validação cruzada, inde o particionamento dos dados é feito um a um.</p>
+<p>Outra forma de validação cruzada é a <em>n-fold</em>, que particiona os dados em <span class="math inline">\(n\)</span> conjuntos de teste. - Esse procedimento <em>leave-one-out</em> é como o jackknife - Os dados podem ser divididos em qualquer número <span class="math inline">\(K\)</span> e partições, portanto haverão <span class="math inline">\(K\)</span> bases de teste, e o modelo será ajustado <span class="math inline">\(K\)</span> vezes</p>
+<p>Algoritmo <em>n-fold</em> para validação cruzada</p>
+<ol style="list-style-type: decimal">
+<li>Para <span class="math inline">\(k = 1, \ldots, n\)</span>, seja <span class="math inline">\((x_k, y_k)\)</span> os pontos de teste e use as observações restantes para ajustar o modelo
+<ol style="list-style-type: lower-alpha">
+<li>Ajuste o modelo para as <span class="math inline">\(n-1\)</span> observações da base de “teste” <span class="math inline">\((x_i, y_i)\)</span>, <span class="math inline">\(i \neq k\)</span></li>
+<li>Calcule o velor predito <span class="math inline">\(\hat{y}_k = \hat{\beta}_0 + \hat{\beta}_1 x_k\)</span> para o <strong>ponto de teste</strong></li>
+<li>Calcule o erro predito <span class="math inline">\(e_k = y_k - \hat{y}_k\)</span></li>
+</ol></li>
+<li>Calcule o erro quadrático médio <span class="math inline">\(\hat{\sigma}^{2}_e = \frac{1}{n} \sum_{k=1}^n e_k^2\)</span></li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co">## Dados</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">data</span>(<span class="st">&quot;ironslag&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;DAAG&quot;</span>)</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">str</span>(ironslag)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co"># &#39;data.frame&#39;: 53 obs. of  2 variables:</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">#  $ chemical: num  24 16 24 18 18 10 14 16 18 20 ...</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">#  $ magnetic: num  25 22 17 21 20 13 16 14 19 10 ...</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a></code></pre></div>
+<p><img src="figures/11_jackknife/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">## Modelos propostos</span></a>
+<a class="sourceLine" id="cb8-3" title="3">a &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>, <span class="dv">40</span>, <span class="fl">.1</span>) <span class="co"># sequencia para graficos</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">## Linear</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb8-6" title="6">L1 &lt;-<span class="st"> </span><span class="kw">lm</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Linear&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
+<a class="sourceLine" id="cb8-8" title="8">yhat1 &lt;-<span class="st"> </span>L1<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L1<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a</a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="kw">lines</span>(a, yhat1, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">## Quadratico</span></a>
+<a class="sourceLine" id="cb8-11" title="11">L2 &lt;-<span class="st"> </span><span class="kw">lm</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(chemical<span class="op">^</span><span class="dv">2</span>), ironslag)</a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Quadratic&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
+<a class="sourceLine" id="cb8-13" title="13">yhat2 &lt;-<span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a <span class="op">+</span><span class="st"> </span>L2<span class="op">$</span>coef[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>a<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="kw">lines</span>(a, yhat2, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">## Exponencial</span></a>
+<a class="sourceLine" id="cb8-16" title="16">L3 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span>chemical, ironslag)</a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="kw">plot</span>(magnetic <span class="op">~</span><span class="st"> </span>chemical, ironslag, <span class="dt">main =</span> <span class="st">&quot;Exponential&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
+<a class="sourceLine" id="cb8-18" title="18">logyhat3 &lt;-<span class="st"> </span>L3<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L3<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>a</a>
+<a class="sourceLine" id="cb8-19" title="19">yhat3 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat3)</a>
+<a class="sourceLine" id="cb8-20" title="20"><span class="kw">lines</span>(a, yhat3, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb8-21" title="21"><span class="co">## log-log</span></a>
+<a class="sourceLine" id="cb8-22" title="22">L4 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(chemical), ironslag)</a>
+<a class="sourceLine" id="cb8-23" title="23"><span class="kw">plot</span>(<span class="kw">log</span>(magnetic) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(chemical), ironslag,</a>
+<a class="sourceLine" id="cb8-24" title="24">     <span class="dt">main =</span> <span class="st">&quot;Log-Log&quot;</span>, <span class="dt">pch =</span> <span class="dv">19</span>)</a>
+<a class="sourceLine" id="cb8-25" title="25">logyhat4 &lt;-<span class="st"> </span>L4<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>L4<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(a)</a>
+<a class="sourceLine" id="cb8-26" title="26"><span class="kw">lines</span>(<span class="kw">log</span>(a), logyhat4, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="figures/11_jackknife/unnamed-chunk-7-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">## Validação cruzada</span></a>
+<a class="sourceLine" id="cb9-3" title="3">n &lt;-<span class="st"> </span><span class="kw">length</span>(ironslag<span class="op">$</span>magnetic)</a>
+<a class="sourceLine" id="cb9-4" title="4">e1 &lt;-<span class="st"> </span>e2 &lt;-<span class="st"> </span>e3 &lt;-<span class="st"> </span>e4 &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)</a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n) {</a>
+<a class="sourceLine" id="cb9-6" title="6">    y &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[<span class="op">-</span>k]</a>
+<a class="sourceLine" id="cb9-7" title="7">    x &lt;-<span class="st"> </span>ironslag<span class="op">$</span>chemical[<span class="op">-</span>k]</a>
+<a class="sourceLine" id="cb9-8" title="8">    <span class="co">## Linear</span></a>
+<a class="sourceLine" id="cb9-9" title="9">    J1 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x)</a>
+<a class="sourceLine" id="cb9-10" title="10">    yhat1 &lt;-<span class="st"> </span>J1<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J1<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]</a>
+<a class="sourceLine" id="cb9-11" title="11">    e1[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat1</a>
+<a class="sourceLine" id="cb9-12" title="12">    <span class="co">## Quadrático</span></a>
+<a class="sourceLine" id="cb9-13" title="13">    J2 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(x<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb9-14" title="14">    yhat2 &lt;-<span class="st"> </span>J2<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J2<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k] <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="st">        </span>J2<span class="op">$</span>coef[<span class="dv">3</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb9-16" title="16">    e2[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat2</a>
+<a class="sourceLine" id="cb9-17" title="17">    <span class="co">## Exponencial</span></a>
+<a class="sourceLine" id="cb9-18" title="18">    J3 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(y) <span class="op">~</span><span class="st"> </span>x)</a>
+<a class="sourceLine" id="cb9-19" title="19">    logyhat3 &lt;-<span class="st"> </span>J3<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J3<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>ironslag<span class="op">$</span>chemical[k]</a>
+<a class="sourceLine" id="cb9-20" title="20">    yhat3 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat3)</a>
+<a class="sourceLine" id="cb9-21" title="21">    e3[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat3</a>
+<a class="sourceLine" id="cb9-22" title="22">    <span class="co">## Log-log</span></a>
+<a class="sourceLine" id="cb9-23" title="23">    J4 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(y) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(x))</a>
+<a class="sourceLine" id="cb9-24" title="24">    logyhat4 &lt;-<span class="st"> </span>J4<span class="op">$</span>coef[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>J4<span class="op">$</span>coef[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(ironslag<span class="op">$</span>chemical[k])</a>
+<a class="sourceLine" id="cb9-25" title="25">    yhat4 &lt;-<span class="st"> </span><span class="kw">exp</span>(logyhat4)</a>
+<a class="sourceLine" id="cb9-26" title="26">    e4[k] &lt;-<span class="st"> </span>ironslag<span class="op">$</span>magnetic[k] <span class="op">-</span><span class="st"> </span>yhat4</a>
+<a class="sourceLine" id="cb9-27" title="27">}</a>
+<a class="sourceLine" id="cb9-28" title="28"></a>
+<a class="sourceLine" id="cb9-29" title="29"><span class="co">## Estimativas do erro quadrático médio</span></a>
+<a class="sourceLine" id="cb9-30" title="30"><span class="kw">c</span>(<span class="kw">mean</span>(e1<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e2<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e3<span class="op">^</span><span class="dv">2</span>), <span class="kw">mean</span>(e4<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb9-31" title="31"><span class="co"># [1] 19.55644 17.85248 18.44188 20.45424</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## Comparação dos modelos</span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="kw">plot</span>(L1<span class="op">$</span>fit, L1<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Linear&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="kw">qqnorm</span>(L1<span class="op">$</span>res); <span class="kw">qqline</span>(L1<span class="op">$</span>res)</a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="kw">plot</span>(L2<span class="op">$</span>fit, L2<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Quadrático&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="kw">qqnorm</span>(L2<span class="op">$</span>res); <span class="kw">qqline</span>(L2<span class="op">$</span>res)</a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="kw">plot</span>(L3<span class="op">$</span>fit, L3<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;Exponencial&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="kw">qqnorm</span>(L3<span class="op">$</span>res); <span class="kw">qqline</span>(L3<span class="op">$</span>res)</a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="kw">plot</span>(L4<span class="op">$</span>fit, L4<span class="op">$</span>res, <span class="dt">main =</span> <span class="st">&quot;log-log&quot;</span>); <span class="kw">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="kw">qqnorm</span>(L4<span class="op">$</span>res); <span class="kw">qqline</span>(L4<span class="op">$</span>res)</a></code></pre></div>
+<p><img src="figures/11_jackknife/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
 </div>
 
 <center>
