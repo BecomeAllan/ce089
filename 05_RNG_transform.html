@@ -926,12 +926,12 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean    median        uq</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.731  107.421  119.1627  121.4935  127.4485</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2933.433 3119.480 3578.6484 3184.7915 3321.0050</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean   median        uq</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  102.178  106.4185  115.9746  115.397  121.8445</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 3022.949 3143.6265 3564.1680 3218.941 3305.5675</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#        max neval</span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    180.876   100</span></a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10794.583   100</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">#    152.114   100</span></a>
+<a class="sourceLine" id="cb14-8" title="8"><span class="co">#  10368.876   100</span></a></code></pre></div>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
