@@ -480,8 +480,8 @@ div.tocify {
 <p>Exemplo: função <code>runif()</code> (para gerar valores aleatórios de uma distribuição uniforme):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 77.08228 39.24176 41.06494 49.78336 43.15297 20.94779 59.62810</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 70.74857 83.71257 12.76069</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 27.75769 57.85516 67.33198 51.38183 24.58606 45.58079 58.74459</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 68.50682 86.78324 84.12208</span></a></code></pre></div>
 <p>Argumentos que já possuem um valor especificado (como <code>max</code> e <code>min</code>) podem ser omitidos:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>)</a></code></pre></div>
 <p>Se os argumentos forem nomeados, a ordem deles dentro da função não tem mais importância:</p>
@@ -665,8 +665,8 @@ div.tocify {
 <p>Objetos podem armazenar diferentes estruturas de dados:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb34-2" title="2">y</a>
-<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.82000098 0.53298450 0.10524868 0.56904360 0.86941341 0.08627586</span></a>
-<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.48737621 0.39336127 0.89639633 0.78883412</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.7065500 0.8001719 0.8940379 0.6371096 0.5351685 0.3777427 0.6040572</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [8] 0.8562278 0.1627914 0.5662651</span></a></code></pre></div>
 <p>Note que cada objeto só pode armazenar uma estrutura (um número ou uma sequência de valores) de cada vez! (Aqui, o valor <span class="math inline">\(4\)</span> que estava armazenado em <code>y</code> foi sobrescrito pelos valores acima.)</p>
 <div id="nomes-de-objetos" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nomes de objetos</h2>
@@ -1612,7 +1612,7 @@ div.tocify {
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
 <a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xdddabd0&gt;</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xd72f5c0&gt;</span></a>
 <a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
 <a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1641,7 +1641,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x49f36a0&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x434d6d0&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1705,7 +1705,7 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Tuesday, 05 November, 2019, 23:24
+<pre><code># Friday, 08 November, 2019, 18:34
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1735,7 +1735,7 @@ div.tocify {
 #  [1] Rcpp_1.0.2           codetools_0.2-16     digest_0.6.22       
 #  [4] grid_3.6.1           magrittr_1.5         evaluate_0.14       
 #  [7] highr_0.8            rlang_0.4.1          stringi_1.4.3       
-# [10] rmarkdown_1.16.2     tools_3.6.1          stringr_1.4.0       
+# [10] rmarkdown_1.16.3     tools_3.6.1          stringr_1.4.0       
 # [13] diagram_1.6.4        xfun_0.10            yaml_2.2.0          
 # [16] compiler_3.6.1       microbenchmark_1.4-7 shape_1.4.4         
 # [19] htmltools_0.4.0      animation_2.6</code></pre>
