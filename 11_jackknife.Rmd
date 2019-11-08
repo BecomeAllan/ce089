@@ -16,34 +16,273 @@ opts_chunk$set(fig.path = "figures/11_jackknife/")
 
 # Introdução
 
+- Canivete suiço.
+- Equipado com várias ferramentas, fácil transporte.
+- Mas ferramentas especializadas são melhores que as do canivete.
+- Proposto por Tukey.
+- É um procedimento não paramétrico pois nenhuma suposição é feita
+sobre a distribuição dos dados.
+- É facilmente automatizável.  Um único algoritmo pode ser escrito
+tendo como argumentos os dados e a estatística de interesse.
+- O método é baseado em amostras de tamanho $n - 1$. Existe a
+suposição implicita de comportamento suave com o tamanho da amostra.
+- Ao contrário do bootstrap, é um procedimento **determinístico**, ou
+  seja, os resultados de um jackknife sempre serão os mesmos para a
+  mesma amostra.
+
 # Jackknife
 
-```{r}
-## Example 8.6 (Jackknife estimate of bias)
+O jackknife é um procedimento do tipo *leave-one-out* (um caso
+particular de validação cruzada).
 
+Seja $x = (x_1, \ldots, x_n)$ uma amostra observada, e defina a
+$i$-ésima amostra de jackkinfe $x_{(i)}$ como o subconjunto de $x$, que
+"deixa de fora" a $i$-ésima observação, ou seja,
+$$
+x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
+$$
+Se $\hat{\theta} = T_n(x)$, então a $i$-ésima estimativa de jackknife é
+$\hat{\theta}_{(i)} = T_{n-1}(x_{(i)})$.
+
+A ideia é fundamentada no estimador da média
+$$
+  \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i.
+$$
+
+A média com a $i$-ésima observação removida, $X_{(i)}$, é
+$$
+  \bar{X}_{(i)} = \frac{1}{n - 1}
+  \left( \sum_{i=1}^{n} X_i \right) - X_{i}
+$$
+
+Combinando as expressões anteriores, pode-se determinar o valor de $X_i$
+por
+$$
+  X_i = n\bar{X} - (n - 1) \bar{X}_{(i)}.
+$$
+
+Essa expressão não tem valor para o caso da média, que serviu apenas de
+inspiração. Mas tem utilidade para outros parâmetros/estatísticas.
+
+Suponha que $\theta$ seja um parâmetro a ser estimado a partir de uma
+função dos dados (amostra de tamanho $n$)
+$$
+  \hat{\theta} = T(X_1, X_2, \ldots, X_n).
+$$
+
+A quantidade
+$$
+  \hat{\theta}_i^{\star} = n \hat{\theta} - (n - 1) \hat{\theta}_{(i)}
+$$
+
+é denominada de **pseudo-valor** e se baseia nas diferença ponderadas
+entra a estimativa ($\hat{\theta}$) e todas as observações e na
+**estimativa parcial**, ou seja, aquela sem a $i$-ésima observação
+($\hat{\theta}_{(i)}$).
+
+O estimador pontual de Jackknife é definido por
+$$
+  \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
+  \hat{\theta}_{(i)}^{\star},
+$$
+ou seja, é a **média dos pseudo-valores**.
+
+Os valores $\hat{\theta}$ e $\hat{\theta}^{\star}$ não são
+necessariamente iguais nos casos gerais.
+
+Se for assumido que os valores $\theta_{(i)}^{\star}$, $i = 1, \ldots,
+n$, são independentes, a variância do estimador de Jackknife é dada por
+$$
+\text{Var}(\hat{\theta}^{\star}) = \frac{s^2}{n},
+  \quad s^2 = \frac{1}{n - 1}
+  \sum_{i = 1}^n (\hat{\theta}_{(i)}^{*} - \hat{\theta}^{\star})^2.
+$$
+Portanto o erro padrão será
+$$
+\text{EP}_{jack} = \sqrt{\text{Var}(\hat{\theta}^{\star})} =
+\sqrt{\frac{s^2}{n}}
+$$
+
+Nesse mesmo sentido, assumindo independência entre os valores
+$\theta_{(i)}^{\star}$, um intervalo de confiança **aproximado** de
+$100(1-\alpha)\%$ para $\theta$ pode ser definido como
+$$
+\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
+$$
+
+## Exemplo: média amostral
+
+```{r}
+## Simula valores de uma normal
+set.seed(123)
+x <- rnorm(30, 100, 5)
+(n <- length(x))
+(xbar <- mean(x))
+(s2 <- var(x))
+(ep <- sqrt(s2/n))
+
+## Estimativas parciais
+theta.jack <- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] <- mean(x[-i])
+}
+theta.jack
+
+## Conceito: reproduzir o valor
+x[1]
+n * xbar - (n - 1) * theta.jack[1]
+
+## Pseudo valores
+(pv <- n * xbar - (n - 1) * theta.jack)
+mean(pv)
+xbar # média da amostra
+
+## Erro padrão
+## Usando os pseudo-valores
+sqrt(var(pv)/n)
+ep # erro padrão da amostra
+
+## Resultados
+round(cbind(Amostra = x, "Pseudo-valores" = pv,
+            "Estimativas parciais" = theta.jack), 2)
+```
+
+## Exemplo: desvio padrão amostral
+
+```{r}
+## Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão
+## Valores de X ~ Exp(1). E[X] = 1 e Var[X] = 1
+x <- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
+       0.01, 0.61, 0.82, 1.7, 0.39, 0.11, 1.2, 1.21, 0.72)
+hist(x)
+(n <- length(x))
+(xbar <- mean(x))
+(sx <- sd(x))
+
+## Obter uma estimativa do erro padrão para o desvio padrão
+
+## Estimativas parciais
+theta.jack <- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] <- sd(x[-i])
+}
+theta.jack
+
+## Pseudo valores
+(pv <- n * sx - (n - 1) * theta.jack)
+mean(pv)
+sx # desvio padrão amostral
+
+## Erro padrão
+## Usando os pseudo-valores
+sqrt(var(pv)/n)
+
+## Resultados
+round(cbind(Amostra = x, "Pseudo-valores" = pv,
+            "Estimativas parciais" = theta.jack), 2)
+```
+
+## Exemplo: correlação
+
+```{r}
+## Estimativa de erro padrão via bootstrap
+data(law, package = "bootstrap")
+str(law)
+plot(law$LSAT, law$GPA)
+(rho <- cor(law$LSAT, law$GPA))
+## Definições
+B <- 2000
+n <- nrow(law)
+R <- numeric(B)
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA[i]
+    R[b] <- cor(LSAT, GPA)
+}
+## Resultado
+mean(R)
+(se.R <- sd(R))
+
+## Usando jackknife
+theta.jack <- numeric(n)
+for(j in 1:n) {
+    theta.jack[j] <- cor(law$LSAT[-j], law$GPA[-j])
+}
+## Estimativas parciais
+theta.jack
+
+## Pseudo valores
+## Note que alguns valores estão fora do intervalo [-1,1]
+(pv <- n * rho - (n - 1) * theta.jack)
+mean(pv)
+rho # valor da amostra
+
+## Erro padrão
+sqrt(var(pv)/n)
+se.R # via bootstrap
+## sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+
+## Intervalo de confiança Jackknife (supõe independência e normalidade).
+mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+cor.test(law$LSAT, law$GPA)$conf.int # teórico
+```
+
+## Exemplo: razão de médias
+
+```{r}
 data(patch, package = "bootstrap")
 n <- nrow(patch)
 y <- patch$y
 z <- patch$z
 (theta.hat <- mean(y)/mean(z))
 
-## compute the jackknife replicates, leave-one-out estimates
+## Estimativas parciais: jackknife
 theta.jack <- numeric(n)
 for (i in 1:n) {
     theta.jack[i] <- mean(y[-i])/mean(z[-i])
 }
-(bias <- (n - 1) * (mean(theta.jack) - theta.hat))
 
-## Example 8.7 (Jackknife estimate of standard error)
+## Pseudo valores
+(pv <- n * theta.hat - (n - 1) * theta.jack)
+mean(pv)
+theta.hat # amostral
 
-(se <- sqrt((n-1) * mean((theta.jack - mean(theta.jack))^2)))
+## Erro padrão de jackknife
+sqrt(var(pv)/n)
 
+## Via bootstrap
+B <- 2000
+theta.b <- numeric(B)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    y <- patch$y[i]
+    z <- patch$z[i]
+    theta.b[b] <- mean(y)/mean(z)
+}
+## Estimativas
+(se <- sd(theta.b))
+
+## Intervalos de confiança para a estimativa
+## Via bootstrap
+theta.boot <- function(dat, ind) {
+    y <- dat[ind, 1]
+    z <- dat[ind, 2]
+    mean(y)/mean(z)
+}
+dat <- cbind(patch$y, patch$z)
+boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
+boot.ci(boot.obj, type = c("basic", "norm", "perc"))
+## Via jackknife
+mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+```
+
+```{r, include=FALSE, eval=FALSE}
 ## Example 8.8 (Failure of jackknife)
-
 set.seed(123) #for the specific example given
 n <- 10
 x <- sample(1:100, size = n)
-
 ## jackknife estimate of se
 M <- numeric(n)
 for (i in 1:n) {        #leave one out
@@ -52,59 +291,89 @@ for (i in 1:n) {        #leave one out
 }
 Mbar <- mean(M)
 sqrt((n - 1)/n * sum((M - Mbar)^2))
-
+pv <- n * median(x) - (n - 1) * M
+mean(pv)
+mean(x) # amostral
+sqrt(var(pv)/n)
 ## bootstrap estimate of se
 Mb <- replicate(1000, expr = {
     y <- sample(x, size = n, replace = TRUE)
     median(y)
 })
 sd(Mb)
-x
-M
-Mb
 ```
 
 # Validação cruzada
 
-```{r}
-### Example 8.16 (Model selection)
+A validação cruzada é um método de particionamento de dados que pode ser
+usado para verificar:
 
+- A estabilidade de estimativas de parâmetros
+- A acurácia de algoritmos de classificação
+  - O modelo é estimado no conjunto de "treinamento", e verificado no
+    conjunto de "teste"
+- A adequabilidade de um modelo ajustado
+  - O ajuste de qualquer modelo pode ser verificado também através de um
+    conjunto de teste
+
+O jackknife pode ser considerado como um caso particular de validação
+cruzada, inde o particionamento dos dados é feito um a um.
+
+Outra forma de validação cruzada é a *n-fold*, que particiona os dados
+em $n$ conjuntos de teste.
+  - Esse procedimento *leave-one-out* é como o jackknife
+  - Os dados podem ser divididos em qualquer número $K$ e partições,
+    portanto haverão $K$ bases de teste, e o modelo será ajustado $K$
+    vezes
+
+Algoritmo *n-fold* para validação cruzada
+
+1. Para $k = 1, \ldots, n$, seja $(x_k, y_k)$ os pontos de teste e use
+   as observações restantes para ajustar o modelo
+    a. Ajuste o modelo para as $n-1$ observações da base de "teste"
+   $(x_i, y_i)$, $i \neq k$
+    b. Calcule o velor predito $\hat{y}_k = \hat{\beta}_0 +
+   \hat{\beta}_1 x_k$ para o **ponto de teste**
+    c. Calcule o erro predito $e_k = y_k - \hat{y}_k$
+2. Calcule o erro quadrático médio $\hat{\sigma}^{2}_e =
+   \frac{1}{n} \sum_{k=1}^n e_k^2$
+
+
+```{r}
+## Dados
 data("ironslag", package = "DAAG")
 str(ironslag)
 plot(magnetic ~ chemical, ironslag)
-a <- seq(10, 40, .1)     #sequence for plotting fits
 
+## Modelos propostos
+a <- seq(10, 40, .1) # sequencia para graficos
+## Linear
 par(mfrow = c(2, 2))
 L1 <- lm(magnetic ~ chemical, ironslag)
 plot(magnetic ~ chemical, ironslag, main = "Linear", pch = 19)
 yhat1 <- L1$coef[1] + L1$coef[2] * a
-lines(a, yhat1, lwd = 2)
-
+lines(a, yhat1, lwd = 2, col = 2)
+## Quadratico
 L2 <- lm(magnetic ~ chemical + I(chemical^2), ironslag)
 plot(magnetic ~ chemical, ironslag, main = "Quadratic", pch = 19)
 yhat2 <- L2$coef[1] + L2$coef[2] * a + L2$coef[3] * a^2
-lines(a, yhat2, lwd = 2)
-
+lines(a, yhat2, lwd = 2, col = 2)
+## Exponencial
 L3 <- lm(log(magnetic) ~ chemical, ironslag)
 plot(magnetic ~ chemical, ironslag, main = "Exponential", pch = 19)
 logyhat3 <- L3$coef[1] + L3$coef[2] * a
 yhat3 <- exp(logyhat3)
-lines(a, yhat3, lwd = 2)
-
+lines(a, yhat3, lwd = 2, col = 2)
+## log-log
 L4 <- lm(log(magnetic) ~ log(chemical), ironslag)
 plot(log(magnetic) ~ log(chemical), ironslag,
      main = "Log-Log", pch = 19)
 logyhat4 <- L4$coef[1] + L4$coef[2] * log(a)
-lines(log(a), logyhat4, lwd = 2)
+lines(log(a), logyhat4, lwd = 2, col = 2)
 
-## Example 8.17 (Model selection: Cross validation)
-
-# Example 8.16, cont.
+## Validação cruzada
 n <- length(ironslag$magnetic)
 e1 <- e2 <- e3 <- e4 <- numeric(n)
-
-## for n-fold cross validation
-## fit models on leave-one-out samples
 for (k in 1:n) {
     y <- ironslag$magnetic[-k]
     x <- ironslag$chemical[-k]
@@ -129,12 +398,12 @@ for (k in 1:n) {
     e4[k] <- ironslag$magnetic[k] - yhat4
 }
 
+## Estimativas do erro quadrático médio
 c(mean(e1^2), mean(e2^2), mean(e3^2), mean(e4^2))
+```
 
-#selected model, fitted in Example 8.16
-summary(L2)
-anova(L2)
-
+```{r, out.width='100%'}
+## Comparação dos modelos
 par(mfrow = c(4, 2))
 plot(L1$fit, L1$res, main = "Linear"); abline(0, 0)
 qqnorm(L1$res); qqline(L1$res)
@@ -145,5 +414,4 @@ qqnorm(L3$res); qqline(L3$res)
 plot(L4$fit, L4$res, main = "log-log"); abline(0, 0)
 qqnorm(L4$res); qqline(L4$res)
 par(mfrow = c(1, 1))
-
 ```
