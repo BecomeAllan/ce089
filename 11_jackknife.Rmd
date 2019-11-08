@@ -15,3 +15,135 @@ opts_chunk$set(fig.path = "figures/11_jackknife/")
 ```
 
 # Introdução
+
+# Jackknife
+
+```{r}
+## Example 8.6 (Jackknife estimate of bias)
+
+data(patch, package = "bootstrap")
+n <- nrow(patch)
+y <- patch$y
+z <- patch$z
+(theta.hat <- mean(y)/mean(z))
+
+## compute the jackknife replicates, leave-one-out estimates
+theta.jack <- numeric(n)
+for (i in 1:n) {
+    theta.jack[i] <- mean(y[-i])/mean(z[-i])
+}
+(bias <- (n - 1) * (mean(theta.jack) - theta.hat))
+
+## Example 8.7 (Jackknife estimate of standard error)
+
+(se <- sqrt((n-1) * mean((theta.jack - mean(theta.jack))^2)))
+
+## Example 8.8 (Failure of jackknife)
+
+set.seed(123) #for the specific example given
+n <- 10
+x <- sample(1:100, size = n)
+
+## jackknife estimate of se
+M <- numeric(n)
+for (i in 1:n) {        #leave one out
+    y <- x[-i]
+    M[i] <- median(y)
+}
+Mbar <- mean(M)
+sqrt((n - 1)/n * sum((M - Mbar)^2))
+
+## bootstrap estimate of se
+Mb <- replicate(1000, expr = {
+    y <- sample(x, size = n, replace = TRUE)
+    median(y)
+})
+sd(Mb)
+x
+M
+Mb
+```
+
+# Validação cruzada
+
+```{r}
+### Example 8.16 (Model selection)
+
+data("ironslag", package = "DAAG")
+str(ironslag)
+plot(magnetic ~ chemical, ironslag)
+a <- seq(10, 40, .1)     #sequence for plotting fits
+
+par(mfrow = c(2, 2))
+L1 <- lm(magnetic ~ chemical, ironslag)
+plot(magnetic ~ chemical, ironslag, main = "Linear", pch = 19)
+yhat1 <- L1$coef[1] + L1$coef[2] * a
+lines(a, yhat1, lwd = 2)
+
+L2 <- lm(magnetic ~ chemical + I(chemical^2), ironslag)
+plot(magnetic ~ chemical, ironslag, main = "Quadratic", pch = 19)
+yhat2 <- L2$coef[1] + L2$coef[2] * a + L2$coef[3] * a^2
+lines(a, yhat2, lwd = 2)
+
+L3 <- lm(log(magnetic) ~ chemical, ironslag)
+plot(magnetic ~ chemical, ironslag, main = "Exponential", pch = 19)
+logyhat3 <- L3$coef[1] + L3$coef[2] * a
+yhat3 <- exp(logyhat3)
+lines(a, yhat3, lwd = 2)
+
+L4 <- lm(log(magnetic) ~ log(chemical), ironslag)
+plot(log(magnetic) ~ log(chemical), ironslag,
+     main = "Log-Log", pch = 19)
+logyhat4 <- L4$coef[1] + L4$coef[2] * log(a)
+lines(log(a), logyhat4, lwd = 2)
+
+## Example 8.17 (Model selection: Cross validation)
+
+# Example 8.16, cont.
+n <- length(ironslag$magnetic)
+e1 <- e2 <- e3 <- e4 <- numeric(n)
+
+## for n-fold cross validation
+## fit models on leave-one-out samples
+for (k in 1:n) {
+    y <- ironslag$magnetic[-k]
+    x <- ironslag$chemical[-k]
+    ## Linear
+    J1 <- lm(y ~ x)
+    yhat1 <- J1$coef[1] + J1$coef[2] * ironslag$chemical[k]
+    e1[k] <- ironslag$magnetic[k] - yhat1
+    ## Quadrático
+    J2 <- lm(y ~ x + I(x^2))
+    yhat2 <- J2$coef[1] + J2$coef[2] * ironslag$chemical[k] +
+        J2$coef[3] * ironslag$chemical[k]^2
+    e2[k] <- ironslag$magnetic[k] - yhat2
+    ## Exponencial
+    J3 <- lm(log(y) ~ x)
+    logyhat3 <- J3$coef[1] + J3$coef[2] * ironslag$chemical[k]
+    yhat3 <- exp(logyhat3)
+    e3[k] <- ironslag$magnetic[k] - yhat3
+    ## Log-log
+    J4 <- lm(log(y) ~ log(x))
+    logyhat4 <- J4$coef[1] + J4$coef[2] * log(ironslag$chemical[k])
+    yhat4 <- exp(logyhat4)
+    e4[k] <- ironslag$magnetic[k] - yhat4
+}
+
+c(mean(e1^2), mean(e2^2), mean(e3^2), mean(e4^2))
+
+#selected model, fitted in Example 8.16
+summary(L2)
+anova(L2)
+
+par(mfrow = c(4, 2))
+plot(L1$fit, L1$res, main = "Linear"); abline(0, 0)
+qqnorm(L1$res); qqline(L1$res)
+plot(L2$fit, L2$res, main = "Quadrático"); abline(0, 0)
+qqnorm(L2$res); qqline(L2$res)
+plot(L3$fit, L3$res, main = "Exponencial"); abline(0, 0)
+qqnorm(L3$res); qqline(L3$res)
+plot(L4$fit, L4$res, main = "log-log"); abline(0, 0)
+qqnorm(L4$res); qqline(L4$res)
+par(mfrow = c(1, 1))
+
+```
