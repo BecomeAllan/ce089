@@ -381,60 +381,152 @@ abline(v = med.amostral, col = 2)
 sum(am >= med.amostral)/N
 ```
 
+## Índice de Moran (correlação espacial)
 
-```{r, include=FALSE, eval=FALSE}
-x <- 1:8 # x-coordinates of points
-y <- 1:5 # y-coordinates of points
-#
-# Weights matrix.
-#
-## The weights are proportional to 1 for cells that share a side, to
-## sqrt(1/2) = 0.7071 for cells that only share a corner, and to 0
-## otherwise.
-ind <- expand.grid(i=1:length(x), j=1:length(y))
+O índice de Moran é uma medida que avalia a dependência espacial entre
+observações, através de uma medida de correlção que considera os "pesos"
+entre observações vizinhas (mais próximas). Valores em locais mais
+próximos tendem a influenciar mais do que os valores de locais mais
+distantes.
+
+O índice ($I$) de Moran é calculado por
+$$
+I = \frac{n}{\sum_{i=1}^n (x_i - \bar{x})^2} \frac{\sum_{i=1}^n
+\sum_{j=1}^n w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^n
+\sum_{j=1}^n w_{ij}}
+$$
+
+```{r}
+## Índice de Moran para medir dependência espacial.
+
+## Coordenadas dos eventos em uma malha regular 8 x 8.
+x <- 1:8
+y <- 1:8
+
+## Construção da matriz de pesos que determina a vizinhança entre
+## observações.
+ind <- expand.grid(i = 1:length(x),
+                   j = 1:length(y))
+
+##  Função que determina o peso entre duas localizações na malha.
 f <- function(i, j) {
-  u <- min(3, sum(abs(ind[i, ] - ind[j, ])))
-  c(0, 1, sqrt(1/2), 0)[u+1]
+    u <- min(3, sum(abs(ind[i, ] - ind[j, ])))
+    w <- c(0, 1, sqrt(1/2), 0)[u + 1]
+    return(w)
 }
-w <- matrix(0.0, nrow(ind), nrow(ind))
-for (i in 1:nrow(ind)) for (j in 1:nrow(ind)) w[i,j] <- f(i,j)
-image(w)
-w <- w / sum(w)
-image(w)
-#
-# Moran's I.
-#
-moran <- function(x, weights) {
-  n <- length(x)
-  z <- as.vector((x - mean(x)) / sd(x))
-  as.vector(z %*% weights %*% (z * sqrt(n / (n-1))))
+
+##  Cria os pesos, matriz (8^2) x (8^2) = 64 x 64.
+w <- matrix(0, nrow = nrow(ind), ncol = nrow(ind))
+for (i in 1:nrow(ind)) {
+    for (j in 1:nrow(ind)) {
+        w[i, j] <- f(i, j)
+    }
 }
-#
-# Permutation test (including a plot).
-#
-ppt <- function(z, w, N=1e4, ...) {
-  stat <- moran(z, w)
-  sim <- replicate(N, moran(sample(z, length(z)), w))
-  p.value <- mean((all <- c(stat, sim)) >= stat)
-  hist(sim, sub=paste("p =", round(p.value, 4)), xlim=range(all), ...)
-  abline(v = stat, col="#903030", lty=3, lwd=2)
-  return(p.value)
+
+##  Normaliza.
+w <- w/sum(w)
+
+## Gráfico. Valores claros indicam maior peso entre observações.
+image(w, asp = 1, col = gray.colors(100))
+
+## Lógica do índica de Moran: correlação entre valores observados e
+## média dos vizinhos. Exemplo com valores simulados.
+xx <- rnorm(64)
+cor(cbind("Valores observados" = xx,
+          "Média dos vizinhos" = as.vector(xx %*% w)))
+
+## Índice de Moran
+moran <- function(x, w) {
+    n <- length(x)
+    xbar <- mean(x)
+    dx <- x - xbar
+    xi <- rep(dx, each = n)
+    xj <- rep(dx)
+    xixj <- xi * xj
+    pm <- matrix(xixj, ncol = n)
+    pmw <- pm * w
+    spmw <- sum(pmw)
+    smw <- sum(w)
+    sw  <- spmw / smw
+    vr <- n / sum(dx^2)
+    MI <- vr * sw
+    return(MI)
 }
-#
-# Simulated observations.
-#
+
+## Moran para os dados simulados
+moran(xx, w)
+
+## A ideia do teste de permutação, é trocar de lugar as observações e
+## calcular o índice de Moran, mantendo a matriz de pesos fixa. Se não
+## houver dependência espacial, então qualquer observação poderia estar
+## em qualquer lugar. Com isso, o valor calculado do índice de Moran
+## pode ser comparado com a distribuição dos índices de Moran calculados
+## para observações permutadas.
+## Se o valor observado for extremo, indica que deve haver correlação
+## espacial. Se o observado estiver no centro (ou próximo do centro) da
+## distribuição, então não há evidências de correlação espacial.
+replicate(10, moran(sample(xx), w))
+
+## Teste de permutação com saída gráfica.
+ppt <- function(z, w, N = 10000, stat, ...) {
+    ## Índice de Moran por reamostragem.
+    sim <- replicate(N,
+                     moran(sample(z), w))
+    ## Determina o p-valor.
+    p.value <- mean((all <- c(stat, sim)) >= stat)
+    ## Histograma da distribuição empírica sob H_0.
+    hist(sim,
+         sub = paste("p =", round(p.value, 4)),
+         xlim = range(all),
+         ...)
+    abline(v = stat, col = "#903030", lty = 3, lwd = 2)
+    return(p.value)
+}
+
+## Observações simuladas.
 set.seed(17)
-par(mfrow=c(2,3))
+par(mfrow = c(2, 3))
 
-# Induce autocorrelation via an underlying trend.
-z <- matrix(rexp(length(x)*length(y), outer(x,y^2)), length(x))
-image(log(z), main="Autocorrelated Data")
-hist(z)
-ppt(z, w, main="Null Distribution of Moran's I", xlab="I")
+## Dados com dependência espacial --------------------------------------
+## Indução de autocorrelação por meio de uma tendência.
+z <- matrix(rexp(length(x) * length(y),
+                 outer(x, y^2)),
+            length(x))
+image(log(z), main = "Com dependência")
 
-# Generate data independently of location.
-z <- matrix(rnorm(length(x)*length(y), 0, 1/2), length(x))
-image(z, main="Uncorrelated Data")
+cor(cbind("Valores observados" = as.vector(z),
+          "Média dos vizinhos" = as.vector(as.vector(z) %*% w)))
+
+## Índice de Moran com dados originais.
+(stat <- moran(z, w))
+
 hist(z)
-ppt(z, w, main="Null Distribution of Moran's I", xlab="I")
+ppt(z, w, stat = stat, main = "I de Moran", xlab = "I")
+
+## Teste usando spdep
+spdep::moran.test(z, spdep::mat2listw(w))
+## De help(moran.test):
+## The assumptions underlying the test are sensitive to the form of the
+## graph of neighbour relationships and other factors, and results may
+## be checked against those of moran.mc permutations
+spdep::moran.mc(z, spdep::mat2listw(w), nsim = 10000)
+
+## Dados sem dependência espacial --------------------------------------
+## Geração de de um conjunto de dados sob hipótese nula.
+z <- matrix(rnorm(length(x) * length(y), 0, 1/2), length(x))
+image(z, main = "Sem dependência")
+
+cor(cbind("Valores observados" = as.vector(z),
+          "Média dos vizinhos" = as.vector(as.vector(z) %*% w)))
+
+# Índice de Moran com dados originais.
+(stat <- moran(z, w))
+
+hist(z)
+ppt(z, w, stat = stat, main = "I de Moran", xlab = "I")
+par(mfrow = c(1, 1))
+
+## Teste usando spdep
+spdep::moran.test(z, spdep::mat2listw(w))
+spdep::moran.mc(z, spdep::mat2listw(w), nsim = 10000)
 ```
