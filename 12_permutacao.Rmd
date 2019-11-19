@@ -1,0 +1,329 @@
+---
+title: "Métodos de permutação (ou aleatorização)"
+# subtitle: "Jackknife"
+author: "Fernando P. Mayer"
+bibliography: ref.bib
+output:
+  html_document:
+    number_sections: true
+    toc_depth: 3
+---
+
+```{r, cache=FALSE, include=FALSE}
+source("setup_knitr.R")
+opts_chunk$set(fig.path = "figures/12_permutacao/")
+```
+
+# Introdução
+
+**Justificativas**
+
+- Métodos computacionalmente intensivos para inferência
+estatística são usados quando as abordagens tradicionais não são
+adequadas.
+- Resultados assintóticos em pequenas amostras.
+- Violação de pressupostos.
+- Não existência de mecanísmos de inferência específicos.
+- Tais métodos se baseiam em reamostragem e/ou simulação.
+- Podem ser aplicados em muitos contextos.
+
+**Testes de Aleatorização**
+
+- Abordagem baseada em permutação das observações
+(*permutation tests*).
+- São considerados testes livre de distribuição.
+- Faz suposições sobre o processo gerador dos dados.
+- Duas formas de cálculo da estatística de teste:
+  - **Exaustiva**: no conjunto de todos os arranjos possíveis
+  $\rightarrow$ distribuição amostral exata.
+  - **Por reamostragem**: amostra do conjunto completo de arranjos com
+    reamostragem sem reposição.
+- IMPORTANTE: Sob a hipótese nula os dados são **permutáveis**.
+- Esse é o principal conceito e requisito dos testes de
+aleatorização.
+
+**Limitações dos testes de aleatorização**
+
+- Só podem ser usados para hipóteses que envolvam comparações
+(trocar observações entre grupos) ou desalinhar registros (como em
+correlação, por exemplo).
+- Portanto, não podem ser usados para testar hipóteses sobre
+parâmetros individuais.
+- O teste de aleatorização exato de Fisher para a média é uma
+alternativa para testar hipótese sobre a média considerando
+população simétrica, porém, estritamente não é um teste de
+aleatorização.
+
+De acordo com Manly (2006):
+
+- Compara o valor da estatística com aquele obtido da distribuição
+gerada pela permutação dos valores observados.
+- São úteis pois permitem o usuário definir a estatística de teste
+mais apropriada.
+- Não necessariamente os resultados podem ser extrapolados para a
+população.
+- Testes de aleatorização são exatos: fonece um nível de
+significância que é igual ou inferior ao nível nominal.
+- Duas estatísticas são equivalente se elas dão o mesmo nível de
+significância em testes de aleatorização.
+- Testes de aleatorização e tradicionais darão similar nível de
+significância se as suposições do último forem atendidas.
+
+# Exemplos
+
+## Exemplo: correlação
+
+```{r}
+data(law, package = "bootstrap")
+str(law)
+plot(law$LSAT, law$GPA)
+(rho <- cor(law$LSAT, law$GPA))
+## Definições
+B <- 2000
+n <- nrow(law)
+R <- numeric(B)
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA[i]
+    R[b] <- cor(LSAT, GPA)
+}
+## Resultado
+mean(R)
+(se.R <- sd(R))
+
+hist(R)
+abline(v = rho, col = 2)
+sum(R >= rho)/length(R)
+2 * sum(R >= rho)/length(R)
+
+## Usando jackknife
+theta.jack <- numeric(n)
+for(j in 1:n) {
+    theta.jack[j] <- cor(law$LSAT[-j], law$GPA[-j])
+}
+## Estimativas parciais
+theta.jack
+
+## Pseudo valores
+## Note que alguns valores estão fora do intervalo [-1,1]
+(pv <- n * rho - (n - 1) * theta.jack)
+mean(pv)
+rho # valor da amostra
+
+## Erro padrão
+sqrt(var(pv)/n)
+se.R # via bootstrap
+## sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+
+## Intervalo de confiança Jackknife (supõe independência e normalidade).
+mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+cor.test(law$LSAT, law$GPA)$conf.int # teórico
+cor.test(law$LSAT, law$GPA)
+```
+
+```{r}
+# N = 5 para um par de medidas.
+x <- c(4.1, 8.3, 2.9, 10.8, 9.5)
+y <- c(3.7, 5.1, 1.0, 7.7, 8.9)
+cbind(x, y)
+
+## Estatística de teste na amostra original: coeficiente de correlação
+## de Pearson.
+r0 <- cor(x, y, method = "pearson")
+r0
+
+X <- gtools::permutations(n = length(x), r = length(x), v = x)
+str(X)
+factorial(5)
+sort(x)
+head(X)
+## As 120 correlações obtidas para cada arranjo.
+r <- apply(X, MARGIN = 1, FUN = cor, y = y, method = "spearman")
+hist(r)
+abline(v = r0, col = 2)
+
+## P-valor do teste.
+sum(r >= r0)/length(r)
+2 * sum(r >= r0)/length(r)
+
+cor.test(x, y)
+```
+
+```{r}
+## Impossivel fazer todas as combinacoes
+factorial(nrow(law))
+
+## Definições
+B <- 2000
+n <- nrow(law)
+R <- numeric(B)
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = FALSE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA
+    R[b] <- cor(LSAT, GPA)
+}
+## Resultado
+hist(R)
+abline(v = rho, col = 2)
+
+## P-valor do teste.
+2 * sum(R >= rho)/length(R)
+
+
+## Definições
+B <- 2000
+n <- nrow(law)
+R <- numeric(B)
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    LSAT <- law$LSAT[i]
+    GPA <- law$GPA[i]
+    R[b] <- cor(LSAT, GPA)
+}
+## Resultado
+hist(R)
+abline(v = rho, col = 2)
+
+## P-valor do teste.
+2 * sum(R >= rho)/length(R)
+sum(R >= rho)/length(R)
+
+cor.test(law$LSAT, law$GPA)
+
+
+```
+
+## Exemplo da aula anterior
+
+```{r}
+## Exemplo adaptado de Manly (1997)
+## Comparação do comprimento da mandíbula de chacais machos e fêmeas
+set.seed(2)
+machos <- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112)
+## Simula diferença para as femeas
+femeas <- rnorm(10, mean(machos) - 2, sd = sd(machos))
+da <- data.frame(comp = c(machos, femeas),
+                 sexo = c(rep("M", 10), rep("F", 10)))
+densityplot(~comp, groups = sexo, data = da, auto.key = TRUE)
+## Média por sexo
+tapply(da$comp, da$sexo, mean)
+## Diferença das médias
+diff(tapply(da$comp, da$sexo, mean))
+
+## Média de cada sexo
+(m1 <- mean(machos))
+(m2 <- mean(femeas))
+## Diferença entre as médias amostrais
+(med.amostral <- m1 - m2)
+## Calcula o desvio padrão ponderado
+n1 <- length(machos)
+v1 <- var(machos)
+n2 <- length(femeas)
+v2 <- var(femeas)
+(s.pond <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))
+
+## Teste de hipótese para
+## H0: mu1 <= mu2
+## Ha: mu1 > mu2
+mu0 <- 0
+t.test(x = machos, y = femeas, alternative = "greater",
+       var.equal = TRUE, mu = mu0)
+## Estatística de teste
+(tcalc <- (m1 - m2)/(s.pond * sqrt(1/n1 + 1/n2)))
+## Valor crítico
+(tcrit <- qt(.025, df = n1 + n2 - 2, lower.tail = FALSE))
+## p-valor
+pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)
+
+## Teste por simulação via Bootstrap
+N <- 10000
+## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
+## de machos e fêmeas são provenientes da mesma poplação, e portanto
+## podem ser pensados como uma única amostra.
+amostra <- c(machos, femeas)
+## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
+## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
+## então as diferenças entre as médias devem ser próximas de zero.
+am <- replicate(
+    N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
+)
+## Visualização
+hist(am, main = "Distribuição amostral")
+abline(v = med.amostral, col = 2)
+## p-valor empírico
+sum(am >= med.amostral)/N
+```
+
+```{r}
+## Exemplo adaptado de Manly (1997)
+## Comparação do comprimento da mandíbula de chacais machos e fêmeas
+machos <- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112)
+femeas <- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
+da <- data.frame(comp = c(machos, femeas),
+                 sexo = c(rep("M", 10), rep("F", 10)))
+densityplot(~comp, groups = sexo, data = da, auto.key = TRUE)
+## Média por sexo
+tapply(da$comp, da$sexo, mean)
+## Diferença das médias
+diff(tapply(da$comp, da$sexo, mean))
+
+## Média de cada sexo
+(m1 <- mean(machos))
+(m2 <- mean(femeas))
+## Diferença entre as médias amostrais
+(med.amostral <- m1 - m2)
+## Calcula o desvio padrão ponderado
+n1 <- length(machos)
+v1 <- var(machos)
+n2 <- length(femeas)
+v2 <- var(femeas)
+(s.pond <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))
+
+## Teste de hipótese para
+## H0: mu1 <= mu2
+## Ha: mu1 > mu2
+mu0 <- 0
+t.test(x = machos, y = femeas, alternative = "greater",
+       var.equal = TRUE, mu = mu0)
+## Estatística de teste
+(tcalc <- (m1 - m2)/(s.pond * sqrt(1/n1 + 1/n2)))
+## Valor crítico
+(tcrit <- qt(.025, df = n1 + n2 - 2, lower.tail = FALSE))
+## p-valor
+pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)
+
+## Teste por simulação via Bootstrap
+N <- 10000
+## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
+## de machos e fêmeas são provenientes da mesma poplação, e portanto
+## podem ser pensados como uma única amostra.
+amostra <- c(machos, femeas)
+## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
+## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
+## então as diferenças entre as médias devem ser próximas de zero.
+am <- replicate(
+    N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
+)
+## Visualização
+hist(am, main = "Distribuição amostral")
+abline(v = med.amostral, col = 2)
+## p-valor empírico
+sum(am >= med.amostral)/N
+
+
+## Teste por simulação via permutação
+(difer <- machos - femeas)
+(sdifer <- sum(difer))
+
+
+## Visualização
+hist(am, main = "Distribuição amostral")
+abline(v = med.amostral, col = 2)
+## p-valor empírico
+sum(am >= med.amostral)/N
+```
