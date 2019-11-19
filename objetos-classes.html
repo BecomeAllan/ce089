@@ -480,8 +480,8 @@ div.tocify {
 <p>Exemplo: função <code>runif()</code> (para gerar valores aleatórios de uma distribuição uniforme):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 38.847827 79.879533 93.525836 54.176769 28.273964 17.360458  8.103064</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8] 22.945901  5.857108 65.408073</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 95.362532 95.504869 66.403928 47.221629 95.124303 17.492584 79.912534</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8]  7.571328 84.083933 26.877084</span></a></code></pre></div>
 <p>Argumentos que já possuem um valor especificado (como <code>max</code> e <code>min</code>) podem ser omitidos:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>)</a></code></pre></div>
 <p>Se os argumentos forem nomeados, a ordem deles dentro da função não tem mais importância:</p>
@@ -547,10 +547,10 @@ div.tocify {
 # [21] &quot;rpart&quot;      &quot;spatial&quot;    &quot;splines&quot;    &quot;stats&quot;      &quot;stats4&quot;    
 # [26] &quot;survival&quot;   &quot;tcltk&quot;      &quot;tools&quot;      &quot;utils&quot;</code></pre>
 <p>No entanto, nem todos são carregados na inicialização do R. Por padrão, apenas os seguintes pacotes são carregados automaticamente:</p>
-<pre><code>#  [1] &quot;plyr&quot;         &quot;latticeExtra&quot; &quot;RColorBrewer&quot; &quot;lattice&quot;     
-#  [5] &quot;expm&quot;         &quot;Matrix&quot;       &quot;knitr&quot;        &quot;stats&quot;       
-#  [9] &quot;graphics&quot;     &quot;grDevices&quot;    &quot;utils&quot;        &quot;datasets&quot;    
-# [13] &quot;methods&quot;      &quot;base&quot;</code></pre>
+<pre><code>#  [1] &quot;survival&quot;     &quot;boot&quot;         &quot;bootstrap&quot;    &quot;plyr&quot;         &quot;latticeExtra&quot;
+#  [6] &quot;RColorBrewer&quot; &quot;lattice&quot;      &quot;expm&quot;         &quot;Matrix&quot;       &quot;knitr&quot;       
+# [11] &quot;stats&quot;        &quot;graphics&quot;     &quot;grDevices&quot;    &quot;utils&quot;        &quot;datasets&quot;    
+# [16] &quot;methods&quot;      &quot;base&quot;</code></pre>
 <p>Para listar os pacotes carregados, use a função</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">search</span>()</a></code></pre></div>
 <p>Note que o primeiro elemento, <code>.GlobalEnv</code>, será sempre carregado pois ele é o <em>ambiente</em> que irá armazenar (e deixar disponível) os objetos criados pelo usuário. Para carregar um pacote instalado, usamos a função <code>library()</code>, por exemplo</p>
@@ -665,8 +665,8 @@ div.tocify {
 <p>Objetos podem armazenar diferentes estruturas de dados:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb34-2" title="2">y</a>
-<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.56743776 0.58410475 0.50226936 0.27230256 0.04920685 0.11937515</span></a>
-<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.28016516 0.46026073 0.82346097 0.98356447</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.15603229 0.56335339 0.50968106 0.83429726 0.69709059 0.99900442</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.05794272 0.71144694 0.52419334 0.46788612</span></a></code></pre></div>
 <p>Note que cada objeto só pode armazenar uma estrutura (um número ou uma sequência de valores) de cada vez! (Aqui, o valor <span class="math inline">\(4\)</span> que estava armazenado em <code>y</code> foi sobrescrito pelos valores acima.)</p>
 <div id="nomes-de-objetos" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nomes de objetos</h2>
@@ -810,8 +810,8 @@ div.tocify {
 <p>Note que esse valor de 7 é o número de <strong>dígitos significativos</strong>, e pode variar conforme a sequência de números. Por exemplo,</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb45-2" title="2">y</a>
-<a class="sourceLine" id="cb45-3" title="3"><span class="co">#  [1] 0.069360916 0.817775199 0.942621732 0.269381876 0.169348123</span></a>
-<a class="sourceLine" id="cb45-4" title="4"><span class="co">#  [6] 0.033895622 0.178785004 0.641665366 0.022877743 0.008324827</span></a></code></pre></div>
+<a class="sourceLine" id="cb45-3" title="3"><span class="co">#  [1] 0.069360916 0.817775199 0.942621732 0.269381876 0.169348123 0.033895622</span></a>
+<a class="sourceLine" id="cb45-4" title="4"><span class="co">#  [7] 0.178785004 0.641665366 0.022877743 0.008324827</span></a></code></pre></div>
 <p>possui valores com 9 casas decimais. Isto é apenas a representação do número que aparece na tela. Internamente, cada número é armazenado com uma precisão de 64 bits. Os únicos números que podem ser representados exatamente no R são os inteiros e frações cujo denominador é potência de 2. Todos os outros números são arredondados internamente com uma acurácia de aproximadamente 53 dígitos binários. Isso pode introduzir algum tipo de erro, por exemplo:</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">sqrt</span>(<span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="dv">2</span></a>
 <a class="sourceLine" id="cb46-2" title="2"><span class="co"># [1] 4.440892e-16</span></a>
@@ -821,8 +821,7 @@ div.tocify {
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="fl">0.3</span> <span class="op">+</span><span class="st"> </span><span class="fl">0.6</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb47-2" title="2"><span class="co"># [1] -1.110223e-16</span></a>
 <a class="sourceLine" id="cb47-3" title="3"><span class="kw">print</span>(<span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.6</span>, <span class="fl">0.9</span>), <span class="dt">digits =</span> <span class="dv">22</span>)</a>
-<a class="sourceLine" id="cb47-4" title="4"><span class="co"># [1] 0.2999999999999999888978 0.5999999999999999777955</span></a>
-<a class="sourceLine" id="cb47-5" title="5"><span class="co"># [3] 0.9000000000000000222045</span></a></code></pre></div>
+<a class="sourceLine" id="cb47-4" title="4"><span class="co"># [1] 0.2999999999999999888978 0.5999999999999999777955 0.9000000000000000222045</span></a></code></pre></div>
 <p>Esse tipo de erro é chamado de <strong>erro de ponto flutuante</strong>, e as operações nessas condições são chamadas de <strong>aritmética de ponto flutuante</strong>. Para mais informações sobre esse assunto veja <a href="http://www.validlab.com/goldberg/paper.pdf">What Every Computer Scientist Should Know About Floating-Point Arithmetic</a> e <a href="http://cran-r.c3sl.ufpr.br/doc/FAQ/R-FAQ.html#Why-doesn_0027t-R-think-these-numbers-are-equal_003f">Why doesn’t R think these numbers are equal?</a>.</p>
 <p>No R os números podem ser representados com até 22 casas decimais. Você pode ver o número com toda sua precisão usando a função <code>print()</code> e especificando o número de casas decimais com o argumento <code>digits</code> (de 1 a 22)</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1"><span class="kw">print</span>(x, <span class="dt">digits =</span> <span class="dv">1</span>)</a>
@@ -838,9 +837,8 @@ div.tocify {
 <a class="sourceLine" id="cb48-11" title="11"><span class="co">#  [9] 0.55143501446582376956940 0.45661473530344665050507</span></a></code></pre></div>
 <p>Também é possível alterar a representação na tela para o formato científico, usando a função <code>format()</code></p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="kw">format</span>(x, <span class="dt">scientific =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb49-2" title="2"><span class="co">#  [1] &quot;2.875775e-01&quot; &quot;7.883051e-01&quot; &quot;4.089769e-01&quot; &quot;8.830174e-01&quot;</span></a>
-<a class="sourceLine" id="cb49-3" title="3"><span class="co">#  [5] &quot;9.404673e-01&quot; &quot;4.555650e-02&quot; &quot;5.281055e-01&quot; &quot;8.924190e-01&quot;</span></a>
-<a class="sourceLine" id="cb49-4" title="4"><span class="co">#  [9] &quot;5.514350e-01&quot; &quot;4.566147e-01&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb49-2" title="2"><span class="co">#  [1] &quot;2.875775e-01&quot; &quot;7.883051e-01&quot; &quot;4.089769e-01&quot; &quot;8.830174e-01&quot; &quot;9.404673e-01&quot;</span></a>
+<a class="sourceLine" id="cb49-3" title="3"><span class="co">#  [6] &quot;4.555650e-02&quot; &quot;5.281055e-01&quot; &quot;8.924190e-01&quot; &quot;5.514350e-01&quot; &quot;4.566147e-01&quot;</span></a></code></pre></div>
 <p>Nessa representação, o valor 2.875775e-01 = <span class="math inline">\(2.875775 \times 10^{-01}\)</span> = <span class="math inline">\(0.2875775\)</span>.</p>
 </div>
 <div id="sequências-de-números" class="section level3">
@@ -1260,8 +1258,8 @@ div.tocify {
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">lista &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, <span class="st">&quot;R&quot;</span>, <span class="kw">list</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb88-2" title="2">lista</a>
 <a class="sourceLine" id="cb88-3" title="3"><span class="co"># [[1]]</span></a>
-<a class="sourceLine" id="cb88-4" title="4"><span class="co">#  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23</span></a>
-<a class="sourceLine" id="cb88-5" title="5"><span class="co"># [24] 24 25 26 27 28 29 30</span></a>
+<a class="sourceLine" id="cb88-4" title="4"><span class="co">#  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25</span></a>
+<a class="sourceLine" id="cb88-5" title="5"><span class="co"># [26] 26 27 28 29 30</span></a>
 <a class="sourceLine" id="cb88-6" title="6"><span class="co"># </span></a>
 <a class="sourceLine" id="cb88-7" title="7"><span class="co"># [[2]]</span></a>
 <a class="sourceLine" id="cb88-8" title="8"><span class="co"># [1] &quot;R&quot;</span></a>
@@ -1584,11 +1582,11 @@ div.tocify {
 <p>Nesta sessão vamos abordar como funcionam os métodos como definidos pelo sistema S3, por ser o mais utilizado na prática para se criar novas funções no R. Para saber mais sobre os outros métodos, consulte o livro <a href="http://adv-r.had.co.nz/OO-essentials.html">Advanced R</a>.</p>
 <p>Vamos entender como uma função genérica pode ser criada através de um exemplo. Usando a função <code>methods()</code>, podemos verificar quais métodos estão disponíveis para uma determinada função, por exemplo, para a função <code>mean()</code>:</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method      </span></a>
-<a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [3] mean,sparseMatrix-method mean,sparseVector-method</span></a>
-<a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [5] mean.Date                mean.default            </span></a>
-<a class="sourceLine" id="cb106-5" title="5"><span class="co">#  [7] mean.difftime            mean.POSIXct            </span></a>
-<a class="sourceLine" id="cb106-6" title="6"><span class="co">#  [9] mean.POSIXlt             mean.quosure*           </span></a>
+<a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
+<a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
+<a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [7] mean.difftime            mean.POSIXct             mean.POSIXlt            </span></a>
+<a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.quosure*            mean.yearmon*            mean.yearqtr*           </span></a>
+<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.zoo*               </span></a>
 <a class="sourceLine" id="cb106-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
@@ -1612,7 +1610,7 @@ div.tocify {
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
 <a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xdf7ef90&gt;</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xdae0688&gt;</span></a>
 <a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
 <a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1641,7 +1639,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x4b68970&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x55e4460&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1652,13 +1650,12 @@ div.tocify {
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">mean.matrix &lt;-<span class="st"> </span><span class="cf">function</span>(x, ...) <span class="kw">rowMeans</span>(x)</a></code></pre></div>
 <p>Uma função método é sempre definida dessa forma: <code>&lt;funçãogenérica&gt;.&lt;classe&gt;</code>. Agora podemos ver novamente os métodos disponíveis para a função <code>mean()</code></p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method      </span></a>
-<a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [3] mean,sparseMatrix-method mean,sparseVector-method</span></a>
-<a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [5] mean.Date                mean.default            </span></a>
-<a class="sourceLine" id="cb115-5" title="5"><span class="co">#  [7] mean.difftime            mean.matrix             </span></a>
-<a class="sourceLine" id="cb115-6" title="6"><span class="co">#  [9] mean.POSIXct             mean.POSIXlt            </span></a>
-<a class="sourceLine" id="cb115-7" title="7"><span class="co"># [11] mean.quosure*           </span></a>
-<a class="sourceLine" id="cb115-8" title="8"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
+<a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [7] mean.difftime            mean.matrix              mean.POSIXct            </span></a>
+<a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.yearmon*           </span></a>
+<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.yearqtr*            mean.zoo*               </span></a>
+<a class="sourceLine" id="cb115-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
 <a class="sourceLine" id="cb116-2" title="2"><span class="co"># [1] &quot;matrix&quot;</span></a>
@@ -1705,7 +1702,7 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Friday, 08 November, 2019, 22:03
+<pre><code># Tuesday, 19 November, 2019, 22:21
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1727,18 +1724,23 @@ div.tocify {
 # [1] stats     graphics  grDevices utils     datasets  methods   base     
 # 
 # other attached packages:
-# [1] boot_1.3-22         bootstrap_2019.6    plyr_1.8.4         
-# [4] latticeExtra_0.6-28 RColorBrewer_1.1-2  lattice_0.20-38    
-# [7] expm_0.999-4        Matrix_1.2-17       knitr_1.25         
+#  [1] perm_1.0-0.0        coin_1.3-1          survival_2.44-1.1  
+#  [4] boot_1.3-22         bootstrap_2019.6    plyr_1.8.4         
+#  [7] latticeExtra_0.6-28 RColorBrewer_1.1-2  lattice_0.20-38    
+# [10] expm_0.999-4        Matrix_1.2-17       knitr_1.26         
 # 
 # loaded via a namespace (and not attached):
-#  [1] Rcpp_1.0.3           codetools_0.2-16     digest_0.6.22       
-#  [4] grid_3.6.1           magrittr_1.5         evaluate_0.14       
-#  [7] highr_0.8            rlang_0.4.1          stringi_1.4.3       
-# [10] rmarkdown_1.16.3     tools_3.6.1          stringr_1.4.0       
-# [13] diagram_1.6.4        xfun_0.10            yaml_2.2.0          
-# [16] compiler_3.6.1       microbenchmark_1.4-7 shape_1.4.4         
-# [19] htmltools_0.4.0      animation_2.6</code></pre>
+#  [1] Rcpp_1.0.3           compiler_3.6.1       highr_0.8           
+#  [4] tools_3.6.1          digest_0.6.22        evaluate_0.14       
+#  [7] rlang_0.4.1          microbenchmark_1.4-7 yaml_2.2.0          
+# [10] parallel_3.6.1       mvtnorm_1.0-11       libcoin_1.0-5       
+# [13] xfun_0.11            stringr_1.4.0        gtools_3.8.1        
+# [16] stats4_3.6.1         grid_3.6.1           diagram_1.6.4       
+# [19] rmarkdown_1.17.3     animation_2.6        multcomp_1.4-10     
+# [22] TH.data_1.0-10       magrittr_1.5         modeltools_0.2-22   
+# [25] matrixStats_0.55.0   codetools_0.2-16     htmltools_0.4.0     
+# [28] MASS_7.3-51.4        splines_3.6.1        shape_1.4.4         
+# [31] sandwich_2.5-1       stringi_1.4.3        zoo_1.8-6</code></pre>
 </div>
 
 <center>

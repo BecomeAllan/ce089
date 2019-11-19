@@ -880,7 +880,7 @@ div.tocify {
 <a class="sourceLine" id="cb29-7" title="7">)</a>
 <a class="sourceLine" id="cb29-8" title="8">st1</a>
 <a class="sourceLine" id="cb29-9" title="9"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb29-10" title="10"><span class="co">#   0.121   0.000   0.120</span></a>
+<a class="sourceLine" id="cb29-10" title="10"><span class="co">#   0.083   0.000   0.083</span></a>
 <a class="sourceLine" id="cb29-11" title="11"></a>
 <a class="sourceLine" id="cb29-12" title="12"><span class="co">## Tempo de execução usando a regra da reciclagem</span></a>
 <a class="sourceLine" id="cb29-13" title="13">st2 &lt;-<span class="st"> </span><span class="kw">system.time</span>(</a>
@@ -888,8 +888,8 @@ div.tocify {
 <a class="sourceLine" id="cb29-15" title="15">)</a>
 <a class="sourceLine" id="cb29-16" title="16">st2</a>
 <a class="sourceLine" id="cb29-17" title="17"><span class="co">#    user  system elapsed </span></a>
-<a class="sourceLine" id="cb29-18" title="18"><span class="co">#   0.002   0.000   0.002</span></a></code></pre></div>
-<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.12/0.002 = 60 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
+<a class="sourceLine" id="cb29-18" title="18"><span class="co">#   0.003   0.000   0.002</span></a></code></pre></div>
+<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.083/0.002 = 41.5 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Uma nota de precaução
@@ -1057,16 +1057,15 @@ Uma nota de precaução
 <p>A função <code>apply()</code>, como já vista acima, é capaz de fazer operações nas linhas (<code>MARGIN = 1</code>) e também nas colunas (<code>MARGIN = 2</code>).</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="co">## Médias por LINHA: média das 3 provas para cada aluno</span></a>
 <a class="sourceLine" id="cb39-2" title="2"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb39-3" title="3"><span class="co">#  [1] 4.333333 5.000000 5.000000 6.666667 7.000000 4.333333 3.000000</span></a>
-<a class="sourceLine" id="cb39-4" title="4"><span class="co">#  [8] 7.000000 4.000000 5.000000 2.666667 4.000000 6.000000 5.666667</span></a>
-<a class="sourceLine" id="cb39-5" title="5"><span class="co"># [15] 6.000000 4.333333 4.666667 6.333333 5.000000 4.333333 6.333333</span></a>
-<a class="sourceLine" id="cb39-6" title="6"><span class="co"># [22] 4.666667 3.666667 3.333333 2.666667 7.000000 5.666667 8.000000</span></a>
-<a class="sourceLine" id="cb39-7" title="7"><span class="co"># [29] 3.666667 7.333333</span></a>
-<a class="sourceLine" id="cb39-8" title="8"><span class="co">## Médias por COLUNA: média de cada uma das 3 provas para todos os</span></a>
-<a class="sourceLine" id="cb39-9" title="9"><span class="co">## alunos</span></a>
-<a class="sourceLine" id="cb39-10" title="10"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">2</span>, <span class="dt">FUN =</span> mean)</a>
-<a class="sourceLine" id="cb39-11" title="11"><span class="co">#   prova1   prova2   prova3 </span></a>
-<a class="sourceLine" id="cb39-12" title="12"><span class="co"># 4.433333 5.433333 5.400000</span></a></code></pre></div>
+<a class="sourceLine" id="cb39-3" title="3"><span class="co">#  [1] 4.333333 5.000000 5.000000 6.666667 7.000000 4.333333 3.000000 7.000000</span></a>
+<a class="sourceLine" id="cb39-4" title="4"><span class="co">#  [9] 4.000000 5.000000 2.666667 4.000000 6.000000 5.666667 6.000000 4.333333</span></a>
+<a class="sourceLine" id="cb39-5" title="5"><span class="co"># [17] 4.666667 6.333333 5.000000 4.333333 6.333333 4.666667 3.666667 3.333333</span></a>
+<a class="sourceLine" id="cb39-6" title="6"><span class="co"># [25] 2.666667 7.000000 5.666667 8.000000 3.666667 7.333333</span></a>
+<a class="sourceLine" id="cb39-7" title="7"><span class="co">## Médias por COLUNA: média de cada uma das 3 provas para todos os</span></a>
+<a class="sourceLine" id="cb39-8" title="8"><span class="co">## alunos</span></a>
+<a class="sourceLine" id="cb39-9" title="9"><span class="kw">apply</span>(<span class="dt">X =</span> notas[, provas], <span class="dt">MARGIN =</span> <span class="dv">2</span>, <span class="dt">FUN =</span> mean)</a>
+<a class="sourceLine" id="cb39-10" title="10"><span class="co">#   prova1   prova2   prova3 </span></a>
+<a class="sourceLine" id="cb39-11" title="11"><span class="co"># 4.433333 5.433333 5.400000</span></a></code></pre></div>
 <p>As funções <code>sapply()</code> e <code>lapply()</code> são semelhantes à <code>apply()</code>, mas operam somente nas colunas.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="co">## sapply simpilifica o resultado para um vetor</span></a>
 <a class="sourceLine" id="cb40-2" title="2"><span class="kw">sapply</span>(notas[, provas],  mean)</a>

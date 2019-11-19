@@ -677,8 +677,8 @@ div.tocify {
 <a class="sourceLine" id="cb24-4" title="4"><span class="co"># [1] &quot;numeric&quot;</span></a></code></pre></div>
 <p>Isso é importante, por exemplo, se quisessemos aplicar uma função qualquer a um componente da lista. No primeiro caso isso não é possível pois o conteúdo continua dentro de uma lista, enquanto que no segundo caso os valores retornados são os próprios números:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">mean</span>(lis[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="co"># Warning in mean.default(lis[1]): argument is not numeric or logical:</span></a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="co"># returning NA</span></a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="co"># Warning in mean.default(lis[1]): argument is not numeric or logical: returning</span></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="co"># NA</span></a>
 <a class="sourceLine" id="cb25-4" title="4"><span class="co"># [1] NA</span></a>
 <a class="sourceLine" id="cb25-5" title="5"><span class="kw">mean</span>(lis[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb25-6" title="6"><span class="co"># [1] 5.5</span></a></code></pre></div>
