@@ -480,8 +480,8 @@ div.tocify {
 <p>Exemplo: função <code>runif()</code> (para gerar valores aleatórios de uma distribuição uniforme):</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">runif</span>(n, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="dv">100</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 95.362532 95.504869 66.403928 47.221629 95.124303 17.492584 79.912534</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [8]  7.571328 84.083933 26.877084</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#  [1] 82.42955 97.51117 46.93282 21.90022 34.14275  9.44935 92.89543 19.88535</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#  [9] 62.39317 32.62787</span></a></code></pre></div>
 <p>Argumentos que já possuem um valor especificado (como <code>max</code> e <code>min</code>) podem ser omitidos:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">runif</span>(<span class="dv">10</span>)</a></code></pre></div>
 <p>Se os argumentos forem nomeados, a ordem deles dentro da função não tem mais importância:</p>
@@ -665,8 +665,8 @@ div.tocify {
 <p>Objetos podem armazenar diferentes estruturas de dados:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb34-2" title="2">y</a>
-<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.15603229 0.56335339 0.50968106 0.83429726 0.69709059 0.99900442</span></a>
-<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [7] 0.05794272 0.71144694 0.52419334 0.46788612</span></a></code></pre></div>
+<a class="sourceLine" id="cb34-3" title="3"><span class="co">#  [1] 0.8325578 0.6797345 0.4042401 0.5941045 0.4121373 0.8982319 0.2192148</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="co">#  [8] 0.8691109 0.7959712 0.3231446</span></a></code></pre></div>
 <p>Note que cada objeto só pode armazenar uma estrutura (um número ou uma sequência de valores) de cada vez! (Aqui, o valor <span class="math inline">\(4\)</span> que estava armazenado em <code>y</code> foi sobrescrito pelos valores acima.)</p>
 <div id="nomes-de-objetos" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nomes de objetos</h2>
@@ -1585,8 +1585,8 @@ div.tocify {
 <a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
 <a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
 <a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [7] mean.difftime            mean.POSIXct             mean.POSIXlt            </span></a>
-<a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.quosure*            mean.yearmon*            mean.yearqtr*           </span></a>
-<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.zoo*               </span></a>
+<a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.quosure*            mean.units*              mean.yearmon*           </span></a>
+<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.yearqtr*            mean.zoo*               </span></a>
 <a class="sourceLine" id="cb106-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
@@ -1610,7 +1610,7 @@ div.tocify {
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
 <a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xdae0688&gt;</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xd66a378&gt;</span></a>
 <a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
 <a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1639,7 +1639,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x55e4460&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x5170fa0&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1653,8 +1653,8 @@ div.tocify {
 <a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
 <a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
 <a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [7] mean.difftime            mean.matrix              mean.POSIXct            </span></a>
-<a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.yearmon*           </span></a>
-<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.yearqtr*            mean.zoo*               </span></a>
+<a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.units*             </span></a>
+<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.yearmon*            mean.yearqtr*            mean.zoo*               </span></a>
 <a class="sourceLine" id="cb115-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
@@ -1702,7 +1702,7 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Tuesday, 19 November, 2019, 22:21
+<pre><code># Tuesday, 19 November, 2019, 23:59
 # ----------------------------------------
 # R version 3.6.1 (2017-01-27)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1730,17 +1730,23 @@ div.tocify {
 # [10] expm_0.999-4        Matrix_1.2-17       knitr_1.26         
 # 
 # loaded via a namespace (and not attached):
-#  [1] Rcpp_1.0.3           compiler_3.6.1       highr_0.8           
-#  [4] tools_3.6.1          digest_0.6.22        evaluate_0.14       
-#  [7] rlang_0.4.1          microbenchmark_1.4-7 yaml_2.2.0          
-# [10] parallel_3.6.1       mvtnorm_1.0-11       libcoin_1.0-5       
-# [13] xfun_0.11            stringr_1.4.0        gtools_3.8.1        
-# [16] stats4_3.6.1         grid_3.6.1           diagram_1.6.4       
-# [19] rmarkdown_1.17.3     animation_2.6        multcomp_1.4-10     
-# [22] TH.data_1.0-10       magrittr_1.5         modeltools_0.2-22   
-# [25] matrixStats_0.55.0   codetools_0.2-16     htmltools_0.4.0     
-# [28] MASS_7.3-51.4        splines_3.6.1        shape_1.4.4         
-# [31] sandwich_2.5-1       stringi_1.4.3        zoo_1.8-6</code></pre>
+#  [1] shape_1.4.4          gtools_3.8.1         zoo_1.8-6           
+#  [4] modeltools_0.2-22    diagram_1.6.4        xfun_0.11           
+#  [7] sf_0.8-0             splines_3.6.1        htmltools_0.4.0     
+# [10] stats4_3.6.1         yaml_2.2.0           rlang_0.4.1         
+# [13] e1071_1.7-2          DBI_1.0.0            sp_1.3-2            
+# [16] matrixStats_0.55.0   multcomp_1.4-10      stringr_1.4.0       
+# [19] mvtnorm_1.0-11       coda_0.19-3          codetools_0.2-16    
+# [22] evaluate_0.14        parallel_3.6.1       class_7.3-15        
+# [25] spdep_1.1-3          highr_0.8            TH.data_1.0-10      
+# [28] Rcpp_1.0.3           KernSmooth_2.23-15   classInt_0.4-2      
+# [31] gdata_2.18.0         deldir_0.1-23        microbenchmark_1.4-7
+# [34] digest_0.6.22        gmodels_2.18.1       stringi_1.4.3       
+# [37] animation_2.6        grid_3.6.1           LearnBayes_2.15.1   
+# [40] tools_3.6.1          sandwich_2.5-1       magrittr_1.5        
+# [43] MASS_7.3-51.4        libcoin_1.0-5        spData_0.3.2        
+# [46] rmarkdown_1.17.3     nlme_3.1-140         units_0.6-5         
+# [49] compiler_3.6.1</code></pre>
 </div>
 
 <center>
