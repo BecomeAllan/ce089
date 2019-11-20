@@ -81,9 +81,9 @@ mais exemplos mostrados em aula.
 - **15/11 (Sex)**: **Feriado**.
 - **19/11 (Ter)**: Testes de permutação. [HTML](12_permutacao.html).
 - **22/11 (Sex)**: Técnicas de otimização numérica.
-- **26/11 (Ter)**:
+- **26/11 (Ter)**: CH integralizada.
 - **29/11 (Sex)**: **Prova 2**.
-- **03/12 (Ter)**:
+- **03/12 (Ter)**: CH integralizada.
 - **10/12 (Ter)**: **Exame final**.
 
 [Moodle]: https://moodle.c3sl.ufpr.br/course/view.php?id=282
