@@ -15,12 +15,55 @@ da <- read.csv("misc/notas.csv")
 str(da)
 da <- da[order(da$Matrícula), ]
 row.names(da) <- NULL
+
+## Converte todos os NAs em 0
+da[is.na(da)] <- 0
+
+## Define colunas de Atividades
+A.col <- grep("^A", names(da))
+## Define funcao para calcular a media das np maiores notas
+fn <- function(x, np) {
+    sum(sort(x, decreasing = TRUE)[1:np])/np
+}
+## Calcula as medias das Atividades
+da$MA <- apply(da[, A.col], 1, fn, np = 4)
+
+## Define colunas de Provas
+P.col <- grep("^P", names(da))
+## Calcula as medias das Provas
+da$MP <- apply(da[, P.col], 1, mean)
+
+## Media ponderada, ja arredonda para cima e muda escala
+da$MF <- ceiling((da$MP * 0.6 + da$MA * 0.4) * 10)
+da$S <- "Ex"
+da$S[da$MF < 40] <- "Re"
+da$S[da$MF >= 70] <- "Ap"
 ```
 
+```{r, include=FALSE}
+table(da$S)
+prop.table(table(da$S))
+```
+
+Na tabela abaixo:
+
+- `A1`-`A5` são as notas das atividades do Moodle
+- `P1` e `P2` são as notas das provas
+- `MA` é a média das **quatro** maiores notas das atividades
+- `MP` é a média das duas provas
+- `MF` é a média final considerando $0.6 MP + 0.4 MA$. Esse valor foi
+  multiplicado por 10 e **já arredondado para cima**
+- `S` é a situação: `Re` (reprovado), `Ex` (exame), ou `Ap` (aprovado)
+
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(da)
+knitr::kable(da, digits = 2)
 ```
 
 ```{r, echo=FALSE}
-boxplot(da[, 2:ncol(da)], ylab = "Nota")
+par(mfrow = c(1, 2))
+boxplot(da[, A.col], ylab = "Nota", ylim = c(0, 10),
+        main = "Atividades")
+boxplot(da[, P.col], ylab = "Nota", ylim = c(0, 10),
+        main = "Provas")
+par(mfrow = c(1, 1))
 ```
