@@ -11,10 +11,8 @@ source("setup_knitr.R")
 
 [![Build Status](https://travis-ci.org/leg-ufpr/ce089.svg?branch=master)](https://travis-ci.org/leg-ufpr/ce089)
 
-<div class="alert alert-danger" role="alert">
-**ATENÇÃO:** as notas das atividades 4 e 5 estão disponíveis. A nota da
-P2 e a média final serão divulgadas nesta quinta-feira (05/12).
-</div>
+<!-- <div class="alert alert-danger" role="alert"> -->
+<!-- </div> -->
 
 # Detalhes da oferta da disciplina
 
