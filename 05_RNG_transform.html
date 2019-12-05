@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -316,6 +315,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -927,8 +927,8 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
 <a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean   median        uq      max</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  101.642  104.942  112.7126  112.902  118.3235  145.692</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2873.858 2983.064 3363.0577 3030.955 3106.7585 9712.453</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  104.884  107.631  114.4928  113.410  119.3245  136.885</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2803.394 2900.877 3267.2951 2963.698 3042.9445 9097.815</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#  neval cld</span></a>
 <a class="sourceLine" id="cb14-7" title="7"><span class="co">#    100  a </span></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="co">#    100   b</span></a></code></pre></div>
