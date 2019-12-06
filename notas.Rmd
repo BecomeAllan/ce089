@@ -40,11 +40,6 @@ da$S[da$MF < 40] <- "Re"
 da$S[da$MF >= 70] <- "Ap"
 ```
 
-```{r, include=FALSE}
-table(da$S)
-prop.table(table(da$S))
-```
-
 Na tabela abaixo:
 
 - `A1`-`A5` são as notas das atividades do Moodle
@@ -59,11 +54,14 @@ Na tabela abaixo:
 knitr::kable(da, digits = 2)
 ```
 
-```{r, echo=FALSE}
-par(mfrow = c(1, 2))
+```{r, echo=FALSE, out.width="100%"}
+tab <- table(da$S)
+layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE))
 boxplot(da[, A.col], ylab = "Nota", ylim = c(0, 10),
         main = "Atividades")
 boxplot(da[, P.col], ylab = "Nota", ylim = c(0, 10),
         main = "Provas")
-par(mfrow = c(1, 1))
+x <- barplot(prop.table(tab), ylim = c(0, 0.6),
+             ylab = "Proporção", main = "Situação")
+text(x = x, y = prop.table(tab), labels = tab, pos = 3)
 ```
