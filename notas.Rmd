@@ -38,7 +38,29 @@ da$MF <- ceiling((da$MP * 0.6 + da$MA * 0.4) * 10)
 da$S <- "Ex"
 da$S[da$MF < 40] <- "Re"
 da$S[da$MF >= 70] <- "Ap"
+
+##----------------------------------------------------------------------
+## Após o exame
+
+## Notas zero no exame voltam a ser NA
+da$Ex[da$Ex == 0] <- NA
+
+## Verifica se alguém que deveria fazer o exame não fez. Nesse caso a
+## nota deve mesmo ficar zero
+da$Ex[da$S == "Ex" & is.na(da$Ex)] <- 0
+
+## Calcula média final para quem fez exame
+## Copia médias finais
+da$MFE <- da$MF
+## Calcula média final para exame, já arredondando para cima
+da$MFE[da$S == "Ex"] <- ceiling(
+    x = (da$MF[da$S == "Ex"] + da$Ex[da$S == "Ex"])/2)
+
+## Define situação final
+da$SE <- "Ap"
+da$SE[da$MFE < 50] <- "Re"
 ```
+
 
 Na tabela abaixo:
 
@@ -49,14 +71,18 @@ Na tabela abaixo:
 - `MF` é a média final considerando $0.6 MP + 0.4 MA$. Esse valor foi
   multiplicado por 10 e **já arredondado para cima**
 - `S` é a situação: `Re` (reprovado), `Ex` (exame), ou `Ap` (aprovado)
+- `Ex` é a nota do exame
+- `MFE` é a média final após o exame $(MF + Ex)/2$
+- `SE` é a situação final após o exame
 
 ```{r, echo=FALSE, results='asis'}
-knitr::kable(da, digits = 2)
+## knitr::kable(da, digits = 2)
+knitr::kable(da[c(1:8, 10:13, 9, 14:15)], digits = 2)
 ```
 
 ```{r, echo=FALSE, out.width="100%"}
 tab <- table(da$S)
-layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE))
+layout(matrix(c(1, 2, 3, 3, 4, 5), ncol = 2, byrow = TRUE))
 boxplot(da[, A.col], ylab = "Nota", ylim = c(0, 10),
         main = "Atividades")
 boxplot(da[, P.col], ylab = "Nota", ylim = c(0, 10),
@@ -64,4 +90,13 @@ boxplot(da[, P.col], ylab = "Nota", ylim = c(0, 10),
 x <- barplot(prop.table(tab), ylim = c(0, 0.6),
              ylab = "Proporção", main = "Situação")
 text(x = x, y = prop.table(tab), labels = tab, pos = 3)
+## Após exame
+tabe <- table(da$SE)
+boxplot(da$Ex, xlab = "Nota do exame",
+        ylim = c(0, 100), horizontal = TRUE)
+x <- barplot(prop.table(tabe), ylim = c(0, 0.63),
+             ylab = "Proporção", xlab = "Situação final")
+text(x = x, y = prop.table(tabe), labels = tabe, pos = 3)
+mtext("Após o exame", side = 3, outer = TRUE,
+      line = -40, font = 2)
 ```
