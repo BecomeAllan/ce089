@@ -72,7 +72,8 @@ Na tabela abaixo:
   multiplicado por 10 e **já arredondado para cima**
 - `S` é a situação: `Re` (reprovado), `Ex` (exame), ou `Ap` (aprovado)
 - `Ex` é a nota do exame
-- `MFE` é a média final após o exame $(MF + Ex)/2$
+- `MFE` é a média final após o exame $(MF + Ex)/2$, **já arredondada
+  para cima**
 - `SE` é a situação final após o exame
 
 ```{r, echo=FALSE, results='asis'}
