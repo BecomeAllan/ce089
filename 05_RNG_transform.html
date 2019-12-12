@@ -927,8 +927,8 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
 <a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min        lq      mean    median        uq      max</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)  102.713  105.8735  115.4254  115.0595  121.5315  165.975</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2885.286 2988.9975 3418.3494 3061.1625 3159.0245 9931.133</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)   90.225   98.3485  105.8564  104.8855  112.1375  138.713</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2341.887 2701.7385 3058.0960 2797.7290 2904.9855 8508.692</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#  neval cld</span></a>
 <a class="sourceLine" id="cb14-7" title="7"><span class="co">#    100  a </span></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="co">#    100   b</span></a></code></pre></div>

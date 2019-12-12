@@ -311,6 +311,9 @@ $(document).ready(function () {
 <li><code>MP</code> é a média das duas provas</li>
 <li><code>MF</code> é a média final considerando <span class="math inline">\(0.6 MP + 0.4 MA\)</span>. Esse valor foi multiplicado por 10 e <strong>já arredondado para cima</strong></li>
 <li><code>S</code> é a situação: <code>Re</code> (reprovado), <code>Ex</code> (exame), ou <code>Ap</code> (aprovado)</li>
+<li><code>Ex</code> é a nota do exame</li>
+<li><code>MFE</code> é a média final após o exame <span class="math inline">\((MF + Ex)/2\)</span></li>
+<li><code>SE</code> é a situação final após o exame</li>
 </ul>
 <table>
 <thead>
@@ -327,6 +330,9 @@ $(document).ready(function () {
 <th align="right">MP</th>
 <th align="right">MF</th>
 <th align="left">S</th>
+<th align="right">Ex</th>
+<th align="right">MFE</th>
+<th align="left">SE</th>
 </tr>
 </thead>
 <tbody>
@@ -343,6 +349,9 @@ $(document).ready(function () {
 <td align="right">7.15</td>
 <td align="right">70</td>
 <td align="left">Ap</td>
+<td align="right">NA</td>
+<td align="right">70</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20124663</td>
@@ -355,6 +364,9 @@ $(document).ready(function () {
 <td align="right">1.5</td>
 <td align="right">7.25</td>
 <td align="right">1.30</td>
+<td align="right">37</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">37</td>
 <td align="left">Re</td>
 </tr>
@@ -371,6 +383,9 @@ $(document).ready(function () {
 <td align="right">5.10</td>
 <td align="right">52</td>
 <td align="left">Ex</td>
+<td align="right">27</td>
+<td align="right">40</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20124680</td>
@@ -383,6 +398,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">1.44</td>
 <td align="right">0.00</td>
+<td align="right">6</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">6</td>
 <td align="left">Re</td>
 </tr>
@@ -399,6 +417,9 @@ $(document).ready(function () {
 <td align="right">2.00</td>
 <td align="right">37</td>
 <td align="left">Re</td>
+<td align="right">NA</td>
+<td align="right">37</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20137523</td>
@@ -413,6 +434,9 @@ $(document).ready(function () {
 <td align="right">4.00</td>
 <td align="right">50</td>
 <td align="left">Ex</td>
+<td align="right">75</td>
+<td align="right">63</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20137542</td>
@@ -427,6 +451,9 @@ $(document).ready(function () {
 <td align="right">3.85</td>
 <td align="right">43</td>
 <td align="left">Ex</td>
+<td align="right">64</td>
+<td align="right">54</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20149085</td>
@@ -439,6 +466,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">6.75</td>
 <td align="right">0.65</td>
+<td align="right">31</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">31</td>
 <td align="left">Re</td>
 </tr>
@@ -455,6 +485,9 @@ $(document).ready(function () {
 <td align="right">0.80</td>
 <td align="right">14</td>
 <td align="left">Re</td>
+<td align="right">NA</td>
+<td align="right">14</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20149099</td>
@@ -469,6 +502,9 @@ $(document).ready(function () {
 <td align="right">2.50</td>
 <td align="right">44</td>
 <td align="left">Ex</td>
+<td align="right">69</td>
+<td align="right">57</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20149119</td>
@@ -483,6 +519,9 @@ $(document).ready(function () {
 <td align="right">3.55</td>
 <td align="right">51</td>
 <td align="left">Ex</td>
+<td align="right">47</td>
+<td align="right">49</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20149122</td>
@@ -497,6 +536,9 @@ $(document).ready(function () {
 <td align="right">5.10</td>
 <td align="right">56</td>
 <td align="left">Ex</td>
+<td align="right">67</td>
+<td align="right">62</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20149150</td>
@@ -511,6 +553,9 @@ $(document).ready(function () {
 <td align="right">5.25</td>
 <td align="right">62</td>
 <td align="left">Ex</td>
+<td align="right">78</td>
+<td align="right">70</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20149158</td>
@@ -523,6 +568,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">0.00</td>
 <td align="right">0.00</td>
+<td align="right">0</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">0</td>
 <td align="left">Re</td>
 </tr>
@@ -539,6 +587,9 @@ $(document).ready(function () {
 <td align="right">4.95</td>
 <td align="right">57</td>
 <td align="left">Ex</td>
+<td align="right">44</td>
+<td align="right">51</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20159826</td>
@@ -551,6 +602,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">1.89</td>
 <td align="right">0.70</td>
+<td align="right">12</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">12</td>
 <td align="left">Re</td>
 </tr>
@@ -567,6 +621,9 @@ $(document).ready(function () {
 <td align="right">3.65</td>
 <td align="right">49</td>
 <td align="left">Ex</td>
+<td align="right">51</td>
+<td align="right">50</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20160210</td>
@@ -579,6 +636,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">7.18</td>
 <td align="right">0.85</td>
+<td align="right">34</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">34</td>
 <td align="left">Re</td>
 </tr>
@@ -595,6 +655,9 @@ $(document).ready(function () {
 <td align="right">5.00</td>
 <td align="right">62</td>
 <td align="left">Ex</td>
+<td align="right">34</td>
+<td align="right">48</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20160225</td>
@@ -609,6 +672,9 @@ $(document).ready(function () {
 <td align="right">4.50</td>
 <td align="right">59</td>
 <td align="left">Ex</td>
+<td align="right">45</td>
+<td align="right">52</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20160231</td>
@@ -623,6 +689,9 @@ $(document).ready(function () {
 <td align="right">1.90</td>
 <td align="right">40</td>
 <td align="left">Ex</td>
+<td align="right">0</td>
+<td align="right">20</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20160237</td>
@@ -637,6 +706,9 @@ $(document).ready(function () {
 <td align="right">8.05</td>
 <td align="right">64</td>
 <td align="left">Ex</td>
+<td align="right">67</td>
+<td align="right">66</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20160242</td>
@@ -651,6 +723,9 @@ $(document).ready(function () {
 <td align="right">6.00</td>
 <td align="right">66</td>
 <td align="left">Ex</td>
+<td align="right">75</td>
+<td align="right">71</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20170371</td>
@@ -665,6 +740,9 @@ $(document).ready(function () {
 <td align="right">5.40</td>
 <td align="right">64</td>
 <td align="left">Ex</td>
+<td align="right">56</td>
+<td align="right">60</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20170373</td>
@@ -677,6 +755,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">0.00</td>
 <td align="right">0.00</td>
+<td align="right">0</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">0</td>
 <td align="left">Re</td>
 </tr>
@@ -693,6 +774,9 @@ $(document).ready(function () {
 <td align="right">3.90</td>
 <td align="right">54</td>
 <td align="left">Ex</td>
+<td align="right">31</td>
+<td align="right">43</td>
+<td align="left">Re</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20170386</td>
@@ -705,6 +789,9 @@ $(document).ready(function () {
 <td align="right">9.0</td>
 <td align="right">8.85</td>
 <td align="right">8.70</td>
+<td align="right">88</td>
+<td align="left">Ap</td>
+<td align="right">NA</td>
 <td align="right">88</td>
 <td align="left">Ap</td>
 </tr>
@@ -721,6 +808,9 @@ $(document).ready(function () {
 <td align="right">5.80</td>
 <td align="right">65</td>
 <td align="left">Ex</td>
+<td align="right">71</td>
+<td align="right">68</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20170392</td>
@@ -733,6 +823,9 @@ $(document).ready(function () {
 <td align="right">5.5</td>
 <td align="right">8.21</td>
 <td align="right">7.05</td>
+<td align="right">76</td>
+<td align="left">Ap</td>
+<td align="right">NA</td>
 <td align="right">76</td>
 <td align="left">Ap</td>
 </tr>
@@ -749,6 +842,9 @@ $(document).ready(function () {
 <td align="right">8.15</td>
 <td align="right">81</td>
 <td align="left">Ap</td>
+<td align="right">NA</td>
+<td align="right">81</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20170396</td>
@@ -761,6 +857,9 @@ $(document).ready(function () {
 <td align="right">7.5</td>
 <td align="right">8.04</td>
 <td align="right">7.75</td>
+<td align="right">79</td>
+<td align="left">Ap</td>
+<td align="right">NA</td>
 <td align="right">79</td>
 <td align="left">Ap</td>
 </tr>
@@ -777,6 +876,9 @@ $(document).ready(function () {
 <td align="right">6.25</td>
 <td align="right">70</td>
 <td align="left">Ap</td>
+<td align="right">NA</td>
+<td align="right">70</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="odd">
 <td align="left">GRR20170415</td>
@@ -791,6 +893,9 @@ $(document).ready(function () {
 <td align="right">2.15</td>
 <td align="right">44</td>
 <td align="left">Ex</td>
+<td align="right">33</td>
+<td align="right">39</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20170417</td>
@@ -803,6 +908,9 @@ $(document).ready(function () {
 <td align="right">8.0</td>
 <td align="right">9.16</td>
 <td align="right">8.70</td>
+<td align="right">89</td>
+<td align="left">Ap</td>
+<td align="right">NA</td>
 <td align="right">89</td>
 <td align="left">Ap</td>
 </tr>
@@ -819,6 +927,9 @@ $(document).ready(function () {
 <td align="right">4.60</td>
 <td align="right">56</td>
 <td align="left">Ex</td>
+<td align="right">62</td>
+<td align="right">59</td>
+<td align="left">Ap</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20170453</td>
@@ -831,6 +942,9 @@ $(document).ready(function () {
 <td align="right">0.0</td>
 <td align="right">0.00</td>
 <td align="right">0.00</td>
+<td align="right">0</td>
+<td align="left">Re</td>
+<td align="right">NA</td>
 <td align="right">0</td>
 <td align="left">Re</td>
 </tr>
@@ -847,6 +961,9 @@ $(document).ready(function () {
 <td align="right">1.20</td>
 <td align="right">27</td>
 <td align="left">Re</td>
+<td align="right">NA</td>
+<td align="right">27</td>
+<td align="left">Re</td>
 </tr>
 <tr class="even">
 <td align="left">GRR20180797</td>
@@ -859,6 +976,9 @@ $(document).ready(function () {
 <td align="right">7.2</td>
 <td align="right">7.83</td>
 <td align="right">8.20</td>
+<td align="right">81</td>
+<td align="left">Ap</td>
+<td align="right">NA</td>
 <td align="right">81</td>
 <td align="left">Ap</td>
 </tr>
