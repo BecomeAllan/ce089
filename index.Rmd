@@ -17,29 +17,41 @@ source("setup_knitr.R")
 # Detalhes da oferta da disciplina
 
 - **Curso:** Estatística
-- **Período:** segundo semestre de 2019
-- **Professores Responsáveis:**
+- **Período:** segundo semestre de 2020 (período especial, iniciado em
+  maio de 2021)
+- **Professor Responsável:**
   - [Fernando de Pol Mayer][], [LEG][]/DEST/UFPR
-  - [Walmes Marques Zeviani][], [LEG][]/DEST/UFPR
+  <!-- - [Walmes Marques Zeviani][], [LEG][]/DEST/UFPR -->
 - **Horários e Locais:**
-  - Terça, 20:40 - 22:10h, **Sala DEST Multimídia**
-  - Sexta, 19:00 - 20:30h, **Sala DEST Multimídia**
-- **Horários de atendimento dos professores:**
-    - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários
-      podem ser agendados previamente por email.
-- **Frequência**: de acordo com as normas da Universidade, mínimo de 75%
+  - Quarta, 21:00 - 22:30h, **Teams**
+  - Sexta, 19:00 - 20:30h, **Teams**
+<!-- - **Horários de atendimento dos professores:** -->
+<!--     - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários -->
+<!--       podem ser agendados previamente por email. -->
+- **Frequência**: A frequência será computada com base nas atividades
+(enquetes) assíncronas (10 enquetes). Será calculada a frequência pela
+proporção de envios destas atividades até data e hora estabelecidas.
 - **Avaliação**:
-  - (60%) Duas provas escritas (30% cada uma)
-  - (20%) Avaliações esporádicas
-  - (20%) Apresentação de trabalho
-- **Oferta anterior:** [2018/2](http://leg.ufpr.br/~walmes/ensino/EC2/)
+  - A nota na disciplina será formada pelo desempenho médio (0 – 100) na
+    realização de 5 avaliações
+  - Para mitigar eventuais problemas de conexão e ambientação, a menor
+    nota dentre as 5 avaliações será desconsiderada para o cálculo do
+    desempenho médio.
+  - Critérios para aprovação:
+    - Frequência de pelo menos 75% e nota igual ou acima de 70 →
+    Aprovação sem Exame Final.
+    - Frequência de pelo menos 75% e Nota entre 40 e 70 → Exame Final.
+    - Média entre Nota e Exame Final igual ou acima de 50 → Aprovação.
+    - Nota inferior a 40 ou presença inferior a 75% → Reprovação.
+    - Média entre Nota e Exame Final inferior a 50 → Reprovação.
+<!-- - **Oferta anterior:** [2018/2](http://leg.ufpr.br/~walmes/ensino/EC2/) -->
 - **Moodle:** [Página no
-  Moodle](https://moodle.c3sl.ufpr.br/course/view.php?id=282) da
+  Moodle](https://ufprvirtual.ufpr.br/course/view.php?id=18647) da
   dsiciplina
-- **Datas importantes:** De acordo com a [Resolução 64/18 - CEPE][]:
-    - **05/08**: Início do semestre letivo
-    - **04/12**: Final do semestre letivo
-    - **09/12-14/12**: Período de exames
+- **Datas importantes:**
+    - **19/05/21**: Início das aulas
+    - **30/07/21**: Final das aulas
+    - **13/08/21**: Exame final
 
 # Programa/objetivos da disciplina
 
@@ -49,7 +61,7 @@ source("setup_knitr.R")
    - Vetorização
    - *Error/exception handling*
    - *Benchmarking* e *profiling*
-   - R e C++
+   <!-- - R e C++ -->
    - Documentos dinâmicos
 2. Métodos para geração de números aleatórios
    - Geração de números uniformes
@@ -64,9 +76,9 @@ source("setup_knitr.R")
    - Aplicação de métodos de reamostragem
    - Testes de permutação
    - Métodos de Monte Carlo via Cadeias de Markov (MCMC)
-4. Otimização
-   - Métodos numéricos no R
-   - Métodos de otimização
+<!-- 4. Otimização -->
+<!--    - Métodos numéricos no R -->
+<!--    - Métodos de otimização -->
 
 # Ementa
 
