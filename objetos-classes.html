@@ -20,6 +20,15 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -36,8 +45,24 @@
  gtag('config', 'UA-66454501-13');
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
@@ -118,39 +143,9 @@ code span.wa { color: #008000; font-weight: bold; } /* Warning */
   }
 })();
 </script>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -160,10 +155,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -180,40 +171,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -241,7 +205,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -253,7 +217,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -264,10 +228,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -279,7 +256,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -411,7 +387,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -463,7 +439,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -548,9 +524,9 @@ div.tocify {
 # [26] &quot;survival&quot;   &quot;tcltk&quot;      &quot;tools&quot;      &quot;utils&quot;</code></pre>
 <p>No entanto, nem todos são carregados na inicialização do R. Por padrão, apenas os seguintes pacotes são carregados automaticamente:</p>
 <pre><code>#  [1] &quot;survival&quot;     &quot;boot&quot;         &quot;bootstrap&quot;    &quot;plyr&quot;         &quot;latticeExtra&quot;
-#  [6] &quot;RColorBrewer&quot; &quot;lattice&quot;      &quot;expm&quot;         &quot;Matrix&quot;       &quot;knitr&quot;       
-# [11] &quot;stats&quot;        &quot;graphics&quot;     &quot;grDevices&quot;    &quot;utils&quot;        &quot;datasets&quot;    
-# [16] &quot;methods&quot;      &quot;base&quot;</code></pre>
+#  [6] &quot;lattice&quot;      &quot;expm&quot;         &quot;Matrix&quot;       &quot;knitr&quot;        &quot;stats&quot;       
+# [11] &quot;graphics&quot;     &quot;grDevices&quot;    &quot;datasets&quot;     &quot;utils&quot;        &quot;methods&quot;     
+# [16] &quot;base&quot;</code></pre>
 <p>Para listar os pacotes carregados, use a função</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">search</span>()</a></code></pre></div>
 <p>Note que o primeiro elemento, <code>.GlobalEnv</code>, será sempre carregado pois ele é o <em>ambiente</em> que irá armazenar (e deixar disponível) os objetos criados pelo usuário. Para carregar um pacote instalado, usamos a função <code>library()</code>, por exemplo</p>
@@ -1141,7 +1117,7 @@ div.tocify {
 <a class="sourceLine" id="cb78-5" title="5"><span class="co"># [2,]    2    5    8   11</span></a>
 <a class="sourceLine" id="cb78-6" title="6"><span class="co"># [3,]    3    6    9   12</span></a>
 <a class="sourceLine" id="cb78-7" title="7"><span class="kw">class</span>(matriz)</a>
-<a class="sourceLine" id="cb78-8" title="8"><span class="co"># [1] &quot;matrix&quot;</span></a>
+<a class="sourceLine" id="cb78-8" title="8"><span class="co"># [1] &quot;matrix&quot; &quot;array&quot;</span></a>
 <a class="sourceLine" id="cb78-9" title="9"><span class="kw">typeof</span>(matriz)</a>
 <a class="sourceLine" id="cb78-10" title="10"><span class="co"># [1] &quot;integer&quot;</span></a></code></pre></div>
 <p>Alterando a ordem de preenchimento da matriz (por linhas):</p>
@@ -1181,7 +1157,7 @@ div.tocify {
 <a class="sourceLine" id="cb83-11" title="11"><span class="co"># [1,]    1    3    5    7    9</span></a>
 <a class="sourceLine" id="cb83-12" title="12"><span class="co"># [2,]    2    4    6    8   10</span></a>
 <a class="sourceLine" id="cb83-13" title="13"><span class="kw">class</span>(m)</a>
-<a class="sourceLine" id="cb83-14" title="14"><span class="co"># [1] &quot;matrix&quot;</span></a>
+<a class="sourceLine" id="cb83-14" title="14"><span class="co"># [1] &quot;matrix&quot; &quot;array&quot;</span></a>
 <a class="sourceLine" id="cb83-15" title="15"><span class="kw">typeof</span>(m)</a>
 <a class="sourceLine" id="cb83-16" title="16"><span class="co"># [1] &quot;integer&quot;</span></a></code></pre></div>
 <div id="operações-matemáticas-em-matrizes" class="section level3">
@@ -1330,8 +1306,8 @@ div.tocify {
 <p>Veja os detalhes com <code>str()</code></p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1"><span class="kw">str</span>(da)</a>
 <a class="sourceLine" id="cb93-2" title="2"><span class="co"># &#39;data.frame&#39;: 3 obs. of  3 variables:</span></a>
-<a class="sourceLine" id="cb93-3" title="3"><span class="co">#  $ nome : Factor w/ 3 levels &quot;João&quot;,&quot;José&quot;,..: 1 2 3</span></a>
-<a class="sourceLine" id="cb93-4" title="4"><span class="co">#  $ sexo : Factor w/ 2 levels &quot;F&quot;,&quot;M&quot;: 2 2 1</span></a>
+<a class="sourceLine" id="cb93-3" title="3"><span class="co">#  $ nome : chr  &quot;João&quot; &quot;José&quot; &quot;Maria&quot;</span></a>
+<a class="sourceLine" id="cb93-4" title="4"><span class="co">#  $ sexo : chr  &quot;M&quot; &quot;M&quot; &quot;F&quot;</span></a>
 <a class="sourceLine" id="cb93-5" title="5"><span class="co">#  $ idade: num  32 34 30</span></a></code></pre></div>
 <p>Note que a função <code>data.frame()</code> converte caracteres para fator automaticamente. Para que isso não aconteça, use o argumento <code>stringsAsFactors = FALSE</code></p>
 <div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" title="1">da &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">nome =</span> <span class="kw">c</span>(<span class="st">&quot;João&quot;</span>, <span class="st">&quot;José&quot;</span>, <span class="st">&quot;Maria&quot;</span>),</a>
@@ -1582,11 +1558,11 @@ div.tocify {
 <p>Nesta sessão vamos abordar como funcionam os métodos como definidos pelo sistema S3, por ser o mais utilizado na prática para se criar novas funções no R. Para saber mais sobre os outros métodos, consulte o livro <a href="http://adv-r.had.co.nz/OO-essentials.html">Advanced R</a>.</p>
 <p>Vamos entender como uma função genérica pode ser criada através de um exemplo. Usando a função <code>methods()</code>, podemos verificar quais métodos estão disponíveis para uma determinada função, por exemplo, para a função <code>mean()</code>:</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
-<a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
-<a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [7] mean.difftime            mean.POSIXct             mean.POSIXlt            </span></a>
-<a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.quosure*            mean.units*              mean.yearmon*           </span></a>
-<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.yearqtr*            mean.zoo*               </span></a>
+<a class="sourceLine" id="cb106-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,Raster-method      </span></a>
+<a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               </span></a>
+<a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [7] mean.default             mean.difftime            mean.POSIXct            </span></a>
+<a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.units*             </span></a>
+<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.yearmon*            mean.yearqtr*            mean.zoo*               </span></a>
 <a class="sourceLine" id="cb106-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
@@ -1610,7 +1586,7 @@ div.tocify {
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
 <a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xddb7b20&gt;</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0x3e78ea0&gt;</span></a>
 <a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
 <a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1639,7 +1615,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x58b4520&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x4823a70&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1650,15 +1626,16 @@ div.tocify {
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">mean.matrix &lt;-<span class="st"> </span><span class="cf">function</span>(x, ...) <span class="kw">rowMeans</span>(x)</a></code></pre></div>
 <p>Uma função método é sempre definida dessa forma: <code>&lt;funçãogenérica&gt;.&lt;classe&gt;</code>. Agora podemos ver novamente os métodos disponíveis para a função <code>mean()</code></p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">methods</span>(mean)</a>
-<a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,sparseMatrix-method</span></a>
-<a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [4] mean,sparseVector-method mean.Date                mean.default            </span></a>
-<a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [7] mean.difftime            mean.matrix              mean.POSIXct            </span></a>
-<a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.units*             </span></a>
-<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.yearmon*            mean.yearqtr*            mean.zoo*               </span></a>
-<a class="sourceLine" id="cb115-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb115-2" title="2"><span class="co">#  [1] mean,ANY-method          mean,Matrix-method       mean,Raster-method      </span></a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               </span></a>
+<a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [7] mean.default             mean.difftime            mean.matrix             </span></a>
+<a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXct             mean.POSIXlt             mean.quosure*           </span></a>
+<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.units*              mean.yearmon*            mean.yearqtr*           </span></a>
+<a class="sourceLine" id="cb115-7" title="7"><span class="co"># [16] mean.zoo*               </span></a>
+<a class="sourceLine" id="cb115-8" title="8"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
-<a class="sourceLine" id="cb116-2" title="2"><span class="co"># [1] &quot;matrix&quot;</span></a>
+<a class="sourceLine" id="cb116-2" title="2"><span class="co"># [1] &quot;matrix&quot; &quot;array&quot;</span></a>
 <a class="sourceLine" id="cb116-3" title="3"><span class="kw">mean</span>(mat)</a>
 <a class="sourceLine" id="cb116-4" title="4"><span class="co"># [1]  0.09544402  0.12852087  0.06229588 -0.01993810  0.23591872</span></a></code></pre></div>
 <p>Esse exemplo ilustra como é simples criar funções método para diferentes classes de objetos. Poderíamos fazer o mesmo para objetos das classes <code>data.frame</code> e <code>list</code></p>
@@ -1702,15 +1679,15 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Thursday, 12 December, 2019, 02:01
+<pre><code># Wednesday, 19 May, 2021, 21:51
 # ----------------------------------------
-# R version 3.6.1 (2017-01-27)
+# R version 4.0.2 (2020-06-22)
 # Platform: x86_64-pc-linux-gnu (64-bit)
 # Running under: Ubuntu 16.04.6 LTS
 # 
 # Matrix products: default
-# BLAS:   /home/travis/R-bin/lib/R/lib/libRblas.so
-# LAPACK: /home/travis/R-bin/lib/R/lib/libRlapack.so
+# BLAS:   /usr/lib/openblas-base/libblas.so.3
+# LAPACK: /usr/lib/libopenblasp-r0.2.18.so
 # 
 # locale:
 #  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -1721,32 +1698,34 @@ div.tocify {
 # [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 # 
 # attached base packages:
-# [1] stats     graphics  grDevices utils     datasets  methods   base     
+# [1] stats     graphics  grDevices datasets  utils     methods   base     
 # 
 # other attached packages:
-#  [1] perm_1.0-0.0        coin_1.3-1          survival_2.44-1.1  
-#  [4] boot_1.3-22         bootstrap_2019.6    plyr_1.8.5         
-#  [7] latticeExtra_0.6-28 RColorBrewer_1.1-2  lattice_0.20-38    
-# [10] expm_0.999-4        Matrix_1.2-17       knitr_1.26         
+#  [1] perm_1.0-0.0        coin_1.4-1          survival_3.1-12    
+#  [4] boot_1.3-25         bootstrap_2019.6    plyr_1.8.6         
+#  [7] latticeExtra_0.6-29 lattice_0.20-41     expm_0.999-6       
+# [10] Matrix_1.2-18       knitr_1.33         
 # 
 # loaded via a namespace (and not attached):
-#  [1] shape_1.4.4          gtools_3.8.1         zoo_1.8-6           
-#  [4] modeltools_0.2-22    diagram_1.6.4        xfun_0.11           
-#  [7] sf_0.8-0             splines_3.6.1        htmltools_0.4.0     
-# [10] stats4_3.6.1         yaml_2.2.0           rlang_0.4.2         
-# [13] e1071_1.7-3          DBI_1.0.0            sp_1.3-2            
-# [16] matrixStats_0.55.0   multcomp_1.4-11      stringr_1.4.0       
-# [19] mvtnorm_1.0-11       coda_0.19-3          codetools_0.2-16    
-# [22] evaluate_0.14        parallel_3.6.1       class_7.3-15        
-# [25] spdep_1.1-3          highr_0.8            TH.data_1.0-10      
-# [28] Rcpp_1.0.3           KernSmooth_2.23-15   classInt_0.4-2      
-# [31] gdata_2.18.0         deldir_0.1-23        microbenchmark_1.4-7
-# [34] digest_0.6.23        gmodels_2.18.1       stringi_1.4.3       
-# [37] animation_2.6        grid_3.6.1           LearnBayes_2.15.1   
-# [40] tools_3.6.1          sandwich_2.5-1       magrittr_1.5        
-# [43] MASS_7.3-51.4        libcoin_1.0-5        spData_0.3.2        
-# [46] rmarkdown_1.18.7     nlme_3.1-140         units_0.6-5         
-# [49] compiler_3.6.1</code></pre>
+#  [1] shape_1.4.6          gtools_3.8.2         zoo_1.8-9           
+#  [4] modeltools_0.2-23    diagram_1.6.5        xfun_0.23           
+#  [7] sf_0.9-8             splines_4.0.2        htmltools_0.5.1.1   
+# [10] stats4_4.0.2         yaml_2.2.1           rlang_0.4.11        
+# [13] e1071_1.7-6          DBI_1.1.1            sp_1.4-5            
+# [16] RColorBrewer_1.1-2   matrixStats_0.58.0   multcomp_1.4-17     
+# [19] jpeg_0.1-8.1         stringr_1.4.0        raster_3.4-10       
+# [22] mvtnorm_1.1-1        coda_0.19-4          codetools_0.2-16    
+# [25] evaluate_0.14        class_7.3-17         parallel_4.0.2      
+# [28] spdep_1.1-7          highr_0.9            TH.data_1.0-10      
+# [31] Rcpp_1.0.6           KernSmooth_2.23-17   classInt_0.4-3      
+# [34] renv_0.13.2-38       gdata_2.18.0         deldir_0.2-10       
+# [37] microbenchmark_1.4-7 png_0.1-7            digest_0.6.27       
+# [40] gmodels_2.18.1       stringi_1.6.2        animation_2.6       
+# [43] grid_4.0.2           LearnBayes_2.15.1    tools_4.0.2         
+# [46] sandwich_3.0-1       magrittr_2.0.1       proxy_0.4-25        
+# [49] MASS_7.3-51.6        libcoin_1.0-8        spData_0.3.8        
+# [52] rmarkdown_2.8.3      nlme_3.1-148         units_0.7-1         
+# [55] compiler_4.0.2</code></pre>
 </div>
 
 <center>
@@ -1769,7 +1748,7 @@ div.tocify {
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -1787,7 +1766,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -1796,6 +1775,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
@@ -1808,7 +1790,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
