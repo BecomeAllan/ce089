@@ -1,6 +1,10 @@
 language: r
+r:
+  - 4.1.0
 cache: packages
 pandoc_version: 2.5
+
+latex: false
 
 apt_packages:
   - libmagick++-dev
