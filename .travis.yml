@@ -13,6 +13,15 @@ apt_packages:
   - libgdal1-dev
   - libproj-dev
 
+cache:
+  directories:
+  - $HOME/.local/share/renv
+  - $TRAVIS_BUILD_DIR/renv/library
+
+install:
+  - Rscript -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv')"
+  - Rscript -e "renv::restore()"
+
 before_script:
   - chmod +x ./_build.sh
   - chmod +x ./_deploy.sh
