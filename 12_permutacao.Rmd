@@ -141,8 +141,8 @@ t.test(vals ~ id, data = da, var.equal = TRUE)$p.value
 
 ## Usando pacotes
 library(coin)
-oneway_test(vals ~ id, data = da)
-oneway_test(vals ~ id, data = da,
+oneway_test(vals ~ factor(id), data = da)
+oneway_test(vals ~ factor(id), data = da,
             distribution = approximate(nresample = 10000))
 library(perm)
 permTS(vals ~ id, data = da)
@@ -167,7 +167,7 @@ abline(v = obsdiff, col = 2)
 ## P-valor do teste.
 2 * sum(xydiff >= obsdiff)/length(xydiff)
 t.test(vals ~ id, data = da, var.equal = TRUE)$p.value
-coin::oneway_test(vals ~ id, data = da)
+coin::oneway_test(vals ~ factor(id), data = da)
 perm::permTS(vals ~ id, data = da)
 ```
 
