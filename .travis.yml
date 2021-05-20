@@ -10,7 +10,7 @@ latex: false
 before_install:
   - sudo add-apt-repository -y ppa:cran/imagemagick
   - sudo apt-get -q update
-  - sudo apt-get -y libmagick++-dev
+  - sudo apt-get install -y libmagick++-dev
 
 apt_packages:
   # - libmagick++-dev
