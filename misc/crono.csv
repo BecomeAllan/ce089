@@ -1,0 +1,24 @@
+Semana,Data,Dia,Hora,Item,Conteúdo,Avaliação
+1,19/05/21,Qua,21:00 - 22:30,1,Apresentação da disciplina. Introdução à Estatística Computacional II.,
+1,21/05/21,Sex,19:00 - 20:30,2,Revisão de conceitos fundamentais da linguagem R.,
+2,26/05/21,Qua,21:00 - 22:30,3,"Técnicas de programação: benchmarking, profiling, debugging e error handling.",
+2,28/05/21,Sex,19:00 - 20:30,4,Geração de números aleatórios uniformes.,"Itens 2, 3"
+,02/06/21,Qua,,,Período sem atividades didáticas,
+,04/06/21,Sex,,,Período sem atividades didáticas,
+3,09/06/21,Qua,21:00 - 22:30,5,Geração de números aleatórios não uniformes: método da transformação integral de probabilidade.,
+3,11/06/21,Sex,19:00 - 20:30,6,Geração de números aleatórios não uniformes: método de aceitação e rejeição.,
+4,16/06/21,Qua,21:00 - 22:30,7,Geração de números aleatórios não uniformes: método de relação entre variáveis.,
+4,18/06/21,Sex,19:00 - 20:30,8,Integração de Monte Carlo.,"Itens 4, 5, 6, 7"
+5,23/06/21,Qua,21:00 - 22:30,9,Distribuições aproximadas baseadas em simulação de Monte Carlo.,
+5,25/06/21,Sex,19:00 - 20:30,10,MCMC: Metropolis random walk e amostrador independente.,
+6,30/06/21,Qua,21:00 - 22:30,11,MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings.,
+6,02/07/21,Sex,19:00 - 20:30,12,Métodos de Monte Carlo para inferência estatística: estimação.,"Itens 8, 9, 10, 11"
+7,07/07/21,Qua,21:00 - 22:30,13,Propriedades de estimadores pontuais por simulação de Monte Carlo. Taxa empírica do erro tipo I.,
+7,09/07/21,Sex,19:00 - 20:30,14,Testes de hipótese via simulação de Monte Carlo.,
+8,14/07/21,Qua,21:00 - 22:30,15,Métodos de reamostragem: bootstrap.,
+8,16/07/21,Sex,19:00 - 20:30,16,Intervalos de confiança via bootstrap.,"Itens 12, 13, 14"
+9,21/07/21,Qua,21:00 - 22:30,17,Jackknife e validação cruzada.,
+9,23/07/21,Sex,19:00 - 20:30,18,Testes de permutação.,
+10,28/07/21,Qua,,,Período sem atividades didáticas,
+10,30/07/21,Sex,19:00 - 20:30,,Período sem atividades didáticas,"Itens 15, 16, 17, 18"
+,13/08/21,Sex,19:00 - 20:30,,Exame final,Itens 2 a 18

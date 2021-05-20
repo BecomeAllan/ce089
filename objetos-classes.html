@@ -429,7 +429,7 @@ div.tocify {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leg-ufpr/ce089">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     GitHub
   </a>
@@ -523,10 +523,10 @@ div.tocify {
 # [21] &quot;rpart&quot;      &quot;spatial&quot;    &quot;splines&quot;    &quot;stats&quot;      &quot;stats4&quot;    
 # [26] &quot;survival&quot;   &quot;tcltk&quot;      &quot;tools&quot;      &quot;utils&quot;</code></pre>
 <p>No entanto, nem todos são carregados na inicialização do R. Por padrão, apenas os seguintes pacotes são carregados automaticamente:</p>
-<pre><code>#  [1] &quot;survival&quot;     &quot;boot&quot;         &quot;bootstrap&quot;    &quot;plyr&quot;         &quot;latticeExtra&quot;
-#  [6] &quot;lattice&quot;      &quot;expm&quot;         &quot;Matrix&quot;       &quot;knitr&quot;        &quot;stats&quot;       
-# [11] &quot;graphics&quot;     &quot;grDevices&quot;    &quot;datasets&quot;     &quot;utils&quot;        &quot;methods&quot;     
-# [16] &quot;base&quot;</code></pre>
+<pre><code>#  [1] &quot;kableExtra&quot;   &quot;perm&quot;         &quot;coin&quot;         &quot;survival&quot;     &quot;boot&quot;        
+#  [6] &quot;bootstrap&quot;    &quot;plyr&quot;         &quot;latticeExtra&quot; &quot;lattice&quot;      &quot;expm&quot;        
+# [11] &quot;Matrix&quot;       &quot;knitr&quot;        &quot;stats&quot;        &quot;graphics&quot;     &quot;grDevices&quot;   
+# [16] &quot;datasets&quot;     &quot;utils&quot;        &quot;methods&quot;      &quot;base&quot;</code></pre>
 <p>Para listar os pacotes carregados, use a função</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">search</span>()</a></code></pre></div>
 <p>Note que o primeiro elemento, <code>.GlobalEnv</code>, será sempre carregado pois ele é o <em>ambiente</em> que irá armazenar (e deixar disponível) os objetos criados pelo usuário. Para carregar um pacote instalado, usamos a função <code>library()</code>, por exemplo</p>
@@ -1562,8 +1562,9 @@ div.tocify {
 <a class="sourceLine" id="cb106-3" title="3"><span class="co">#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               </span></a>
 <a class="sourceLine" id="cb106-4" title="4"><span class="co">#  [7] mean.default             mean.difftime            mean.POSIXct            </span></a>
 <a class="sourceLine" id="cb106-5" title="5"><span class="co"># [10] mean.POSIXlt             mean.quosure*            mean.units*             </span></a>
-<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.yearmon*            mean.yearqtr*            mean.zoo*               </span></a>
-<a class="sourceLine" id="cb106-7" title="7"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<a class="sourceLine" id="cb106-6" title="6"><span class="co"># [13] mean.vctrs_vctr*         mean.yearmon*            mean.yearqtr*           </span></a>
+<a class="sourceLine" id="cb106-7" title="7"><span class="co"># [16] mean.zoo*               </span></a>
+<a class="sourceLine" id="cb106-8" title="8"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1586,9 +1587,9 @@ div.tocify {
 <a class="sourceLine" id="cb111-3" title="3"><span class="co"># </span></a>
 <a class="sourceLine" id="cb111-4" title="4"><span class="co"># function (x, ...) </span></a>
 <a class="sourceLine" id="cb111-5" title="5"><span class="co"># standardGeneric(&quot;mean&quot;)</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0x3e78ea0&gt;</span></a>
+<a class="sourceLine" id="cb111-6" title="6"><span class="co"># &lt;environment: 0xe5bc318&gt;</span></a>
 <a class="sourceLine" id="cb111-7" title="7"><span class="co"># Methods may be defined for arguments: x</span></a>
-<a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(&quot;mean&quot;)  for currently available ones.</span></a></code></pre></div>
+<a class="sourceLine" id="cb111-8" title="8"><span class="co"># Use  showMethods(mean)  for currently available ones.</span></a></code></pre></div>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">mean.default</a>
 <a class="sourceLine" id="cb112-2" title="2"><span class="co"># function (x, trim = 0, na.rm = FALSE, ...) </span></a>
@@ -1615,7 +1616,7 @@ div.tocify {
 <a class="sourceLine" id="cb112-23" title="23"><span class="co">#     }</span></a>
 <a class="sourceLine" id="cb112-24" title="24"><span class="co">#     .Internal(mean(x))</span></a>
 <a class="sourceLine" id="cb112-25" title="25"><span class="co"># }</span></a>
-<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x4823a70&gt;</span></a>
+<a class="sourceLine" id="cb112-26" title="26"><span class="co"># &lt;bytecode: 0x66f2fe0&gt;</span></a>
 <a class="sourceLine" id="cb112-27" title="27"><span class="co"># &lt;environment: namespace:base&gt;</span></a></code></pre></div>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
@@ -1630,8 +1631,8 @@ div.tocify {
 <a class="sourceLine" id="cb115-3" title="3"><span class="co">#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               </span></a>
 <a class="sourceLine" id="cb115-4" title="4"><span class="co">#  [7] mean.default             mean.difftime            mean.matrix             </span></a>
 <a class="sourceLine" id="cb115-5" title="5"><span class="co"># [10] mean.POSIXct             mean.POSIXlt             mean.quosure*           </span></a>
-<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.units*              mean.yearmon*            mean.yearqtr*           </span></a>
-<a class="sourceLine" id="cb115-7" title="7"><span class="co"># [16] mean.zoo*               </span></a>
+<a class="sourceLine" id="cb115-6" title="6"><span class="co"># [13] mean.units*              mean.vctrs_vctr*         mean.yearmon*           </span></a>
+<a class="sourceLine" id="cb115-7" title="7"><span class="co"># [16] mean.yearqtr*            mean.zoo*               </span></a>
 <a class="sourceLine" id="cb115-8" title="8"><span class="co"># see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">class</span>(mat)</a>
@@ -1679,9 +1680,9 @@ div.tocify {
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Wednesday, 19 May, 2021, 21:51
+<pre><code># Thursday, 20 May, 2021, 02:21
 # ----------------------------------------
-# R version 4.0.2 (2020-06-22)
+# R version 4.1.0 (2021-05-18)
 # Platform: x86_64-pc-linux-gnu (64-bit)
 # Running under: Ubuntu 16.04.6 LTS
 # 
@@ -1701,31 +1702,40 @@ div.tocify {
 # [1] stats     graphics  grDevices datasets  utils     methods   base     
 # 
 # other attached packages:
-#  [1] perm_1.0-0.0        coin_1.4-1          survival_3.1-12    
-#  [4] boot_1.3-25         bootstrap_2019.6    plyr_1.8.6         
-#  [7] latticeExtra_0.6-29 lattice_0.20-41     expm_0.999-6       
-# [10] Matrix_1.2-18       knitr_1.33         
+#  [1] tidyr_1.1.3         dplyr_1.0.6         kableExtra_1.3.4   
+#  [4] perm_1.0-0.0        coin_1.4-1          survival_3.2-11    
+#  [7] boot_1.3-28         bootstrap_2019.6    plyr_1.8.6         
+# [10] latticeExtra_0.6-29 lattice_0.20-44     expm_0.999-6       
+# [13] Matrix_1.3-3        knitr_1.33         
 # 
 # loaded via a namespace (and not attached):
-#  [1] shape_1.4.6          gtools_3.8.2         zoo_1.8-9           
-#  [4] modeltools_0.2-23    diagram_1.6.5        xfun_0.23           
-#  [7] sf_0.9-8             splines_4.0.2        htmltools_0.5.1.1   
-# [10] stats4_4.0.2         yaml_2.2.1           rlang_0.4.11        
-# [13] e1071_1.7-6          DBI_1.1.1            sp_1.4-5            
-# [16] RColorBrewer_1.1-2   matrixStats_0.58.0   multcomp_1.4-17     
-# [19] jpeg_0.1-8.1         stringr_1.4.0        raster_3.4-10       
-# [22] mvtnorm_1.1-1        coda_0.19-4          codetools_0.2-16    
-# [25] evaluate_0.14        class_7.3-17         parallel_4.0.2      
-# [28] spdep_1.1-7          highr_0.9            TH.data_1.0-10      
-# [31] Rcpp_1.0.6           KernSmooth_2.23-17   classInt_0.4-3      
-# [34] renv_0.13.2-38       gdata_2.18.0         deldir_0.2-10       
-# [37] microbenchmark_1.4-7 png_0.1-7            digest_0.6.27       
-# [40] gmodels_2.18.1       stringi_1.6.2        animation_2.6       
-# [43] grid_4.0.2           LearnBayes_2.15.1    tools_4.0.2         
-# [46] sandwich_3.0-1       magrittr_2.0.1       proxy_0.4-25        
-# [49] MASS_7.3-51.6        libcoin_1.0-8        spData_0.3.8        
-# [52] rmarkdown_2.8.3      nlme_3.1-148         units_0.7-1         
-# [55] compiler_4.0.2</code></pre>
+#  [1] httr_1.4.2           viridisLite_0.4.0    splines_4.1.0       
+#  [4] gtools_3.8.2         microbenchmark_1.4-7 sp_1.4-5            
+#  [7] highr_0.9            stats4_4.1.0         animation_2.6       
+# [10] renv_0.13.2-38       yaml_2.2.1           LearnBayes_2.15.1   
+# [13] diagram_1.6.5        pillar_1.6.1         glue_1.4.2          
+# [16] digest_0.6.27        RColorBrewer_1.1-2   rvest_1.0.0         
+# [19] colorspace_2.0-1     sandwich_3.0-1       htmltools_0.5.1.1   
+# [22] pkgconfig_2.0.3      raster_3.4-10        gmodels_2.18.1      
+# [25] purrr_0.3.4          mvtnorm_1.1-1        webshot_0.5.2       
+# [28] scales_1.1.1         svglite_2.0.0        gdata_2.18.0        
+# [31] jpeg_0.1-8.1         tibble_3.1.2         proxy_0.4-25        
+# [34] generics_0.1.0       ellipsis_0.3.2       TH.data_1.0-10      
+# [37] magrittr_2.0.1       crayon_1.4.1         deldir_0.2-10       
+# [40] evaluate_0.14        fansi_0.4.2          nlme_3.1-152        
+# [43] MASS_7.3-54          xml2_1.3.2           class_7.3-19        
+# [46] tools_4.1.0          lifecycle_1.0.0      matrixStats_0.58.0  
+# [49] multcomp_1.4-17      stringr_1.4.0        munsell_0.5.0       
+# [52] compiler_4.1.0       e1071_1.7-6          systemfonts_1.0.2   
+# [55] rlang_0.4.11         classInt_0.4-3       units_0.7-1         
+# [58] grid_4.1.0           rstudioapi_0.13      rmarkdown_2.8       
+# [61] codetools_0.2-18     DBI_1.1.1            R6_2.5.0            
+# [64] zoo_1.8-9            utf8_1.2.1           libcoin_1.0-8       
+# [67] spdep_1.1-7          KernSmooth_2.23-20   shape_1.4.6         
+# [70] modeltools_0.2-23    stringi_1.6.2        parallel_4.1.0      
+# [73] Rcpp_1.0.6           vctrs_0.3.8          sf_0.9-8            
+# [76] png_0.1-7            spData_0.3.8         tidyselect_1.1.1    
+# [79] xfun_0.23            coda_0.19-4</code></pre>
 </div>
 
 <center>
@@ -1775,9 +1785,6 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

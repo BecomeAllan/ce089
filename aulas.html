@@ -29,6 +29,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -258,7 +260,7 @@ $(document).ready(function () {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leg-ufpr/ce089">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     GitHub
   </a>
@@ -278,44 +280,478 @@ $(document).ready(function () {
 
 
 <p>Abaixo está o cronograma inicial planejado para a disciplina. (Pode sofrer alterações).</p>
-<ul>
-<li><strong>06/08 (Ter)</strong>: Apresentação da disciplina.</li>
-<li><strong>09/08 (Sex)</strong>: Introdução à Estatística Computacional II. <a href="slides/00_intro.html">Slides</a>.</li>
-<li><strong>13/08 (Ter)</strong>: Funções, objetos e classes. Parte I: funções, argumentos e tipos primitivos de objetos. <a href="objetos-classes.html">HTML</a>.</li>
-<li><strong>16/08 (Sex)</strong>: Funções, objetos e classes. Parte II: Classes, atributos e funções genéricas (métodos). <a href="objetos-classes.html">HTML</a>.</li>
-<li><strong>20/08 (Ter)</strong>: Não haverá aula (professor em viagem). Fazer atividade disponível no <a href="https://moodle.c3sl.ufpr.br/course/view.php?id=282">Moodle</a>.</li>
-<li><strong>23/08 (Sex)</strong>: Indexação e seleção condicional. <a href="indexacao-selecao.html">HTML</a>.</li>
-<li><strong>27/08 (Ter)</strong>: Programando com dados: estruturas de repetição, seleção e vetorização. <a href="programacao.html">HTML</a>.</li>
-<li><strong>30/08 (Sex)</strong>: Técnicas de programação: benchmarking, profiling, debugging e error handling. <a href="slides/01_tecnicas.html">Slides</a>. <a href="slides/01_tecnicas.R">Script</a> com os códigos dos slides.</li>
-<li><strong>03/09 (Ter)</strong>: Atividade disponível no <a href="https://moodle.c3sl.ufpr.br/course/view.php?id=282">Moodle</a>.</li>
-<li><strong>06/09 (Sex)</strong>: Geração de números aleatórios uniformes. <a href="slides/02_RNG_uniforme.html">Slides</a>.</li>
-<li><strong>10/09 (Ter)</strong>: Geração de números aleatórios não uniformes: método da transformação integral de probabilidade. <a href="slides/03_RNG_inversa.html">Slides</a>.</li>
-<li><strong>13/09 (Sex)</strong>: Geração de números aleatórios não uniformes: método de aceitação e rejeição. <a href="04_RNG_aceitacao.html">HTML</a>.</li>
-<li><strong>17/09 (Ter)</strong>: Geração de números aleatórios não uniformes: método da relação entre variáveis. <a href="05_RNG_transform.html">HTML</a>.</li>
-<li><strong>20/09 (Sex)</strong>: Atividade disponível no <a href="https://moodle.c3sl.ufpr.br/course/view.php?id=282">Moodle</a>.</li>
-<li><strong>24/09 (Ter)</strong>: Não haverá aula devido ao SIEPE. <a href="http://www.soc.ufpr.br/portal/wp-content/uploads/2018/11/cepe-64-18-atualizada.pdf">Resolução 64/18 - CEPE</a>.</li>
-<li><strong>27/09 (Sex)</strong>: <strong>Prova 1</strong>.</li>
-<li><strong>01/10 (Ter)</strong>: Integração de Monte Carlo. <a href="06_MC_intro.html">HTML</a>.</li>
-<li><strong>04/10 (Sex)</strong>: Distribuições aproximadas baseadas em simulação de Monte Carlo. <a href="07_MC_aprox.html">HTML</a>.</li>
-<li><strong>08/10 (Ter)</strong>: Correção de prova e comentários sobre atividades.</li>
-<li><strong>11/10 (Sex)</strong>: MCMC: Metropolis random walk e amostrador independente. <a href="08_MCMC-1.html">HTML</a> e <a href="scripts/08_MCMC-1.R">script</a> com mais exemplos mostrados em aula.</li>
-<li><strong>15/10 (Ter)</strong>: MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings. <a href="08_MCMC-2.html">HTML</a>.</li>
-<li><strong>18/10 (Sex)</strong>: Atividade disponível no <a href="https://moodle.c3sl.ufpr.br/course/view.php?id=282">Moodle</a>.</li>
-<li><strong>22/10 (Ter)</strong>: Métodos de Monte Carlo para inferência estatística: estimação. <a href="09_MC_inf-1.html">HTML</a>.</li>
-<li><strong>25/10 (Sex)</strong>: Propriedades de estimadores pontuais por simulação de Monte Carlo. Taxa empírica do erro tipo I. <a href="09_MC_inf-2.html">HTML</a>.</li>
-<li><strong>29/10 (Ter)</strong>: Testes de hipótese via simulação de Monte Carlo. <a href="09_MC_inf-3.html">HTML</a>.</li>
-<li><strong>01/11 (Sex)</strong>: Métodos de reamostragem: bootstrap. <a href="10_bootstrap.html">HTML</a>.</li>
-<li><strong>05/11 (Ter)</strong>: Intervalos de confiança via bootstrap. <a href="10_bootstrap.html">HTML</a>.</li>
-<li><strong>08/11 (Sex)</strong>: Jackknife e validação cruzada. <a href="11_jackknife.html">HTML</a>.</li>
-<li><strong>12/11 (Ter)</strong>: Atividade disponível no <a href="https://moodle.c3sl.ufpr.br/course/view.php?id=282">Moodle</a>.</li>
-<li><strong>15/11 (Sex)</strong>: <strong>Feriado</strong>.</li>
-<li><strong>19/11 (Ter)</strong>: Testes de permutação. <a href="12_permutacao.html">HTML</a>.</li>
-<li><strong>22/11 (Sex)</strong>: Técnicas de otimização numérica.</li>
-<li><strong>26/11 (Ter)</strong>: CH integralizada.</li>
-<li><strong>29/11 (Sex)</strong>: <strong>Prova 2</strong>.</li>
-<li><strong>03/12 (Ter)</strong>: CH integralizada.</li>
-<li><strong>10/12 (Ter)</strong>: <strong>Exame final</strong>.</li>
-</ul>
+<pre><code># 
+# Attaching package: &#39;dplyr&#39;
+# The following object is masked from &#39;package:kableExtra&#39;:
+# 
+#     group_rows
+# The following objects are masked from &#39;package:plyr&#39;:
+# 
+#     arrange, count, desc, failwith, id, mutate, rename, summarise,
+#     summarize
+# The following objects are masked from &#39;package:stats&#39;:
+# 
+#     filter, lag
+# The following objects are masked from &#39;package:base&#39;:
+# 
+#     intersect, setdiff, setequal, union
+# 
+# Attaching package: &#39;tidyr&#39;
+# The following objects are masked from &#39;package:Matrix&#39;:
+# 
+#     expand, pack, unpack</code></pre>
+<table class="table table-striped table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Data
+</th>
+<th style="text-align:left;">
+Dia
+</th>
+<th style="text-align:left;">
+Item
+</th>
+<th style="text-align:left;">
+Conteúdo
+</th>
+<th style="text-align:left;">
+Avaliação
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+19/05/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+Apresentação da disciplina. Introdução à Estatística Computacional II.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+21/05/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+Revisão de conceitos fundamentais da linguagem R.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+26/05/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Técnicas de programação: benchmarking, profiling, debugging e error handling.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+28/05/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+Geração de números aleatórios uniformes.
+</td>
+<td style="text-align:left;">
+Itens 2, 3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+02/06/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Período sem atividades didáticas
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+04/06/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Período sem atividades didáticas
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+09/06/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+Geração de números aleatórios não uniformes: método da transformação integral de probabilidade.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+11/06/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+Geração de números aleatórios não uniformes: método de aceitação e rejeição.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+16/06/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+Geração de números aleatórios não uniformes: método de relação entre variáveis.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+18/06/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+Integração de Monte Carlo.
+</td>
+<td style="text-align:left;">
+Itens 4, 5, 6, 7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+23/06/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+Distribuições aproximadas baseadas em simulação de Monte Carlo.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+25/06/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+MCMC: Metropolis random walk e amostrador independente.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+30/06/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:left;">
+MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+02/07/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+Métodos de Monte Carlo para inferência estatística: estimação.
+</td>
+<td style="text-align:left;">
+Itens 8, 9, 10, 11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+07/07/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+Propriedades de estimadores pontuais por simulação de Monte Carlo. Taxa empírica do erro tipo I.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+09/07/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+Testes de hipótese via simulação de Monte Carlo.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+14/07/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+Métodos de reamostragem: bootstrap.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+16/07/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+Intervalos de confiança via bootstrap.
+</td>
+<td style="text-align:left;">
+Itens 12, 13, 14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+21/07/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+17
+</td>
+<td style="text-align:left;">
+Jackknife e validação cruzada.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+23/07/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+Testes de permutação.
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+28/07/21
+</td>
+<td style="text-align:left;">
+Qua
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Período sem atividades didáticas
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+30/07/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Período sem atividades didáticas
+</td>
+<td style="text-align:left;">
+Itens 15, 16, 17, 18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+13/08/21
+</td>
+<td style="text-align:left;">
+Sex
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Exame final
+</td>
+<td style="text-align:left;">
+Itens 2 a 18
+</td>
+</tr>
+</tbody>
+</table>
+<!-- - **06/08 (Ter)**: Apresentação da disciplina. -->
+<!-- - **09/08 (Sex)**: Introdução à Estatística Computacional II. -->
+<!--   [Slides](slides/00_intro.html). -->
+<!-- - **13/08 (Ter)**: Funções, objetos e classes. Parte I: funções, -->
+<!-- argumentos e tipos primitivos de objetos. [HTML](objetos-classes.html). -->
+<!-- - **16/08 (Sex)**: Funções, objetos e classes. Parte II: Classes, -->
+<!-- atributos e funções genéricas (métodos). [HTML](objetos-classes.html). -->
+<!-- - **20/08 (Ter)**: Não haverá aula (professor em viagem). Fazer -->
+<!--   atividade disponível no [Moodle][]. -->
+<!-- - **23/08 (Sex)**: Indexação e seleção condicional. -->
+<!--   [HTML](indexacao-selecao.html). -->
+<!-- - **27/08 (Ter)**: Programando com dados: estruturas de repetição, -->
+<!--   seleção e vetorização. [HTML](programacao.html). -->
+<!-- - **30/08 (Sex)**: Técnicas de programação: benchmarking, profiling, -->
+<!-- debugging e error handling. [Slides](slides/01_tecnicas.html). -->
+<!-- [Script](slides/01_tecnicas.R) com os códigos dos slides. -->
+<!-- - **03/09 (Ter)**: Atividade disponível no [Moodle][]. -->
+<!-- - **06/09 (Sex)**: Geração de números aleatórios uniformes. -->
+<!-- [Slides](slides/02_RNG_uniforme.html). -->
+<!-- - **10/09 (Ter)**: Geração de números aleatórios não uniformes: método -->
+<!--   da transformação integral de probabilidade. -->
+<!--   [Slides](slides/03_RNG_inversa.html). -->
+<!-- - **13/09 (Sex)**: Geração de números aleatórios não uniformes: método -->
+<!--   de aceitação e rejeição. [HTML](04_RNG_aceitacao.html). -->
+<!-- - **17/09 (Ter)**: Geração de números aleatórios não uniformes: método -->
+<!--   da relação entre variáveis. [HTML](05_RNG_transform.html). -->
+<!-- - **20/09 (Sex)**: Atividade disponível no [Moodle][]. -->
+<!-- - **24/09 (Ter)**: Não haverá aula devido ao SIEPE. -->
+<!-- [Resolução 64/18 - CEPE][]. -->
+<!-- - **27/09 (Sex)**: **Prova 1**. -->
+<!-- - **01/10 (Ter)**: Integração de Monte Carlo. [HTML](06_MC_intro.html). -->
+<!-- - **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de -->
+<!--   Monte Carlo. [HTML](07_MC_aprox.html). -->
+<!-- - **08/10 (Ter)**: Correção de prova e comentários sobre atividades. -->
+<!-- - **11/10 (Sex)**: MCMC: Metropolis random walk e amostrador -->
+<!-- independente. [HTML](08_MCMC-1.html) e [script](scripts/08_MCMC-1.R) com -->
+<!-- mais exemplos mostrados em aula. -->
+<!-- - **15/10 (Ter)**: MCMC: Cadeias de Markov e algoritmo de -->
+<!--   Metropolis-Hastings. [HTML](08_MCMC-2.html). -->
+<!-- - **18/10 (Sex)**: Atividade disponível no [Moodle][]. -->
+<!-- - **22/10 (Ter)**: Métodos de Monte Carlo para inferência estatística: -->
+<!--   estimação. [HTML](09_MC_inf-1.html). -->
+<!-- - **25/10 (Sex)**: Propriedades de estimadores pontuais por simulação de -->
+<!--   Monte Carlo. Taxa empírica do erro tipo I. [HTML](09_MC_inf-2.html). -->
+<!-- - **29/10 (Ter)**: Testes de hipótese via simulação de Monte Carlo. -->
+<!--   [HTML](09_MC_inf-3.html). -->
+<!-- - **01/11 (Sex)**: Métodos de reamostragem: bootstrap. -->
+<!--   [HTML](10_bootstrap.html). -->
+<!-- - **05/11 (Ter)**: Intervalos de confiança via bootstrap. -->
+<!--   [HTML](10_bootstrap.html). -->
+<!-- - **08/11 (Sex)**: Jackknife e validação cruzada. -->
+<!--   [HTML](11_jackknife.html). -->
+<!-- - **12/11 (Ter)**: Atividade disponível no [Moodle][]. -->
+<!-- - **15/11 (Sex)**: **Feriado**. -->
+<!-- - **19/11 (Ter)**: Testes de permutação. [HTML](12_permutacao.html). -->
+<!-- - **22/11 (Sex)**: Técnicas de otimização numérica. -->
+<!-- - **26/11 (Ter)**: CH integralizada. -->
+<!-- - **29/11 (Sex)**: **Prova 2**. -->
+<!-- - **03/12 (Ter)**: CH integralizada. -->
+<!-- - **10/12 (Ter)**: **Exame final**. -->
 
 <center>
   <hr width="100%" size="3px">

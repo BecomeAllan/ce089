@@ -429,7 +429,7 @@ div.tocify {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leg-ufpr/ce089">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
     GitHub
   </a>
@@ -528,7 +528,7 @@ div.tocify {
 <a class="sourceLine" id="cb1-31" title="31"><span class="co"># </span></a>
 <a class="sourceLine" id="cb1-32" title="32"><span class="co"># data:  vals by id</span></a>
 <a class="sourceLine" id="cb1-33" title="33"><span class="co"># t = 0.88051, df = 8, p-value = 0.4043</span></a>
-<a class="sourceLine" id="cb1-34" title="34"><span class="co"># alternative hypothesis: true difference in means is not equal to 0</span></a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="co"># alternative hypothesis: true difference in means between group x and group y is not equal to 0</span></a>
 <a class="sourceLine" id="cb1-35" title="35"><span class="co"># 95 percent confidence interval:</span></a>
 <a class="sourceLine" id="cb1-36" title="36"><span class="co">#  -2.978831  6.658831</span></a>
 <a class="sourceLine" id="cb1-37" title="37"><span class="co"># sample estimates:</span></a>
@@ -1279,9 +1279,6 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
