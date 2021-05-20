@@ -5,8 +5,12 @@ output:
     toc: false
 ---
 
-```{r setup, include=FALSE, cache=FALSE}
+```{r setup, include=FALSE, cache=FALSE, warning=FALSE}
 source("setup_knitr.R")
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
 ```
 
 Abaixo está o cronograma inicial planejado para a disciplina. (Pode
@@ -28,10 +32,6 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 ```{r echo=FALSE, results='hide'}
 dd <- read.table("misc/crono.csv", header = TRUE, sep = ",")
 str(dd)
-library(knitr)
-library(kableExtra)
-library(dplyr)
-library(tidyr)
 ```
 
 ```{r echo=FALSE}
@@ -40,7 +40,8 @@ dd |>
     select(Data, Dia, Item, Conteúdo, Avaliação) |>
     kable() |>
     kable_styling(bootstrap_options = c("striped", "bordered")) |>
-    column_spec(1, bold = TRUE)
+    column_spec(1, bold = TRUE) |>
+    row_spec(c(4, 10, 14, 18, 22), background = "lightgray")
 ```
 
 <!-- - **06/08 (Ter)**: Apresentação da disciplina. -->
