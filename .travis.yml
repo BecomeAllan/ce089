@@ -3,7 +3,7 @@ r:
   - 4.1.0
 cache: packages
 pandoc_version: 2.5
-dist: focal
+# dist: focal
 
 latex: false
 
