@@ -7,15 +7,18 @@ output:
 
 ## Referências básicas
 
+- Efron, B.; Hastie, T. [Computer age statistical inference: algorithms,
+  evidence and data science](https://web.stanford.edu/~hastie/CASI/).
+  Cambridge University Press, 2016.
 - Gentle, JE. **Computational Statistics**. Springer, 2009.
 - Gentle, JE; Härdle, WK; Mori, Y. **Handbook of computational
 statistics: concepts and methods**. Springer, 2012.
 - Härdle, WK.; Okhrin, O; Okhrin, Y. **Basic elements of computational
   statistics**. Springer, 2017.
-- Rizzo, M. L. **Statistical computing with R**. CRC Press, 2019.
-- Efron, B.; Hastie, T. **Computer age statistical inference:
-algorithms, evidence, and data science**. Cambridge University
-Press, 2016.
+- Peng, RD. [R programming for data
+  science](https://bookdown.org/rdpeng/rprogdatascience/).
+  Leanpub, 2020.
+- Rizzo, ML. **Statistical computing with R**. CRC Press, 2019.
 
 ## Referências complementares
 
@@ -32,26 +35,32 @@ UFLA, 2013.
 - Gillespie, C.; Lovelace, R. [Efficient R
 programming](https://csgillespie.github.io/efficientR/). Chapman &
 Hall, 2017.
+- Hastie, T.; Tibshirani, R.; Friedman, J. [The elements of statistical
+learning: data mining, inference, and
+prediction](https://web.stanford.edu/~hastie/ElemStatLearn/).
+Springer, 2009.
+- James, G.; Witten, D.; Hastie, T.; Tibshirani, R. [An introduction to
+  statistical learning: with applications in
+  R](https://www.statlearning.com/). Springer, 2017.
 - Manly, B. **Randomization, bootstrap and Monte Carlo methods in
 biology**. Chapman & Hall, 1997.
 - Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
 Springer, 2010.
 - Robert, CP; Casella, G. **Monte Carlo statistical methods**.
 Springer, 2004.
-- Silva, RS. Estatística Computacional (notas de aula online).
-  http://www.im.ufrj.br/ralph/estatisticacomputacional.html.
+- Silva, RS. Estatística Computacional. [Notas de aula
+  online](http://www.im.ufrj.br/ralph/estatisticacomputacional.html).
 - Wickham, H. [Advanced R](https://adv-r.hadley.nz/). Chapman &
   Hall, 2019.
 
-## Referências *online*
+<!-- ## Referências *online* -->
 
-- <http://www.dex.ufla.br/~danielff/ensino/estatisticacomputacional.html>;
-- <https://ecivilufes.files.wordpress.com/2011/03/algoritimos.pdf>;
-- <http://www.impa.br/opencms/pt/biblioteca/pm/PM_21.pdf>;
-- <http://www.icmc.usp.br/~ehlers/slides-comp.pdf>;
-- <https://sites.google.com/site/thaisf/Home/cursos/estatcompg>
-- [Método da aceitação e rejeição](http://www.columbia.edu/~ks20/4703-Sigman/4703-07-Notes-ARM.pdf) -
-Karl Sigman.
-- <http://www.cs.cmu.edu/~tcortina/15-105sp09/Unit02PtC.pdf>;
-- [Bootstrap inference - Francisco Cribari-Neto](http://conteudo.icmc.usp.br/CMS/Arquivos/arquivos_enviados/SECAO-POSGRAD_87_bootstrap-slides.pdf).
-- [Can You Behave Randomly?](http://faculty.rhodes.edu/wetzel/random/intro.html) - Robert R. Coveyou.
+<!-- - <http://www.dex.ufla.br/~danielff/ensino/estatisticacomputacional.html>; -->
+<!-- - <https://ecivilufes.files.wordpress.com/2011/03/algoritimos.pdf>; -->
+<!-- - <http://www.impa.br/opencms/pt/biblioteca/pm/PM_21.pdf>; -->
+<!-- - <http://www.icmc.usp.br/~ehlers/slides-comp.pdf>; -->
+<!-- - <https://sites.google.com/site/thaisf/Home/cursos/estatcompg> -->
+<!-- - [Método da aceitação e rejeição](http://www.columbia.edu/~ks20/4703-Sigman/4703-07-Notes-ARM.pdf) -Karl Sigman. -->
+<!-- - <http://www.cs.cmu.edu/~tcortina/15-105sp09/Unit02PtC.pdf>; -->
+<!-- - [Bootstrap inference - Francisco Cribari-Neto](http://conteudo.icmc.usp.br/CMS/Arquivos/arquivos_enviados/SECAO-POSGRAD_87_bootstrap-slides.pdf). -->
+<!-- - [Can You Behave Randomly?](http://faculty.rhodes.edu/wetzel/random/intro.html) - Robert R. Coveyou. -->
