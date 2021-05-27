@@ -5,7 +5,12 @@ output:
     toc: false
 ---
 
-## Materiais da diciplina
+<div class="alert alert-danger" role="alert">
+Para salvar os slides e páginas em PDF, abra no Google Chrome (ou
+Chromium), aperte <kbd>Ctrl</kbd> <kbd>p</kbd> e selecione "Imprimir para
+PDF".
+</div>
+
 
 De acordo com os itens do [cronograma](aulas.html):
 
