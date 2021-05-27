@@ -130,9 +130,9 @@ library(microbenchmark)
 (mb1 &lt;- microbenchmark(df[3, 2], df[3, "name"], df$name[3]))
 # Unit: nanoseconds
 #           expr   min      lq     mean  median      uq   max neval cld
-#       df[3, 2] 14359 14730.0 15270.98 14880.5 15099.5 48759   100   b
-#  df[3, "name"] 14411 14791.5 15085.61 15002.0 15233.0 19632   100   b
-#     df$name[3]   984  1302.0  1700.98  1715.5  1810.5 11667   100  a
+#       df[3, 2] 14177 14650.5 15262.78 14894.5 15089.5 49828   100   b
+#  df[3, "name"] 14253 14779.0 15027.92 15003.0 15219.5 19063   100   b
+#     df$name[3]   962  1377.5  1704.68  1707.5  1792.5 11438   100  a
 ```
 
 Outro exemplo:
@@ -142,9 +142,9 @@ Outro exemplo:
 x &lt;- runif(1e6)
 (mb2 &lt;- microbenchmark(sqrt(x), x^0.5))
 # Unit: milliseconds
-#     expr      min       lq      mean    median        uq      max neval cld
-#  sqrt(x)  5.77664  7.90323  8.134924  7.981991  8.239766 15.59648   100  a 
-#    x^0.5 35.09342 35.99124 37.899772 37.662792 38.334363 46.42381   100   b
+#     expr      min        lq      mean    median        uq      max neval cld
+#  sqrt(x)  7.75125  7.921406  8.734661  7.988195  8.117342 23.22328   100  a 
+#    x^0.5 37.45522 37.780727 38.411015 37.933275 38.176402 51.02596   100   b
 ```
 
 &lt;br&gt;
@@ -183,7 +183,7 @@ Voltando ao exemplo da aula anterior:
 
 ```r
 ## Vetor com uma sequência de 1 a 1.000.000
-x &lt;- 1:1e6
+x &lt;- 1:1e7
 
 ## Cria um objeto de armazenamento com o mesmo tamanho do resultado
 st1 &lt;- system.time({
@@ -194,7 +194,7 @@ st1 &lt;- system.time({
 })
 st1
 #    user  system elapsed 
-#   0.079   0.000   0.079
+#   0.734   0.019   0.754
 
 ## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
 st2 &lt;- system.time({
@@ -205,7 +205,7 @@ st2 &lt;- system.time({
 })
 st2
 #    user  system elapsed 
-#    0.29    0.00    0.29
+#   3.168   0.230   3.402
 ```
 
 ---
@@ -236,9 +236,9 @@ st2 &lt;- function(x) {
 }
 (mb &lt;- microbenchmark(st1, st2, times = 1000))
 # Unit: nanoseconds
-#  expr min lq   mean median uq max neval cld
-#   st1  24 26 26.688     26 26 537  1000   a
-#   st2  24 26 28.503     27 28 869  1000   a
+#  expr min lq   mean median uq  max neval cld
+#   st1  25 26 28.081     27 28  579  1000   a
+#   st2  26 28 30.034     29 30 1256  1000   a
 ```
 ]
 .pull-right[
@@ -564,13 +564,6 @@ traceback()
 ```
 
 
-```r
-getOption("warn")
-options(warn = 2)
-baskara(3, 2, 1)
-traceback()
-options(warn = 0)
-```
 
 ---
 # Encontrando erros
