@@ -899,9 +899,9 @@ x_2 = \sqrt{-2 \log(u_1)}\, \sin(2\pi u_2),
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>(<span class="kw">boxmuller</span>(<span class="dv">1000</span>), <span class="kw">polarmethod</span>(<span class="dv">1000</span>))</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="co"># Unit: microseconds</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq       mean    median       uq      max</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)   82.560   84.327   88.75416   88.6265   91.021  128.672</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2288.438 2356.105 2647.41862 2412.4880 2492.436 7162.712</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#               expr      min       lq      mean    median       uq      max</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">#    boxmuller(1000)   82.066   84.814   89.1564   88.1085   91.678  106.590</span></a>
+<a class="sourceLine" id="cb14-5" title="5"><span class="co">#  polarmethod(1000) 2252.546 2358.141 2671.5029 2421.8455 2480.972 7444.398</span></a>
 <a class="sourceLine" id="cb14-6" title="6"><span class="co">#  neval cld</span></a>
 <a class="sourceLine" id="cb14-7" title="7"><span class="co">#    100  a </span></a>
 <a class="sourceLine" id="cb14-8" title="8"><span class="co">#    100   b</span></a></code></pre></div>
