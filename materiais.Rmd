@@ -23,6 +23,9 @@ De acordo com os itens do [cronograma](aulas.html):
    handling. [Slides](slides/01_tecnicas.html).
 4. Geração de números aleatórios uniformes.
    [Slides](slides/02_RNG_uniforme.html).
+   - [A note on random number
+     generation](http://cran-r.c3sl.ufpr.br/web/packages/randtoolbox/vignettes/fullpres.pdf).
+     Christophe Dutang e Diethelm Wuertz.
 5. Geração de números aleatórios não uniformes: método da transformação
   integral de probabilidade. [Slides](slides/03_RNG_inversa.html).
 6. Geração de números aleatórios não uniformes: método de aceitação e
