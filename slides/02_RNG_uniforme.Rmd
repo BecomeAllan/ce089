@@ -1,22 +1,36 @@
 ---
 title: "Geração de números aleatórios uniformes"
 author: Fernando Mayer
-date: 2019-09-06
-bibliography: ../ref.bib
+date: |
+  | 2019-09-06
+  | Última atualização `r Sys.Date()`
 output:
   xaringan::moon_reader:
-    # css: ["default", "fc", "fc-fonts", "fira.css"]
-    css: ["default", "fc", "fc-fonts"]
-    self_contained: TRUE
+    css: ["default", "config/ibm-plex.css", "config/ibm-plex-fonts.css"]
+    self_contained: FALSE
+    includes:
+      in_header: "config/mathjax-equation-numbers.html"
     nature:
-      # highlightStyle: github
+      ratio: "16:9"
+      highlightStyle: github
       highlightLines: TRUE
       countIncrementalSlides: FALSE
 ---
 
 ```{r, cache=FALSE, include=FALSE}
-source("../setup_knitr.R")
+## source("../setup_knitr.R")
+source("config/setup_knitr.R")
 opts_chunk$set(fig.path = "figures/02_RNG_uniforme/")
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+bib <- ReadBib("config/refs.bib", check = FALSE)
+xaringanExtra::use_xaringan_extra("tachyons")
+## knitr::opts_chunk$set(out.width = "80%")
 ```
 
 # Introdução
@@ -80,7 +94,7 @@ modelagem.
 ---
 # Geração de números aleatórios
 
-### Números aleatórios reais
+## Números aleatórios reais
 
 - São gerados por dispositivos via processos físicos.
   - Globo de sorteio da Mega-Sena e bingos.
@@ -105,8 +119,30 @@ Veja:
 ---
 # Geração de números aleatórios
 
-### Números pseudo aleatórios
+## Números aleatórios reais
 
+O pacote
+[random](https://cran.r-project.org/web/packages/random/index.html) do R
+faz uma conexão com o site https://www.random.org/ para trazer números
+aleatórios "reais".
+
+```{r cache=TRUE}
+library(random)
+randomNumbers(n = 10, min=1, max = 10, col = 10, base = 10)
+randomSequence(min = 1, max = 10, col = 10)
+randomStrings(n = 4, len = 5, digits = TRUE, upperalpha = TRUE,
+              loweralpha = TRUE, unique = TRUE)
+```
+
+Na prática, para aplicações em estatística, os números aleatório reais
+não tem muita utilidade, já que suas propriedades são desconhecidas.
+
+---
+# Geração de números aleatórios
+
+## Números pseudo aleatórios
+
+.pull-left[
 - São gerados por programas de computador, ou seja, algorítmos.
 
 - Os número não são realmente aleatórios, pois, dado o algorítmo
@@ -116,10 +152,9 @@ gerador, pode-se prever os números (tem reprodutibilidade).
 
 - Bons GNA terão propriedades interessantes para aplicações
 Estatística.
+]
 
----
-# Geração de números pseudo aleatórios
-
+.pull-right[
 - Uma sequência de números gerados por um algoritmo, completamente
   determinado pelo valor inicial do algoritmo: **semente** (*seed*) ou
   **chave** (*key*).
@@ -135,10 +170,12 @@ Estatística.
   repete a longo prazo
   - No entanto, os algoritmos modernos possuem períodos tão longos, que
     a periodicidade pode ser desprezada
+]
 
 ---
 # Geração de números pseudo aleatórios
 
+.pull-left[
 Um gerador de números pseudo aleatórios é uma estrutura do tipo
 $$
 \Xi = (S, s_0, f, U, g)
@@ -150,10 +187,9 @@ onde:
 - $f: S \rightarrow S$ é uma função de tranformação
 - $U$ é um conjunto **finito** de símbolos de saída
 - $g: S \rightarrow U$ é uma função de saída
+]
 
----
-# Geração de números pseudo aleatórios
-
+.pull-right[
 De maneira geral, a geração de números aleatórios é da seguinte forma:
 
 1. Defina o estado inicial (semente) $s_0$
@@ -173,6 +209,8 @@ Por exemplo, a sequência
 
 possui período $p=4$, pois $s_{4+1} = s_1$, $s_{4+2} = s_2$, e assim
 sucessivamente.
+
+]
 
 ---
 # Geração de números pseudo aleatórios
@@ -475,7 +513,7 @@ rnorm(5)
 
 <br><br><br>
 
-```{r, echo=FALSE, out.width="90%"}
+```{r, echo=FALSE, out.width="70%"}
 knitr::include_graphics("../img/dilbert.jpg")
 ```
 
@@ -504,7 +542,7 @@ x <- rcl(n = 1000, x0 = 1, m = 2^12, a = 125, c = 1, unit = TRUE)
 ---
 # Testes visuais
 
-```{r, out.width="70%", fig.show="hold", echo=c(2,3)}
+```{r, out.width="60%", fig.show="hold", echo=c(2,3)}
 par(mfrow = c(1, 2))
 plot(x)
 hist(x)
@@ -516,7 +554,7 @@ par(mfrow = c(1, 1))
 
 ACF para correlação serial
 
-```{r, out.width="70%"}
+```{r, out.width="50%"}
 acf(x)
 ```
 
@@ -562,9 +600,9 @@ ks.test(x, "punif")
 
 Visualização da distribuição acumulada empírica da sequência gerada
 (linha preta) com uma distribuição acumulada de uma uniforme gerada pela
-função `runif()` (linha vermelha - usada como referência).
+função `punif()` (linha vermelha - usada como referência).
 
-```{r, out.width="60%", fig.show="hold"}
+```{r, out.width="50%", fig.show="hold"}
 plot(ecdf(x))
-plot(ecdf(runif(1000)), add = TRUE, col = 2)
+plot(ecdf(punif(seq(0, 1, length.out = 1000))), add = TRUE, col = 2)
 ```
