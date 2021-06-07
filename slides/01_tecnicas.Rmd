@@ -1,20 +1,7 @@
 ---
 title: "Técnicas de programação"
 author: Fernando Mayer
-date: |
-  | 2019-08-29
-  | Última atualização `r Sys.Date()`
-output:
-  xaringan::moon_reader:
-    css: ["default", "config/ibm-plex.css", "config/ibm-plex-fonts.css"]
-    self_contained: FALSE
-    includes:
-      in_header: "config/mathjax-equation-numbers.html"
-    nature:
-      ratio: "16:9"
-      highlightStyle: github
-      highlightLines: TRUE
-      countIncrementalSlides: FALSE
+date: 2019-08-29 .footnotesize[(última atualização `r Sys.Date()`)]
 ---
 
 

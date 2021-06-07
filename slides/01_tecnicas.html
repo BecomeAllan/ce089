@@ -21,8 +21,8 @@
          cursor: default;
      }
     </style>
-    <link rel="stylesheet" href="config/ibm-plex.css" type="text/css" />
-    <link rel="stylesheet" href="config/ibm-plex-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="config/sydney.css" type="text/css" />
+    <link rel="stylesheet" href="config/sydney-fonts.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -30,8 +30,7 @@ class: center, middle, inverse, title-slide
 
 # Técnicas de programação
 ### Fernando Mayer
-### <div class="line-block">2019-08-29<br />
-Última atualização 2021-05-26</div>
+### 2019-08-29 .footnotesize[(última atualização 2021-06-06)]
 
 ---
 
@@ -110,7 +109,7 @@ system.time(df[3, 2])
 #       0       0       0
 system.time(df[3, "name"])
 #    user  system elapsed 
-#       0       0       0
+#   0.000   0.000   0.001
 system.time(df$name[3])
 #    user  system elapsed 
 #       0       0       0
@@ -128,11 +127,11 @@ Usando `microbenchmark()`
 ```r
 library(microbenchmark)
 (mb1 &lt;- microbenchmark(df[3, 2], df[3, "name"], df$name[3]))
-# Unit: nanoseconds
-#           expr   min      lq     mean  median      uq   max neval cld
-#       df[3, 2] 14177 14650.5 15262.78 14894.5 15089.5 49828   100   b
-#  df[3, "name"] 14253 14779.0 15027.92 15003.0 15219.5 19063   100   b
-#     df$name[3]   962  1377.5  1704.68  1707.5  1792.5 11438   100  a
+# Unit: microseconds
+#           expr    min      lq     mean  median     uq    max neval cld
+#       df[3, 2] 14.666 15.1340 16.15878 15.3535 15.533 52.608   100   b
+#  df[3, "name"] 14.630 15.2155 15.76195 15.3995 15.661 34.420   100   b
+#     df$name[3]  1.027  1.3620  1.82577  1.7655  1.879 11.161   100  a
 ```
 
 Outro exemplo:
@@ -142,9 +141,9 @@ Outro exemplo:
 x &lt;- runif(1e6)
 (mb2 &lt;- microbenchmark(sqrt(x), x^0.5))
 # Unit: milliseconds
-#     expr      min        lq      mean    median        uq      max neval cld
-#  sqrt(x)  7.75125  7.921406  8.734661  7.988195  8.117342 23.22328   100  a 
-#    x^0.5 37.45522 37.780727 38.411015 37.933275 38.176402 51.02596   100   b
+#     expr       min       lq     mean    median        uq       max neval cld
+#  sqrt(x)  5.756494  7.80254 10.02966  7.881377  7.972673 212.55098   100  a 
+#    x^0.5 35.260980 37.37702 37.52623 37.574524 37.830855  47.92268   100   b
 ```
 
 &lt;br&gt;
@@ -194,7 +193,7 @@ st1 &lt;- system.time({
 })
 st1
 #    user  system elapsed 
-#   0.734   0.019   0.754
+#   0.743   0.020   0.763
 
 ## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
 st2 &lt;- system.time({
@@ -205,7 +204,7 @@ st2 &lt;- system.time({
 })
 st2
 #    user  system elapsed 
-#   3.168   0.230   3.402
+#   2.783   0.229   3.020
 ```
 
 ---
@@ -237,8 +236,8 @@ st2 &lt;- function(x) {
 (mb &lt;- microbenchmark(st1, st2, times = 1000))
 # Unit: nanoseconds
 #  expr min lq   mean median uq  max neval cld
-#   st1  25 26 28.081     27 28  579  1000   a
-#   st2  26 28 30.034     29 30 1256  1000   a
+#   st1  20 25 25.292     25 25  518  1000   a
+#   st2  20 25 26.458     25 25 1390  1000   a
 ```
 ]
 .pull-right[
