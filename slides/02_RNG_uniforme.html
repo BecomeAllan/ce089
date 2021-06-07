@@ -21,8 +21,8 @@
          cursor: default;
      }
     </style>
-    <link rel="stylesheet" href="config/ibm-plex.css" type="text/css" />
-    <link rel="stylesheet" href="config/ibm-plex-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="config/sydney.css" type="text/css" />
+    <link rel="stylesheet" href="config/sydney-fonts.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -30,8 +30,7 @@ class: center, middle, inverse, title-slide
 
 # Geração de números aleatórios uniformes
 ### Fernando Mayer
-### <div class="line-block">2019-09-06<br />
-Última atualização 2021-05-28</div>
+### 2019-09-06 .footnotesize[(última atualização 2021-06-06)]
 
 ---
 
@@ -135,18 +134,33 @@ aleatórios "reais".
 ```r
 library(random)
 randomNumbers(n = 10, min=1, max = 10, col = 10, base = 10)
+```
+
+```
 #      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
-# [1,]  8  3  2  1 10  8  7 10  1   2
+# [1,]  4  8  3  9  6  8  8  2  6  10
+```
+
+```r
 randomSequence(min = 1, max = 10, col = 10)
+```
+
+```
 #      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
-# [1,]  3  9  4  2  6  7 10  1  8   5
+# [1,]  4  1  8  7  2  5  9 10  3   6
+```
+
+```r
 randomStrings(n = 4, len = 5, digits = TRUE, upperalpha = TRUE,
               loweralpha = TRUE, unique = TRUE)
+```
+
+```
 #      V1     
-# [1,] "6Okk5"
-# [2,] "hTvgQ"
-# [3,] "9t9Xg"
-# [4,] "Zkajj"
+# [1,] "NEWmj"
+# [2,] "WliRF"
+# [3,] "cFhEN"
+# [4,] "8vQWP"
 ```
 
 Na prática, para aplicações em estatística, os números aleatório reais
@@ -259,6 +273,9 @@ Gerando 10 números dessa sequência com `\(s_0=2\)` e `\(a=345\)`
 
 ```r
 naive(n = 10, x0 = 2, a = 345)
+```
+
+```
 #  [1] 6.900000e+02 2.380500e+05 8.212725e+07 2.833390e+10 9.775196e+12
 #  [6] 3.372443e+15 1.163493e+18 4.014050e+20 1.384847e+23 4.777723e+25
 ```
@@ -337,6 +354,9 @@ O método gerador padrão no R é o Mersenne-Twister. Por exemplo
 
 ```r
 runif(10)
+```
+
+```
 #  [1] 0.4976992 0.7176185 0.9919061 0.3800352 0.7774452 0.9347052 0.2121425
 #  [8] 0.6516738 0.1255551 0.2672207
 ```
@@ -348,6 +368,9 @@ Através da função `set.seed(&lt;k&gt;)`, podemos especificar um número intei
 ```r
 set.seed(1)
 runif(10)
+```
+
+```
 #  [1] 0.26550866 0.37212390 0.57285336 0.90820779 0.20168193 0.89838968
 #  [7] 0.94467527 0.66079779 0.62911404 0.06178627
 ```
@@ -362,6 +385,9 @@ gerador. Por exemplo
 ```r
 set.seed(1, kind = "Knuth-TAOCP-2002")
 runif(10)
+```
+
+```
 #  [1] 0.4701631 0.1585074 0.4828353 0.2083405 0.5682372 0.4294435 0.2085656
 #  [8] 0.4578193 0.6270014 0.8554341
 ```
@@ -370,6 +396,9 @@ runif(10)
 ```r
 set.seed(1, kind = "Mersenne-Twister")
 runif(10)
+```
+
+```
 #  [1] 0.26550866 0.37212390 0.57285336 0.90820779 0.20168193 0.89838968
 #  [7] 0.94467527 0.66079779 0.62911404 0.06178627
 ```
@@ -441,15 +470,36 @@ Alguns resultados
 
 ```r
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 1)
+```
+
+```
 #  [1] 2.0e-06 3.0e-06 4.0e-06 5.0e-06 6.0e-06 7.0e-06 8.0e-06 9.0e-06 1.0e-05
 # [10] 1.1e-05
+```
+
+```r
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 1)
+```
+
+```
 #  [1] 0.000144 0.020593 0.944800 0.106401 0.215344 0.794193 0.569600 0.452801
 #  [9] 0.750544 0.327793
+```
+
+```r
 ## Congruencial multiplicativo
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 0)
+```
+
+```
 #  [1] 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06
+```
+
+```r
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
+```
+
+```
 #  [1] 0.000143 0.020449 0.924207 0.161601 0.108943 0.578849 0.775407 0.883201
 #  [9] 0.297743 0.577249
 ```
@@ -471,17 +521,50 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
 ```r
 ## Periodo = 4 &lt; m = 10
 rcl(n = 12, x0 = 7, m = 10, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 6 9 0 7 6 9 0 7 6 9 0 7
+```
+
+```r
 ## Outros períodos
 rcl(n = 12, x0 = 8, m = 10, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 3 8 3 8 3 8 3 8 3 8 3 8
+```
+
+```r
 rcl(n = 12, x0 = 1, m = 10, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 4 5 2 1 4 5 2 1 4 5 2 1
+```
+
+```r
 rcl(n = 12, x0 = 0, m = 10, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 7 6 9 0 7 6 9 0 7 6 9 0
+```
+
+```r
 rcl(n = 12, x0 = 2, m = 10, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 1 4 5 2 1 4 5 2 1 4 5 2
+```
+
+```r
 rcl(n = 12, x0 = 2, m = 100, a = 7, c = 7, unit = FALSE)
+```
+
+```
 #  [1] 21 54 85  2 21 54 85  2 21 54 85  2
 ```
 
@@ -496,9 +579,18 @@ Por exemplo, Park e Miller (1988) definiram `\(m = 2^{31} - 1\)`, `\(a=7^5\)` e
 
 ```r
 rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = FALSE)
+```
+
+```
 #  [1]     117649 1977326743  621132276  452154665 1566311569 1143995257
 #  [7]  707192808 1615021558 1621510873 1165762081 1469983786 1365616214
+```
+
+```r
 rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = TRUE)
+```
+
+```
 #  [1] 5.478458e-05 9.207645e-01 2.892373e-01 2.105509e-01 7.293707e-01
 #  [6] 5.327143e-01 3.293123e-01 7.520530e-01 7.550748e-01 5.428503e-01
 # [11] 6.845145e-01 6.359146e-01
@@ -549,27 +641,84 @@ Como a mudança de método gerador interfere nas funções:
 
 ```r
 RNGkind()
+```
+
+```
 # [1] "Mersenne-Twister" "Inversion"        "Rejection"
+```
+
+```r
 set.seed(1, kind = "Mersenne-Twister")
 RNGkind()
+```
+
+```
 # [1] "Mersenne-Twister" "Inversion"        "Rejection"
+```
+
+```r
 runif(5)
+```
+
+```
 # [1] 0.2655087 0.3721239 0.5728534 0.9082078 0.2016819
+```
+
+```r
 rnorm(5)
+```
+
+```
 # [1]  1.2724293  0.4146414 -1.5399500 -0.9285670 -0.2947204
+```
+
+```r
 set.seed(1, kind = "Knuth-TAOCP-2002")
 RNGkind()
+```
+
+```
 # [1] "Knuth-TAOCP-2002" "Inversion"        "Rejection"
+```
+
+```r
 runif(5)
+```
+
+```
 # [1] 0.4701631 0.1585074 0.4828353 0.2083405 0.5682372
+```
+
+```r
 rnorm(5)
+```
+
+```
 # [1] -0.1777910 -0.1059292  1.0600282  0.7387614 -0.2825928
+```
+
+```r
 set.seed(1, kind = "Mersenne-Twister")
 RNGkind()
+```
+
+```
 # [1] "Mersenne-Twister" "Inversion"        "Rejection"
+```
+
+```r
 runif(5)
+```
+
+```
 # [1] 0.2655087 0.3721239 0.5728534 0.9082078 0.2016819
+```
+
+```r
 rnorm(5)
+```
+
+```
 # [1]  1.2724293  0.4146414 -1.5399500 -0.9285670 -0.2947204
 ```
 
@@ -640,13 +789,22 @@ xc &lt;- cut(x, breaks = seq(0, 1, 0.1), include.lowest = TRUE)
 ## Com 1000 dados, deveriam haver 100 observações em cada classe.
 ## Estas são as frequências observadas
 table(xc)
+```
+
+```
 # xc
 #   [0,0.1] (0.1,0.2] (0.2,0.3] (0.3,0.4] (0.4,0.5] (0.5,0.6] (0.6,0.7] (0.7,0.8] 
 #       100        96        98        85       105        93        97       125 
 # (0.8,0.9]   (0.9,1] 
 #       107        94
+```
+
+```r
 ## A função chisq.test() faz o teste usando esta tabela
 chisq.test(x = table(xc))
+```
+
+```
 # 
 # 	Chi-squared test for given probabilities
 # 
@@ -670,6 +828,9 @@ chisq.test(x = table(xc))
 
 ```r
 ks.test(x, "punif")
+```
+
+```
 # 
 # 	One-sample Kolmogorov-Smirnov test
 # 
