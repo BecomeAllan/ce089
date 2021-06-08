@@ -30,7 +30,7 @@ class: center, middle, inverse, title-slide
 
 # Técnicas de programação
 ### Fernando Mayer
-### 2019-08-29 .footnotesize[(última atualização 2021-06-06)]
+### 2019-08-29 .footnotesize[(última atualização 2021-06-08)]
 
 ---
 
@@ -96,24 +96,49 @@ Funções úteis:
 
 Usando `system.time()`
 
+.pull-left[
 
 ```r
 (df &lt;- data.frame(v = 1:4, name = letters[1:4]))
+```
+
+```
 #   v name
 # 1 1    a
 # 2 2    b
 # 3 3    c
 # 4 4    d
+```
+]
+.pull-right[
+
+```r
 system.time(df[3, 2])
-#    user  system elapsed 
-#       0       0       0
-system.time(df[3, "name"])
-#    user  system elapsed 
-#   0.000   0.000   0.001
-system.time(df$name[3])
+```
+
+```
 #    user  system elapsed 
 #       0       0       0
 ```
+
+```r
+system.time(df[3, "name"])
+```
+
+```
+#    user  system elapsed 
+#   0.001   0.000   0.000
+```
+
+```r
+system.time(df$name[3])
+```
+
+```
+#    user  system elapsed 
+#       0       0       0
+```
+]
 
 - Cada expressão precisa ser executada em uma linha
 - Cada expressão é executada uma única vez
@@ -127,11 +152,14 @@ Usando `microbenchmark()`
 ```r
 library(microbenchmark)
 (mb1 &lt;- microbenchmark(df[3, 2], df[3, "name"], df$name[3]))
-# Unit: microseconds
-#           expr    min      lq     mean  median     uq    max neval cld
-#       df[3, 2] 14.666 15.1340 16.15878 15.3535 15.533 52.608   100   b
-#  df[3, "name"] 14.630 15.2155 15.76195 15.3995 15.661 34.420   100   b
-#     df$name[3]  1.027  1.3620  1.82577  1.7655  1.879 11.161   100  a
+```
+
+```
+# Unit: nanoseconds
+#           expr   min    lq     mean median      uq   max neval cld
+#       df[3, 2] 14121 14628 15179.67  14883 15008.0 47815   100   b
+#  df[3, "name"] 14253 14759 15025.50  14961 15195.5 19514   100   b
+#     df$name[3]   970  1322  1752.81   1781  1882.5  9730   100  a
 ```
 
 Outro exemplo:
@@ -140,10 +168,13 @@ Outro exemplo:
 ```r
 x &lt;- runif(1e6)
 (mb2 &lt;- microbenchmark(sqrt(x), x^0.5))
+```
+
+```
 # Unit: milliseconds
-#     expr       min       lq     mean    median        uq       max neval cld
-#  sqrt(x)  5.756494  7.80254 10.02966  7.881377  7.972673 212.55098   100  a 
-#    x^0.5 35.260980 37.37702 37.52623 37.574524 37.830855  47.92268   100   b
+#     expr       min        lq      mean    median        uq      max neval cld
+#  sqrt(x)  7.697456  7.732036  8.240139  7.761981  7.833209 18.85344   100  a 
+#    x^0.5 36.822887 36.939120 37.688956 37.107378 37.464933 50.02921   100   b
 ```
 
 &lt;br&gt;
@@ -162,7 +193,7 @@ x &lt;- runif(1e6)
 boxplot(mb1)
 ```
 
-&lt;img src="figures/01_tecnicas/unnamed-chunk-5-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/01_tecnicas/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
 
@@ -171,7 +202,7 @@ boxplot(mb1)
 boxplot(mb2)
 ```
 
-&lt;img src="figures/01_tecnicas/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/01_tecnicas/unnamed-chunk-7-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -192,9 +223,14 @@ st1 &lt;- system.time({
     }
 })
 st1
-#    user  system elapsed 
-#   0.743   0.020   0.763
+```
 
+```
+#    user  system elapsed 
+#   0.724   0.029   0.755
+```
+
+```r
 ## Cria um objeto de tamanho "zero" e vai "crescendo" esse vetor
 st2 &lt;- system.time({
     out2 &lt;- numeric(0)
@@ -203,8 +239,11 @@ st2 &lt;- system.time({
     }
 })
 st2
+```
+
+```
 #    user  system elapsed 
-#   2.783   0.229   3.020
+#   2.875   0.320   3.200
 ```
 
 ---
@@ -234,10 +273,13 @@ st2 &lt;- function(x) {
     return(x)
 }
 (mb &lt;- microbenchmark(st1, st2, times = 1000))
+```
+
+```
 # Unit: nanoseconds
-#  expr min lq   mean median uq  max neval cld
-#   st1  20 25 25.292     25 25  518  1000   a
-#   st2  20 25 26.458     25 25 1390  1000   a
+#  expr min lq   mean median uq max neval cld
+#   st1  20 24 25.221     25 25 393  1000   a
+#   st2  20 24 25.583     25 25 877  1000   a
 ```
 ]
 .pull-right[
@@ -246,7 +288,7 @@ st2 &lt;- function(x) {
 boxplot(mb)
 ```
 
-&lt;img src="figures/01_tecnicas/unnamed-chunk-9-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/01_tecnicas/unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 
 - A diferença é que aqui fica mais fácil passarmos uma função, ao invés
@@ -364,7 +406,7 @@ y &lt;- b0 + b1*x + rnorm(n, mean = 0, sd = sqrt(sigma2))
 plot(x, y)
 ```
 
-&lt;img src="figures/01_tecnicas/unnamed-chunk-14-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/01_tecnicas/unnamed-chunk-15-1.png" width="65%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -373,21 +415,35 @@ plot(x, y)
 .pull-left[
 Um modelo linear ajustado aos dados resulta em:
 
+.code80[
 
 ```r
 ## Modelo
 m &lt;- lm(y ~ x)
 ## b0 e b1
 coef(m)
+```
+
+```
 # (Intercept)           x 
 #   6.2459652   0.5262506
+```
+
+```r
 ## sigma^2
 summary(m)$sigma^2
+```
+
+```
 # [1] 20.25663
+```
+
+```r
 plot(x, y); abline(m, col = 2)
 ```
 
-&lt;img src="figures/01_tecnicas/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/01_tecnicas/unnamed-chunk-16-1.png" width="55%" style="display: block; margin: auto;" /&gt;
+]
 ]
 
 .pull-right[
@@ -461,10 +517,25 @@ class: center, middle, inverse
 
 ```r
 stop("Isso é um erro")
+```
+
+```
 # Error in eval(expr, envir, enclos): Isso é um erro
+```
+
+```r
 warning("Isso é um warning")
+```
+
+```
 # Warning: Isso é um warning
+```
+
+```r
 message("Isso é uma mensagem")
+```
+
+```
 # Isso é uma mensagem
 ```
 
@@ -506,11 +577,29 @@ Alguns resultados:
 
 ```r
 baskara(-3, 2, 1)
+```
+
+```
 # [1]  1.0000000 -0.3333333
+```
+
+```r
 baskara(0, 2, 1) # 2 * a = 0
+```
+
+```
 # [1] -Inf  NaN
+```
+
+```r
 baskara(3, 2, 1) # 2^2 - 4 * 3 * 1 = -8
+```
+
+```
 # Warning in sqrt(delta): NaNs produced
+```
+
+```
 # [1] NaN NaN
 ```
 
@@ -553,6 +642,9 @@ baskara &lt;- function(a, b, c) {
 
 ```r
 baskara(0, 2, 1)
+```
+
+```
 # Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
 ```
 
@@ -586,6 +678,9 @@ baskara &lt;- function(a, b, c) {
 
 ```r
 baskara(3, 2, 1)
+```
+
+```
 # Error in baskara(3, 2, 1): Delta é negativo.
 ```
 
@@ -716,44 +811,94 @@ baskara &lt;- function(a, b, c) {
 .pull-left[
 Sem o `try()`, o objeto não é criado:
 
+.code80[
 
 ```r
 baskara(0, 2, 1)
-# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
-er1 &lt;- baskara(0, 2, 1)
-# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
-er1
-# Error in eval(expr, envir, enclos): object 'er1' not found
 ```
 
+```
+# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
+```
+
+```r
+er1 &lt;- baskara(0, 2, 1)
+```
+
+```
+# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
+```
+
+```r
+er1
+```
+
+```
+# Error in eval(expr, envir, enclos): object 'er1' not found
+```
+]
+]
+.pull-right[
 Com o `try()`, o objeto é criado e possui a classe `try-error`:
 
+.code80[
 
 ```r
 try(baskara(0, 2, 1))
+```
+
+```
 # Error in baskara(0, 2, 1) : Argumento `a` não pode ser zero.
+```
+
+```r
 er2 &lt;- try(baskara(0, 2, 1))
+```
+
+```
 # Error in baskara(0, 2, 1) : Argumento `a` não pode ser zero.
+```
+
+```r
 er2
+```
+
+```
 # [1] "Error in baskara(0, 2, 1) : Argumento `a` não pode ser zero.\n"
 # attr(,"class")
 # [1] "try-error"
 # attr(,"condition")
 # &lt;simpleError in baskara(0, 2, 1): Argumento `a` não pode ser zero.&gt;
+```
+
+```r
 class(er2)
+```
+
+```
 # [1] "try-error"
 ```
 ]
+]
 
-.pull-right[
-Não existe uma forma pronta de lidar com essa classe, mas você pode
-definir o que deve acontecer:
+---
+# Ignorando erros
+
+**Usando `try()` e `tryCatch()`:**
+
+
+Não existe uma forma pronta de lidar com a classe `try-error`, mas você
+pode definir o que deve acontecer:
 
 
 ```r
 if(class(er2) == "try-error") c(NA, NA)
+```
+
+```
 # [1] NA NA
 ```
+
 Com `tryCatch()` podemos definir previamente o resultado quando ocorrer
 um erro:
 
@@ -761,12 +906,20 @@ um erro:
 ```r
 tryCatch(baskara(0, 2, 1),
          error = function(cmd) c(NA, NA))
-# [1] NA NA
-tryCatch(baskara(3, 2, 1),
-         error = function(cmd) c(NA, NA))
+```
+
+```
 # [1] NA NA
 ```
-]
+
+```r
+tryCatch(baskara(3, 2, 1),
+         error = function(cmd) c(NA, NA))
+```
+
+```
+# [1] NA NA
+```
 
 ---
 # Ignorando erros
@@ -788,13 +941,33 @@ baskara2 &lt;- function(a, b, c) {
 }
 
 baskara(0, 2, 1)
-# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
-baskara2(0, 2, 1)
-# Error in baskara2(0, 2, 1): Argumento `a` não pode ser zero.
+```
 
+```
+# Error in baskara(0, 2, 1): Argumento `a` não pode ser zero.
+```
+
+```r
+baskara2(0, 2, 1)
+```
+
+```
+# Error in baskara2(0, 2, 1): Argumento `a` não pode ser zero.
+```
+
+```r
 baskara(3, 2, 1)
+```
+
+```
 # Error in baskara(3, 2, 1): Delta é negativo.
+```
+
+```r
 baskara2(3, 2, 1)
+```
+
+```
 # [1] NA NA
 ```
 
