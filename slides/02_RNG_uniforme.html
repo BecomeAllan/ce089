@@ -30,7 +30,7 @@ class: center, middle, inverse, title-slide
 
 # Geração de números aleatórios uniformes
 ### Fernando Mayer
-### 2019-09-06 .footnotesize[(última atualização 2021-06-06)]
+### 2019-09-06 .footnotesize[(última atualização 2021-06-08)]
 
 ---
 
@@ -450,8 +450,9 @@ $$
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 Implementação básica
-
+.code90[
 
 ```r
 rcl &lt;- function(n, x0, m, a, c, unit = TRUE) {
@@ -464,17 +465,20 @@ rcl &lt;- function(n, x0, m, a, c, unit = TRUE) {
     return(x[-1])
 }
 ```
-
+]
+]
+.pull-right-60[
 Alguns resultados
 
+.code90[
 
 ```r
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 1)
 ```
 
 ```
-#  [1] 2.0e-06 3.0e-06 4.0e-06 5.0e-06 6.0e-06 7.0e-06 8.0e-06 9.0e-06 1.0e-05
-# [10] 1.1e-05
+#  [1] 2.0e-06 3.0e-06 4.0e-06 5.0e-06 6.0e-06 7.0e-06 8.0e-06
+#  [8] 9.0e-06 1.0e-05 1.1e-05
 ```
 
 ```r
@@ -482,8 +486,8 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 1)
 ```
 
 ```
-#  [1] 0.000144 0.020593 0.944800 0.106401 0.215344 0.794193 0.569600 0.452801
-#  [9] 0.750544 0.327793
+#  [1] 0.000144 0.020593 0.944800 0.106401 0.215344 0.794193
+#  [7] 0.569600 0.452801 0.750544 0.327793
 ```
 
 ```r
@@ -492,7 +496,8 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 0)
 ```
 
 ```
-#  [1] 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06
+#  [1] 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06 1e-06
+# [10] 1e-06
 ```
 
 ```r
@@ -500,13 +505,16 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
 ```
 
 ```
-#  [1] 0.000143 0.020449 0.924207 0.161601 0.108943 0.578849 0.775407 0.883201
-#  [9] 0.297743 0.577249
+#  [1] 0.000143 0.020449 0.924207 0.161601 0.108943 0.578849
+#  [7] 0.775407 0.883201 0.297743 0.577249
 ```
+]
+]
 
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 - Naturalmente, a escolha de `\(a\)`, `\(c\)` e `\(m\)` deve ser feita com cuidado
 - Não são quaisquer valores que gerarão uma boa sequência
 - Em geral:
@@ -516,6 +524,8 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
 - **O período será no máximo `\(m\)`**, por isso deve ser um número grande
   - No entanto, dependendo da combinação de valores das constantes, o
     período pode ser bem menor
+]
+.pull-right-60[
 
 
 ```r
@@ -567,6 +577,7 @@ rcl(n = 12, x0 = 2, m = 100, a = 7, c = 7, unit = FALSE)
 ```
 #  [1] 21 54 85  2 21 54 85  2 21 54 85  2
 ```
+]
 
 ---
 # Gerador congruencial linear (GCL)
@@ -597,7 +608,7 @@ rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = TRUE)
 ```
 
 Alguns outros métodos disponíveis.
-
+.small[
 | GNA             | m            | a           | c          |
 |-----------------|--------------|-------------|------------|
 | Knuth-Lewis     | `\(2^{32}\)`     | `\(1664525\)`   | `\(1.01e9^1\)` |
@@ -606,7 +617,7 @@ Alguns outros métodos disponíveis.
 | Marsaglia       | `\(2^{32}\)`     | `\(69069\)`     | `\(0\)`        |
 | Park-Miller     | `\(2^{31} - 1\)` | `\(16807\)`     | `\(0\)`        |
 |                 |              |             |            |
-
+]
 
 ---
 # Gerador Mersenne Twister
@@ -637,7 +648,7 @@ Alguns outros métodos disponíveis.
 # Gerador Mersenne Twister
 
 Como a mudança de método gerador interfere nas funções:
-
+.pull-left.code80[
 
 ```r
 RNGkind()
@@ -688,6 +699,8 @@ runif(5)
 ```
 # [1] 0.4701631 0.1585074 0.4828353 0.2083405 0.5682372
 ```
+]
+.pull-right.code80[
 
 ```r
 rnorm(5)
@@ -721,6 +734,7 @@ rnorm(5)
 ```
 # [1]  1.2724293  0.4146414 -1.5399500 -0.9285670 -0.2947204
 ```
+]
 
 ---
 # Testes de aleatoriedade
@@ -761,7 +775,7 @@ plot(x)
 hist(x)
 ```
 
-&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-17-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-18-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 # Testes visuais
@@ -773,7 +787,7 @@ ACF para correlação serial
 acf(x)
 ```
 
-&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-18-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-19-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 # Teste de qui-quadrado
@@ -855,7 +869,7 @@ plot(ecdf(x))
 plot(ecdf(punif(seq(0, 1, length.out = 1000))), add = TRUE, col = 2)
 ```
 
-&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-21-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figures/02_RNG_uniforme/unnamed-chunk-22-1.png" width="50%" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

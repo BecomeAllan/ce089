@@ -376,8 +376,9 @@ $$
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 Implementação básica
-
+.code90[
 ```{r}
 rcl <- function(n, x0, m, a, c, unit = TRUE) {
     x <- integer(n + 1)
@@ -389,20 +390,28 @@ rcl <- function(n, x0, m, a, c, unit = TRUE) {
     return(x[-1])
 }
 ```
-
+]
+]
+.pull-right-60[
 Alguns resultados
 
-```{r}
+.code90[
+```{r, echo=-c(1,7)}
+options(width = 60)
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 1)
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 1)
 ## Congruencial multiplicativo
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 0)
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
+options(width = 80)
 ```
+]
+]
 
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 - Naturalmente, a escolha de $a$, $c$ e $m$ deve ser feita com cuidado
 - Não são quaisquer valores que gerarão uma boa sequência
 - Em geral:
@@ -412,6 +421,8 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
 - **O período será no máximo $m$**, por isso deve ser um número grande
   - No entanto, dependendo da combinação de valores das constantes, o
     período pode ser bem menor
+]
+.pull-right-60[
 
 ```{r}
 ## Periodo = 4 < m = 10
@@ -423,6 +434,7 @@ rcl(n = 12, x0 = 0, m = 10, a = 7, c = 7, unit = FALSE)
 rcl(n = 12, x0 = 2, m = 10, a = 7, c = 7, unit = FALSE)
 rcl(n = 12, x0 = 2, m = 100, a = 7, c = 7, unit = FALSE)
 ```
+]
 
 ---
 # Gerador congruencial linear (GCL)
@@ -438,7 +450,7 @@ rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = TRUE)
 ```
 
 Alguns outros métodos disponíveis.
-
+.small[
 | GNA             | m            | a           | c          |
 |-----------------|--------------|-------------|------------|
 | Knuth-Lewis     | $2^{32}$     | $1664525$   | $1.01e9^1$ |
@@ -447,7 +459,7 @@ Alguns outros métodos disponíveis.
 | Marsaglia       | $2^{32}$     | $69069$     | $0$        |
 | Park-Miller     | $2^{31} - 1$ | $16807$     | $0$        |
 |                 |              |             |            |
-
+]
 
 ---
 # Gerador Mersenne Twister
@@ -478,7 +490,7 @@ $2^{19927} - 1 \approx 4.3 \times 10^{6001}$
 # Gerador Mersenne Twister
 
 Como a mudança de método gerador interfere nas funções:
-
+.pull-left.code80[
 ```{r}
 RNGkind()
 set.seed(1, kind = "Mersenne-Twister")
@@ -488,12 +500,17 @@ rnorm(5)
 set.seed(1, kind = "Knuth-TAOCP-2002")
 RNGkind()
 runif(5)
+```
+]
+.pull-right.code80[
+```{r}
 rnorm(5)
 set.seed(1, kind = "Mersenne-Twister")
 RNGkind()
 runif(5)
 rnorm(5)
 ```
+]
 
 ---
 # Testes de aleatoriedade
