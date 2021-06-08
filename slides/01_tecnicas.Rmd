@@ -79,12 +79,18 @@ Funções úteis:
 
 Usando `system.time()`
 
+.pull-left[
 ```{r}
 (df <- data.frame(v = 1:4, name = letters[1:4]))
+```
+]
+.pull-right[
+```{r}
 system.time(df[3, 2])
 system.time(df[3, "name"])
 system.time(df$name[3])
 ```
+]
 
 - Cada expressão precisa ser executada em uma linha
 - Cada expressão é executada uma única vez
@@ -307,7 +313,8 @@ plot(x, y)
 .pull-left[
 Um modelo linear ajustado aos dados resulta em:
 
-```{r out.width='70%'}
+.code80[
+```{r out.width='55%'}
 ## Modelo
 m <- lm(y ~ x)
 ## b0 e b1
@@ -316,6 +323,7 @@ coef(m)
 summary(m)$sigma^2
 plot(x, y); abline(m, col = 2)
 ```
+]
 ]
 
 .pull-right[
@@ -625,14 +633,18 @@ baskara <- function(a, b, c) {
 .pull-left[
 Sem o `try()`, o objeto não é criado:
 
+.code80[
 ```{r, error=TRUE}
 baskara(0, 2, 1)
 er1 <- baskara(0, 2, 1)
 er1
 ```
-
+]
+]
+.pull-right[
 Com o `try()`, o objeto é criado e possui a classe `try-error`:
 
+.code80[
 ```{r, error=TRUE}
 try(baskara(0, 2, 1))
 er2 <- try(baskara(0, 2, 1))
@@ -640,14 +652,21 @@ er2
 class(er2)
 ```
 ]
+]
 
-.pull-right[
-Não existe uma forma pronta de lidar com essa classe, mas você pode
-definir o que deve acontecer:
+---
+# Ignorando erros
+
+**Usando `try()` e `tryCatch()`:**
+
+
+Não existe uma forma pronta de lidar com a classe `try-error`, mas você
+pode definir o que deve acontecer:
 
 ```{r}
 if(class(er2) == "try-error") c(NA, NA)
 ```
+
 Com `tryCatch()` podemos definir previamente o resultado quando ocorrer
 um erro:
 
@@ -657,7 +676,6 @@ tryCatch(baskara(0, 2, 1),
 tryCatch(baskara(3, 2, 1),
          error = function(cmd) c(NA, NA))
 ```
-]
 
 ---
 # Ignorando erros
