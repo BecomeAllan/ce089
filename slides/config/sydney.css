@@ -182,7 +182,7 @@ it from other content slides */
 
 /* link colour */
 a {
-    color: #0148A4;
+    color: #0148A4 !important;
 }
 
 .columns-2 {
@@ -587,7 +587,9 @@ p.caption {
 }
 
 .hljs-github .hljs {
-	margin-top: -1em;
+	  /* margin-top: -1em; */
+	  margin-top: -0.5em;
+    /* background: lightgray; */
 }
 
 :not(pre) + pre {
