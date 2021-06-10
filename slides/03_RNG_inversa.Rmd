@@ -2,22 +2,22 @@
 title: "Geração de números aleatórios não uniformes"
 subtitle: "Método da transformação integral de probabilidade"
 author: Fernando Mayer
-date: 2019-09-10
-bibliography: ../ref.bib
-output:
-  xaringan::moon_reader:
-    # css: ["default", "fc", "fc-fonts", "fira.css"]
-    css: ["default", "fc", "fc-fonts"]
-    self_contained: TRUE
-    nature:
-      # highlightStyle: github
-      highlightLines: TRUE
-      countIncrementalSlides: FALSE
+date: 2019-09-10 .footnotesize[(última atualização `r Sys.Date()`)]
 ---
 
 ```{r, cache=FALSE, include=FALSE}
-source("../setup_knitr.R")
+source("config/setup_knitr.R")
 opts_chunk$set(fig.path = "figures/03_RNG_inversa/")
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+bib <- ReadBib("config/refs.bib", check = FALSE)
+xaringanExtra::use_xaringan_extra("tachyons")
+## knitr::opts_chunk$set(out.width = "80%")
 ```
 
 # Introdução
@@ -76,7 +76,7 @@ $$
 ---
 # Distribuição uniforme: propriedades
 
-```{r, fig.show='hold', out.width='60%'}
+```{r, fig.show='hold', out.width='50%'}
 x <- seq(0, 1, 0.01)
 fx <- dunif(x)
 par(mfrow = c(1, 2))
@@ -92,13 +92,17 @@ par(mfrow = c(1, 1))
 
 <!-- Mood, pg. 202; Casella e Berger, pg. 49 -->
 
+.content-box-yellow[
 (a) Se $X$ é uma variável aleatória com função de distribuição acumulada
 $F_X(x)$, então $U = F_X(X)$ é uniformemente distribuída no intervalo
 $(0,1)$, isto é, $P[U \leq u] = u$, $0 < u < 1$.
+]
 
+.content-box-purple[
 (b) Se $U$ é uniformemente distribuída mo intervalo $(0,1)$, então
 $X = F_{X}^{-1}(U)$ possui função de distribuição acumulada
 $F_X(\cdot)$.
+]
 
 #### Demonstração
 
@@ -154,6 +158,14 @@ um $x$ que satisfaça $x_1 \leq x \leq x_2$, então $F_X^{-1}(u) = x_1$.
 
 <!-- Tem que ter os graficos aqui!!! -->
 
+```{r, include=FALSE}
+curve(pnorm, -3, 3)
+curve(pexp, 0, 5)
+curve(pgamma(x, shape = 10, rate = 1), 0, 20)
+curve(pbeta(x, shape1 = 10, shape2 = 5), 0, 1)
+## Ver alguma retangular
+```
+
 ---
 # Transformação integral de probabilidade
 
@@ -177,6 +189,11 @@ $u \sim \text{U}(0,1)$ e calcule a inversa $F_X^{-1}(u)$
   - (b) Calcule $x = F_X^{-1}(u)$
 
 ---
+class: inverse, middle
+# Variáveis contínuas
+
+
+---
 # Variáveis contínuas
 
 Considere a seguinte distribuição de probabilidade:
@@ -188,7 +205,7 @@ $$
 A função de distribuição é
 
 $$
-F(x) = \int_0^x 3v\, dv = x^3
+F(x) = \int_0^x 3v^2\, dv = x^3
 $$
 
 A inversa é
@@ -210,16 +227,31 @@ x <- u^(1/3)
 ---
 # Variáveis contínuas
 
-```{r, out.width='70%'}
-## Histograma dos valores gerados pelo método da inversa
+.pull-left[
+```{r, out.width='90%'}
+## Histograma dos valores gerados
 hist(x, prob = TRUE)
 ## Modelo teórico
 curve(3 * x^2, from = 0, to = 1, add = TRUE, col = 2)
 ```
+]
+.pull-right[
+```{r, out.width='90%'}
+## Acumulada empírica
+plot(ecdf(x))
+## Acumulada teórica
+curve(x^3, from = 0, to = 1, add = TRUE, col = 2)
+legend("left", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+```
+]
 
 ---
 # Variáveis contínuas
 
+#### Exponencial
+
+.pull-left-70[
 Uma v.a. $X$ segue o **modelo exponencial** com parâmetro $\lambda > 0$
 se sua densidade é dada por
 $$
@@ -243,10 +275,8 @@ u &= 1 - \exp\{-\lambda x\}\\
 \therefore \quad x &= F^{-1}(u) = -\frac{\log(1 - u)}{\lambda}.
 \end{align*}
 $$
-
----
-# Variáveis contínuas
-
+]
+.pull-right-30[
 #### Implementação em R
 
 ```{r}
@@ -256,24 +286,36 @@ randexp <- function(n, lambda) {
     return(x)
 }
 ```
+]
 
 ---
 # Variáveis contínuas
 
-```{r, out.width='60%'}
-x <- randexp(n = 1000, lambda = 0.5)
-Fx <- function(x, lambda) 1 - exp(-lambda * x)
-plot(ecdf(x))
-curve(Fx(x, lambda = 0.5), add = TRUE, col = 2, from = 0)
-legend("right", legend = c("Empírica", "Teórica"),
-       lty = 1, col = 1:2, bty = "n")
+.pull-left.code80[
+```{r}
+x <- randexp(n = 1000, lambda = 0.5) #<<
+hist(x, freq = FALSE)
+curve(dexp(x, rate = 0.5), add = TRUE, col = 2, from = 0)
 ```
+]
+.pull-right.code80[
+```{r}
+plot(ecdf(x))
+Fx <- function(x, lambda) 1 - exp(-lambda * x)
+curve(Fx(x, lambda = 0.5), add = TRUE, col = 2, from = 0)
+## curve(pexp(x, rate = 0.5), add = TRUE, col = 2, from = 0)
+plot(ecdf(rexp(x, rate = 0.5)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "rexp"),
+       lty = 1, col = 1:3, bty = "n")
+```
+]
 
 ---
 # Variáveis contínuas
 
 #### Uniforme no intervalo $[a,b]$
 
+.pull-left-70[
 Se $X \sim U[a,b]$ então
 $$
 f(x) = \frac{1}{b - a}, \quad  a \leq x \leq b
@@ -288,6 +330,8 @@ $$
 u = \frac{x-a}{b-a} \quad \Rightarrow \quad
 x = a + (b-1)u
 $$
+]
+.pull-right-30[
 ```{r}
 randunif <- function(n, a, b) {
     u <- runif(n)
@@ -295,26 +339,39 @@ randunif <- function(n, a, b) {
     return(x)
 }
 ```
+]
 
 ---
 # Variáveis contínuas
 
 #### Uniforme no intervalo $[a,b]$
 
-```{r, out.width='60%'}
-x <- randunif(n = 1000, a = 1, b = 10)
-Fx <- function(x, a, b) (x - a)/(b - a)
-plot(ecdf(x))
-curve(Fx(x, a = 1, b = 10), add = TRUE, col = 2, from = 0)
-legend("right", legend = c("Empírica", "Teórica"),
-       lty = 1, col = 1:2, bty = "n")
+.pull-left.code80[
+```{r}
+x <- randunif(n = 1000, a = 1, b = 10) #<<
+hist(x, freq = FALSE)
+curve(dunif(x, 1, 10), add = TRUE, col = 2, from = 1)
 ```
+]
+.pull-right.code80[
+```{r}
+plot(ecdf(x))
+Fx <- function(x, a, b) (x - a)/(b - a)
+curve(Fx(x, a = 1, b = 10), add = TRUE, col = 2,
+      from = 1, to = 10)
+## curve(punif(x, 1, 10), add = TRUE, col = 2, from = 1, to = 10)
+plot(ecdf(runif(x, 1, 10)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "runif"),
+       lty = 1, col = 1:3, bty = "n")
+```
+]
 
 ---
 # Variáveis contínuas
 
 #### Gama
 
+.pull-left[
 Se $X \sim G[r,\lambda]$ então
 $$
 f(x) = \frac{1}{\Gamma(r)\lambda^r} x^{r-1} e^{\frac{x}{\lambda}},
@@ -333,6 +390,8 @@ x = \frac{u^{-(r+1)}}{\Gamma(r)\lambda^r}e^{-u/\lambda}
 $$
 Onde $\gamma(\cdot)$ é a [função gama
 incompleta](https://en.wikipedia.org/wiki/Incomplete_gamma_function).
+]
+.pull-right.code80[
 ```{r}
 randgama <- function(n, r, lambda) {
     u <- runif(n)
@@ -340,6 +399,39 @@ randgama <- function(n, r, lambda) {
     return(x)
 }
 ```
+]
+
+---
+exclude: true
+# Variáveis contínuas
+
+#### Gama
+
+.pull-left.code80[
+```{r}
+xx <- rgamma(1000, 1, 2)
+hist(xx)
+x <- randgama(n = 1000, r = 1/200, lambda = 1/200) #<<
+hist(x, freq = FALSE)
+curve(dunif(x, 1, 10), add = TRUE, col = 2, from = 1)
+```
+]
+.pull-right.code80[
+```{r}
+plot(ecdf(x))
+Fx <- function(x, a, b) (x - a)/(b - a)
+curve(Fx(x, a = 1, b = 10), add = TRUE, col = 2,
+      from = 1, to = 10)
+## curve(punif(x, 1, 10), add = TRUE, col = 2, from = 1, to = 10)
+plot(ecdf(runif(x, 1, 10)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "runif"),
+       lty = 1, col = 1:3, bty = "n")
+```
+]
+
+---
+class: inverse, middle
+# Variáveis discretas
 
 ---
 # Variáveis discretas
@@ -377,6 +469,7 @@ Portanto, para cada valor:
 
 #### Bernoulli
 
+.pull-left[
 Se $X \sim Ber(p)$ então
 $$
 P(X=x) = p^x (1-p)^{n-x}, \quad  x=0,1
@@ -397,22 +490,30 @@ F_X^{-1}(u) =
 0,   & u \leq 0.6
 \end{cases}
 $$
-Uma implementação elegante seria
-```{r}
-n <- 1000
-u <- runif(n)
-x <- as.integer(u > 0.6)
+]
+.pull-right[
+```{r, echo=-4}
+p <- 0.4; q <- 1 - p
+x <- rbinom(1000, size = 1, prob = p)
+plot(ecdf(x), verticals = TRUE, col.vert = "red")
+## knots(ecdf(x))
 ```
+]
 
 ---
 # Variáveis discretas
 
 #### Bernoulli
 
-Mas poderiamos pensar em formas diferentes:
-
+.pull-left[
 ```{r}
-## Uma forma mais longa (e menos eficiente) ----------------------------
+## Uma implementação elegante
+n <- 1000
+u <- runif(n)
+x <- as.integer(u > 0.6) #<<
+```
+```{r}
+## Uma forma mais longa (e menos eficiente)
 x2 <- integer(n)
 p <- 0.4
 q <- 1 - p
@@ -424,37 +525,55 @@ for(i in 1:length(x2)) {
     }
 }
 identical(x, x2)
-## Usando ifelse vetorizado --------------------------------------------
+```
+]
+
+.pull-right[
+```{r}
+## Usando ifelse vetorizado
 x3 <- ifelse(u < q, 0L, 1L)
 identical(x2, x3)
-## Usando seleção condicional ------------------------------------------
+## Usando seleção condicional
 x4 <- integer(n)
 x4[u >= q] <- 1L
 identical(x3, x4)
 ```
+Outras formas de gerar da Bernoulli:
+
+```{r, eval=FALSE}
+rbinom(n, size = 1, prob = p)
+sample(c(0, 1), size = n, replace = TRUE,
+       prob = c(0.6, 0.4))
+```
+]
 
 ---
 # Variáveis discretas
 
 #### Bernoulli
 
-```{r, out.width='50%', fig.show='hold'}
+.pull-left.code80[
+```{r}
+addmargins(prop.table(table(x)))
+barplot(prop.table(table(x)), ylim = c(0, 0.7))
+```
+]
+.pull-right.code80[
+```{r}
 plot(ecdf(x))
 curve(pbinom(x, size = 1, p = p), add = TRUE, type = "s", col = 2)
+plot(ecdf(rbinom(x, size = 1, prob = p)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "rbinom"),
+       lty = 1, col = 1:3, bty = "n")
 ```
-
-Outras formas de gerar da Bernoulli:
-
-```{r, eval=FALSE}
-rbinom(n, size = 1, prob = p)
-sample(c(0, 1), size = n, replace = TRUE, prob = c(0.6, 0.4))
-```
+]
 
 ---
 # Variáveis discretas
 
 #### Uniforme discreta
 
+.pull-left[
 Se $X$ tem distribuição uniforme discreta com $k$ valores, o seu
 suporte é o conjunto $x \in \{1, 2, \ldots, k\}$, $k \geq 2$. A função
 de probabilidade é
@@ -479,6 +598,14 @@ X =
 k, & \text{se } (k-1)/k \leq U < 1. \\
 \end{cases}
 $$
+]
+.pull-right[
+Um exemplo com $X \sim \text{U}(k=10)$
+```{r}
+x <- sample(1:10, size = 1000, replace = TRUE)
+plot(ecdf(x), verticals = TRUE, col.vert = "red")
+```
+]
 
 ---
 # Variáveis discretas
@@ -489,7 +616,7 @@ Uma implementação "ingênua" seria
 
 ```{r}
 n <- 1000
-u <- runif(n)
+u <- runif(n) #<<
 x <- integer(n)
 k <- 10
 x[u < 1/k] <- 1
@@ -503,7 +630,7 @@ Uma implementação usando conceitos de objetos do R
 xc <- cut(u, breaks = c(0, seq(1/k, (k-1)/k, 0.1), k/k),
           include.lowest = TRUE)
 table(xc)
-x <- as.integer(xc)
+x <- as.integer(xc) #<<
 ```
 
 ---
@@ -511,11 +638,22 @@ x <- as.integer(xc)
 
 #### Uniforme discreta
 
-```{r, fig.show='hold', out.width='60%'}
-Fx <- function(x, k) x/k
-plot(ecdf(x))
-curve(Fx(x, k = 10), add = TRUE, col = 2, from = 0, to = 10, n = 10)
+.pull-left.code80[
+```{r}
+addmargins(prop.table(table(x)))
+barplot(prop.table(table(x)), ylim = c(0, 0.15))
 ```
+]
+.pull-right.code80[
+```{r}
+plot(ecdf(x))
+Fx <- function(x, k) x/k
+curve(Fx(x, k = 10), add = TRUE, col = 2, from = 1, to = 10, n = 10, type = "s")
+plot(ecdf(sample(1:10, size = 1000, replace = TRUE)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "sample"),
+       lty = 1, col = 1:3, bty = "n")
+```
+]
 
 ---
 # Variáveis discretas
@@ -591,7 +729,7 @@ replicate(n = 10, randd(x = x, px = px))
 
 Considere a seguinte distribuição
 
-```{r, out.width='60%'}
+```{r, out.width='45%'}
 x <- 1:4
 px <- c(.2, .15, .25, .4)
 plot(cumsum(px), type = "s", ylim = c(0, 1))
@@ -604,7 +742,7 @@ Para gerar valores aleatórios desta distribuição, podemos usar a mesma
 função definida acima, apenas passando os vetores de $X$ e $p_x$
 adequados.
 
-```{r, out.width='60%'}
+```{r, out.width='40%'}
 randd(x = x, px = px)
 xr <- replicate(n = 10000, randd(x = x, px = px))
 plot(ecdf(xr)); lines(x, cumsum(px), type = "s", col = 2)
@@ -685,14 +823,20 @@ randpois <- function(lambda) {
 ---
 # Variáveis discretas
 
+.pull-left[
 ```{r, out.width='60%'}
 randpois(lambda = 5)
 replicate(10, randpois(lambda = 5))
 x <- replicate(10000, randpois(lambda = 5))
+```
+]
+.pull-right[
+```{r}
 plot(ecdf(x))
 plot(ecdf(rpois(x, lambda = 5)), add = TRUE, col = 2)
 curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3)
 ```
+]
 
 ---
 # Exercícios
