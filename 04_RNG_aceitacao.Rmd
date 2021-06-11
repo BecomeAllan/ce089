@@ -40,7 +40,7 @@ $$
 f(x) \leq M g(x)
 $$
 para todo $x$ do domínio de $f$. A função $g$ que "encapsula" a função
-$f$ é chamada de **distribuiçao proposta** (*proposal*).
+$f$ é chamada de **distribuição proposta** (*proposal*).
 
 O seguinte algoritmo permite gerar números aleatórios de uma
 distribuição de probabilidade caracterizada pela função densidade $f$:
@@ -83,7 +83,7 @@ curve(1.5 * (x ^ 2), -1, 1)
 integrate(function(x) 1.5 * (x^2), lower = -1, upper = 1)
 ```
 
-Vamos considerar como $g$ (a distribuição prposta) a densidade de uma
+Vamos considerar como $g$ (a distribuição proposta) a densidade de uma
 uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para
 ter produto 1, assim $g(y) = 0.5, -1 < y < 1$. Qual deve ser um valor de
 $M$ para garantir que $f(x) \leq M g(x)$ para todo $x$ dentro do
@@ -174,7 +174,7 @@ Agora, podemos definir um algoritmo que repete esse processo para um
 número fixo de amostras da distribuição proposta.
 
 ```{r}
-## Simula de uma unica vez, com um valor fixo de simulações
+## Simula de uma única vez, com um valor fixo de simulações
 Nsim <- 2500
 set.seed(1)
 ## Amostra da proposta
@@ -368,7 +368,7 @@ ua <- u[u < r]
 ur <- u[u >= r]
 ```
 
-Assim como no exemplo anterior, podemos visualizar os pontos amsotrados
+Assim como no exemplo anterior, podemos visualizar os pontos amostrados
 que foram aceitados e aqueles rejeitados.
 
 ```{r betaac}
@@ -389,7 +389,7 @@ length(x)/length(y)
 
 Note pelo gráfico acima que a maior parte dos pontos amostrados não
 são aceitos (veja também a baixa taxa de aceitação). Isso mostra que
-estamos disperdisando a maior parte do tempo computacional amostrando
+estamos desperdiçando a maior parte do tempo computacional amostrando
 pontos que não serão aceitos.
 
 Devemos então pensar em uma outra distribuição proposta, com a intenção
