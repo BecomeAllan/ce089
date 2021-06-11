@@ -462,7 +462,7 @@ div.tocify {
 <li>Ter um bom gerador de números uniformes.</li>
 <li>Ter um bom gerador de números de uma variável aleatória representada por uma distribuição <span class="math inline">\(D\)</span>, escolhida de tal maneira que existe uma constante <span class="math inline">\(M\)</span> tal que a densidade de <span class="math inline">\(g\)</span> que caracteriza a distribuição <span class="math inline">\(D\)</span> satisfaz <span class="math display">\[
 f(x) \leq M g(x)
-\]</span> para todo <span class="math inline">\(x\)</span> do domínio de <span class="math inline">\(f\)</span>. A função <span class="math inline">\(g\)</span> que “encapsula” a função <span class="math inline">\(f\)</span> é chamada de <strong>distribuiçao proposta</strong> (<em>proposal</em>).</li>
+\]</span> para todo <span class="math inline">\(x\)</span> do domínio de <span class="math inline">\(f\)</span>. A função <span class="math inline">\(g\)</span> que “encapsula” a função <span class="math inline">\(f\)</span> é chamada de <strong>distribuição proposta</strong> (<em>proposal</em>).</li>
 </ol>
 <p>O seguinte algoritmo permite gerar números aleatórios de uma distribuição de probabilidade caracterizada pela função densidade <span class="math inline">\(f\)</span>:</p>
 <ol style="list-style-type: decimal">
@@ -491,7 +491,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Tem integral 1?</span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw">integrate</span>(<span class="cf">function</span>(x) <span class="fl">1.5</span> <span class="op">*</span><span class="st"> </span>(x<span class="op">^</span><span class="dv">2</span>), <span class="dt">lower =</span> <span class="dv">-1</span>, <span class="dt">upper =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="co"># 1 with absolute error &lt; 1.1e-14</span></a></code></pre></div>
-<p>Vamos considerar como <span class="math inline">\(g\)</span> (a distribuição prposta) a densidade de uma uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para ter produto 1, assim <span class="math inline">\(g(y) = 0.5, -1 &lt; y &lt; 1\)</span>. Qual deve ser um valor de <span class="math inline">\(M\)</span> para garantir que <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> dentro do intervalo <span class="math inline">\([-1, 1]\)</span>? Pela definição acima, temos que: <span class="math display">\[
+<p>Vamos considerar como <span class="math inline">\(g\)</span> (a distribuição proposta) a densidade de uma uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para ter produto 1, assim <span class="math inline">\(g(y) = 0.5, -1 &lt; y &lt; 1\)</span>. Qual deve ser um valor de <span class="math inline">\(M\)</span> para garantir que <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> dentro do intervalo <span class="math inline">\([-1, 1]\)</span>? Pela definição acima, temos que: <span class="math display">\[
 M \geq \max_x \frac{f(x)}{g(x)} = \frac{1.5}{0.5} = 3
 \]</span> Portanto, fazemos <span class="math inline">\(M = 3\)</span>, pois esse é o valor mínimo necessário para satisfazer <span class="math inline">\(f(x) \leq M g(x)\)</span> (e queremos o valor de <span class="math inline">\(M\)</span> menor possível para mais eficiência computacional).</p>
 <p>No gráfico abaixo, vemos a função <span class="math inline">\(f(x)\)</span>, a proposta <span class="math inline">\(g(x)\)</span>, e a que iremos de fato utilizar no algoritmo, a <span class="math inline">\(M g(x)\)</span></p>
@@ -547,7 +547,7 @@ M \geq \max_x \frac{f(x)}{g(x)} = \frac{1.5}{0.5} = 3
 <p>Para uma ilustração animada veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html">este exemplo</a> da geração de números de uma distribuição normal, a partir de uma Cauchy (distribuição proposta). Para os detalhes da implementação veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html">este link</a>.</p>
 </div>
 <p>Agora, podemos definir um algoritmo que repete esse processo para um número fixo de amostras da distribuição proposta.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Simula de uma unica vez, com um valor fixo de simulações</span></a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Simula de uma única vez, com um valor fixo de simulações</span></a>
 <a class="sourceLine" id="cb6-2" title="2">Nsim &lt;-<span class="st"> </span><span class="dv">2500</span></a>
 <a class="sourceLine" id="cb6-3" title="3"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="co">## Amostra da proposta</span></a>
@@ -670,7 +670,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <a class="sourceLine" id="cb17-16" title="16">ua &lt;-<span class="st"> </span>u[u <span class="op">&lt;</span><span class="st"> </span>r]</a>
 <a class="sourceLine" id="cb17-17" title="17"><span class="co">## Rejeitados</span></a>
 <a class="sourceLine" id="cb17-18" title="18">ur &lt;-<span class="st"> </span>u[u <span class="op">&gt;=</span><span class="st"> </span>r]</a></code></pre></div>
-<p>Assim como no exemplo anterior, podemos visualizar os pontos amsotrados que foram aceitados e aqueles rejeitados.</p>
+<p>Assim como no exemplo anterior, podemos visualizar os pontos amostrados que foram aceitados e aqueles rejeitados.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, alfa, beta), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>)</a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">*</span><span class="st"> </span>x, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb18-3" title="3"><span class="kw">points</span>(x, ua <span class="op">*</span><span class="st"> </span>M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x), <span class="dt">col =</span> <span class="dv">3</span>)</a>
@@ -683,7 +683,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <a class="sourceLine" id="cb19-4" title="4"><span class="co">## Taxa (teorica) de aceitacao é</span></a>
 <a class="sourceLine" id="cb19-5" title="5"><span class="dv">1</span><span class="op">/</span>M</a>
 <a class="sourceLine" id="cb19-6" title="6"><span class="co"># [1] 0.3745677</span></a></code></pre></div>
-<p>Note pelo gráfico acima que a maior parte dos pontos amostrados não são aceitos (veja também a baixa taxa de aceitação). Isso mostra que estamos disperdisando a maior parte do tempo computacional amostrando pontos que não serão aceitos.</p>
+<p>Note pelo gráfico acima que a maior parte dos pontos amostrados não são aceitos (veja também a baixa taxa de aceitação). Isso mostra que estamos desperdiçando a maior parte do tempo computacional amostrando pontos que não serão aceitos.</p>
 <p>Devemos então pensar em uma outra distribuição proposta, com a intenção de melhorar (aumentar) a taxa de aceitação. Naturalmente, uma distribuição proposta com um formato mais próximo daquele que queremos amostrar seria possivelmente mais eficiente.</p>
 <p>Considere então como uma nova distribuição proposta uma <span class="math inline">\(\text{Beta}(2, 6)\)</span> (ainda queremos amostrar de uma <span class="math inline">\(\text{Beta}(2.7, 6.3)\)</span>).</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, <span class="fl">2.7</span>, <span class="fl">6.3</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">3</span>))</a>

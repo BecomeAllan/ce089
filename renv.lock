@@ -637,6 +637,13 @@
       "Repository": "CRAN",
       "Hash": "74b905b0076e1de6e27f540c95ba68d5"
     },
+    "s2": {
+      "Package": "s2",
+      "Version": "1.0.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "02f7d4821a7ca841bbfdf3b7176ce6cf"
+    },
     "sandwich": {
       "Package": "sandwich",
       "Version": "3.0-1",
@@ -667,10 +674,10 @@
     },
     "sf": {
       "Package": "sf",
-      "Version": "0.9-8",
+      "Version": "1.0-0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "d82215b501772c9faadb4dcd71395c7d"
+      "Hash": "800804f284ba87cb28cf24fc47fc4e02"
     },
     "shape": {
       "Package": "shape",
@@ -695,10 +702,10 @@
     },
     "spdep": {
       "Package": "spdep",
-      "Version": "1.1-7",
+      "Version": "1.1-8",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9ef0638fe160bf3e375e8f6b54ec8028"
+      "Hash": "b4fa4605fe99dd87eaee8230dbdbb0c8"
     },
     "stringi": {
       "Package": "stringi",
@@ -811,6 +818,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "e99d80ad34457a4853674e89d5e806de"
+    },
+    "wk": {
+      "Package": "wk",
+      "Version": "0.4.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f7e41a60d8b19cf505ffa06bf578c7bd"
     },
     "xaringan": {
       "Package": "xaringan",
