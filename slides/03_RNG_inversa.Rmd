@@ -442,19 +442,19 @@ valor uniforme pertence na distribuição acumulada.
 Se $X$ é uma VA discreta e
 
 $$
-\begin{align}
+\begin{align*}
 \ldots < x_{i-1} < x_i < x_{i+1} < \ldots
-\end{align}
+\end{align*}
 $$
 
 são os **pontos de descontinuidade** de $F_X(x)$, então a transformação
 inversa é
 
 $$
-\begin{align}
+\begin{align*}
 F_X^{-1}(u) = x_i, \quad \text{ onde } \quad
 F_X(x_{i-1}) < u \leq F_X(x_{i})
-\end{align}
+\end{align*}
 $$
 
 Portanto, para cada valor:
@@ -486,8 +486,8 @@ Portanto, se $p=0.4$, por exemplo,
 $$
 F_X^{-1}(u) =
 \begin{cases}
-1, & u > 0.6 \\
-0,   & u \leq 0.6
+0,   & u \leq 0.6 \\
+1, & u > 0.6
 \end{cases}
 $$
 ]
@@ -553,9 +553,13 @@ sample(c(0, 1), size = n, replace = TRUE,
 #### Bernoulli
 
 .pull-left.code80[
-```{r}
+```{r, out.width='75%'}
 addmargins(prop.table(table(x)))
-barplot(prop.table(table(x)), ylim = c(0, 0.7))
+plot(prop.table(table(x)), ylim = c(0, 0.7), type = "h")
+lines(x = c(0, 1) + .01, y = c(.6, .4),
+      col = "red", type = "h", lwd = 2)
+legend("topright", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
 ```
 ]
 .pull-right.code80[
@@ -639,9 +643,13 @@ x <- as.integer(xc) #<<
 #### Uniforme discreta
 
 .pull-left.code80[
-```{r}
+```{r, out.width='75%'}
 addmargins(prop.table(table(x)))
-barplot(prop.table(table(x)), ylim = c(0, 0.15))
+plot(prop.table(table(x)), ylim = c(0, 0.15), type = "h")
+lines(x = (1:10) + .1, y = rep(.1, 10),
+      col = "red", type = "h", lwd = 2)
+legend("topright", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
 ```
 ]
 .pull-right.code80[
@@ -677,6 +685,7 @@ gere $u \sim U(0,1)$. Com isso, faça:
 
 ### Algoritmo de busca sequêncial
 
+.pull-left-60[
 No caso da distribuição Uniforme discreta acima, com $k=10$, o algoritmo
 seria então
 
@@ -685,7 +694,8 @@ seria então
   - $x = x+1$
   - $F(x) = F(x) + p_x$
 3. Retorne $x$
-
+]
+.pull-right-40[
 Uma implementação básica seria
 
 ```{r}
@@ -700,6 +710,7 @@ randd <- function(x, px) {
     return(x)
 }
 ```
+]
 
 ---
 # Variáveis discretas
@@ -727,13 +738,24 @@ replicate(n = 10, randd(x = x, px = px))
 ---
 # Variáveis discretas
 
-Considere a seguinte distribuição
+Considere a seguinte distribuição de probabilidade
 
-```{r, out.width='45%'}
+.pull-left-30[
+```{r, echo=FALSE}
 x <- 1:4
 px <- c(.2, .15, .25, .4)
-plot(cumsum(px), type = "s", ylim = c(0, 1))
+knitr::kable(cbind(x, px), col.names = c("$X$", "$P(X)$"))
 ```
+]
+.pull-right-70[
+```{r, out.width='70%'}
+x <- 1:4
+px <- c(.2, .15, .25, .4)
+plot(x, cumsum(px), type = "s", ylim = c(0, 1), axes = FALSE)
+axis(1, at = 1:4, labels = 1:4); axis(2); box()
+points(x, cumsum(px), pch = 16)
+```
+]
 
 ---
 # Variáveis discretas
@@ -742,33 +764,40 @@ Para gerar valores aleatórios desta distribuição, podemos usar a mesma
 função definida acima, apenas passando os vetores de $X$ e $p_x$
 adequados.
 
-```{r, out.width='40%'}
+.pull-left-40[
+```{r}
 randd(x = x, px = px)
-xr <- replicate(n = 10000, randd(x = x, px = px))
-plot(ecdf(xr)); lines(x, cumsum(px), type = "s", col = 2)
+replicate(10, randd(x = x, px = px))
 ```
+]
+.pull-right-60[
+```{r, out.width='70%'}
+xr <- replicate(n = 10000, randd(x = x, px = px))
+plot(ecdf(xr), col = 2); lines(x, cumsum(px), type = "s")
+points(x, cumsum(px), pch = 16)
+legend("left", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+```
+]
 
 ---
 # Variáveis discretas
 
 #### Algoritmo de busca sequencial - Poisson
 
+.pull-left[
 - No caso de uma distribuição como a Poisson, a aplicação direta deste
   algoritmo não é possível pois:
   - A Poisson assume um número infinito de valores discretos
   ( $0, 1, 2, \ldots$ )
-  - As probbailidades dependem do parâmetro da distribuição
+  - As probabilidades dependem do parâmetro da distribuição
 
 - Assim, não é possível definir previamente os valores de $X$ e $p_x$
 
 - Uma solução seria então calcular as probabilidades implicitamente
   através de alguma forma de **recursão**
-
----
-# Variáveis discretas
-
-#### Algoritmo de busca sequencial - Poisson
-
+]
+.pull-right[
 Sabendo que
 
 $$
@@ -788,6 +817,7 @@ $$
 
 Dessa forma, podemos usar essa **atualização de probabilidade
 recursiva** no algoritmo de busca sequencial.
+]
 
 ---
 # Variáveis discretas
@@ -796,6 +826,7 @@ recursiva** no algoritmo de busca sequencial.
 
 Uma adaptação do algoritmo geral para a Poisson seria então
 
+.pull-left[
 1. Gera $u \sim U(0,1)$
 2. Atribua $x_0 = 0$, $p_0 = P[X = x_0]$, $F(x) = p_0$ e $p=p_0$
 2. Enquanto $u > F(x)$ faça:
@@ -803,7 +834,8 @@ Uma adaptação do algoritmo geral para a Poisson seria então
   - $p = \frac{\lambda}{x} p$
   - $F(x) = F(x) + p$
 3. Retorne $x$
-
+]
+.pull-right[
 ```{r}
 randpois <- function(lambda) {
     u <- runif(1)
@@ -819,24 +851,31 @@ randpois <- function(lambda) {
     return(x)
 }
 ```
+]
 
 ---
 # Variáveis discretas
 
-.pull-left[
+.pull-left-40[
 ```{r, out.width='60%'}
 randpois(lambda = 5)
 replicate(10, randpois(lambda = 5))
+```
+]
+.pull-right-60[
+```{r, out.width='80%'}
 x <- replicate(10000, randpois(lambda = 5))
-```
-]
-.pull-right[
-```{r}
 plot(ecdf(x))
-plot(ecdf(rpois(x, lambda = 5)), add = TRUE, col = 2)
-curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 3)
+curve(ppois(x, lambda = 5), add = TRUE, type = "s", col = 2)
+plot(ecdf(rpois(x, lambda = 5)), add = TRUE, col = 3)
+legend("right", legend = c("Empírica", "Teórica", "rpois"),
+       lty = 1, col = 1:3, bty = "n")
 ```
 ]
+
+---
+class: inverse, middle
+# Exercícios
 
 ---
 # Exercícios
