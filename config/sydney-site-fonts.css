@@ -1,30 +1,15 @@
-/* mostly as per defaults
-https://github.com/yihui/xaringan/blob/master/inst/rmarkdown/templates/xaringan/resources/default-fonts.css
-but the major change is bringing Roboto front and centre
-*/
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
-@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-/*
-I'm in two minds as to whether to default to Roberto Mono or stick with
-Source Code Pro (internet says Source Code Pro is better)
-https://www.slant.co/versus/224/287/~source-code-pro_vs_roboto-mono
-@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);
-*/
-@import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700);
-
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+/* @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700'); */
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
 
 body {
@@ -32,9 +17,9 @@ body {
     /* font-family: 'Montserrat', sans-serif; */
     /* font-family: 'Roboto', Arial, sans-serif; */
     /* font-family: 'Roboto Slab', serif; */
-    font-family: 'IBM Plex Sans', sans-serif;
+    /* font-family: 'IBM Plex Sans', sans-serif; */
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 /* .navbar-default { */
@@ -42,18 +27,21 @@ body {
 /* } */
 
 
-h1, h2, h3 {
+/* h1, h2, h3 { */
   /* font-family: 'Roboto Condensed', sans-serif; */
-  font-weight: normal;
+  /* font-weight: normal; */
   /* margin-top: -50px; */
   /* margin-bottom: 20px; */
-}
+/* } */
 
+/* Fonte do codigo */
 code, inline-code {
     /* font-family: 'Fira Mono', monospace; */
-    font-family: 'IBM Plex Mono', monospace;
+    /* font-family: 'IBM Plex Mono', monospace; */
+    font-family: 'Source Code Pro', monospace;
 }
 
+/* Formata bloco de codigo */
 pre {
     display: block;
     padding: 10px;
@@ -82,6 +70,7 @@ pre code{
     border-radius: 0;
 }
 
+/* Formata output de codigo */
 pre:not([class]) {
     /* margin-top: 1.5em; */
     margin-top: -1em;
@@ -91,63 +80,9 @@ pre:not([class]) {
 
 
 
-.hljs-github .hljs {
-  overflow-y: auto;
-}
-
-.remark-code-line {
-  font-size: 80%;
-}
-
-/* this is not ideal, but a response to the resising issues
-   discussed https://github.com/yihui/xaringan/issues/62 and
-   https://github.com/yihui/xaringan/issues/143  */
-.mjx-chtml{ font-size: 100% !important; }
-
-/* change the line spread for readability
-   and so that inline code highlighting
-   doesn't cover text on the line above */
-/* .remark-slide-content { font-size:24px; } */
-/* .remark-slide-content p, */
-/* .remark-slide-content li { */
-/*   line-height: 1.0; */
-/*   /\*font-size: 1.1em;*\/ */
-/*   margin-bottom: 0.5em; */
-/*   margin-top: 0.5em; */
-/* } */
-
-.footnote {
-  position: absolute;
-  bottom: 0;
-  padding-right: 8em; /* to avoid the page numbering */
-}
-/* footnote identifier use: .fn[1] */
-.fn {
-  vertical-align: super;
-  font-size: 60%;
-}
-.footnote {
-  font-size: 0.7em;
-}
-.remark-slide-content .footnote  p,
-.remark-slide-content .footnote li {
-  font-size: 0.7em!important;
-}
-.footnote .remark-code,
-.footnote .remark-inline-code{ font-size: 0.8em!important; }
-
-/* code higlighting */
-.remark-code-string-highlighted,
-.remark-code-line-highlighted {
-    background-color: yellow;
-}
 
 
-.remark-slide-number{
-  font-size: 16px!important;
-  bottom: 8px;
-  right: 16px;
-}
+
 /************************
  * Font size and colours
  ************************/
