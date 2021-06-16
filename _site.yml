@@ -5,7 +5,7 @@ output:
   html_document:
     css: ["default", "config/sydney-site.css", "config/sydney-site-fonts.css"]
     theme: flatly
-    highlight: haddock
+    highlight: textmate
     # code_folding: hide
     number_sections: false
     toc: true
