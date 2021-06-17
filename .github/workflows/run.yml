@@ -14,8 +14,9 @@ jobs:
     - uses: actions/checkout@v2
 
     # Install R
-    - name: Set up R
+    - name: Set up R and pandoc
       uses: r-lib/actions/setup-r@v1
+      uses: r-lib/actions/setup-pandoc@v1
 
     # Install system dependencies
     - name: Install system dependencies
@@ -29,6 +30,14 @@ jobs:
         sudo apt-get install -y libgdal-dev
         sudo apt-get install -y libproj-dev
         sudo apt-get install -y libcurl4-openssl-dev
+
+    - name: Cache packages
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.RENV_PATHS_ROOT }}
+        key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-renv-
 
     - name: Restore packages
       shell: Rscript {0}
