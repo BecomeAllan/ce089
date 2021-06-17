@@ -32,6 +32,14 @@ De acordo com os itens do [cronograma](aulas.html):
   rejeição. [HTML](04_RNG_aceitacao.html).
 7. Geração de números aleatórios não uniformes: método da relação entre
   variáveis. [HTML](05_RNG_transform.html).
+   - Implementar os métodos para aproximação do valor do $\pi$: método do
+   círculo/quadrado e método da agullha de Buffon, com base nos
+   materiais:
+     - [Agulha de Buffon](https://www.cin.ufpe.br/~ldl/buffon.pdf) de
+     Lauro Didier Lins
+     - [Agulha de Buffon - Uma demonstração
+     simples](https://www.e-publicacoes.uerj.br/index.php/cadmat/article/view/11896/9319) de R. C. Santos
+     - [Métodos de Monte Carlo e Aproximações de $\pi$](misc/montecarlopi.pdf) de Fernando Henrique Ferraz Pereira da Rosa e colaboradores
 8. Integração de Monte Carlo. [HTML](06_MC_intro.html).
 9. Distribuições aproximadas baseadas em simulação de Monte Carlo.
   [HTML](07_MC_aprox.html).
