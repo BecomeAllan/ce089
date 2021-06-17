@@ -33,6 +33,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -54,99 +56,24 @@
   ul.task-list{list-style: none;}
     </style>
 
-
-<style type="text/css">
-  code {
-    white-space: pre;
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
   }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
 }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; } /* Alert */
-code span.an { color: #008000; } /* Annotation */
-code span.at { } /* Attribute */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #0000ff; } /* ControlFlow */
-code span.ch { color: #008080; } /* Char */
-code span.cn { } /* Constant */
-code span.co { color: #008000; } /* Comment */
-code span.cv { color: #008000; } /* CommentVar */
-code span.do { color: #008000; } /* Documentation */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.im { } /* Import */
-code span.in { color: #008000; } /* Information */
-code span.kw { color: #0000ff; } /* Keyword */
-code span.op { } /* Operator */
-code span.ot { color: #ff4000; } /* Other */
-code span.pp { color: #ff4000; } /* Preprocessor */
-code span.sc { color: #008080; } /* SpecialChar */
-code span.ss { color: #008080; } /* SpecialString */
-code span.st { color: #008080; } /* String */
-code span.va { } /* Variable */
-code span.vs { color: #008080; } /* VerbatimString */
-code span.wa { color: #008000; font-weight: bold; } /* Warning */
-
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
 </script>
 
 
 
 
+
+<link rel="stylesheet" href="default" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site.css" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site-fonts.css" type="text/css" />
 
 
 
@@ -490,23 +417,23 @@ Random walk ou “passeio aleatório”
 <p>Um random walk ou “passeio aleatório” é uma equação recursiva, que basicamente diz que uma observação no tempo <span class="math inline">\(t+1\)</span> depende da observação no temo <span class="math inline">\(t\)</span> e de um <strong>ruído</strong>. Matematicamente: <span class="math display">\[
 x_{t+1} = x_t + \epsilon
 \]</span> onde <span class="math inline">\(\epsilon \sim g\)</span>, e <span class="math inline">\(g\)</span> é uma distribuição simétrica ao redor de zero.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Simulação de um random walk</span></a>
-<a class="sourceLine" id="cb1-2" title="2">rw1 &lt;-<span class="st"> </span><span class="cf">function</span>(T, x1, seed) {</a>
-<a class="sourceLine" id="cb1-3" title="3">    x &lt;-<span class="st"> </span><span class="kw">numeric</span>(T)</a>
-<a class="sourceLine" id="cb1-4" title="4">    x[<span class="dv">1</span>] &lt;-<span class="st"> </span>x1</a>
-<a class="sourceLine" id="cb1-5" title="5">    <span class="kw">set.seed</span>(seed)</a>
-<a class="sourceLine" id="cb1-6" title="6">    e &lt;-<span class="st"> </span><span class="kw">rnorm</span>(T)</a>
-<a class="sourceLine" id="cb1-7" title="7">    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(T <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)) {</a>
-<a class="sourceLine" id="cb1-8" title="8">        x[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>x[t] <span class="op">+</span><span class="st"> </span>e[t]</a>
-<a class="sourceLine" id="cb1-9" title="9">    }</a>
-<a class="sourceLine" id="cb1-10" title="10">    <span class="kw">return</span>(x)</a>
-<a class="sourceLine" id="cb1-11" title="11">}</a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="kw">plot</span>(<span class="kw">rw1</span>(<span class="dt">T =</span> <span class="dv">100</span>, <span class="dt">x1 =</span> <span class="dv">10</span>, <span class="dt">seed =</span> <span class="dv">1</span>), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>,</a>
-<a class="sourceLine" id="cb1-14" title="14">     <span class="dt">xlab =</span> <span class="st">&quot;Tempo&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;x&quot;</span>)</a>
-<a class="sourceLine" id="cb1-15" title="15"><span class="kw">plot</span>(<span class="kw">rw1</span>(<span class="dt">T =</span> <span class="dv">1000</span>, <span class="dt">x1 =</span> <span class="dv">10</span>, <span class="dt">seed =</span> <span class="dv">1</span>), <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>,</a>
-<a class="sourceLine" id="cb1-16" title="16">     <span class="dt">xlab =</span> <span class="st">&quot;Tempo&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;x&quot;</span>)</a>
-<a class="sourceLine" id="cb1-17" title="17"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>## Simulação de um random walk
+rw1 &lt;- function(T, x1, seed) {
+    x &lt;- numeric(T)
+    x[1] &lt;- x1
+    set.seed(seed)
+    e &lt;- rnorm(T)
+    for(t in 1:(T - 1)) {
+        x[t + 1] &lt;- x[t] + e[t]
+    }
+    return(x)
+}
+par(mfrow = c(2, 1))
+plot(rw1(T = 100, x1 = 10, seed = 1), type = &quot;l&quot;,
+     xlab = &quot;Tempo&quot;, ylab = &quot;x&quot;)
+plot(rw1(T = 1000, x1 = 10, seed = 1), type = &quot;l&quot;,
+     xlab = &quot;Tempo&quot;, ylab = &quot;x&quot;)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /> Podemos escrever essa equação como uma diferença sucessiva, <span class="math display">\[
 x_{t+1} - x_t = \epsilon
 \]</span> Ou seja, conhecendo <span class="math inline">\(x_t\)</span>, a distribuição de <span class="math inline">\(x_{t+1}\)</span> será apenas uma função de <span class="math inline">\(\epsilon\)</span>, <span class="math display">\[
@@ -555,67 +482,67 @@ U \leq \alpha(X_t, Y)
 <li>Calcule a probabilidade de aceitação <span class="math inline">\(\alpha(X_t, Y) = \min \left( \frac{f(Y)}{f(X_t)}, 1 \right)\)</span>, onde <span class="math inline">\(f\)</span> é a densidade da normal padrão</li>
 <li>Simule <span class="math inline">\(u \sim \text{U}(0,1)\)</span>. Se <span class="math inline">\(u \leq \alpha(X_t, Y)\)</span>, então <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário <span class="math inline">\(X_{t+1}=X_t\)</span></li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dnorm</span>(x, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2">delta &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb2-3" title="3">N &lt;-<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb2-4" title="4">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb2-5" title="5">x[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="kw">set.seed</span>(<span class="dv">2019-10-11</span>)</a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb2-8" title="8">    z &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="op">-</span>delta, delta)</a>
-<a class="sourceLine" id="cb2-9" title="9">    y &lt;-<span class="st"> </span>x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb2-10" title="10">    alpha &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="kw">f</span>(y)<span class="op">/</span><span class="kw">f</span>(x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]), <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-11" title="11">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb2-12" title="12">    <span class="cf">if</span>(u <span class="op">&lt;=</span><span class="st"> </span>alpha) {</a>
-<a class="sourceLine" id="cb2-13" title="13">        x[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb2-14" title="14">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb2-15" title="15">        x[i] &lt;-<span class="st"> </span>x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb2-16" title="16">    }</a>
-<a class="sourceLine" id="cb2-17" title="17">}</a>
-<a class="sourceLine" id="cb2-18" title="18"><span class="kw">plot</span>(x, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>f &lt;- function(x) dnorm(x, 0, 1)
+delta &lt;- 0.5
+N &lt;- 500
+x &lt;- numeric(N)
+x[1] &lt;- 0
+set.seed(2019-10-11)
+for(i in 2:N) {
+    z &lt;- runif(1, -delta, delta)
+    y &lt;- x[i - 1] + z
+    alpha &lt;- min(f(y)/f(x[i - 1]), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+    }
+}
+plot(x, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja o que acontece se aumentarmos o valor de <span class="math inline">\(\delta\)</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dnorm</span>(x, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-2" title="2">delta &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb3-3" title="3">N &lt;-<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb3-4" title="4">x2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb3-5" title="5">x2[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="kw">set.seed</span>(<span class="dv">2019-10-11</span>)</a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb3-8" title="8">    z &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="op">-</span>delta, delta)</a>
-<a class="sourceLine" id="cb3-9" title="9">    y &lt;-<span class="st"> </span>x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb3-10" title="10">    alpha &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="kw">f</span>(y)<span class="op">/</span><span class="kw">f</span>(x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]), <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-11" title="11">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-12" title="12">    <span class="cf">if</span>(u <span class="op">&lt;=</span><span class="st"> </span>alpha) {</a>
-<a class="sourceLine" id="cb3-13" title="13">        x2[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb3-14" title="14">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb3-15" title="15">        x2[i] &lt;-<span class="st"> </span>x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb3-16" title="16">    }</a>
-<a class="sourceLine" id="cb3-17" title="17">}</a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>f &lt;- function(x) dnorm(x, 0, 1)
+delta &lt;- 2
+N &lt;- 500
+x2 &lt;- numeric(N)
+x2[1] &lt;- 0
+set.seed(2019-10-11)
+for(i in 2:N) {
+    z &lt;- runif(1, -delta, delta)
+    y &lt;- x2[i - 1] + z
+    alpha &lt;- min(f(y)/f(x2[i - 1]), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x2[i] &lt;- y
+    } else {
+        x2[i] &lt;- x2[i - 1]
+    }
+}
+plot(x2, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Compara a distribuição das amostras com a distribuição teórica</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x2))</a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="kw">curve</span>(<span class="kw">pnorm</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>par(mfrow = c(1, 2))
+plot(ecdf(x))
+curve(pnorm(x), add = TRUE, col = 2)
+plot(ecdf(x2))
+curve(pnorm(x), add = TRUE, col = 2)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Comparando as duas cadeias</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">plot</span>(x, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="kw">expression</span>(delta <span class="op">==</span><span class="st"> </span><span class="fl">0.5</span>))</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">main =</span> <span class="kw">expression</span>(delta <span class="op">==</span><span class="st"> </span><span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>par(mfrow = c(2, 1))
+plot(x, type = &quot;l&quot;, main = expression(delta == 0.5))
+plot(x2, type = &quot;l&quot;, main = expression(delta == 2))
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>No primeiro caso, os valores propostos ficam muito próximos do valor atual, e quase sempre serão aceitos. No entanto, levará muitas iterações até o algoritmo cobrir todo o espaço de <span class="math inline">\(X\)</span>.</p>
 <p>No segundo caso, a taxa de rejeição é excessivamente alta e a cadeia se movimenta muito pouco, pois os valores propostos podem ficar muito longe do atual.</p>
 <p>Nas duas situações o algoritmo pode ser ineficiente. Na prática temos que testar vários valores de <span class="math inline">\(\delta\)</span> e monitorar a taxa de aceitação. A partir disso surge um importante conceito em amostradores MCMC: <em>tuning</em>, ou “refinamento”. Em teoria, não existe um valor ideal para <span class="math inline">\(\delta\)</span>, ambas as cadeias irão eventualmente convergir para a distribuição alvo (normal nesse caso). No entanto, a velocidade de convergência e a quantidade de espaço amostral explorado dependem de <span class="math inline">\(\delta\)</span>. Portanto, o amostrador pode ser refinado para melhorar sua eficiência.</p>
 <p>Veja também que no primeiro caso, como os valores propostos são mais próximos do atual, eles também terão uma correlação maior.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="kw">acf</span>(x, <span class="dt">lag.max =</span> <span class="dv">50</span>)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="kw">acf</span>(x2, <span class="dt">lag.max =</span> <span class="dv">50</span>)</a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>par(mfrow = c(1, 2))
+acf(x, lag.max = 50)
+acf(x2, lag.max = 50)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
 <iframe src="rwsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
@@ -624,44 +551,44 @@ U \leq \alpha(X_t, Y)
 <div id="exemplo-com-normal" class="section level2">
 <h2><span class="header-section-number">3.2</span> Exemplo com normal</h2>
 <p>Considere gerar valores de uma distribuição <span class="math inline">\(t\)</span> de Student com <span class="math inline">\(\nu\)</span> graus de liberdade, usando como distribuição proposta uma <span class="math inline">\(\text{N}(X_t, \sigma)\)</span>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">rw.Metropolis &lt;-<span class="st"> </span><span class="cf">function</span>(nu, sigma, x0, N) {</a>
-<a class="sourceLine" id="cb7-2" title="2">    f &lt;-<span class="st"> </span><span class="cf">function</span>(x, nu) <span class="kw">dt</span>(x, nu)</a>
-<a class="sourceLine" id="cb7-3" title="3">    x &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb7-4" title="4">    x[<span class="dv">1</span>] &lt;-<span class="st"> </span>x0</a>
-<a class="sourceLine" id="cb7-5" title="5">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(N)</a>
-<a class="sourceLine" id="cb7-6" title="6">    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb7-7" title="7">        z &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> sigma)</a>
-<a class="sourceLine" id="cb7-8" title="8">        y &lt;-<span class="st"> </span>x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>z</a>
-<a class="sourceLine" id="cb7-9" title="9">        alpha &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="kw">f</span>(y, nu)<span class="op">/</span><span class="kw">f</span>(x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], nu), <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb7-10" title="10">        u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb7-11" title="11">        <span class="cf">if</span>(u <span class="op">&lt;=</span><span class="st"> </span>alpha) {</a>
-<a class="sourceLine" id="cb7-12" title="12">            x[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb7-13" title="13">        } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb7-14" title="14">            x[i] &lt;-<span class="st"> </span>x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb7-15" title="15">        }</a>
-<a class="sourceLine" id="cb7-16" title="16">    }</a>
-<a class="sourceLine" id="cb7-17" title="17">    <span class="kw">return</span>(x)</a>
-<a class="sourceLine" id="cb7-18" title="18">}</a></code></pre></div>
+<pre class="r"><code>rw.Metropolis &lt;- function(nu, sigma, x0, N) {
+    f &lt;- function(x, nu) dt(x, nu)
+    x &lt;- numeric(N)
+    x[1] &lt;- x0
+    u &lt;- runif(N)
+    for(i in 2:N) {
+        z &lt;- rnorm(1, mean = 0, sd = sigma)
+        y &lt;- x[i - 1] + z
+        alpha &lt;- min(f(y, nu)/f(x[i - 1], nu), 1)
+        u &lt;- runif(1)
+        if(u &lt;= alpha) {
+            x[i] &lt;- y
+        } else {
+            x[i] &lt;- x[i - 1]
+        }
+    }
+    return(x)
+}</code></pre>
 <p>Supondo que queremos gerar uma distribuição <span class="math inline">\(t(\nu = 4)\)</span>. Vamos fazer isso com valores diferentes de <span class="math inline">\(\sigma\)</span> da distribuição normal proposta.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">nu &lt;-<span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb8-2" title="2">N &lt;-<span class="st"> </span><span class="dv">2000</span></a>
-<a class="sourceLine" id="cb8-3" title="3">sigma &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">05</span>, <span class="fl">.5</span>, <span class="dv">2</span>,  <span class="dv">16</span>)</a>
-<a class="sourceLine" id="cb8-4" title="4">x0 &lt;-<span class="st"> </span><span class="dv">25</span></a>
-<a class="sourceLine" id="cb8-5" title="5">rw1 &lt;-<span class="st"> </span><span class="kw">rw.Metropolis</span>(n, sigma[<span class="dv">1</span>], x0, N)</a>
-<a class="sourceLine" id="cb8-6" title="6">rw2 &lt;-<span class="st"> </span><span class="kw">rw.Metropolis</span>(n, sigma[<span class="dv">2</span>], x0, N)</a>
-<a class="sourceLine" id="cb8-7" title="7">rw3 &lt;-<span class="st"> </span><span class="kw">rw.Metropolis</span>(n, sigma[<span class="dv">3</span>], x0, N)</a>
-<a class="sourceLine" id="cb8-8" title="8">rw4 &lt;-<span class="st"> </span><span class="kw">rw.Metropolis</span>(n, sigma[<span class="dv">4</span>], x0, N)</a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="co">## Resultado das cadeias</span></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb8-11" title="11">refline &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>), <span class="dt">df =</span> n)</a>
-<a class="sourceLine" id="cb8-12" title="12">rw &lt;-<span class="st"> </span><span class="kw">cbind</span>(rw1, rw2, rw3,  rw4)</a>
-<a class="sourceLine" id="cb8-13" title="13"><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>) {</a>
-<a class="sourceLine" id="cb8-14" title="14">    <span class="kw">plot</span>(rw[, j], <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>,</a>
-<a class="sourceLine" id="cb8-15" title="15">         <span class="dt">main =</span> <span class="kw">bquote</span>(sigma <span class="op">==</span><span class="st"> </span>.(<span class="kw">round</span>(sigma[j], <span class="dv">3</span>))),</a>
-<a class="sourceLine" id="cb8-16" title="16">         <span class="dt">ylab =</span> <span class="st">&quot;X&quot;</span>, <span class="dt">ylim =</span> <span class="kw">range</span>(rw[, j]))</a>
-<a class="sourceLine" id="cb8-17" title="17">    <span class="kw">abline</span>(<span class="dt">h =</span> refline)</a>
-<a class="sourceLine" id="cb8-18" title="18">}</a>
-<a class="sourceLine" id="cb8-19" title="19"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>nu &lt;- 4
+N &lt;- 2000
+sigma &lt;- c(.05, .5, 2,  16)
+x0 &lt;- 25
+rw1 &lt;- rw.Metropolis(n, sigma[1], x0, N)
+rw2 &lt;- rw.Metropolis(n, sigma[2], x0, N)
+rw3 &lt;- rw.Metropolis(n, sigma[3], x0, N)
+rw4 &lt;- rw.Metropolis(n, sigma[4], x0, N)
+## Resultado das cadeias
+par(mfrow = c(2, 2))
+refline &lt;- qt(c(.025, .975), df = n)
+rw &lt;- cbind(rw1, rw2, rw3,  rw4)
+for (j in 1:4) {
+    plot(rw[, j], type = &quot;l&quot;,
+         main = bquote(sigma == .(round(sigma[j], 3))),
+         ylab = &quot;X&quot;, ylim = range(rw[, j]))
+    abline(h = refline)
+}
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Com <span class="math inline">\(\sigma = 0.05\)</span> a probabilidade de aceitação <span class="math inline">\(\alpha\)</span> tende a ser grande, portanto quase todos os valores candidatos são aceitos. Os incrementos são pequenos e a cadeia não converge para a distribuição estacionária.</li>
@@ -708,95 +635,91 @@ U \leq \alpha(X_t, Y)
 </ol>
 <div id="exemplo-beta" class="section level2">
 <h2><span class="header-section-number">4.1</span> Exemplo (beta)</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">## Gerar números de uma distribuição Beta usando a distribuição Uniforme</span></a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="co">## e/ou normal.</span></a>
-<a class="sourceLine" id="cb9-3" title="3"></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co">## Distribuição alvo: X ~ Beta(2, 3)</span></a>
-<a class="sourceLine" id="cb9-5" title="5">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="dt">shape1 =</span> <span class="dv">2</span>, <span class="dt">shape2 =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb9-6" title="6"><span class="kw">curve</span>(f, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb9-7" title="7"><span class="co">## Distribuição candidata (proposal): X ~ Uniforme(0,1)</span></a>
-<a class="sourceLine" id="cb9-8" title="8">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dunif</span>(x, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb9-9" title="9"></a>
-<a class="sourceLine" id="cb9-10" title="10"><span class="co">## Gráfico das densidados sobrepostas.</span></a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="kw">curve</span>(f, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb9-12" title="12"><span class="kw">curve</span>(g, <span class="dt">add=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb9-13" title="13"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;Alvo&quot;</span>, <span class="st">&quot;Candidata&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb9-14" title="14">       <span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>## Gerar números de uma distribuição Beta usando a distribuição Uniforme
+## e/ou normal.
+
+## Distribuição alvo: X ~ Beta(2, 3)
+f &lt;- function(x) dbeta(x, shape1 = 2, shape2 = 3)
+curve(f, 0, 1)
+## Distribuição candidata (proposal): X ~ Uniforme(0,1)
+g &lt;- function(x) dunif(x, 0, 1)
+
+## Gráfico das densidados sobrepostas.
+curve(f, 0, 1)
+curve(g, add=TRUE, col=2)
+legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
+       bty=&quot;n&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"></a>
-<a class="sourceLine" id="cb10-2" title="2">N &lt;-<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb10-3" title="3">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb10-4" title="4">x[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="kw">set.seed</span>(<span class="dv">2019-10-11</span>)</a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb10-7" title="7">    y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>) <span class="co"># Distribuição proposta</span></a>
-<a class="sourceLine" id="cb10-8" title="8">    alpha &lt;-<span class="st"> </span><span class="kw">min</span>((<span class="kw">f</span>(y) <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>])) <span class="op">/</span><span class="st"> </span>(<span class="kw">f</span>(x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y)), <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb10-9" title="9">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb10-10" title="10">    <span class="cf">if</span>(u <span class="op">&lt;=</span><span class="st"> </span>alpha) {</a>
-<a class="sourceLine" id="cb10-11" title="11">        x[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb10-12" title="12">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb10-13" title="13">        x[i] &lt;-<span class="st"> </span>x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb10-14" title="14">    }</a>
-<a class="sourceLine" id="cb10-15" title="15">}</a>
-<a class="sourceLine" id="cb10-16" title="16"></a>
-<a class="sourceLine" id="cb10-17" title="17"><span class="co">## Cadeia</span></a>
-<a class="sourceLine" id="cb10-18" title="18"><span class="kw">plot</span>(x, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>N &lt;- 500
+x &lt;- numeric(N)
+x[1] &lt;- 0.5
+set.seed(2019-10-11)
+for(i in 2:N) {
+    y &lt;- runif(1) # Distribuição proposta
+    alpha &lt;- min((f(y) * g(x[i - 1])) / (f(x[i - 1]) * g(y)), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+    }
+}
+
+## Cadeia
+plot(x, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="co">## Compara com teorica</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x))</a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Compara com teorica
+plot(ecdf(x))
+curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
 <iframe src="iidsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Outro exemplo:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">## Distribuição alvo: X ~ Beta(2, 3)</span></a>
-<a class="sourceLine" id="cb12-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dbeta</span>(x, <span class="dt">shape1 =</span> <span class="dv">2</span>, <span class="dt">shape2 =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="kw">curve</span>(f, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="co">## Distribuição candidata (proposal): X ~ Normal(0.5, 0.25)</span></a>
-<a class="sourceLine" id="cb12-5" title="5">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dnorm</span>(x, <span class="fl">0.5</span>, <span class="fl">0.25</span>)</a>
-<a class="sourceLine" id="cb12-6" title="6"></a>
-<a class="sourceLine" id="cb12-7" title="7"><span class="co">## Gráfico das densidados sobrepostas.</span></a>
-<a class="sourceLine" id="cb12-8" title="8"><span class="kw">curve</span>(f, <span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb12-9" title="9"><span class="kw">curve</span>(g, <span class="dt">add=</span><span class="ot">TRUE</span>, <span class="dt">col=</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb12-10" title="10"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="st">&quot;Alvo&quot;</span>, <span class="st">&quot;Candidata&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb12-11" title="11">       <span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>## Distribuição alvo: X ~ Beta(2, 3)
+f &lt;- function(x) dbeta(x, shape1 = 2, shape2 = 3)
+curve(f, 0, 1)
+## Distribuição candidata (proposal): X ~ Normal(0.5, 0.25)
+g &lt;- function(x) dnorm(x, 0.5, 0.25)
+
+## Gráfico das densidados sobrepostas.
+curve(f, 0, 1)
+curve(g, add=TRUE, col=2)
+legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
+       bty=&quot;n&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"></a>
-<a class="sourceLine" id="cb13-2" title="2">N &lt;-<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb13-3" title="3">x2 &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb13-4" title="4">x2[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb13-5" title="5"><span class="kw">set.seed</span>(<span class="dv">2019-10-11</span>)</a>
-<a class="sourceLine" id="cb13-6" title="6"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>N) {</a>
-<a class="sourceLine" id="cb13-7" title="7">    y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>) <span class="co"># Distribuição proposta</span></a>
-<a class="sourceLine" id="cb13-8" title="8">    alpha &lt;-<span class="st"> </span><span class="kw">min</span>((<span class="kw">f</span>(y) <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>])) <span class="op">/</span><span class="st"> </span>(<span class="kw">f</span>(x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]) <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y)), <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb13-9" title="9">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb13-10" title="10">    <span class="cf">if</span>(u <span class="op">&lt;=</span><span class="st"> </span>alpha) {</a>
-<a class="sourceLine" id="cb13-11" title="11">        x2[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb13-12" title="12">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb13-13" title="13">        x2[i] &lt;-<span class="st"> </span>x2[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb13-14" title="14">    }</a>
-<a class="sourceLine" id="cb13-15" title="15">}</a>
-<a class="sourceLine" id="cb13-16" title="16"></a>
-<a class="sourceLine" id="cb13-17" title="17"><span class="co">## Cadeia</span></a>
-<a class="sourceLine" id="cb13-18" title="18"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>N &lt;- 500
+x2 &lt;- numeric(N)
+x2[1] &lt;- 0.5
+set.seed(2019-10-11)
+for(i in 2:N) {
+    y &lt;- rnorm(1, 0.5, 0.25) # Distribuição proposta
+    alpha &lt;- min((f(y) * g(x2[i - 1])) / (f(x2[i - 1]) * g(y)), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x2[i] &lt;- y
+    } else {
+        x2[i] &lt;- x2[i - 1]
+    }
+}
+
+## Cadeia
+plot(x2, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-20-2.png" width="80%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="co">## Compara com teorica</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="kw">plot</span>(<span class="kw">ecdf</span>(x2))</a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="kw">curve</span>(<span class="kw">pbeta</span>(x, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Compara com teorica
+plot(ecdf(x2))
+curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-20-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
 <iframe src="iidsampler2.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Comparando as cadeias geradas com as duas diferentes propostas:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="kw">plot</span>(x, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="kw">plot</span>(x2, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="kw">acf</span>(x)</a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="kw">acf</span>(x2)</a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(x, type = &quot;l&quot;)
+plot(x2, type = &quot;l&quot;)
+acf(x)
+acf(x2)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC-1/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 </div>

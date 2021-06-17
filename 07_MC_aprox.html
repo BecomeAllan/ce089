@@ -33,6 +33,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -54,99 +56,24 @@
   ul.task-list{list-style: none;}
     </style>
 
-
-<style type="text/css">
-  code {
-    white-space: pre;
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
   }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
 }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; } /* Alert */
-code span.an { color: #008000; } /* Annotation */
-code span.at { } /* Attribute */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #0000ff; } /* ControlFlow */
-code span.ch { color: #008080; } /* Char */
-code span.cn { } /* Constant */
-code span.co { color: #008000; } /* Comment */
-code span.cv { color: #008000; } /* CommentVar */
-code span.do { color: #008000; } /* Documentation */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.im { } /* Import */
-code span.in { color: #008000; } /* Information */
-code span.kw { color: #0000ff; } /* Keyword */
-code span.op { } /* Operator */
-code span.ot { color: #ff4000; } /* Other */
-code span.pp { color: #ff4000; } /* Preprocessor */
-code span.sc { color: #008080; } /* SpecialChar */
-code span.ss { color: #008080; } /* SpecialString */
-code span.st { color: #008080; } /* String */
-code span.va { } /* Variable */
-code span.vs { color: #008080; } /* VerbatimString */
-code span.wa { color: #008000; font-weight: bold; } /* Warning */
-
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
 </script>
 
 
 
 
+
+<link rel="stylesheet" href="default" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site.css" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site-fonts.css" type="text/css" />
 
 
 
@@ -481,53 +408,53 @@ div.tocify {
 <p>Para obter a estimativa de <span class="math display">\[
 \theta = \int_0^1 e^{-x} dx
 \]</span> fazemos:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## Obtem m valores da U(0,1)</span></a>
-<a class="sourceLine" id="cb1-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb1-3" title="3">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb1-5" title="5">theta.hat &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="co">## Calcula a média</span></a>
-<a class="sourceLine" id="cb1-7" title="7">(m.theta.hat &lt;-<span class="st"> </span><span class="kw">sum</span>(theta.hat)<span class="op">/</span>m)</a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co"># [1] 0.6337583</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb1-10" title="10">(theta &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="co"># [1] 0.6321206</span></a></code></pre></div>
+<pre class="r"><code>## Obtem m valores da U(0,1)
+m &lt;- 10000
+x &lt;- runif(m)
+## Calcula g(x)
+theta.hat &lt;- exp(-x)
+## Calcula a média
+(m.theta.hat &lt;- sum(theta.hat)/m)</code></pre>
+<pre><code># [1] 0.6337583</code></pre>
+<pre class="r"><code>## Solução analítica
+(theta &lt;- 1 - exp(-1))</code></pre>
+<pre><code># [1] 0.6321206</code></pre>
 <p>Para obter a estimativa de <span class="math display">\[
 \theta = \int_2^4 e^{-x} dx
 \]</span> fazemos:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">## Obtem m valores da U(2,4)</span></a>
-<a class="sourceLine" id="cb2-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb2-3" title="3">a &lt;-<span class="st"> </span><span class="dv">2</span>; b &lt;-<span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb2-4" title="4">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="dt">min =</span> a, <span class="dt">max =</span> b)</a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb2-6" title="6">theta.hat &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">## Calcula a média * (b - a)</span></a>
-<a class="sourceLine" id="cb2-8" title="8">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))</a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co"># [1] 0.1167288</span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb2-11" title="11">(theta &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="co"># [1] 0.1170196</span></a></code></pre></div>
+<pre class="r"><code>## Obtem m valores da U(2,4)
+m &lt;- 10000
+a &lt;- 2; b &lt;- 4
+x &lt;- runif(m, min = a, max = b)
+## Calcula g(x)
+theta.hat &lt;- exp(-x)
+## Calcula a média * (b - a)
+(m.theta.hat &lt;- (sum(theta.hat)/m) * (b - a))</code></pre>
+<pre><code># [1] 0.1167288</code></pre>
+<pre class="r"><code>## Solução analítica
+(theta &lt;- exp(-2) - exp(-4))</code></pre>
+<pre><code># [1] 0.1170196</code></pre>
 <p>Vemos que, nos dois casos acima, estamos na verdade obtendo uma estimativa das probabilidades <span class="math inline">\(P[0&lt;X&lt;1]\)</span> e <span class="math inline">\(P[2&lt;X&lt;4]\)</span>, respectivamente.</p>
 <p>No entanto, se quisermos calcular a seguinte probabilidade <span class="math display">\[
 P[X&gt;2] = \int_2^{\infty} e^{-x} dx
 \]</span></p>
 <p>Nesse caso, a integração simples de Monte Carlo não é útil, pois não é possível que o limite de integração seja indefinido.</p>
 <p>Na verdade, podemos pensar em uma aproximação <strong>grosseira</strong>, supondo que vamos amostrar de <span class="math inline">\(X \sim \text{U}(2, \infty)\)</span>, onde podemos aproximar o valor de <span class="math inline">\(\infty\)</span> por um número grande. Por exemplo:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## Obtem m valores da U(2,Inf)</span></a>
-<a class="sourceLine" id="cb3-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb3-3" title="3">a &lt;-<span class="st"> </span><span class="dv">2</span>; b &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb3-4" title="4">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="dt">min =</span> a, <span class="dt">max =</span> b)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb3-6" title="6">theta.hat &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)</a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="co">## Calcula a média * (b - a)</span></a>
-<a class="sourceLine" id="cb3-8" title="8">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(b <span class="op">-</span><span class="st"> </span>a))</a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="co"># [1] 0.2770476</span></a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb3-11" title="11">(theta &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span><span class="fl">1e5</span>))</a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="co"># [1] 0.1353353</span></a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="co">## Usando a exponencial</span></a>
-<a class="sourceLine" id="cb3-14" title="14"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+<pre class="r"><code>## Obtem m valores da U(2,Inf)
+m &lt;- 10000
+a &lt;- 2; b &lt;- 1e5
+x &lt;- runif(m, min = a, max = b)
+## Calcula g(x)
+theta.hat &lt;- exp(-x)
+## Calcula a média * (b - a)
+(m.theta.hat &lt;- (sum(theta.hat)/m) * (b - a))</code></pre>
+<pre><code># [1] 0.2770476</code></pre>
+<pre class="r"><code>## Solução analítica
+(theta &lt;- exp(-2) - exp(-1e5))</code></pre>
+<pre><code># [1] 0.1353353</code></pre>
+<pre class="r"><code>## Usando a exponencial
+pexp(2, 1, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.1353353</code></pre>
 <p>Note que o valor estimado nesse caso está longe do velor correto, pois estamos adotando um procedimento completamente arbitrário.</p>
 </div>
 <div id="exemplo-beta" class="section level3">
@@ -538,31 +465,31 @@ P[0.3 &lt; X &lt; 0.5] = \int_{0.3}^{0.5}
 \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
 \]</span></p>
 <p>Pela integração simples de Monte Carlo, podemos facilmente obter esta estimativa:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb4-2" title="2">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb4-3" title="3">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="fl">0.3</span>, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb4-5" title="5">theta.hat &lt;-<span class="st"> </span><span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">## Calcula a média</span></a>
-<a class="sourceLine" id="cb4-7" title="7">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.3</span>))</a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co"># [1] 0.1014207</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="co"># [1] 0.1018369</span></a></code></pre></div>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+m &lt;- 10000
+x &lt;- runif(m, 0.3, 0.5)
+## Calcula g(x)
+theta.hat &lt;- dbeta(x, a, b)
+## Calcula a média
+(m.theta.hat &lt;- (sum(theta.hat)/m) * (0.5 - 0.3))</code></pre>
+<pre><code># [1] 0.1014207</code></pre>
+<pre class="r"><code>## Solução analítica
+pbeta(0.5, a, b) - pbeta(0.3, a, b)</code></pre>
+<pre><code># [1] 0.1018369</code></pre>
 <p>No caso da Beta, calcular probabilidades do tipo <span class="math inline">\(P[X&gt;0.2]\)</span>, por exemplo, é mais fácil, pois sabemos que o domínio da Beta está no intervalo <span class="math inline">\((0,1)\)</span>. Portanto, os limites de integração são definidos <span class="math display">\[
 P[X &gt; 0.2] = \int_{0.2}^{1}
 \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^a (1-x)^{b} dx
 \]</span> Assim, podemos fazer</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">m &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb5-2" title="2">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m, <span class="fl">0.2</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="co">## Calcula g(x)</span></a>
-<a class="sourceLine" id="cb5-4" title="4">theta.hat &lt;-<span class="st"> </span><span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co">## Calcula a média</span></a>
-<a class="sourceLine" id="cb5-6" title="6">(m.theta.hat &lt;-<span class="st"> </span>(<span class="kw">sum</span>(theta.hat)<span class="op">/</span>m) <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.2</span>))</a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="co"># [1] 0.585035</span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="co">## Solução analítica</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb5-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
+<pre class="r"><code>m &lt;- 10000
+x &lt;- runif(m, 0.2, 1)
+## Calcula g(x)
+theta.hat &lt;- dbeta(x, a, b)
+## Calcula a média
+(m.theta.hat &lt;- (sum(theta.hat)/m) * (1 - 0.2))</code></pre>
+<pre><code># [1] 0.585035</code></pre>
+<pre class="r"><code>## Solução analítica
+pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.5876479</code></pre>
 </div>
 </div>
 </div>
@@ -596,56 +523,56 @@ M \geq \max_x \frac{f(x)}{g(x)}
 \]</span></p>
 <p>Sabemos que a função acima é uma <span class="math inline">\(\text{Exp(1)}\)</span>. Ao invés de usar o método de integração de Monte Carlo, vamos obter uma amostra desta distribuição, e, com ela, calcularemos a integral desejada.</p>
 <p>Por simplificação, usaremos como distribuição proposta uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Nesse caso, obtemos o valor de <span class="math inline">\(M\)</span> como</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">(M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dexp</span>(x, <span class="dv">1</span>)<span class="op">/</span><span class="kw">dexp</span>(x, <span class="fl">.5</span>)},</a>
-<a class="sourceLine" id="cb6-2" title="2">               <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co"># [1] 1.99993</span></a></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="fl">0.5</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dexp</span>(x, <span class="fl">.5</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
-<a class="sourceLine" id="cb7-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>(M &lt;- optimize(f = function(x) {dexp(x, 1)/dexp(x, .5)},
+               interval = c(0, 50), maximum = TRUE)$objective)</code></pre>
+<pre><code># [1] 1.99993</code></pre>
+<pre class="r"><code>curve(dexp(x, 1), from = 0, to = 10, col = 4, ylim = c(0, 1))
+curve(dexp(x, 0.5), from = 0, to = 10, add = TRUE, lty = 2)
+curve(M * dexp(x, .5), add = TRUE, lty = 2, lwd = 2)
+legend(&quot;topright&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
+       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora podemos prosseguir com o algoritmo da seguinte forma:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">## Criando os elementos necessários</span></a>
-<a class="sourceLine" id="cb8-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb8-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="co">## Simula valores de f</span></a>
-<a class="sourceLine" id="cb8-5" title="5">N &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb8-6" title="6">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb8-7" title="7">i &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb8-8" title="8">j &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="cf">while</span>(i <span class="op">&lt;=</span><span class="st"> </span>N) {</a>
-<a class="sourceLine" id="cb8-10" title="10">    y &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span class="dv">1</span>, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb8-11" title="11">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb8-12" title="12">    r &lt;-<span class="st"> </span><span class="kw">f</span>(y)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb8-13" title="13">    <span class="cf">if</span>(u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
-<a class="sourceLine" id="cb8-14" title="14">        x[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb8-15" title="15">        i &lt;-<span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb8-16" title="16">    }</a>
-<a class="sourceLine" id="cb8-17" title="17">    j &lt;-<span class="st"> </span>j <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb8-18" title="18">}</a>
-<a class="sourceLine" id="cb8-19" title="19"><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb8-20" title="20"><span class="co"># [1] 100000</span></a>
-<a class="sourceLine" id="cb8-21" title="21"><span class="kw">hist</span>(x, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb8-22" title="22"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Criando os elementos necessários
+f &lt;- function(x) dexp(x, 1)
+g &lt;- function(x) dexp(x, 0.5)
+## Simula valores de f
+N &lt;- 1e5
+x &lt;- numeric(N)
+i &lt;- 1
+j &lt;- 1
+while(i &lt;= N) {
+    y &lt;- rexp(1, 0.5)
+    u &lt;- runif(1)
+    r &lt;- f(y)/(M * g(y))
+    if(u &lt; r) {
+        x[i] &lt;- y
+        i &lt;- i + 1
+    }
+    j &lt;- j + 1
+}
+length(x)</code></pre>
+<pre><code># [1] 100000</code></pre>
+<pre class="r"><code>hist(x, freq = FALSE, ylim = c(0, 1))
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Como agora temos a distribuição completa da <span class="math inline">\(\text{Exp}(1)\)</span>, podemos obter qualquer probabilidade (ou integral) aproximada, simplesmente através das contagens de valores no intervalo especificado. Note que a integral da distribuição, ou seja, <span class="math inline">\(\int_0^{\infty} f(x) dx\)</span> deve fechar em <strong>aproximadamente</strong> 1:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(x))<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="co"># [1] 1</span></a></code></pre></div>
+<pre class="r"><code>sum(x &gt; 0 &amp; x &lt;= max(x))/N</code></pre>
+<pre><code># [1] 1</code></pre>
 <p>Agora, por exemplo, a <span class="math inline">\(P[2&lt;X&lt;4]\)</span> pode ser calculada como</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">## Probabilidade empírica</span></a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw">sum</span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co"># [1] 0.117</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="co">## Teórica</span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="kw">pexp</span>(<span class="dv">4</span>, <span class="dv">1</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="co"># [1] 0.1170196</span></a></code></pre></div>
+<pre class="r"><code>## Probabilidade empírica
+sum(x &gt;= 2 &amp; x &lt;= 4)/N</code></pre>
+<pre><code># [1] 0.117</code></pre>
+<pre class="r"><code>## Teórica
+pexp(4, 1) - pexp(2, 1)</code></pre>
+<pre><code># [1] 0.1170196</code></pre>
 <p>Agora se quisermos calcular <span class="math inline">\(P[X&gt;2]\)</span>, temos condições de fazer através de</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">## Probabilidade empírica</span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="kw">sum</span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="co"># [1] 0.13488</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co">## Teórica</span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+<pre class="r"><code>## Probabilidade empírica
+sum(x &gt;= 2)/N</code></pre>
+<pre><code># [1] 0.13488</code></pre>
+<pre class="r"><code>## Teórica
+pexp(2, 1, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.1353353</code></pre>
 <p>De maneira geral, dessa forma, qualquer probabilidade pode ser calculada como mostrado acima. Matematicamente, podemos representar esse processo por</p>
 <p><span class="math display">\[
 P[X \leq x] = \frac{1}{m} \sum_{i=1}^m I(X \leq x)
@@ -661,53 +588,53 @@ I(X \leq x) =
 <h3><span class="header-section-number">2.1.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, queremos calcular <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, mas agora através da obtenção de uma amostra completa desta distribuição.</p>
 <p>Usando o método de aceitação-rejeição, vamos usar como distribuição proposta uma <span class="math inline">\(\text{U}(0,1)\)</span>. Portanto:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb12-2" title="2">(M &lt;-<span class="st"> </span><span class="kw">optimize</span>(<span class="dt">f =</span> <span class="cf">function</span>(x) {<span class="kw">dbeta</span>(x, a, b)<span class="op">/</span><span class="kw">dunif</span>(x)},</a>
-<a class="sourceLine" id="cb12-3" title="3">               <span class="dt">interval =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">maximum =</span> <span class="ot">TRUE</span>)<span class="op">$</span>objective)</a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="co"># [1] 6.426808</span></a></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="kw">curve</span>(<span class="kw">dunif</span>(x), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="kw">curve</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">dunif</span>(x), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="kw">legend</span>(<span class="st">&quot;right&quot;</span>, <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">&quot;f(x)&quot;</span>, <span class="st">&quot;g(x)&quot;</span>, <span class="st">&quot;M g(x)&quot;</span>),</a>
-<a class="sourceLine" id="cb13-5" title="5">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">bty =</span> <span class="st">&quot;n&quot;</span>)</a></code></pre></div>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+(M &lt;- optimize(f = function(x) {dbeta(x, a, b)/dunif(x)},
+               interval = c(0, 1), maximum = TRUE)$objective)</code></pre>
+<pre><code># [1] 6.426808</code></pre>
+<pre class="r"><code>curve(dbeta(x, a, b), from = 0, to = 1, col = 4, ylim = c(0, 7))
+curve(dunif(x), from = 0, to = 1, add = TRUE, lty = 2)
+curve(M * dunif(x), add = TRUE, lty = 2, lwd = 2)
+legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
+       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Seguindo o mesmo algoritmo anterior, temos então:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">## Criando os elementos necessários</span></a>
-<a class="sourceLine" id="cb14-2" title="2">f &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb14-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dunif</span>(x)</a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">## Simula valores de f</span></a>
-<a class="sourceLine" id="cb14-5" title="5">N &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb14-6" title="6">x &lt;-<span class="st"> </span><span class="kw">numeric</span>(N)</a>
-<a class="sourceLine" id="cb14-7" title="7">i &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb14-8" title="8">j &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb14-9" title="9"><span class="cf">while</span>(i <span class="op">&lt;=</span><span class="st"> </span>N) {</a>
-<a class="sourceLine" id="cb14-10" title="10">    y &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb14-11" title="11">    u &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb14-12" title="12">    r &lt;-<span class="st"> </span><span class="kw">f</span>(y, a, b)<span class="op">/</span>(M <span class="op">*</span><span class="st"> </span><span class="kw">g</span>(y))</a>
-<a class="sourceLine" id="cb14-13" title="13">    <span class="cf">if</span>(u <span class="op">&lt;</span><span class="st"> </span>r) {</a>
-<a class="sourceLine" id="cb14-14" title="14">        x[i] &lt;-<span class="st"> </span>y</a>
-<a class="sourceLine" id="cb14-15" title="15">        i &lt;-<span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb14-16" title="16">    }</a>
-<a class="sourceLine" id="cb14-17" title="17">    j &lt;-<span class="st"> </span>j <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb14-18" title="18">}</a>
-<a class="sourceLine" id="cb14-19" title="19"><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb14-20" title="20"><span class="co"># [1] 100000</span></a>
-<a class="sourceLine" id="cb14-21" title="21"><span class="kw">sum</span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb14-22" title="22"><span class="co"># [1] 1</span></a>
-<a class="sourceLine" id="cb14-23" title="23"><span class="kw">hist</span>(x, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
-<a class="sourceLine" id="cb14-24" title="24"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Criando os elementos necessários
+f &lt;- function(x, a, b) dbeta(x, a, b)
+g &lt;- function(x) dunif(x)
+## Simula valores de f
+N &lt;- 1e5
+x &lt;- numeric(N)
+i &lt;- 1
+j &lt;- 1
+while(i &lt;= N) {
+    y &lt;- runif(1)
+    u &lt;- runif(1)
+    r &lt;- f(y, a, b)/(M * g(y))
+    if(u &lt; r) {
+        x[i] &lt;- y
+        i &lt;- i + 1
+    }
+    j &lt;- j + 1
+}
+length(x)</code></pre>
+<pre><code># [1] 100000</code></pre>
+<pre class="r"><code>sum(x &gt;= 0 &amp; x &lt;= 1)/N</code></pre>
+<pre><code># [1] 1</code></pre>
+<pre class="r"><code>hist(x, freq = FALSE, ylim = c(0, 7))
+curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora, podemos calcular qualquer probabilidade. Por exemplo:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co">## P[0.3 &lt; X &lt; 0.5]</span></a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="co"># [1] 0.10234</span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="co"># [1] 0.1018369</span></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co">## P[X &gt; 0.2]</span></a>
-<a class="sourceLine" id="cb15-7" title="7"><span class="kw">sum</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>)<span class="op">/</span>N</a>
-<a class="sourceLine" id="cb15-8" title="8"><span class="co"># [1] 0.58714</span></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb15-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
+<pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
+sum(x &gt; 0.3 &amp; x &lt; 0.5)/N</code></pre>
+<pre><code># [1] 0.10234</code></pre>
+<pre class="r"><code>pbeta(0.5, a, b) - pbeta(0.3, a, b)</code></pre>
+<pre><code># [1] 0.1018369</code></pre>
+<pre class="r"><code>## P[X &gt; 0.2]
+sum(x &gt; 0.2)/N</code></pre>
+<pre><code># [1] 0.58714</code></pre>
+<pre class="r"><code>pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.5876479</code></pre>
 </div>
 </div>
 <div id="re-amostragem-por-importância" class="section level2">
@@ -733,18 +660,18 @@ Aproximando uma integral indefinida pela amostragem por importância
 </div>
 <div class="panel-body">
 <p>Voltando brevemente ao caso da exponencial, pela amostragem por importância, podemos agora obter uma estimativa de <span class="math inline">\(P[X &gt; 2]\)</span>, caso que não conseguimos usando a integração simples de Monte Carlo.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Define funções</span></a>
-<a class="sourceLine" id="cb16-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb16-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>) <span class="co"># Proposta é Exp(0.5)</span></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="co">## 1. Amostra da proposta</span></a>
-<a class="sourceLine" id="cb16-5" title="5">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb16-6" title="6">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb16-7" title="7"><span class="co">## 2. Calcula a média da razão</span></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="kw">mean</span>(<span class="kw">g</span>(x)<span class="op">/</span><span class="kw">f</span>(x))</a>
-<a class="sourceLine" id="cb16-9" title="9"><span class="co"># [1] 0.1358222</span></a>
-<a class="sourceLine" id="cb16-10" title="10"><span class="co">## Teórico</span></a>
-<a class="sourceLine" id="cb16-11" title="11"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb16-12" title="12"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+<pre class="r"><code>## Define funções
+g &lt;- function(x) exp(-x) * (x &gt;= 2)
+f &lt;- function(x) dexp(x, 0.5) # Proposta é Exp(0.5)
+## 1. Amostra da proposta
+m &lt;- 1e5
+x &lt;- rexp(m, 0.5)
+## 2. Calcula a média da razão
+mean(g(x)/f(x))</code></pre>
+<pre><code># [1] 0.1358222</code></pre>
+<pre class="r"><code>## Teórico
+pexp(2, 1, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.1353353</code></pre>
 </div>
 </div>
 <p>O algoritmo do método de <strong>re-amostragem por importância</strong> é uma extensão do algoritmo anterior e consiste nos seguintes passos:</p>
@@ -762,82 +689,82 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 <h3><span class="header-section-number">2.2.1</span> Exemplo (exponencial)</h3>
 <p>Seguindo com o exemplo da <span class="math inline">\(\text{Exp}(1)\)</span>, o código abaixo serve para gerar uma amostra por importância desta distribuição.</p>
 <p>A função de importância considerada aqui é uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Lembre-se que nesse caso, não é necessário que a função proposta seja maior do que a função alvo.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Define funções</span></a>
-<a class="sourceLine" id="cb17-2" title="2">g &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span>x) <span class="op">*</span><span class="st"> </span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb17-3" title="3">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dexp</span>(x, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="co">## 1. Amostragem</span></a>
-<a class="sourceLine" id="cb17-5" title="5">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb17-6" title="6">x &lt;-<span class="st"> </span><span class="kw">rexp</span>(m, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb17-7" title="7"><span class="co">## 2. Calcula pesos</span></a>
-<a class="sourceLine" id="cb17-8" title="8">w &lt;-<span class="st"> </span><span class="kw">g</span>(x)<span class="op">/</span><span class="kw">f</span>(x)</a>
-<a class="sourceLine" id="cb17-9" title="9">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
-<a class="sourceLine" id="cb17-10" title="10"><span class="co">## 3. Re-amostragem por importância</span></a>
-<a class="sourceLine" id="cb17-11" title="11">k &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
-<a class="sourceLine" id="cb17-12" title="12"><span class="co">## Amostra considerando os pesos normalizados para cada X</span></a>
-<a class="sourceLine" id="cb17-13" title="13">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
-<a class="sourceLine" id="cb17-14" title="14"><span class="co">## Verifica a distribuição da amostra</span></a>
-<a class="sourceLine" id="cb17-15" title="15"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb17-16" title="16"><span class="kw">curve</span>(<span class="kw">dexp</span>(x, <span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Define funções
+g &lt;- function(x) exp(-x) * (x &gt;= 0)
+f &lt;- function(x) dexp(x, 0.5)
+## 1. Amostragem
+m &lt;- 1e5
+x &lt;- rexp(m, 0.5)
+## 2. Calcula pesos
+w &lt;- g(x)/f(x)
+w.norm &lt;- w/sum(w)
+## 3. Re-amostragem por importância
+k &lt;- 1e4
+## Amostra considerando os pesos normalizados para cada X
+g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
+## Verifica a distribuição da amostra
+hist(g.sample, freq = FALSE, ylim = c(0, 1))
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
+<pre class="r"><code>plot(x, w.norm)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com uma amostra completa da distribuição, podemos então calcular qualquer tipo de probabilidades:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co">## P[2 &lt; X &lt; 4]</span></a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="co"># [1] 0.1204</span></a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="co">## Teórica</span></a>
-<a class="sourceLine" id="cb19-5" title="5"><span class="kw">pexp</span>(<span class="dv">4</span>, <span class="dv">1</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb19-6" title="6"><span class="co"># [1] 0.1170196</span></a>
-<a class="sourceLine" id="cb19-7" title="7"><span class="co">## P[X &gt; 2]</span></a>
-<a class="sourceLine" id="cb19-8" title="8"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb19-9" title="9"><span class="co"># [1] 0.1361</span></a>
-<a class="sourceLine" id="cb19-10" title="10"><span class="kw">pexp</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb19-11" title="11"><span class="co"># [1] 0.1353353</span></a></code></pre></div>
+<pre class="r"><code>## P[2 &lt; X &lt; 4]
+sum(g.sample &gt;= 2 &amp; g.sample &lt;= 4)/k</code></pre>
+<pre><code># [1] 0.1204</code></pre>
+<pre class="r"><code>## Teórica
+pexp(4, 1) - pexp(2, 1)</code></pre>
+<pre><code># [1] 0.1170196</code></pre>
+<pre class="r"><code>## P[X &gt; 2]
+sum(g.sample &gt; 2)/k</code></pre>
+<pre><code># [1] 0.1361</code></pre>
+<pre class="r"><code>pexp(2, 1, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.1353353</code></pre>
 </div>
 <div id="exemplo-beta-2" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, vamos ober uma amostra desta distribuição pelo método de re-amostragem por importância. Aqui também utilizaremos uma <span class="math inline">\(\text{U}(0,1)\)</span> como função de importância.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">## Define funções</span></a>
-<a class="sourceLine" id="cb20-2" title="2">a &lt;-<span class="st"> </span><span class="fl">9.39</span>; b &lt;-<span class="st"> </span><span class="fl">33.67</span></a>
-<a class="sourceLine" id="cb20-3" title="3">g &lt;-<span class="st"> </span><span class="cf">function</span>(x, a, b) <span class="kw">dbeta</span>(x, a, b)</a>
-<a class="sourceLine" id="cb20-4" title="4">f &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">dunif</span>(x) <span class="co"># usando U(0,1)</span></a>
-<a class="sourceLine" id="cb20-5" title="5"><span class="co">## 1. Amostragem</span></a>
-<a class="sourceLine" id="cb20-6" title="6">m &lt;-<span class="st"> </span><span class="fl">1e5</span></a>
-<a class="sourceLine" id="cb20-7" title="7">x &lt;-<span class="st"> </span><span class="kw">runif</span>(m)</a>
-<a class="sourceLine" id="cb20-8" title="8"><span class="co">## 2. Calcula pesos</span></a>
-<a class="sourceLine" id="cb20-9" title="9">w &lt;-<span class="st"> </span><span class="kw">g</span>(x, a, b)<span class="op">/</span><span class="kw">f</span>(x)</a>
-<a class="sourceLine" id="cb20-10" title="10">w.norm &lt;-<span class="st"> </span>w<span class="op">/</span><span class="kw">sum</span>(w)</a>
-<a class="sourceLine" id="cb20-11" title="11"><span class="co">## 3. Re-amostragem por importância</span></a>
-<a class="sourceLine" id="cb20-12" title="12">k &lt;-<span class="st"> </span><span class="fl">1e4</span></a>
-<a class="sourceLine" id="cb20-13" title="13"><span class="co">## Amostra considerando os pesos normalizados para cada X</span></a>
-<a class="sourceLine" id="cb20-14" title="14">g.sample &lt;-<span class="st"> </span><span class="kw">sample</span>(x, <span class="dt">size =</span> k, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> w.norm)</a>
-<a class="sourceLine" id="cb20-15" title="15"><span class="co">## Verifica a distribuição da amostra</span></a>
-<a class="sourceLine" id="cb20-16" title="16"><span class="kw">hist</span>(g.sample, <span class="dt">freq =</span> <span class="ot">FALSE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>))</a>
-<a class="sourceLine" id="cb20-17" title="17"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<pre class="r"><code>## Define funções
+a &lt;- 9.39; b &lt;- 33.67
+g &lt;- function(x, a, b) dbeta(x, a, b)
+f &lt;- function(x) dunif(x) # usando U(0,1)
+## 1. Amostragem
+m &lt;- 1e5
+x &lt;- runif(m)
+## 2. Calcula pesos
+w &lt;- g(x, a, b)/f(x)
+w.norm &lt;- w/sum(w)
+## 3. Re-amostragem por importância
+k &lt;- 1e4
+## Amostra considerando os pesos normalizados para cada X
+g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
+## Verifica a distribuição da amostra
+hist(g.sample, freq = FALSE, ylim = c(0, 7))
+curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">plot</span>(x, w.norm)</a></code></pre></div>
+<pre class="r"><code>plot(x, w.norm)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Calcula probabilidades:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">## P[0.3 &lt; X &lt; 0.5]</span></a>
-<a class="sourceLine" id="cb22-2" title="2"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span> <span class="op">&amp;</span><span class="st"> </span>g.sample <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb22-3" title="3"><span class="co"># [1] 0.102</span></a>
-<a class="sourceLine" id="cb22-4" title="4"><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a, b) <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.3</span>, a, b)</a>
-<a class="sourceLine" id="cb22-5" title="5"><span class="co"># [1] 0.1018369</span></a>
-<a class="sourceLine" id="cb22-6" title="6"><span class="co">## P[X &gt; 0.2]</span></a>
-<a class="sourceLine" id="cb22-7" title="7"><span class="kw">sum</span>(g.sample <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>)<span class="op">/</span>k</a>
-<a class="sourceLine" id="cb22-8" title="8"><span class="co"># [1] 0.584</span></a>
-<a class="sourceLine" id="cb22-9" title="9"><span class="kw">pbeta</span>(<span class="fl">0.2</span>, a, b, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb22-10" title="10"><span class="co"># [1] 0.5876479</span></a></code></pre></div>
+<pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
+sum(g.sample &gt; 0.3 &amp; g.sample &lt; 0.5)/k</code></pre>
+<pre><code># [1] 0.102</code></pre>
+<pre class="r"><code>pbeta(0.5, a, b) - pbeta(0.3, a, b)</code></pre>
+<pre><code># [1] 0.1018369</code></pre>
+<pre class="r"><code>## P[X &gt; 0.2]
+sum(g.sample &gt; 0.2)/k</code></pre>
+<pre><code># [1] 0.584</code></pre>
+<pre class="r"><code>pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
+<pre><code># [1] 0.5876479</code></pre>
 <p>A obtenção de uma amostra da distribuição completa da VA de interesse possui diversas finalidades. Por exemplo, no caso da beta, podemos obter um resumo</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">summary</span>(g.sample)</a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="co">#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
-<a class="sourceLine" id="cb23-3" title="3"><span class="co"># 0.03969 0.17313 0.21344 0.21780 0.25754 0.50699</span></a></code></pre></div>
+<pre class="r"><code>summary(g.sample)</code></pre>
+<pre><code>#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 0.03969 0.17313 0.21344 0.21780 0.25754 0.50699</code></pre>
 <p>ou, por exemplo, saber o intervalo onde se encontram 95% dos dados:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">quantile</span>(g.sample, <span class="dt">probs =</span> <span class="kw">c</span>(.<span class="dv">025</span>, <span class="fl">.975</span>))</a>
-<a class="sourceLine" id="cb24-2" title="2"><span class="co">#      2.5%     97.5% </span></a>
-<a class="sourceLine" id="cb24-3" title="3"><span class="co"># 0.1094833 0.3526790</span></a></code></pre></div>
+<pre class="r"><code>quantile(g.sample, probs = c(.025, .975))</code></pre>
+<pre><code>#      2.5%     97.5% 
+# 0.1094833 0.3526790</code></pre>
 <p>Esse tipo de resumo será utilizado nos métodos de inferência que veremos mais adiante.</p>
 <p>No contexto de inferência bayesiana, as distribuições geradas por estes métodos se referem às <strong>distribuições posteriores dos parâmetros</strong> objetos da inferência. Dessa forma, o intervalo acima, por exemplo, nos forneceria diretamente um “intervalo de credibilidade” de 95% para os valores do parâmetro.</p>
 </div>
