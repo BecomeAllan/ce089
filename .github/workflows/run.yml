@@ -50,12 +50,8 @@ jobs:
         if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
         renv::restore()
 
-    # - name: Install R dependencies
-    #   run: |
-    #     Rscript setup.R
-
     # Build the site
-    - name: Build the site
+    - name: Build site
       run: |
         Rscript -e "rmarkdown::render_site()"
 
