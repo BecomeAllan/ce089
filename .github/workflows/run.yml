@@ -16,6 +16,8 @@ jobs:
     # Install R
     - name: Set up R and pandoc
       uses: r-lib/actions/setup-r@v1
+
+    - name: Set up pnadoc
       uses: r-lib/actions/setup-pandoc@v1
 
     # Install system dependencies
