@@ -230,8 +230,12 @@ points(px, py, pch = 20)
 r2 <- px^2 + py^2
 r <- sqrt(r2)
 
-points(px[r <= 1], py[r <= 1], pch = 20, col = 3)
-points(px[r > 1], py[r > 1], pch = 20, col = 2)
+ac <- r2 <= 1
+sum(ac)
+mean(ac)
+
+points(px[ac], py[ac], pch = 20, col = 3)
+points(px[!ac], py[!ac], pch = 20, col = 2)
 
 ## Estima o pi
 # x^2 + y^2 = r^2 => r = sqrt(x^2 + y^2)
@@ -241,6 +245,8 @@ points(px[r > 1], py[r > 1], pch = 20, col = 2)
 # multiplicacao por 4 eh para considerar os 4 quadrados que compoem a
 # figura: 4 * (n/N)
 4*(sum(sqrt(px^2 + py^2) <= 1)/N)
+
+(4 * sum(ac))/N
 
 ## Cria uma funcao
 ##----------------------------------------------------------------------
