@@ -14,8 +14,8 @@ source("setup_knitr.R")
 opts_chunk$set(fig.path = "figures/06_MC_intro/")
 ```
 
-> *Monte Carlo methods are experiments.*
-
+> *Monte Carlo methods are experiments.*\
+>
 > Gentle, J. (2009)
 
 # Introdução
@@ -89,7 +89,7 @@ No entanto, quando a dimensão em $D$ for alta, a integração de Monte
 Carlo é uma alternativa mais viável (que pode ser usada em problemas de
 baixa dimensão também).
 
-Se a gunção $h$ for decomposta de forma a ter um componente que é uma
+Se a função $h$ for decomposta de forma a ter um componente que é uma
 densidade de probabilidade, ou seja,
 $$
 h(x) = g(x)f(x)
@@ -180,7 +180,7 @@ com suporte no intervalo dos limites de integração. Por exemplo, se $X
 \sim U(a,b)$, então $f(x) = \frac{1}{b-a}$ e
 
 \begin{align*}
-\theta &= \int_a^b g(x) f(x) dx \\
+\theta &= \frac{1}{f(x)} \int_a^b g(x) f(x) dx \\
   &= (b-a) \int_a^b g(x) \frac{1}{b-a} dx \\
   &= (b-a) \text{E}[g(X)]
 \end{align*}
@@ -346,7 +346,7 @@ Limitações do método simples de Monte Carlo:
 2. É ineficiente quando a função $g(x)$ não é uniforme
 
 Quando consideramos um problema de integração como um problema de valor
-esperado, é netural que consideremos outras funções de densidade além da
+esperado, é natural que consideremos outras funções de densidade além da
 Uniforme. Isso leva à um método mais geral chamdo de **amostragem por
 importância**.
 
@@ -354,7 +354,7 @@ A amostragem por importância reduz a variância pelo fato de podermos
 escolher uma densidade $f(x)$ mais parecida com com a função $g(x)$
 sendo integrada. Ao escolher uma densidade mais parecida, a variância é
 reduzida. Intuitivamente, a amostragem por importância tende a gerar
-mais amostra onde a contribuição para a integral é maior, ou
+mais amostras onde a contribuição para a integral é maior, ou
 "importante". Se pudermos determinar as regiões mais importantes para a
 integração, a variância do estimador de Monte Carlo pode ser
 significativamente reduzida.
@@ -630,7 +630,4 @@ var(theta.hat)
 sum(theta.hat < 0.5)/m
 pexp(0.5)
 ## Nao bate porque o dominio nao é o mesmo
-
-
-
 ```
