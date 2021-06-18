@@ -374,9 +374,8 @@ div.tocify {
 
 
 <blockquote>
-<p><em>Monte Carlo methods are experiments.</em></p>
-</blockquote>
-<blockquote>
+<p><em>Monte Carlo methods are experiments.</em><br />
+</p>
 <p>Gentle, J. (2009)</p>
 </blockquote>
 <div id="introdução" class="section level1">
@@ -409,7 +408,7 @@ div.tocify {
 <li>Aproximação de Laplace</li>
 </ul>
 <p>No entanto, quando a dimensão em <span class="math inline">\(D\)</span> for alta, a integração de Monte Carlo é uma alternativa mais viável (que pode ser usada em problemas de baixa dimensão também).</p>
-<p>Se a gunção <span class="math inline">\(h\)</span> for decomposta de forma a ter um componente que é uma densidade de probabilidade, ou seja, <span class="math display">\[
+<p>Se a função <span class="math inline">\(h\)</span> for decomposta de forma a ter um componente que é uma densidade de probabilidade, ou seja, <span class="math display">\[
 h(x) = g(x)f(x)
 \]</span> onde <span class="math inline">\(\int_{D} f(x) dx = 1\)</span> e <span class="math inline">\(f(x) \geq 0\)</span>, então a integral <span class="math inline">\(\theta\)</span> pode ser vista como a esperança da VA <span class="math inline">\(Y = g(x)\)</span>, onde <span class="math inline">\(X\)</span> tem distribuição <span class="math inline">\(f(x)\)</span>, ou seja, <span class="math display">\[
 \theta = \text{E}[g(X)] = \int_{D} g(x)f(x) dx.
@@ -462,7 +461,7 @@ integrate(function(x) exp(-x), lower = 0, upper = 1)</code></pre>
 \theta = \int_a^b g(x) dx
 \]</span> Nesse caso, temos que substituir a <span class="math inline">\(U(0,1)\)</span> por alguma outra densidade com suporte no intervalo dos limites de integração. Por exemplo, se <span class="math inline">\(X \sim U(a,b)\)</span>, então <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span> e</p>
 <p><span class="math display">\[\begin{align*}
-\theta &amp;= \int_a^b g(x) f(x) dx \\
+\theta &amp;= \frac{1}{f(x)} \int_a^b g(x) f(x) dx \\
   &amp;= (b-a) \int_a^b g(x) \frac{1}{b-a} dx \\
   &amp;= (b-a) \text{E}[g(X)]
 \end{align*}\]</span></p>
@@ -569,8 +568,8 @@ lines(estint + 1.96 * esterr, lty = 2)</code></pre>
 <li>Não se aplica para intervalos não definidos</li>
 <li>É ineficiente quando a função <span class="math inline">\(g(x)\)</span> não é uniforme</li>
 </ol>
-<p>Quando consideramos um problema de integração como um problema de valor esperado, é netural que consideremos outras funções de densidade além da Uniforme. Isso leva à um método mais geral chamdo de <strong>amostragem por importância</strong>.</p>
-<p>A amostragem por importância reduz a variância pelo fato de podermos escolher uma densidade <span class="math inline">\(f(x)\)</span> mais parecida com com a função <span class="math inline">\(g(x)\)</span> sendo integrada. Ao escolher uma densidade mais parecida, a variância é reduzida. Intuitivamente, a amostragem por importância tende a gerar mais amostra onde a contribuição para a integral é maior, ou “importante”. Se pudermos determinar as regiões mais importantes para a integração, a variância do estimador de Monte Carlo pode ser significativamente reduzida.</p>
+<p>Quando consideramos um problema de integração como um problema de valor esperado, é natural que consideremos outras funções de densidade além da Uniforme. Isso leva à um método mais geral chamdo de <strong>amostragem por importância</strong>.</p>
+<p>A amostragem por importância reduz a variância pelo fato de podermos escolher uma densidade <span class="math inline">\(f(x)\)</span> mais parecida com com a função <span class="math inline">\(g(x)\)</span> sendo integrada. Ao escolher uma densidade mais parecida, a variância é reduzida. Intuitivamente, a amostragem por importância tende a gerar mais amostras onde a contribuição para a integral é maior, ou “importante”. Se pudermos determinar as regiões mais importantes para a integração, a variância do estimador de Monte Carlo pode ser significativamente reduzida.</p>
 <p><img src="img/importancesampling.png" width="50%" style="display: block; margin: auto;" /> (Figura extraída de <a href="https://www.scratchapixel.com" class="uri">https://www.scratchapixel.com</a>).</p>
 <p>Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y\)</span> a VA <span class="math inline">\(g(X)/f(X)\)</span>, então <span class="math display">\[
 \int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
