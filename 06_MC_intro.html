@@ -35,6 +35,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -508,10 +510,7 @@ integrate(function(x) exp(-x), lower = 2, upper = 4)</code></pre>
 <p>Seguindo o exemplo anterior, vimos que a estimativa da integral é</p>
 <pre class="r"><code>m.theta.hat</code></pre>
 <pre><code># [1] 0.1171233</code></pre>
-<p>Mas veja que existe uma distribuição de valores para compor esta estimativa média</p>
-<pre class="r"><code>hist(theta.hat); abline(v = theta, col = 2)</code></pre>
-<p><img src="figures/06_MC_intro/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>A variância relacionada ao estimador pode então ser calculada como</p>
+<p>e a variância relacionada ao estimador pode então ser calculada como</p>
 <pre class="r"><code>## Variancia
 (v.theta.hat &lt;- sum((theta.hat - m.theta.hat)^2)/m^2)</code></pre>
 <pre><code># [1] 4.499182e-07</code></pre>
@@ -527,11 +526,11 @@ r &lt;- 1000
 res &lt;- matrix(runif(m * r, a, b), nrow = m, ncol = r)
 m.theta.sim &lt;- apply(res, 2, function(x) mean(exp(-x)) * (b - a))
 hist(m.theta.sim); abline(v = theta, col = 2)</code></pre>
-<p><img src="figures/06_MC_intro/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com esse resultado, podemos inclusive fornecer um intervalo de confiança associado à nossa estimativa</p>
-<pre class="r"><code>## Media e veriancia
-c(m.theta.hat, v.theta.hat)</code></pre>
-<pre><code># [1] 1.171233e-01 4.499182e-07</code></pre>
+<pre class="r"><code>## Media e variancia
+c(m.theta.hat, v.theta.hat, se.theta.hat)</code></pre>
+<pre><code># [1] 1.171233e-01 4.499182e-07 6.707594e-04</code></pre>
 <pre class="r"><code>## Intervalo de confiança (95%)
 c(m.theta.hat - 1.96 * se.theta.hat, m.theta.hat + 1.96 * se.theta.hat)</code></pre>
 <pre><code># [1] 0.1158086 0.1184380</code></pre>
@@ -548,7 +547,7 @@ plot(estint, ylim = c(.05, .15), type = &quot;l&quot;,
 abline(h = theta, col = 2)
 lines(estint - 1.96 * esterr, lty = 2)
 lines(estint + 1.96 * esterr, lty = 2)</code></pre>
-<p><img src="figures/06_MC_intro/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="redução-da-variância" class="section level2">
 <h2><span class="header-section-number">2.3</span> Redução da variância</h2>
@@ -583,47 +582,51 @@ lines(estint + 1.96 * esterr, lty = 2)</code></pre>
 \theta = \int_0^1 \frac{e^{-x}}{1+x^2} dx
 \]</span> pelo método de amostragem por importância. Diversas funções de importância podem ser propostas para esse caso:</p>
 <p><span class="math display">\[\begin{align*}
-f_0(x) &amp;= 1, \quad 0&lt;x&lt;1 \\
-f_1(x) &amp;= e^{-x}, \quad 0&lt;x&lt;\infty \\
-f_2(x) &amp;= (1+x^2)^{-1}/\pi, \quad -\infty&lt;x&lt;\infty \\
-f_3(x) &amp;= e^{-x}/(1-e^{-1}), \quad 0&lt;x&lt;1 \\
-f_4(x) &amp;= 4(1-x^2)^{-1}/\pi, \quad 0&lt;x&lt;1 \\
+f_1(x) &amp;= 1, \quad 0&lt;x&lt;1 \\
+f_2(x) &amp;= e^{-x}, \quad 0&lt;x&lt;\infty \\
+f_3(x) &amp;= (1+x^2)^{-1}/\pi, \quad -\infty&lt;x&lt;\infty \\
+f_4(x) &amp;= e^{-x}/(1-e^{-1}), \quad 0&lt;x&lt;1 \\
+f_5(x) &amp;= 4(1-x^2)^{-1}/\pi, \quad 0&lt;x&lt;1 \\
 \end{align*}\]</span></p>
 <p>Alguns detalhes:</p>
 <ul>
 <li><span class="math inline">\(f_1\)</span> e <span class="math inline">\(f_2\)</span> possuem domínio maior, o que irá contribuir com muitos zeros (ineficientes)</li>
-<li><span class="math inline">\(f_1\)</span> é uma Exponencial com <span class="math inline">\(\lambda = 1\)</span></li>
-<li><span class="math inline">\(f_2\)</span> é uma Cauchy padrão</li>
-<li><span class="math inline">\(f_3\)</span> e <span class="math inline">\(f_4\)</span> não são funções conhecidas, por isso precisamos usar o método da transformação integral de probabilidade para gerar números destas distribuições</li>
+<li><span class="math inline">\(f_2\)</span> é uma Exponencial com <span class="math inline">\(\lambda = 1\)</span></li>
+<li><span class="math inline">\(f_3\)</span> é uma Cauchy padrão</li>
+<li><span class="math inline">\(f_4\)</span> e <span class="math inline">\(f_5\)</span> não são funções conhecidas, por isso precisamos usar o método da transformação integral de probabilidade para gerar números destas distribuições</li>
 </ul>
 <p>Graficamente temos o seguinte cenário:</p>
 <pre class="r"><code>x &lt;- seq(0, 1, .01)
 w &lt;- 2
-f1 &lt;- exp(-x)
-f2 &lt;- (1 / pi) / (1 + x^2)
-f3 &lt;- exp(-x) / (1 - exp(-1))
-f4 &lt;- 4 / ((1 + x^2) * pi)
+f1 &lt;- 1
+f2 &lt;- exp(-x)
+f3 &lt;- (1 / pi) / (1 + x^2)
+f4 &lt;- exp(-x) / (1 - exp(-1))
+f5 &lt;- 4 / ((1 + x^2) * pi)
 g &lt;- exp(-x) / (1 + x^2)
+
 par(mfrow = c(1, 2))
 plot(x, g, type = &quot;l&quot;, main = &quot;&quot;, ylab = &quot;g(x)&quot;,
      ylim = c(0,2), lwd = 2)
 lines(x, g/g, col = 2, lwd = w)
-lines(x, f1, col = 3, lwd = w)
-lines(x, f2, col = 4, lwd = w)
-lines(x, f3, col = 5, lwd = w)
-lines(x, f4, col = 6, lwd = w)
-legend(&quot;topright&quot;, legend = c(&quot;g&quot;, 0:4),
+lines(x, f2, col = 3, lwd = w)
+lines(x, f3, col = 4, lwd = w)
+lines(x, f4, col = 5, lwd = w)
+lines(x, f5, col = 6, lwd = w)
+legend(&quot;topright&quot;, legend = c(&quot;g&quot;, 1:5),
        col = 1:6, lwd = w, inset = 0.02)
+
 plot(x, g, type = &quot;l&quot;, main = &quot;&quot;, ylab = &quot;g(x)/f(x)&quot;,
      ylim = c(0,3.2), lwd = w)
-lines(x, g/f1, col = 3, lwd = w)
-lines(x, g/f2, col = 4, lwd = w)
-lines(x, g/f3, col = 5, lwd = w)
-lines(x, g/f4, col = 6, lwd = w)
-legend(&quot;topright&quot;, legend = c(0:4),
+lines(x, g/1, col = 2, lwd = w)
+lines(x, g/f2, col = 3, lwd = w)
+lines(x, g/f3, col = 4, lwd = w)
+lines(x, g/f4, col = 5, lwd = w)
+lines(x, g/f5, col = 6, lwd = w)
+legend(&quot;topright&quot;, legend = c(1:5),
        col = 2:6, lwd = w, inset = 0.02)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/06_MC_intro/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/06_MC_intro/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>m &lt;- 10000
 theta.hat &lt;- se &lt;- numeric(5)
 g &lt;- function(x) {
@@ -631,40 +634,116 @@ g &lt;- function(x) {
     exp(-x)/(1 + x^2) * (x &gt; 0) * (x &lt; 1)
 }
 
-x &lt;- runif(m)     # usando f0
+x &lt;- runif(m)     # usando f1
 fg &lt;- g(x)
 theta.hat[1] &lt;- mean(fg)
 se[1] &lt;- sd(fg)
 
-x &lt;- rexp(m, 1)   # usando f1
+x &lt;- rexp(m, 1)   # usando f2
 fg &lt;- g(x) / exp(-x)
 theta.hat[2] &lt;- mean(fg)
 se[2] &lt;- sd(fg)
 
-x &lt;- rcauchy(m)   # usando f2
+x &lt;- rcauchy(m)   # usando f3
 i &lt;- c(which(x &gt; 1), which(x &lt; 0))
 x[i] &lt;- 2  # para evitar erros em g(x)
 fg &lt;- g(x) / dcauchy(x)
 theta.hat[3] &lt;- mean(fg)
 se[3] &lt;- sd(fg)
 
-u &lt;- runif(m)     # f3, pelo método da inversa
+u &lt;- runif(m)     # f4, pelo método da inversa
 x &lt;- - log(1 - u * (1 - exp(-1)))
 fg &lt;- g(x) / (exp(-x) / (1 - exp(-1)))
 theta.hat[4] &lt;- mean(fg)
 se[4] &lt;- sd(fg)
 
-u &lt;- runif(m)    # f4, pelo método da inversa
+u &lt;- runif(m)    # f5, pelo método da inversa
 x &lt;- tan(pi * u / 4)
 fg &lt;- g(x) / (4 / ((1 + x^2) * pi))
 theta.hat[5] &lt;- mean(fg)
 se[5] &lt;- sd(fg)</code></pre>
 <p>Os resultados das estimativas com seus erros-padrões são</p>
-<pre class="r"><code>rbind(theta.hat, se/sqrt(m))</code></pre>
-<pre><code>#                  [,1]       [,2]        [,3]         [,4]        [,5]
-# theta.hat 0.525261009 0.52980810 0.539874509 0.5250382027 0.525325250
-#           0.002447843 0.00418581 0.009629678 0.0009686918 0.001408793</code></pre>
-<p>Os resultados indicam que <span class="math inline">\(f_3\)</span>, e possivelmente <span class="math inline">\(f_4\)</span> produzem as menores variâncias entre as funções propostas, enquanto que <span class="math inline">\(f_2\)</span> possui a maior variância. Note que <span class="math inline">\(f_0\)</span>, a uniforme, possui erro padrão maior.</p>
+<pre class="r"><code>tab &lt;- data.frame(&quot;$\\hat\\theta$&quot; = theta.hat,
+                  &quot;$\\hat{EP}(\\hat\\theta)$&quot; = se/sqrt(m),
+                  check.names = FALSE,
+                  row.names = paste0(&quot;$f_&quot;, 1:5, &quot;$&quot;))
+knitr::kable(tab) |&gt;
+    kableExtra::kable_styling(
+                    bootstrap_options = c(&quot;striped&quot;, &quot;bordered&quot;),
+                    full_width = FALSE)</code></pre>
+<table class="table table-striped table-bordered" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\hat\theta\)</span>
+</th>
+<th style="text-align:right;">
+<span class="math inline">\(\hat{EP}(\hat\theta)\)</span>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(f_1\)</span>
+</td>
+<td style="text-align:right;">
+0.5252610
+</td>
+<td style="text-align:right;">
+0.0024478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(f_2\)</span>
+</td>
+<td style="text-align:right;">
+0.5298081
+</td>
+<td style="text-align:right;">
+0.0041858
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(f_3\)</span>
+</td>
+<td style="text-align:right;">
+0.5398745
+</td>
+<td style="text-align:right;">
+0.0096297
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(f_4\)</span>
+</td>
+<td style="text-align:right;">
+0.5250382
+</td>
+<td style="text-align:right;">
+0.0009687
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(f_5\)</span>
+</td>
+<td style="text-align:right;">
+0.5253252
+</td>
+<td style="text-align:right;">
+0.0014088
+</td>
+</tr>
+</tbody>
+</table>
+<p>Os resultados indicam que <span class="math inline">\(f_4\)</span>, e possivelmente <span class="math inline">\(f_5\)</span> produzem as menores variâncias entre as funções propostas, enquanto que <span class="math inline">\(f_3\)</span> possui a maior variância.</p>
+<!-- Note que $f_0$, a uniforme, possui erro padrão maior. -->
 <p>Esse exemplo mostra que a função de importância que resulta na menor variância de <span class="math inline">\(Y = g(X)/f(X)\)</span> deve ser escolhida com cuidado.</p>
 </div>
 </div>
