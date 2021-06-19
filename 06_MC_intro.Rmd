@@ -253,15 +253,7 @@ Seguindo o exemplo anterior, vimos que a estimativa da integral é
 ```{r}
 m.theta.hat
 ```
-
-Mas veja que existe uma distribuição de valores para compor esta
-estimativa média
-
-```{r}
-hist(theta.hat); abline(v = theta, col = 2)
-```
-
-A variância relacionada ao estimador pode então ser calculada como
+e a variância relacionada ao estimador pode então ser calculada como
 
 ```{r}
 ## Variancia
@@ -291,8 +283,8 @@ Com esse resultado, podemos inclusive fornecer um intervalo de confiança
 associado à nossa estimativa
 
 ```{r}
-## Media e veriancia
-c(m.theta.hat, v.theta.hat)
+## Media e variancia
+c(m.theta.hat, v.theta.hat, se.theta.hat)
 ## Intervalo de confiança (95%)
 c(m.theta.hat - 1.96 * se.theta.hat, m.theta.hat + 1.96 * se.theta.hat)
 ```
@@ -395,20 +387,20 @@ pelo método de amostragem por importância. Diversas funções de
 importância podem ser propostas para esse caso:
 
 \begin{align*}
-f_0(x) &= 1, \quad 0<x<1 \\
-f_1(x) &= e^{-x}, \quad 0<x<\infty \\
-f_2(x) &= (1+x^2)^{-1}/\pi, \quad -\infty<x<\infty \\
-f_3(x) &= e^{-x}/(1-e^{-1}), \quad 0<x<1 \\
-f_4(x) &= 4(1-x^2)^{-1}/\pi, \quad 0<x<1 \\
+f_1(x) &= 1, \quad 0<x<1 \\
+f_2(x) &= e^{-x}, \quad 0<x<\infty \\
+f_3(x) &= (1+x^2)^{-1}/\pi, \quad -\infty<x<\infty \\
+f_4(x) &= e^{-x}/(1-e^{-1}), \quad 0<x<1 \\
+f_5(x) &= 4(1-x^2)^{-1}/\pi, \quad 0<x<1 \\
 \end{align*}
 
 Alguns detalhes:
 
 - $f_1$ e $f_2$ possuem domínio maior, o que irá contribuir com muitos
   zeros (ineficientes)
-- $f_1$ é uma Exponencial com $\lambda = 1$
-- $f_2$ é uma Cauchy padrão
-- $f_3$ e $f_4$ não são funções conhecidas, por isso precisamos usar o
+- $f_2$ é uma Exponencial com $\lambda = 1$
+- $f_3$ é uma Cauchy padrão
+- $f_4$ e $f_5$ não são funções conhecidas, por isso precisamos usar o
   método da transformação integral de probabilidade para gerar números
   destas distribuições
 
@@ -417,28 +409,32 @@ Graficamente temos o seguinte cenário:
 ```{r, fig.show='hold', out.width='100%'}
 x <- seq(0, 1, .01)
 w <- 2
-f1 <- exp(-x)
-f2 <- (1 / pi) / (1 + x^2)
-f3 <- exp(-x) / (1 - exp(-1))
-f4 <- 4 / ((1 + x^2) * pi)
+f1 <- 1
+f2 <- exp(-x)
+f3 <- (1 / pi) / (1 + x^2)
+f4 <- exp(-x) / (1 - exp(-1))
+f5 <- 4 / ((1 + x^2) * pi)
 g <- exp(-x) / (1 + x^2)
+
 par(mfrow = c(1, 2))
 plot(x, g, type = "l", main = "", ylab = "g(x)",
      ylim = c(0,2), lwd = 2)
 lines(x, g/g, col = 2, lwd = w)
-lines(x, f1, col = 3, lwd = w)
-lines(x, f2, col = 4, lwd = w)
-lines(x, f3, col = 5, lwd = w)
-lines(x, f4, col = 6, lwd = w)
-legend("topright", legend = c("g", 0:4),
+lines(x, f2, col = 3, lwd = w)
+lines(x, f3, col = 4, lwd = w)
+lines(x, f4, col = 5, lwd = w)
+lines(x, f5, col = 6, lwd = w)
+legend("topright", legend = c("g", 1:5),
        col = 1:6, lwd = w, inset = 0.02)
+
 plot(x, g, type = "l", main = "", ylab = "g(x)/f(x)",
      ylim = c(0,3.2), lwd = w)
-lines(x, g/f1, col = 3, lwd = w)
-lines(x, g/f2, col = 4, lwd = w)
-lines(x, g/f3, col = 5, lwd = w)
-lines(x, g/f4, col = 6, lwd = w)
-legend("topright", legend = c(0:4),
+lines(x, g/1, col = 2, lwd = w)
+lines(x, g/f2, col = 3, lwd = w)
+lines(x, g/f3, col = 4, lwd = w)
+lines(x, g/f4, col = 5, lwd = w)
+lines(x, g/f5, col = 6, lwd = w)
+legend("topright", legend = c(1:5),
        col = 2:6, lwd = w, inset = 0.02)
 par(mfrow = c(1, 1))
 ```
@@ -451,30 +447,30 @@ g <- function(x) {
     exp(-x)/(1 + x^2) * (x > 0) * (x < 1)
 }
 
-x <- runif(m)     # usando f0
+x <- runif(m)     # usando f1
 fg <- g(x)
 theta.hat[1] <- mean(fg)
 se[1] <- sd(fg)
 
-x <- rexp(m, 1)   # usando f1
+x <- rexp(m, 1)   # usando f2
 fg <- g(x) / exp(-x)
 theta.hat[2] <- mean(fg)
 se[2] <- sd(fg)
 
-x <- rcauchy(m)   # usando f2
+x <- rcauchy(m)   # usando f3
 i <- c(which(x > 1), which(x < 0))
 x[i] <- 2  # para evitar erros em g(x)
 fg <- g(x) / dcauchy(x)
 theta.hat[3] <- mean(fg)
 se[3] <- sd(fg)
 
-u <- runif(m)     # f3, pelo método da inversa
+u <- runif(m)     # f4, pelo método da inversa
 x <- - log(1 - u * (1 - exp(-1)))
 fg <- g(x) / (exp(-x) / (1 - exp(-1)))
 theta.hat[4] <- mean(fg)
 se[4] <- sd(fg)
 
-u <- runif(m)    # f4, pelo método da inversa
+u <- runif(m)    # f5, pelo método da inversa
 x <- tan(pi * u / 4)
 fg <- g(x) / (4 / ((1 + x^2) * pi))
 theta.hat[5] <- mean(fg)
@@ -484,12 +480,21 @@ se[5] <- sd(fg)
 Os resultados das estimativas com seus erros-padrões são
 
 ```{r}
-rbind(theta.hat, se/sqrt(m))
+tab <- data.frame("$\\hat\\theta$" = theta.hat,
+                  "$\\hat{EP}(\\hat\\theta)$" = se/sqrt(m),
+                  check.names = FALSE,
+                  row.names = paste0("$f_", 1:5, "$"))
+knitr::kable(tab) |>
+    kableExtra::kable_styling(
+                    bootstrap_options = c("striped", "bordered"),
+                    full_width = FALSE)
 ```
 
-Os resultados indicam que $f_3$, e possivelmente $f_4$ produzem as
-menores variâncias entre as funções propostas, enquanto que $f_2$ possui
-a maior variância. Note que $f_0$, a uniforme, possui erro padrão maior.
+Os resultados indicam que $f_4$, e possivelmente $f_5$ produzem as
+menores variâncias entre as funções propostas, enquanto que $f_3$ possui
+a maior variância.
+
+<!-- Note que $f_0$, a uniforme, possui erro padrão maior. -->
 
 Esse exemplo mostra que a função de importância que resulta na menor
 variância de $Y = g(X)/f(X)$ deve ser escolhida com cuidado.
