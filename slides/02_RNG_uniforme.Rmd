@@ -1,22 +1,23 @@
 ---
 title: "Geração de números aleatórios uniformes"
 author: Fernando Mayer
-date: 2019-09-06
-bibliography: ../ref.bib
-output:
-  xaringan::moon_reader:
-    # css: ["default", "fc", "fc-fonts", "fira.css"]
-    css: ["default", "fc", "fc-fonts"]
-    self_contained: TRUE
-    nature:
-      # highlightStyle: github
-      highlightLines: TRUE
-      countIncrementalSlides: FALSE
+date: 2019-09-06 .footnotesize[(última atualização `r Sys.Date()`)]
 ---
 
 ```{r, cache=FALSE, include=FALSE}
-source("../setup_knitr.R")
+## source("../setup_knitr.R")
+source("config/setup_knitr.R")
 opts_chunk$set(fig.path = "figures/02_RNG_uniforme/")
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           cite.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = FALSE)
+bib <- ReadBib("config/refs.bib", check = FALSE)
+xaringanExtra::use_xaringan_extra("tachyons")
+## knitr::opts_chunk$set(out.width = "80%")
 ```
 
 # Introdução
@@ -80,7 +81,7 @@ modelagem.
 ---
 # Geração de números aleatórios
 
-### Números aleatórios reais
+## Números aleatórios reais
 
 - São gerados por dispositivos via processos físicos.
   - Globo de sorteio da Mega-Sena e bingos.
@@ -105,8 +106,30 @@ Veja:
 ---
 # Geração de números aleatórios
 
-### Números pseudo aleatórios
+## Números aleatórios reais
 
+O pacote
+[random](https://cran.r-project.org/web/packages/random/index.html) do R
+faz uma conexão com o site https://www.random.org/ para trazer números
+aleatórios "reais".
+
+```{r cache=TRUE}
+library(random)
+randomNumbers(n = 10, min=1, max = 10, col = 10, base = 10)
+randomSequence(min = 1, max = 10, col = 10)
+randomStrings(n = 4, len = 5, digits = TRUE, upperalpha = TRUE,
+              loweralpha = TRUE, unique = TRUE)
+```
+
+Na prática, para aplicações em estatística, os números aleatório reais
+não tem muita utilidade, já que suas propriedades são desconhecidas.
+
+---
+# Geração de números aleatórios
+
+## Números pseudo aleatórios
+
+.pull-left[
 - São gerados por programas de computador, ou seja, algorítmos.
 
 - Os número não são realmente aleatórios, pois, dado o algorítmo
@@ -116,10 +139,9 @@ gerador, pode-se prever os números (tem reprodutibilidade).
 
 - Bons GNA terão propriedades interessantes para aplicações
 Estatística.
+]
 
----
-# Geração de números pseudo aleatórios
-
+.pull-right[
 - Uma sequência de números gerados por um algoritmo, completamente
   determinado pelo valor inicial do algoritmo: **semente** (*seed*) ou
   **chave** (*key*).
@@ -135,10 +157,12 @@ Estatística.
   repete a longo prazo
   - No entanto, os algoritmos modernos possuem períodos tão longos, que
     a periodicidade pode ser desprezada
+]
 
 ---
 # Geração de números pseudo aleatórios
 
+.pull-left[
 Um gerador de números pseudo aleatórios é uma estrutura do tipo
 $$
 \Xi = (S, s_0, f, U, g)
@@ -150,10 +174,9 @@ onde:
 - $f: S \rightarrow S$ é uma função de tranformação
 - $U$ é um conjunto **finito** de símbolos de saída
 - $g: S \rightarrow U$ é uma função de saída
+]
 
----
-# Geração de números pseudo aleatórios
-
+.pull-right[
 De maneira geral, a geração de números aleatórios é da seguinte forma:
 
 1. Defina o estado inicial (semente) $s_0$
@@ -173,6 +196,8 @@ Por exemplo, a sequência
 
 possui período $p=4$, pois $s_{4+1} = s_1$, $s_{4+2} = s_2$, e assim
 sucessivamente.
+
+]
 
 ---
 # Geração de números pseudo aleatórios
@@ -351,8 +376,9 @@ $$
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 Implementação básica
-
+.code90[
 ```{r}
 rcl <- function(n, x0, m, a, c, unit = TRUE) {
     x <- integer(n + 1)
@@ -364,20 +390,28 @@ rcl <- function(n, x0, m, a, c, unit = TRUE) {
     return(x[-1])
 }
 ```
-
+]
+]
+.pull-right-60[
 Alguns resultados
 
-```{r}
+.code90[
+```{r, echo=-c(1,7)}
+options(width = 60)
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 1)
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 1)
 ## Congruencial multiplicativo
 rcl(n = 10, x0 = 1, m = 1e6, a = 1, c = 0)
 rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
+options(width = 80)
 ```
+]
+]
 
 ---
 # Gerador congruencial linear (GCL)
 
+.pull-left-40[
 - Naturalmente, a escolha de $a$, $c$ e $m$ deve ser feita com cuidado
 - Não são quaisquer valores que gerarão uma boa sequência
 - Em geral:
@@ -387,6 +421,8 @@ rcl(n = 10, x0 = 1, m = 1e6, a = 143, c = 0)
 - **O período será no máximo $m$**, por isso deve ser um número grande
   - No entanto, dependendo da combinação de valores das constantes, o
     período pode ser bem menor
+]
+.pull-right-60[
 
 ```{r}
 ## Periodo = 4 < m = 10
@@ -398,6 +434,7 @@ rcl(n = 12, x0 = 0, m = 10, a = 7, c = 7, unit = FALSE)
 rcl(n = 12, x0 = 2, m = 10, a = 7, c = 7, unit = FALSE)
 rcl(n = 12, x0 = 2, m = 100, a = 7, c = 7, unit = FALSE)
 ```
+]
 
 ---
 # Gerador congruencial linear (GCL)
@@ -413,7 +450,7 @@ rcl(n = 12, x0 = 7, m = 2^31 - 1, a = 7^5, c = 0, unit = TRUE)
 ```
 
 Alguns outros métodos disponíveis.
-
+.small[
 | GNA             | m            | a           | c          |
 |-----------------|--------------|-------------|------------|
 | Knuth-Lewis     | $2^{32}$     | $1664525$   | $1.01e9^1$ |
@@ -422,7 +459,7 @@ Alguns outros métodos disponíveis.
 | Marsaglia       | $2^{32}$     | $69069$     | $0$        |
 | Park-Miller     | $2^{31} - 1$ | $16807$     | $0$        |
 |                 |              |             |            |
-
+]
 
 ---
 # Gerador Mersenne Twister
@@ -453,7 +490,7 @@ $2^{19927} - 1 \approx 4.3 \times 10^{6001}$
 # Gerador Mersenne Twister
 
 Como a mudança de método gerador interfere nas funções:
-
+.pull-left.code80[
 ```{r}
 RNGkind()
 set.seed(1, kind = "Mersenne-Twister")
@@ -463,19 +500,24 @@ rnorm(5)
 set.seed(1, kind = "Knuth-TAOCP-2002")
 RNGkind()
 runif(5)
+```
+]
+.pull-right.code80[
+```{r}
 rnorm(5)
 set.seed(1, kind = "Mersenne-Twister")
 RNGkind()
 runif(5)
 rnorm(5)
 ```
+]
 
 ---
 # Testes de aleatoriedade
 
 <br><br><br>
 
-```{r, echo=FALSE, out.width="90%"}
+```{r, echo=FALSE, out.width="70%"}
 knitr::include_graphics("../img/dilbert.jpg")
 ```
 
@@ -504,7 +546,7 @@ x <- rcl(n = 1000, x0 = 1, m = 2^12, a = 125, c = 1, unit = TRUE)
 ---
 # Testes visuais
 
-```{r, out.width="70%", fig.show="hold", echo=c(2,3)}
+```{r, out.width="60%", fig.show="hold", echo=c(2,3)}
 par(mfrow = c(1, 2))
 plot(x)
 hist(x)
@@ -516,7 +558,7 @@ par(mfrow = c(1, 1))
 
 ACF para correlação serial
 
-```{r, out.width="70%"}
+```{r, out.width="50%"}
 acf(x)
 ```
 
@@ -562,9 +604,9 @@ ks.test(x, "punif")
 
 Visualização da distribuição acumulada empírica da sequência gerada
 (linha preta) com uma distribuição acumulada de uma uniforme gerada pela
-função `runif()` (linha vermelha - usada como referência).
+função `punif()` (linha vermelha - usada como referência).
 
-```{r, out.width="60%", fig.show="hold"}
+```{r, out.width="50%", fig.show="hold"}
 plot(ecdf(x))
-plot(ecdf(runif(1000)), add = TRUE, col = 2)
+plot(ecdf(punif(seq(0, 1, length.out = 1000))), add = TRUE, col = 2)
 ```

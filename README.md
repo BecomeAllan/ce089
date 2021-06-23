@@ -1,6 +1,6 @@
 # ce089
 
-[![Build Status](https://travis-ci.org/leg-ufpr/ce089.svg?branch=master)](https://travis-ci.org/leg-ufpr/ce089)
+[![deploy](https://github.com/leg-ufpr/ce089/actions/workflows/run.yml/badge.svg)](https://github.com/leg-ufpr/ce089/actions/workflows/run.yml)
 
 ## Estatística Computacional II
 

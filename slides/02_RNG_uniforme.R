@@ -108,10 +108,19 @@ chisq.test(x = table(xc))
 ks.test(x, "punif")
 
 plot(ecdf(x))
-plot(ecdf(runif(1000)), add = T)
+plot(ecdf(punif(seq(0, 1, length.out = 1000))), add = T, col = 2)
 
 plot(x)
 acf(x)
+
+library(random)
+
+randomNumbers(n=100, min=1, max=100, col=5, base=10, check=TRUE)
+randomSequence(min=1, max=20, col=1, check=TRUE)
+randomStrings(n=10, len=5, digits=TRUE, upperalpha=TRUE,
+              loweralpha=TRUE, unique=TRUE, check=TRUE)
+randomQuota()
+quotaCheck()
 
 ##======================================================================
 

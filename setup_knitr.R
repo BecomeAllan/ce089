@@ -4,7 +4,7 @@ opts_chunk$set(
     ## cache = TRUE,
     tidy = FALSE,
     comment = "#",
-    collapse = TRUE, ## colapsa chunks em R Markdown
+    collapse = FALSE, ## colapsa chunks em R Markdown
     fig.width = 10,
     fig.height = 8,
     fig.align = "center",
