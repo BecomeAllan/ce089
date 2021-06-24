@@ -439,7 +439,7 @@ theta.hat &lt;- exp(-x)
 P[X&gt;2] = \int_2^{\infty} e^{-x} dx
 \]</span></p>
 <p>Nesse caso, a integração simples de Monte Carlo não é útil, pois não é possível que o limite de integração seja indefinido.</p>
-<p>Na verdade, podemos pensar em uma aproximação <strong>grosseira</strong>, supondo que vamos amostrar de <span class="math inline">\(X \sim \text{U}(2, \infty)\)</span>, onde podemos aproximar o valor de <span class="math inline">\(\infty\)</span> por um número grande. Por exemplo:</p>
+<p>Na verdade, <strong>poderíamos</strong> pensar em uma aproximação <strong>grosseira</strong>, supondo que vamos amostrar de <span class="math inline">\(X \sim \text{U}(2, \infty)\)</span>, onde podemos aproximar o valor de <span class="math inline">\(\infty\)</span> por um número grande. Por exemplo:</p>
 <pre class="r"><code>## Obtem m valores da U(2,Inf)
 m &lt;- 10000
 a &lt;- 2; b &lt;- 1e5
@@ -455,7 +455,7 @@ theta.hat &lt;- exp(-x)
 <pre class="r"><code>## Usando a exponencial
 pexp(2, 1, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.1353353</code></pre>
-<p>Note que o valor estimado nesse caso está longe do velor correto, pois estamos adotando um procedimento completamente arbitrário.</p>
+<p>Note que o valor estimado nesse caso está longe do velor correto, pois estamos adotando um procedimento <strong>completamente arbitrário</strong>.</p>
 </div>
 <div id="exemplo-beta" class="section level3">
 <h3><span class="header-section-number">1.1.2</span> Exemplo (beta)</h3>
@@ -496,12 +496,12 @@ pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
 <div id="distribuições-aproximadas" class="section level1">
 <h1><span class="header-section-number">2</span> Distribuições aproximadas</h1>
 <p>Note que nos dois exemplos acima, para cada problema de cálculo de probabilidades (integrais), precisamos aplicar o método de Monte Carlo.</p>
-<p>No entanto, suponha que precisamos fazer diversos cálculos sob uma determinada VA. Ao invés de aplicar esse método para cada cálculo, podemos pensar que seria mais fácil se pudessemos obter uma amostra da distribuição de interesse. A partir desta distribuição, qualquer cálculo necessário pode ser derivado facilmente.</p>
-<p>Essa é a ideia dos métodos a seguir. O primeiro deles, a amostragem por aceitação-rejeição já foi visto no contexto de geração de números aleatórios. A mesma ideia será usada aqui, mas agora usaremos a amostra gerada da distribuição de interesse para resolver problemas de integração.</p>
-<p>O segundo método, o de re-amostragem por importância, pode ser visto como uma extensão do método de amostragem por importância, que vimos no contexto de generalização do método simples de integração de Monte Carlo. Nesse caso, usaremos as mesmas ideias para gerar uma amostra da distribuição de interesse, e não apenas resolver uma integral.</p>
+<p>No entanto, suponha que precisamos fazer diversos cálculos sob uma determinada VA. Ao invés de aplicar esse método para cada cálculo, podemos pensar que seria mais fácil se pudessemos obter uma <strong>amostra</strong> da distribuição de interesse. A partir desta <strong>distribuição</strong>, qualquer cálculo necessário pode ser derivado facilmente.</p>
+<p>Essa é a ideia dos métodos a seguir. O primeiro deles, a amostragem por <strong>aceitação-rejeição</strong> já foi visto no contexto de geração de números aleatórios. A mesma ideia será usada aqui, mas agora <strong>usaremos a amostra gerada da distribuição de interesse para resolver problemas de integração</strong>.</p>
+<p>O segundo método, o de <strong>re-amostragem por importância</strong>, pode ser visto como uma extensão do método de amostragem por importância, que vimos no contexto de generalização do método simples de integração de Monte Carlo. Nesse caso, usaremos as mesmas ideias para <strong>gerar uma amostra da distribuição de interesse</strong>, e não apenas resolver uma integral.</p>
 <div id="amostragem-por-rejeição" class="section level2">
 <h2><span class="header-section-number">2.1</span> Amostragem por rejeição</h2>
-<p>A ideia inicial do método é exatamente igual ao que já foi visto anteriormente no contexto de geração de números aleatórios de uma distribuição alvo <span class="math inline">\(f\)</span>.</p>
+<p>A ideia inicial do método é exatamente <strong>igual ao que já foi visto anteriormente</strong> no contexto de geração de números aleatórios de uma distribuição alvo <span class="math inline">\(f\)</span>.</p>
 <p>O seguinte algoritmo permite gerar números aleatórios de uma distribuição de probabilidade caracterizada pela função densidade <span class="math inline">\(f\)</span>:</p>
 <ol style="list-style-type: decimal">
 <li>Gerar <span class="math inline">\(y\)</span> como sendo uma ocorrência da variável aleatória proveniente de uma distribuição com densidade <span class="math inline">\(g\)</span>, que “encapsula” a distribuição de <span class="math inline">\(f\)</span>.</li>
@@ -521,7 +521,7 @@ M \geq \max_x \frac{f(x)}{g(x)}
 <p><span class="math display">\[
 \theta = \int_2^4 e^{-x} dx
 \]</span></p>
-<p>Sabemos que a função acima é uma <span class="math inline">\(\text{Exp(1)}\)</span>. Ao invés de usar o método de integração de Monte Carlo, vamos obter uma amostra desta distribuição, e, com ela, calcularemos a integral desejada.</p>
+<p>Sabemos que a função acima é uma <span class="math inline">\(\text{Exp(1)}\)</span>. Ao invés de usar o método de integração de Monte Carlo, vamos <strong>obter uma amostra desta distribuição</strong>, e, com ela, calcularemos a integral desejada.</p>
 <p>Por simplificação, usaremos como distribuição proposta uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Nesse caso, obtemos o valor de <span class="math inline">\(M\)</span> como</p>
 <pre class="r"><code>(M &lt;- optimize(f = function(x) {dexp(x, 1)/dexp(x, .5)},
                interval = c(0, 50), maximum = TRUE)$objective)</code></pre>
@@ -540,7 +540,6 @@ g &lt;- function(x) dexp(x, 0.5)
 N &lt;- 1e5
 x &lt;- numeric(N)
 i &lt;- 1
-j &lt;- 1
 while(i &lt;= N) {
     y &lt;- rexp(1, 0.5)
     u &lt;- runif(1)
@@ -549,12 +548,19 @@ while(i &lt;= N) {
         x[i] &lt;- y
         i &lt;- i + 1
     }
-    j &lt;- j + 1
 }
+## Tamanho da amostra
 length(x)</code></pre>
 <pre><code># [1] 100000</code></pre>
-<pre class="r"><code>hist(x, freq = FALSE, ylim = c(0, 1))
-curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)</code></pre>
+<pre class="r"><code>## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(x, freq = FALSE, ylim = c(0, 1))
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+plot(ecdf(x))
+curve(pexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Como agora temos a distribuição completa da <span class="math inline">\(\text{Exp}(1)\)</span>, podemos obter qualquer probabilidade (ou integral) aproximada, simplesmente através das contagens de valores no intervalo especificado. Note que a integral da distribuição, ou seja, <span class="math inline">\(\int_0^{\infty} f(x) dx\)</span> deve fechar em <strong>aproximadamente</strong> 1:</p>
 <pre class="r"><code>sum(x &gt; 0 &amp; x &lt;= max(x))/N</code></pre>
@@ -586,7 +592,7 @@ I(X \leq x) =
 </div>
 <div id="exemplo-beta-1" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Exemplo (beta)</h3>
-<p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, queremos calcular <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, mas agora através da obtenção de uma amostra completa desta distribuição.</p>
+<p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, queremos calcular <span class="math inline">\(P[0.3 &lt; X &lt; 0.5]\)</span>, mas agora através da obtenção de uma <strong>amostra completa desta distribuição</strong>.</p>
 <p>Usando o método de aceitação-rejeição, vamos usar como distribuição proposta uma <span class="math inline">\(\text{U}(0,1)\)</span>. Portanto:</p>
 <pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
 (M &lt;- optimize(f = function(x) {dbeta(x, a, b)/dunif(x)},
@@ -606,7 +612,6 @@ g &lt;- function(x) dunif(x)
 N &lt;- 1e5
 x &lt;- numeric(N)
 i &lt;- 1
-j &lt;- 1
 while(i &lt;= N) {
     y &lt;- runif(1)
     u &lt;- runif(1)
@@ -615,14 +620,22 @@ while(i &lt;= N) {
         x[i] &lt;- y
         i &lt;- i + 1
     }
-    j &lt;- j + 1
 }
+## Tamanho da amostra
 length(x)</code></pre>
 <pre><code># [1] 100000</code></pre>
-<pre class="r"><code>sum(x &gt;= 0 &amp; x &lt;= 1)/N</code></pre>
+<pre class="r"><code>## Integral
+sum(x &gt;= 0 &amp; x &lt;= 1)/N</code></pre>
 <pre><code># [1] 1</code></pre>
-<pre class="r"><code>hist(x, freq = FALSE, ylim = c(0, 7))
-curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)</code></pre>
+<pre class="r"><code>## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(x, freq = FALSE,  ylim = c(0, 7))
+curve(dbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
+plot(ecdf(x))
+curve(pbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)
+par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora, podemos calcular qualquer probabilidade. Por exemplo:</p>
 <pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
@@ -639,10 +652,10 @@ sum(x &gt; 0.2)/N</code></pre>
 </div>
 <div id="re-amostragem-por-importância" class="section level2">
 <h2><span class="header-section-number">2.2</span> Re-amostragem por importância</h2>
-<p>O método de re-amostragem por importância (SIR - <em>Sampling Importance Resampling</em>) é uma alternativa ao método de aceitação-rejeição quando não é possível determinar um valor razoável para <span class="math inline">\(M\)</span>. A essência do algoritmo é amostrar valores segundo pesos que são computados para cada um deles.</p>
-<p>Veremos que o método nada mais é do que uma extensão do método de amostragem por importância para aproximação de integrais. No entanto, o objetivo aqui também é obter a distribuição completa da densidade alvo, e, com isso, calcular quantidades de interesse.</p>
-<p>O método de re-amostragem por importância é também muito utilizado no contexto de inferência bayesiana, na obtenção de distribuições posteriores de parâmetros.</p>
-<p>Lembrando que, na amsotrgem por importância, temos o seguinte cenário. Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y\)</span> a VA <span class="math inline">\(g(X)/f(X)\)</span>, então <span class="math display">\[
+<p>O método de re-amostragem por importância (SIR - <em>Sampling Importance Resampling</em>) é uma alternativa ao método de aceitação-rejeição <strong>quando não é possível determinar um valor razoável para</strong> <span class="math inline">\(M\)</span>. A essência do algoritmo é amostrar valores segundo pesos que são computados para cada um deles.</p>
+<p>Veremos que o método nada mais é do que uma <strong>extensão do método de amostragem por importância para aproximação de integrais</strong>. No entanto, o objetivo aqui também é obter a distribuição completa da densidade alvo, e, com isso, calcular quantidades de interesse.</p>
+<p>O método de re-amostragem por importância é também muito utilizado no contexto de <strong>inferência bayesiana</strong>, na obtenção de distribuições posteriores de parâmetros.</p>
+<p>Lembrando que, na <strong>amsotrgem por importância</strong>, temos o seguinte cenário. Suponha que <span class="math inline">\(X\)</span> seja uma VA com densidade <span class="math inline">\(f(x)\)</span>. Seja <span class="math inline">\(Y = g(X)/f(X)\)</span>, então <span class="math display">\[
 \int g(x) dx = \int \frac{g(x)}{f(x)} f(x) dx = \text{E}[Y]
 \]</span> Com isso, podemos estimar <span class="math inline">\(\text{E}[Y]\)</span> como uma integração simples de Monte Carlo, ou seja, <span class="math display">\[
 \frac{1}{m}\sum_{i=1}^{m} Y_i = \frac{1}{m}\sum_{i=1}^{m}
@@ -676,19 +689,24 @@ pexp(2, 1, lower.tail = FALSE)</code></pre>
 </div>
 <p>O algoritmo do método de <strong>re-amostragem por importância</strong> é uma extensão do algoritmo anterior e consiste nos seguintes passos:</p>
 <ol style="list-style-type: decimal">
-<li>(<em>Amostragem</em>) Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
+<li>(<strong>Amostragem</strong>) Gerar uma amostra de <span class="math inline">\(m\)</span> observações independentes da função de importância <span class="math inline">\(f(x)\)</span>, <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>.</li>
 <li>Calcular os <strong>pesos</strong> <span class="math display">\[
 w(x_i) = \frac{g(x_i)}{f(x_i)}
 \]</span> Os pesos dão uma ideia da probabilidade de aceitação de um determinado <span class="math inline">\(x_i\)</span>. Como estes pesos podem ser maiores do que 1, eles precisam ser padronizados por <span class="math display">\[
 w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 \]</span></li>
-<li>(<em>Re-amostragem por importância</em>) Amostrar <strong>com reposição</strong> <span class="math inline">\(k &lt; m\)</span> valores de <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>, utilizando os pesos <span class="math inline">\(\{w^*(x_1), \ldots, w^*(x_m)\}\)</span>, como uma <strong>distribuição discreta de probabilidades</strong>.</li>
+<li>(<strong>Re-amostragem por importância</strong>) Amostrar <strong>com reposição</strong> <span class="math inline">\(k &lt; m\)</span> valores de <span class="math inline">\(\{x_1, \ldots, x_m\}\)</span>, utilizando os pesos <span class="math inline">\(\{w^*(x_1), \ldots, w^*(x_m)\}\)</span>, como uma <strong>distribuição discreta de probabilidades</strong>.</li>
 </ol>
 <p>Dessa forma, <span class="math inline">\(\mathcal{X} = \{x^*_1, \ldots, x^*_k\}\)</span> será uma amostra de <span class="math inline">\(g(X)\)</span>.</p>
 <div id="exemplo-exponencial-2" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Exemplo (exponencial)</h3>
 <p>Seguindo com o exemplo da <span class="math inline">\(\text{Exp}(1)\)</span>, o código abaixo serve para gerar uma amostra por importância desta distribuição.</p>
-<p>A função de importância considerada aqui é uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Lembre-se que nesse caso, não é necessário que a função proposta seja maior do que a função alvo.</p>
+<p>A função de importância considerada aqui é uma <span class="math inline">\(\text{Exp}(0.5)\)</span>. Lembre-se que nesse caso, <strong>não é necessário que a função proposta seja maior do que a função alvo</strong>.</p>
+<pre class="r"><code>curve(dexp(x, 1), from = 0, to = 10, col = 4)
+curve(dexp(x,  0.5), from = 0, to = 10, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;g(x)&quot;, &quot;f(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Define funções
 g &lt;- function(x) exp(-x) * (x &gt;= 0)
 f &lt;- function(x) dexp(x, 0.5)
@@ -702,13 +720,29 @@ w.norm &lt;- w/sum(w)
 k &lt;- 1e4
 ## Amostra considerando os pesos normalizados para cada X
 g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
-## Verifica a distribuição da amostra
-hist(g.sample, freq = FALSE, ylim = c(0, 1))
-curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
-<pre class="r"><code>plot(x, w.norm)</code></pre>
+## Tamanho da amostra
+length(g.sample)</code></pre>
+<pre><code># [1] 10000</code></pre>
+<pre class="r"><code>## Integral
+sum(g.sample &gt; 0 &amp; g.sample &lt; max(g.sample))/k</code></pre>
+<pre><code># [1] 0.9999</code></pre>
+<pre class="r"><code>## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(g.sample, freq = FALSE)
+curve(dexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+plot(ecdf(g.sample))
+curve(pexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
+<pre class="r"><code>curve(dexp(x, 1), from = 0, to = 10, col = 4,  ylim = c(0, 2))
+curve(dexp(x,  0.5), from = 0, to = 10, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)
+points(x, w)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com uma amostra completa da distribuição, podemos então calcular qualquer tipo de probabilidades:</p>
 <pre class="r"><code>## P[2 &lt; X &lt; 4]
 sum(g.sample &gt;= 2 &amp; g.sample &lt;= 4)/k</code></pre>
@@ -725,8 +759,13 @@ sum(g.sample &gt; 2)/k</code></pre>
 <div id="exemplo-beta-2" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Exemplo (beta)</h3>
 <p>Voltando ao exemplo de <span class="math inline">\(X \sim \text{Beta}(a=9.39, b=33.67)\)</span>, vamos ober uma amostra desta distribuição pelo método de re-amostragem por importância. Aqui também utilizaremos uma <span class="math inline">\(\text{U}(0,1)\)</span> como função de importância.</p>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dunif(x, 0, 1), from = 0, to = 1, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;g(x)&quot;, &quot;f(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Define funções
-a &lt;- 9.39; b &lt;- 33.67
 g &lt;- function(x, a, b) dbeta(x, a, b)
 f &lt;- function(x) dunif(x) # usando U(0,1)
 ## 1. Amostragem
@@ -739,13 +778,30 @@ w.norm &lt;- w/sum(w)
 k &lt;- 1e4
 ## Amostra considerando os pesos normalizados para cada X
 g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
-## Verifica a distribuição da amostra
-hist(g.sample, freq = FALSE, ylim = c(0, 7))
-curve(dbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
+## Tamanho da amostra
+length(g.sample)</code></pre>
+<pre><code># [1] 10000</code></pre>
+<pre class="r"><code>## Integral
+sum(g.sample &gt; 0 &amp; g.sample &lt; 1)/k</code></pre>
+<pre><code># [1] 1</code></pre>
+<pre class="r"><code>## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(g.sample, freq = FALSE,  ylim = c(0, 7))
+curve(dbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
+plot(ecdf(g.sample))
+curve(pbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 <p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
-<pre class="r"><code>plot(x, w.norm)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dunif(x, 0, 1), from = 0, to = 1, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)
+points(x, w)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Calcula probabilidades:</p>
 <pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
 sum(g.sample &gt; 0.3 &amp; g.sample &lt; 0.5)/k</code></pre>
