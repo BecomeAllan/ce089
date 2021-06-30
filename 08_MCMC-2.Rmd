@@ -17,7 +17,8 @@ opts_chunk$set(fig.path = "figures/08_MCMC-2/")
 # Introdução
 
 O termo "Monte Carlo via Cadeia de Markov" abrange uma grande gama de
-técnicas que possuem algumas ideias em comum:
+métodos introduzidos por Metropolis e Hastings (CITAR) para integração
+de Monte Carlo, e que possuem algumas ideias em comum:
 
 1. Queremos amostrar de alguma função densidade de probabilidade
    complicada $f$. A suposição aqui é que nós conseguimos **calcular**
@@ -33,10 +34,16 @@ técnicas que possuem algumas ideias em comum:
    sequência de valores $\{x_n\}$, gerada pela cadeia, irá **convergir
    em distribuição** para a densidade $f$.
 
-Já vimos que os métodos de Monte Carlo via Cadeias de Markov (MCMC)
-servem basicamente para gerar valores de uma distribuição. No entanto,
-ao contrário dos métodos anteriores (e.g. aceitação-rejeição), os
-valores obtidos por MCMC são **correlacionados**.
+Portanto, a ideia básica dos métodos de Monte Carlo via Cadeias de
+Markov (MCMC) para amostrar de $f$ é construir uma cadeia de Markov com
+distribuição estacionária $f$, e rodar essa cadeia por um longo período
+de tempo, até que ela convirja (aproximadamente) para sua distribuição
+estacionária.
+
+Os métodos de MCMC servem basicamente para gerar valores de uma
+distribuição. No entanto, ao contrário dos métodos anteriores (e.g.
+aceitação-rejeição), os valores obtidos por MCMC são
+**correlacionados**.
 
 Uma amostra com valores correlacionados não é desejável, mas mesmo
 assim, os métodos de MCMC são preferidos em situações mais complexas. O
@@ -55,6 +62,10 @@ facilitam a resolução de problemas de alta dimensão, através de uma
 sequência de problemas menores que são mais fáceis de resolver (e.g.
 amostrador de Gibbs).
 
+
+# Integração com MCMC
+
+Ver 11.1.2 do livro
 
 # Cadeias de Markov
 
@@ -76,8 +87,8 @@ imediatamente anterior (essa propriedade é conhecida como **propriedade
 de Markov**).
 
 Dessa forma, para determinar a sequência de valores que a cadeia pode
-assumir, podemos determinar a distribuição do próximo valor conhecendo
-apenas o valor anterior.
+assumir, podemos **determinar a distribuição do próximo valor conhecendo
+apenas o valor anterior**.
 
 A coleção de estados que uma cadeia de Markov pode visitar é chamada de
 **espaço de estados**. A distribuição de probabilidade condicional, que
@@ -190,8 +201,8 @@ frequência relativa de "visitas" em cada estado após muitas iterações.
 Para isso, inicia-se a cadeia em um estado qualquer, e os movimentos
 levarão aos outros estados a cada iteração, conforme estabelecido pela
 matriz de transição. O número de vezes que um estado é visitado a longo
-prazo (muitas iterações) levará a uma aproximação da distribuição
-estacionária, através das frequências relativas.
+prazo (muitas iterações) levará a uma **aproximação da distribuição
+estacionária**, através das **frequências relativas**.
 
 ```{r}
 ## Cria função para gerar cadeia
@@ -208,14 +219,26 @@ N <- c(1e2, 1e3, 1e4, 1e5)
 res <- lapply(N, function(x) {
     mc(n = x, x1 = "SC", P = P, states = estados)
 })
-## Proporção relativa
+## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))
 ## Começando em outro estado
 res <- lapply(N, function(x) {
     mc(n = x, x1 = "RS", P = P, states = estados)
 })
-## Proporção relativa
+## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))
+```
+
+```{r, include=FALSE, eval=FALSE}
+tab <- t(sapply(res, function(x) prop.table(table(x))))
+barplot(tab, beside = TRUE, legend = N)
+## Uma forma de ver as cdeias, mas aqui nao fica bom
+spaces <- replicate(3, mc(n = 100, x1 = "SC", P = P, states = estados))
+str(spaces)
+plot(1:1e2, as.factor(spaces[, 1]), type = "l")
+for(i in 2:3) {
+    lines(1:1e2, as.factor(spaces[, i]), col = i)
+}
 ```
 
 Existem ainda três suposições necessárias para que os teoremas limite
@@ -230,8 +253,8 @@ sejam verdadeiros. A cadeia deve ser:
 
 Em geral, os algoritmos de MCMC satisfazem estas três condições.
 
-No caso de cadeias recorrentes (ou aperiódicas), a distribuição
-estacionária também é a **distribuição limite**, no sentido de que a
+No caso de cadeias recorrentes (ou aperiódicas), **a distribuição
+estacionária também é a distribuição limite**, no sentido de que a
 distribuição limite de $\{X_t\}$ é $\pi_e$ para qualquer valor de estado
 inicial $X_0$. Esta propriedade é chamada de **ergodicidade**, e
 obviamente é de interesse direto nos métodos de MCMC, pois eventualmente
@@ -246,9 +269,60 @@ Monte Carlo também é aplicada nos métodos de MCMC. Essa definição também
 cadeia seja **dependente por definição**, a média aritmética dos valores
 da cadeia é um estimador consistente da média teórica.
 
+<div class="panel panel-primary">
+<div class="panel-heading">Encontrando a distribuição limite</div>
+<div class="panel-body">
+
+<!-- https://www.probabilitycourse.com/chapter11/11_2_6_stationary_and_limiting_distributions.php -->
+
+A distribuição de probabilidade $\pi = [\pi_0, \pi_1, \ldots]$ é chamada
+de **distribuição limite** de uma Cadeia de Markov $\{X_n\}$ se
+$$
+\pi_j = \lim_{n \to \infty} P(X_n = j | X_0 = i), \quad \forall \, i, j \in S
+$$
+e
+$$
+\sum_{j \in S} \pi_j = 1
+$$
+onde $S$ é o conjunto de espaço de estados possíveis.
+
+Quando a cadeia satisfaz as 3 condições acima, então **a distribuição
+estacionária também é a distribuição limite**, e sendo uma cadeia
+ergódica, a **distribuição estacionária é única**. Portanto, basta
+acharmos a distribuição estacionária para achar a distribuição limite.
+
+Naturalmente podemos encontrar a distribuição estacionária da maneira
+como fizemos acima, ou seja, fazendo
+
+$$
+\pi_e = \lim_{n \to \infty} \pi_0 P^{(n)}
+$$
+e conferindo a relação
+$$
+\pi_e P = \pi_e
+$$
+
+No entanto, dado que a matriz de transição $P$ é fixa e conhecida, então
+podemos obter a distribuição estacionária "teórica" por meio dos
+autovetores de $P'$
+
+```{r}
+eigen(t(P))
+ev <- eigen(t(P))$vectors
+## Distribuição estacionária
+ev[, 1]/sum(ev[, 1])
+```
+
+Para detalhes dessa relação veja este
+[link](https://brilliant.org/wiki/stationary-distributions/).
+</div>
+</div>
+
 Veja uma animação em http://setosa.io/ev/markov-chains.
 
 ```{r, eval=FALSE, include=FALSE}
+## https://stephens999.github.io/fiveMinuteStats/markov_chains_discrete_stationary_dist.html
+## https://brilliant.org/wiki/stationary-distributions/
 ## Obtem estacionaria pelos autovetores
 ## Em uma matriz de Markov, a primeira coluna sempre terá autovalor 1
 ## Mas note que tem que ser o transposto dessa
@@ -261,48 +335,58 @@ ev[, 1]/sum(ev[, 1])
 ```{r, eval=FALSE, include=FALSE}
 library(markovchain)
 ## Cria a cadeia
-(mc <- new("markovchain", states = estados, transitionMatrix = M,
+## (M <- matrix(c(.5, .3, .2, 0, .2, .4, .3, .1, .1, .1, .6, .2, .1, .2,
+##                .3, .4), byrow = TRUE, ncol = 4))
+(mc <- new("markovchain", states = estados, transitionMatrix = P,
            byrow = TRUE))
 steadyStates(mc)
 mc^100
-(M <- matrix(c(.5, .3, .2, 0, .2, .4, .3, .1, .1, .1, .6, .2, .1, .2,
-               .3, .4), byrow = TRUE, ncol = 4))
-rowSums(M)
-colSums(M)
 
-prt0 <- matrix(rep(1/4, 4), nrow = 1)
-(prt1 <- prt0 %*% M)
-(prt2 <- prt0 %*% (M %*% M))
+rowSums(P)
+colSums(P)
 
-prt0 %*% M^2
+prt0 <- matrix(rep(1/3, 3), nrow = 1)
+(prt1 <- prt0 %*% P)
+(prt2 <- prt0 %*% (P %*% P))
 
-M %*% M %*% M %*% M
+prt0 %*% P^2
 
-M^2
+P %*% P %*% P %*% P
+
+P^2
 library(expm)
-M %^% 2
+P %^% 2
 
-prt0 <- matrix(c(0, 0, 0, 1), nrow = 1)
-(prt1 <- prt0 %*% M)
+prt0 <- matrix(c(0, 0, 1), nrow = 1)
+(prt1 <- prt0 %*% P)
 
 N <- 1e5
 pos <- numeric(N)
-pos[1] <- 4
+pos[1] <- 3
 for(i in 2:N) {
-    pos[i] <- sample(1:4, size = 1, prob = M[pos[i - 1], ])
+    pos[i] <- sample(1:3, size = 1, prob = P[pos[i - 1], ])
 }
 (pe <- prop.table(table(pos)))
-prt0 %*% (M %^% N)
-prt0 %*% (M %^% 20)
+prt0 %*% (P %^% N)
+prt0 %*% (P %^% 20)
 
-t(pe) %*% M
+t(pe) %*% P
 
-eigen(M)
-ev <- eigen(M)$vectors
+eigen(P)
+ev <- eigen(P)$vectors
 ev[, 1]
 ev[, 1]/sum(ev[, 1])
 ev[, 2]
 ev[, 2]/sum(ev[, 2])
+ev[, 3]/sum(ev[, 3])
+
+eigen(t(P))
+ev <- eigen(t(P))$vectors
+ev[, 1]
+ev[, 1]/sum(ev[, 1])
+ev[, 2]
+ev[, 2]/sum(ev[, 2])
+ev[, 3]/sum(ev[, 3])
 
 ```
 
