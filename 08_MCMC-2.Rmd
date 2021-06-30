@@ -17,7 +17,7 @@ opts_chunk$set(fig.path = "figures/08_MCMC-2/")
 # Introdução
 
 O termo "Monte Carlo via Cadeia de Markov" abrange uma grande gama de
-métodos introduzidos por Metropolis e Hastings (CITAR) para integração
+métodos introduzidos por @Metropolis1953 e @Hastings1970 para integração
 de Monte Carlo, e que possuem algumas ideias em comum:
 
 1. Queremos amostrar de alguma função densidade de probabilidade
@@ -62,12 +62,13 @@ facilitam a resolução de problemas de alta dimensão, através de uma
 sequência de problemas menores que são mais fáceis de resolver (e.g.
 amostrador de Gibbs).
 
+<!-- # Integração com MCMC -->
 
-# Integração com MCMC
-
-Ver 11.1.2 do livro
+<!-- Ver 11.1.2 do livro -->
 
 # Cadeias de Markov
+
+<!-- Advanced Statistical Computing. Roger Peng. -->
 
 Uma cadeia de Markov é um **processo estocático** que evolui ao longo do
 tempo, passando por diversos **estados**. A sequência de estados é
@@ -387,10 +388,40 @@ ev[, 1]/sum(ev[, 1])
 ev[, 2]
 ev[, 2]/sum(ev[, 2])
 ev[, 3]/sum(ev[, 3])
-
 ```
 
-# Metropolis-Hastings
+# Algoritmos de Metropolis-Hastings
+
+Os algoritmos de Metropolis-Hastings (M-H) são uma classe de Métodos de
+Monte Carlo via Cadeias de Markov, incluindo casos especiais como o
+amostrador de Metropolis, o amostrador de Gibbs, o amostrador
+independente e o amostrador *random walk*.
+
+A ideia principal é gerar uma Cadeia de Markov $\{X_t | t = 0, 1, 2,
+\ldots\}$ de forma que sua distribuição estacionária seja a distribuição
+alvo. O algoritmo deve especificar, para um dado estado $X_t$, como
+gerar o próximo estado $X_{t+1}$. Em todos os algoritmos de M-H, existe
+um valor candidato $Y$, gerado a partir de uma distribuição proposta
+$g(\cdot|X_t)$ e se este valor candidato:
+
+- **é aceito**, a cadeia se move para o estado $Y$ no tempo $t+1$ e
+  $X_{t+1}=Y$.
+- **não é aceito**, a cadeia permanece no estado $X_t$ e $x_{t+1}=X_t$.
+
+Note que, por construção, os valores gerados são dependentes (ou
+correlacionados).
+
+A escolha para a distribuição proposta é bem flexível, mas a cadeia
+gerada por esta escolha deve satisfazer algumas condições de
+regularidade. A distribuição proposta deve ser escolhida de forma que a
+cadeia gerada vá, de fato, convergir para a distribuição estacionária -
+a distribuição alvo $f$. As condições necessárias para a cadeia gerada
+são: **irreducibilidade**, **recorrência positiva** e
+**aperiodicidade**. **Uma distribuição proposta com o mesmo suporte da
+distribuição alvo, geralmente irá satisfazer estas condições de
+regularidade**.
+
+## Amostrador de Metropolis-Hastings
 
 O algoritmo de Metropolis-Hastings gera uma cadeia de Markov $\{X_0,
 X_1, \ldots\}$ conforme definido abaixo.
@@ -903,3 +934,5 @@ for (i in 2:N) {
 }
 plot.ts(x)
 ```
+
+# Referências {-}
