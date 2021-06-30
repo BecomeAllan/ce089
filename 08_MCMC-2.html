@@ -376,25 +376,29 @@ div.tocify {
 
 <div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
-<p>O termo “Monte Carlo via Cadeia de Markov” abrange uma grande gama de técnicas que possuem algumas ideias em comum:</p>
+<p>O termo “Monte Carlo via Cadeia de Markov” abrange uma grande gama de métodos introduzidos por <span class="citation">Metropolis et al. (1953)</span> e <span class="citation">Hastings (1970)</span> para integração de Monte Carlo, e que possuem algumas ideias em comum:</p>
 <ol style="list-style-type: decimal">
 <li>Queremos amostrar de alguma função densidade de probabilidade complicada <span class="math inline">\(f\)</span>. A suposição aqui é que nós conseguimos <strong>calcular</strong> <span class="math inline">\(f\)</span>, mas não podemos amostrar dela.</li>
 <li>Sabemos que certos processos estocáticos chamados de <strong>cadeias de Markov</strong> convergem para uma <strong>distribuição estacionária</strong> (se certas condições forem satisfeitas). Simular desta cadeia de Markov por um período longo, eventualmente nos levará a uma amostra da distribuição estacionária da cadeia.</li>
 <li>Dada a forma funcional de <span class="math inline">\(f\)</span>, queremos construir uma cadeia de Markov que possui <span class="math inline">\(f\)</span> como sua distribuição estacionária.</li>
 <li>Queremos amostrar valores da cadeia de Markov de forma que a sequência de valores <span class="math inline">\(\{x_n\}\)</span>, gerada pela cadeia, irá <strong>convergir em distribuição</strong> para a densidade <span class="math inline">\(f\)</span>.</li>
 </ol>
-<p>Já vimos que os métodos de Monte Carlo via Cadeias de Markov (MCMC) servem basicamente para gerar valores de uma distribuição. No entanto, ao contrário dos métodos anteriores (e.g. aceitação-rejeição), os valores obtidos por MCMC são <strong>correlacionados</strong>.</p>
+<p>Portanto, a ideia básica dos métodos de Monte Carlo via Cadeias de Markov (MCMC) para amostrar de <span class="math inline">\(f\)</span> é construir uma cadeia de Markov com distribuição estacionária <span class="math inline">\(f\)</span>, e rodar essa cadeia por um longo período de tempo, até que ela convirja (aproximadamente) para sua distribuição estacionária.</p>
+<p>Os métodos de MCMC servem basicamente para gerar valores de uma distribuição. No entanto, ao contrário dos métodos anteriores (e.g. aceitação-rejeição), os valores obtidos por MCMC são <strong>correlacionados</strong>.</p>
 <p>Uma amostra com valores correlacionados não é desejável, mas mesmo assim, os métodos de MCMC são preferidos em situações mais complexas. O primeiro motivo é que, mesmo com valores correlacionados, é possível selecionar uma (sub) amostra de valores que não seja correlacionada. O segundo motivo é que as <strong>cadeias de Markov possuem diferentes propriedades de convergência</strong>, que podem ser exploradas para se obter distribuições propostas mais fáceis de tratar numericamente, quando os métodos mais gerais de amostragem por importância (por exemplo) não se aplicam diretamente.</p>
 <p>Além disso, o conhecimento necessário da distribuição alvo que se quer gerar é mínimo, geralmente não é necessário saber a constante de integração por exemplo. Além disso, estes métodos via cadeias de Markov facilitam a resolução de problemas de alta dimensão, através de uma sequência de problemas menores que são mais fáceis de resolver (e.g. amostrador de Gibbs).</p>
+<!-- # Integração com MCMC -->
+<!-- Ver 11.1.2 do livro -->
 </div>
 <div id="cadeias-de-markov" class="section level1">
 <h1><span class="header-section-number">2</span> Cadeias de Markov</h1>
+<!-- Advanced Statistical Computing. Roger Peng. -->
 <p>Uma cadeia de Markov é um <strong>processo estocático</strong> que evolui ao longo do tempo, passando por diversos <strong>estados</strong>. A sequência de estados é denotada pela coleção de valores <span class="math inline">\(\{X_t\}\)</span>, ou seja, é uma sequência de variáveis aleatórias dependentes <span class="math display">\[
 X_0, X_1, \ldots, X_t, \ldots
 \]</span> onde a transição entre os estados é aleatória, segundo a regra <span class="math display">\[
 P[X_t | X_{t-1}, X_{t-2}, \ldots, X_0] = P[X_t | X_{t-1}]
 \]</span> Essa relação significa que a distribuição de probabilidade de um processo no tempo <span class="math inline">\(t\)</span>, dado todos os outros valores da cadeia, é igual à distribuição de probabilidade condicionada apenas ao valor imediatamente anterior (essa propriedade é conhecida como <strong>propriedade de Markov</strong>).</p>
-<p>Dessa forma, para determinar a sequência de valores que a cadeia pode assumir, podemos determinar a distribuição do próximo valor conhecendo apenas o valor anterior.</p>
+<p>Dessa forma, para determinar a sequência de valores que a cadeia pode assumir, podemos <strong>determinar a distribuição do próximo valor conhecendo apenas o valor anterior</strong>.</p>
 <p>A coleção de estados que uma cadeia de Markov pode visitar é chamada de <strong>espaço de estados</strong>. A distribuição de probabilidade condicional, que determina se a cadeia se move de um estado para outro é chamada de <strong>kernel de transição</strong> ou <strong>matriz de transição</strong>, e pode ser denotada por <span class="math display">\[
 X_t | X_{t-1}, X_{t-2}, \ldots, X_0 \sim K(X_{t}, X_{t-1})
 \]</span> Por exemplo, uma cadeia de Markov do tipo <em>random walk</em> satisfaz <span class="math display">\[
@@ -478,7 +482,7 @@ P[X_{t+1} = j | X_t = i] = P_{ij}
 pi_e %*% P</code></pre>
 <pre><code>#             PR        RS        SC
 # [1,] 0.3888889 0.3333333 0.2777778</code></pre>
-<p>A distribuição estacionária também pode ser <strong>aproximada</strong> a partir da frequência relativa de “visitas” em cada estado após muitas iterações. Para isso, inicia-se a cadeia em um estado qualquer, e os movimentos levarão aos outros estados a cada iteração, conforme estabelecido pela matriz de transição. O número de vezes que um estado é visitado a longo prazo (muitas iterações) levará a uma aproximação da distribuição estacionária, através das frequências relativas.</p>
+<p>A distribuição estacionária também pode ser <strong>aproximada</strong> a partir da frequência relativa de “visitas” em cada estado após muitas iterações. Para isso, inicia-se a cadeia em um estado qualquer, e os movimentos levarão aos outros estados a cada iteração, conforme estabelecido pela matriz de transição. O número de vezes que um estado é visitado a longo prazo (muitas iterações) levará a uma <strong>aproximação da distribuição estacionária</strong>, através das <strong>frequências relativas</strong>.</p>
 <pre class="r"><code>## Cria função para gerar cadeia
 mc &lt;- function(n, x1, P, states) {
     x &lt;- character(n)
@@ -493,7 +497,7 @@ N &lt;- c(1e2, 1e3, 1e4, 1e5)
 res &lt;- lapply(N, function(x) {
     mc(n = x, x1 = &quot;SC&quot;, P = P, states = estados)
 })
-## Proporção relativa
+## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))</code></pre>
 <pre><code>#           PR      RS      SC
 # [1,] 0.42000 0.31000 0.27000
@@ -504,7 +508,7 @@ t(sapply(res, function(x) prop.table(table(x))))</code></pre>
 res &lt;- lapply(N, function(x) {
     mc(n = x, x1 = &quot;RS&quot;, P = P, states = estados)
 })
-## Proporção relativa
+## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))</code></pre>
 <pre><code>#           PR      RS      SC
 # [1,] 0.39000 0.38000 0.23000
@@ -518,13 +522,59 @@ t(sapply(res, function(x) prop.table(table(x))))</code></pre>
 <li><strong>Aperiódica</strong>: não deve haver estados absorventes (i.e., estados em que, uma vez inseridos, não podem mais ser deixados).</li>
 </ol>
 <p>Em geral, os algoritmos de MCMC satisfazem estas três condições.</p>
-<p>No caso de cadeias recorrentes (ou aperiódicas), a distribuição estacionária também é a <strong>distribuição limite</strong>, no sentido de que a distribuição limite de <span class="math inline">\(\{X_t\}\)</span> é <span class="math inline">\(\pi_e\)</span> para qualquer valor de estado inicial <span class="math inline">\(X_0\)</span>. Esta propriedade é chamada de <strong>ergodicidade</strong>, e obviamente é de interesse direto nos métodos de MCMC, pois eventualmente atingiremos a distribuição alvo, que é a distribuição estacionária. Particularmente, para qualquer função <span class="math inline">\(h\)</span> <span class="math display">\[
+<p>No caso de cadeias recorrentes (ou aperiódicas), <strong>a distribuição estacionária também é a distribuição limite</strong>, no sentido de que a distribuição limite de <span class="math inline">\(\{X_t\}\)</span> é <span class="math inline">\(\pi_e\)</span> para qualquer valor de estado inicial <span class="math inline">\(X_0\)</span>. Esta propriedade é chamada de <strong>ergodicidade</strong>, e obviamente é de interesse direto nos métodos de MCMC, pois eventualmente atingiremos a distribuição alvo, que é a distribuição estacionária. Particularmente, para qualquer função <span class="math inline">\(h\)</span> <span class="math display">\[
 \frac{1}{T} \sum_{t=1}^{T} h(X_t) \longrightarrow \text{E}_{\pi}[h(X)]
 \]</span> ou seja, a Lei Forte dos Grandes Números, que é a base dos métodos de Monte Carlo também é aplicada nos métodos de MCMC. Essa definição também é conhecida como <strong>teorema ergódico</strong>. Isso também mostra que, embora a cadeia seja <strong>dependente por definição</strong>, a média aritmética dos valores da cadeia é um estimador consistente da média teórica.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Encontrando a distribuição limite
+</div>
+<div class="panel-body">
+<!-- https://www.probabilitycourse.com/chapter11/11_2_6_stationary_and_limiting_distributions.php -->
+<p>A distribuição de probabilidade <span class="math inline">\(\pi = [\pi_0, \pi_1, \ldots]\)</span> é chamada de <strong>distribuição limite</strong> de uma Cadeia de Markov <span class="math inline">\(\{X_n\}\)</span> se <span class="math display">\[
+\pi_j = \lim_{n \to \infty} P(X_n = j | X_0 = i), \quad \forall \, i, j \in S
+\]</span> e <span class="math display">\[
+\sum_{j \in S} \pi_j = 1
+\]</span> onde <span class="math inline">\(S\)</span> é o conjunto de espaço de estados possíveis.</p>
+<p>Quando a cadeia satisfaz as 3 condições acima, então <strong>a distribuição estacionária também é a distribuição limite</strong>, e sendo uma cadeia ergódica, a <strong>distribuição estacionária é única</strong>. Portanto, basta acharmos a distribuição estacionária para achar a distribuição limite.</p>
+<p>Naturalmente podemos encontrar a distribuição estacionária da maneira como fizemos acima, ou seja, fazendo</p>
+<p><span class="math display">\[
+\pi_e = \lim_{n \to \infty} \pi_0 P^{(n)}
+\]</span> e conferindo a relação <span class="math display">\[
+\pi_e P = \pi_e
+\]</span></p>
+<p>No entanto, dado que a matriz de transição <span class="math inline">\(P\)</span> é fixa e conhecida, então podemos obter a distribuição estacionária “teórica” por meio dos autovetores de <span class="math inline">\(P&#39;\)</span></p>
+<pre class="r"><code>eigen(t(P))</code></pre>
+<pre><code># eigen() decomposition
+# $values
+# [1]  1.0 -0.2  0.1
+# 
+# $vectors
+#            [,1]          [,2]       [,3]
+# [1,] -0.6674238 -7.071068e-01  0.2672612
+# [2,] -0.5720776 -2.750209e-17 -0.8017837
+# [3,] -0.4767313  7.071068e-01  0.5345225</code></pre>
+<pre class="r"><code>ev &lt;- eigen(t(P))$vectors
+## Distribuição estacionária
+ev[, 1]/sum(ev[, 1])</code></pre>
+<pre><code># [1] 0.3888889 0.3333333 0.2777778</code></pre>
+<p>Para detalhes dessa relação veja este <a href="https://brilliant.org/wiki/stationary-distributions/">link</a>.</p>
+</div>
+</div>
 <p>Veja uma animação em <a href="http://setosa.io/ev/markov-chains" class="uri">http://setosa.io/ev/markov-chains</a>.</p>
 </div>
-<div id="metropolis-hastings" class="section level1">
-<h1><span class="header-section-number">3</span> Metropolis-Hastings</h1>
+<div id="algoritmos-de-metropolis-hastings" class="section level1">
+<h1><span class="header-section-number">3</span> Algoritmos de Metropolis-Hastings</h1>
+<p>Os algoritmos de Metropolis-Hastings (M-H) são uma classe de Métodos de Monte Carlo via Cadeias de Markov, incluindo casos especiais como o amostrador de Metropolis, o amostrador de Gibbs, o amostrador independente e o amostrador <em>random walk</em>.</p>
+<p>A ideia principal é gerar uma Cadeia de Markov <span class="math inline">\(\{X_t | t = 0, 1, 2, \ldots\}\)</span> de forma que sua distribuição estacionária seja a distribuição alvo. O algoritmo deve especificar, para um dado estado <span class="math inline">\(X_t\)</span>, como gerar o próximo estado <span class="math inline">\(X_{t+1}\)</span>. Em todos os algoritmos de M-H, existe um valor candidato <span class="math inline">\(Y\)</span>, gerado a partir de uma distribuição proposta <span class="math inline">\(g(\cdot|X_t)\)</span> e se este valor candidato:</p>
+<ul>
+<li><strong>é aceito</strong>, a cadeia se move para o estado <span class="math inline">\(Y\)</span> no tempo <span class="math inline">\(t+1\)</span> e <span class="math inline">\(X_{t+1}=Y\)</span>.</li>
+<li><strong>não é aceito</strong>, a cadeia permanece no estado <span class="math inline">\(X_t\)</span> e <span class="math inline">\(x_{t+1}=X_t\)</span>.</li>
+</ul>
+<p>Note que, por construção, os valores gerados são dependentes (ou correlacionados).</p>
+<p>A escolha para a distribuição proposta é bem flexível, mas a cadeia gerada por esta escolha deve satisfazer algumas condições de regularidade. A distribuição proposta deve ser escolhida de forma que a cadeia gerada vá, de fato, convergir para a distribuição estacionária - a distribuição alvo <span class="math inline">\(f\)</span>. As condições necessárias para a cadeia gerada são: <strong>irreducibilidade</strong>, <strong>recorrência positiva</strong> e <strong>aperiodicidade</strong>. <strong>Uma distribuição proposta com o mesmo suporte da distribuição alvo, geralmente irá satisfazer estas condições de regularidade</strong>.</p>
+<div id="amostrador-de-metropolis-hastings" class="section level2">
+<h2><span class="header-section-number">3.1</span> Amostrador de Metropolis-Hastings</h2>
 <p>O algoritmo de Metropolis-Hastings gera uma cadeia de Markov <span class="math inline">\(\{X_0, X_1, \ldots\}\)</span> conforme definido abaixo.</p>
 <ol style="list-style-type: decimal">
 <li>Defina uma distribuição proposta <span class="math inline">\(g(\cdot|X_t)\)</span></li>
@@ -547,8 +597,8 @@ U \leq \alpha(X_t, Y)
 <li>Se a distribuição proposta for adequada, a “cadeia” de Metropolis-Hastings irá convergir para uma distribuição estacionária única <span class="math inline">\(\pi\)</span>.</li>
 <li>O algoritmo foi desenvolvido de forma que a distribuição estacionária da cadeia é de fato a distribuição alvo <span class="math inline">\(f\)</span>.</li>
 </ul>
-<div id="exemplo-beta" class="section level2">
-<h2><span class="header-section-number">3.1</span> Exemplo (beta)</h2>
+<div id="exemplo-beta" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Exemplo (beta)</h3>
 <p>Considere o examplo de aulas anteriores sobre o algoritmo de aceitação-rejeição, onde deseja-se gerar valores de uma distribuição <span class="math inline">\(\text{Beta}(\alpha = 2.7, \beta = 6.3)\)</span>, com uma distribuição proposta <span class="math inline">\(\text{U}(0,1)\)</span>.</p>
 <p>Para comparação, vamos gerar valores usando o método de aceitação-rejeição e agora pelo método de Metropolis-Hastings.</p>
 <pre class="r"><code>## Aceitação-rejeição --------------------------------------------------
@@ -564,7 +614,7 @@ curve(g, from = 0, to = 1, add = TRUE, lty = 2)
 curve(M * g(x), add = TRUE, lty = 2, lwd = 2)
 legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
        lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Simula com número fixo
 N &lt;- 1e5
 ## Amostra da proposta U(0,1)
@@ -614,23 +664,23 @@ plot(ecdf(x), main = &quot;Metropolis-Hastings&quot;)
 curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
 legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
        lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Compara autocorrelação
 acf(x.ar, main = &quot;Aceitação-rejeição&quot;)
 acf(x, main = &quot;Metropolis-Hastings&quot;)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-13-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Compara as duas cadeias
 par(mfrow = c(2, 1))
 plot.ts(x.ar[5000:5200], main = &quot;Aceitação-rejeição&quot;)
 plot.ts(x[5000:5200], main = &quot;Metropolis-Hastings&quot;)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-13-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
 <iframe src="mhsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 </div>
-<div id="exemplo-rayleigh" class="section level2">
-<h2><span class="header-section-number">3.2</span> Exemplo (Rayleigh)</h2>
+<div id="exemplo-rayleigh" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Exemplo (Rayleigh)</h3>
 <p>Usando o algoritmo de Metropolis-Hastings, gere uma amostra de uma distribuição <span class="math inline">\(\text{Rayleigh}(\sigma)\)</span>, que possui a densidade</p>
 <p><span class="math display">\[
 f(x) = \frac{x}{\sigma^2} e^{-x^2/2\sigma^2}, \quad x \geq 0, \sigma &gt; 0
@@ -656,7 +706,7 @@ legend(&quot;topright&quot;,
                   expression(chi^2 ~ (2.5)), expression(chi^2 ~ (3.2)),
                   expression(chi^2 ~ (4))),
        lty = 1, col = 1:5)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>O algoritmo de Metropolis-Hastings nesse caso ficaria assim:</p>
 <ol style="list-style-type: decimal">
 <li>Defina <span class="math inline">\(g(\cdot|X)\)</span> como uma densidade de <span class="math inline">\(\chi^2(X)\)</span></li>
@@ -701,7 +751,7 @@ k/N</code></pre>
 par(mfrow = c(2, 1))
 plot.ts(x)
 plot.ts(x[5000:5500])</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))
 
 ## Histograma da distribuição e correlação entre as observações
@@ -710,7 +760,7 @@ hist(x, freq = FALSE)
 ind &lt;- seq(0, max(x), length.out = 100)
 lines(ind, (f(ind, sigma)), col = 2)
 acf(x)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-20-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-22-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))
 
 ## Compara acumulada empírica com teórica
@@ -720,7 +770,19 @@ Fx &lt;- function(x, sigma) {
 }
 plot(ecdf(x))
 curve(Fx(x, 4), add = TRUE, col = 2, from = 0)</code></pre>
-<p><img src="figures/08_MCMC-2/unnamed-chunk-20-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC-2/unnamed-chunk-22-3.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references">
+<div id="ref-Hastings1970">
+<p>Hastings, W. K. 1970. “Monte Carlo Sampling Methods Using Markov Chains and Their Applications.” <em>Biometrika</em> 57 (1): 97–109. <a href="https://academic.oup.com/biomet/article-abstract/57/1/97/284580">https://academic.oup.com/biomet/article-abstract/57/1/97/284580</a>.</p>
+</div>
+<div id="ref-Metropolis1953">
+<p>Metropolis, Nicholas, Arianna W. Rosenbluth, Marshall N. Rosenbluth, Augusta H. Teller, and Edward Teller. 1953. “Equation of state calculations by fast computing machines.” <em>The Journal of Chemical Physics</em> 21 (6): 1087–92. <a href="https://doi.org/10.1063/1.1699114">https://doi.org/10.1063/1.1699114</a>.</p>
+</div>
 </div>
 </div>
 
