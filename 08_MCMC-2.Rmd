@@ -456,7 +456,7 @@ será proporcional.
 - O algoritmo foi desenvolvido de forma que a distribuição estacionária
   da cadeia é de fato a distribuição alvo $f$.
 
-## Exemplo (beta)
+### Exemplo (beta)
 
 Considere o examplo de aulas anteriores sobre o algoritmo de
 aceitação-rejeição, onde deseja-se gerar valores de uma distribuição
@@ -683,7 +683,7 @@ knitr::include_url("mhsampler1.html", height = "715px")
 ```
 
 
-## Exemplo (Rayleigh)
+### Exemplo (Rayleigh)
 
 Usando o algoritmo de Metropolis-Hastings, gere uma amostra de uma
 distribuição $\text{Rayleigh}(\sigma)$, que possui a densidade
