@@ -1,8 +1,13 @@
-## Alvo: Beta.
-## Canditada: Uniforme.
+## Nao esta OK
+
+## Alvo: Rayleigh
+## Canditada: Chi-quadrado
 mhsampler1 <- function(nsim, x1, plot=FALSE,
                        go=c("click","enter","none")){
     out <- vector(mode="numeric", length=nsim)
+    f <- function(x, sigma) {
+        (x / sigma^2) * exp(-x^2 / (2 * sigma^2)) * (x >= 0) * (sigma > 0)
+    }
     ## Valor para iniciar a cadeia.
     out[1] <- x1
     for(i in 2:nsim){
@@ -10,15 +15,15 @@ mhsampler1 <- function(nsim, x1, plot=FALSE,
         if(plot & go[1]=="click"){
             y <- locator(n=1)$x
         } else {
-            y <- runif(1)
+            y <- rchisq(1, out[i - 1])
         }
         ## Cálculo da razão de aceitação.
         ## num <- f(y, sigma) * dchisq(x[i - 1], df = y)
         ## den <- f(x[i - 1], sigma) * dchisq(y, df = x[i - 1])
-        dg1 <- dbeta(y, 2.7, 6.3)
-        dn1 <- dunif(out[i - 1])
-        dg0 <- dbeta(out[i-1], 2.7, 6.3)
-        dn0 <- dunif(y)
+        dg1 <- f(y, 4)
+        dn1 <- dchisq(out[i - 1], df = y)
+        dg0 <- f(out[i-1], 4)
+        dn0 <- dchisq(y, df = out[i - 1])
         ratio <- (dg1 * dn1)/(dg0 * dn0)
         u <- runif(1)
         if(u<ratio){
@@ -31,17 +36,18 @@ mhsampler1 <- function(nsim, x1, plot=FALSE,
         ## Parte de representação gráfica do método.
         if(plot & nsim<=20){
             ## Curvas.
-            curve(dbeta(x, 2.7, 6.3), 0, 1, ylim=c(0, 3),
+            curve(f(x, 4), 0, 20, ylim=c(0, .4),
                   ylab="densidade");
-            curve(dunif(x), add=TRUE, lty=2);
+            curve(dchisq(x, df = out[i - 1]), add=TRUE, lty=2);
+            curve(dchisq(x, df = y), add=TRUE, lty=3);
             ## Lengendas.
             legend("topright",
-                   legend=c(expression(f*" ~ Beta"),
-                       expression(g*" ~ Unif")),
+                   legend=c(expression(f[X]*" ~ Beta"),
+                       expression(f[Y]*" ~ Unif")),
                    lty=c(1,2), bty="n")
             legend("right",
-                   legend=c(expression("Candidato em"*~t + 1),
-                       expression("Valor em"*~t)),
+                   legend=c(expression("Candidato em"*~i),
+                       expression("Valor em"*~i-1)),
                    lty=1, col=c(2,4), bty="n")
             ## Segmentos da base até os valores nas funções.
             ## segments(y, dg1, y, 0, col=2, lty=1);
@@ -59,35 +65,30 @@ mhsampler1 <- function(nsim, x1, plot=FALSE,
             points(out[i-1], dg0, pch=19, cex=cex, col="green");
             points(y, dn0, pch=19, cex=cex, col=col);
             ## Rótulos dos pontos.
-            text(y, dg1, labels=expression(f[Y]));
-            text(out[i - 1], dn1, labels=expression(g[X]));
+            text(y, dg1, labels=expression(f[X]));
+            text(out[i - 1], dn1, labels=expression(f[Y]));
             text(out[i-1], dg0, expression(f[X]));
-            text(y, dn0, expression(g[Y]));
+            text(y, dn0, expression(f[Y]));
             text(c(y, out[i-1]), 0,
-                 labels=c(expression(x[t + 1]), expression(x[t])),
+                 labels=c(expression(x[i]), expression(x[i-1])),
                  pos=4)
             ## Anotações matemáticas.
             L <- list(dg1=dg1, dg0=dg0, dn1=dn1,
-                      dn0=dn0, num=dg1 * dn1, den=dg0 * dn0,
+                      dn0=dn0, num=dg1/dg0, den=dn1/dn0,
                       ratio=ratio)
             L <- lapply(L, round, digits=3)
-            ## ex <- substitute(frac(f[X](x[i]), f[X](x[i-1]))/
-            ##                  frac(f[Y](x[i]), f[Y](x[i-1]))*" = "*
-            ##                  frac(dg1, dg0)/frac(dn1, dn0)*" = "*
-            ##                  num/den==ratio, L)
-            ex <- substitute(
-                frac(f(y) * g(x[t] * "|" * y),
-                     f(x[t]) * g(y * "|" * x[t]))*" = "*
-                frac(dg1, dg0) ~ frac(dn1, dn0)*" = "*
-                    frac(num, den) == ratio, L)
+            ex <- substitute(frac(f[X](x[i]), f[X](x[i-1]))/
+                             frac(f[Y](x[i]), f[Y](x[i-1]))*" = "*
+                             frac(dg1, dg0)/frac(dn1, dn0)*" = "*
+                             num/den==ratio, L)
             r <- substitute("u = "~u<ratio,
                             lapply(list(ratio=ratio, u=u),
                                    round, digits=3))
             mtext(ex, side=3, line=1, adj=0)
             mtext(r, side=3, line=2, adj=1)
             mtext(ifelse(u<ratio,
-                         expression(Aceita~x[t + 1]),
-                         expression(Repete~x[t])),
+                         expression(Aceita~x[i]),
+                         expression(Repete~x[i-1])),
                   side=3, line=1, adj=1)
             switch(go[1],
                    ## Avança por cliques do mouse.
@@ -102,25 +103,35 @@ mhsampler1 <- function(nsim, x1, plot=FALSE,
 }
 
 n <- 10
-x <- mhsampler1(n, x1 = .5, plot=TRUE, go="console")
+x <- mhsampler1(n, x1 = 4, plot=TRUE, go="none")
 
 ## Gerando muitos números pelo método.
-x <- mhsampler1(5000, x1 = .5)
+x <- mhsampler1(5000, x1=4)
 par(mfrow=c(2,2))
 plot(x, type="l")        ## Traço da cadeia completa.
 plot(x[1:100], type="l") ## Traço do começo da cadeia.
 acf(x)                   ## Mostra que a cadeia não é independente.
 plot(ecdf(x))            ## Acumulada teórica vs empírica.
-curve(pbeta(x, 2.7, 6.3), add = TRUE, col = 2, from = 0)
+curve(Fx(x, 4), add = TRUE, col = 2, from = 0)
 par(mfrow=c(1,1))
 
-animation::saveHTML(
-               mhsampler1(nsim = 20, x1 = .2,
-                          plot = TRUE, go = "none"),
-               img.name = "MH_sampler_beta_unif",
-               imgdir = "../figures/MH_sampler_beta_unif",
-               htmlfile = "MH_sampler_beta_unif.html",
-               autobrowse = FALSE,
-               verbose = FALSE,
-               ani.width = 600,
-               ani.height = 600)
+N <- 1e4
+## Rayleigh(4)
+sigma <- 4
+x <- numeric(N)
+x[1] <- 100
+k <- 0 # para contar quantos foram aceitos
+for (i in 2:N) {
+    y <- rchisq(1, df = x[i - 1])
+    num <- f(y, sigma) * g(x[i - 1], df = y)
+    den <- f(x[i - 1], sigma) * g(y, df = x[i - 1])
+    alpha <- num/den
+    u <- runif(1)
+    if (u <= alpha) {
+        x[i] <- y
+    } else {
+        x[i] <- x[i - 1]
+        k <- k + 1     # contagem dos aceitos
+    }
+}
+plot.ts(x)

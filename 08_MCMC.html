@@ -669,8 +669,9 @@ plot.ts(x[5000:5200], main = &quot;Metropolis-Hastings&quot;)
 par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /><img src="figures/08_MCMC/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" /><img src="figures/08_MCMC/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="MH_sampler_beta_unif.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="animation/MH_sampler_beta_unif.html" width="80%" height="735px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
+<!-- Tem o outro exemplo da beta -->
 </div>
 <div id="exemplo-rayleigh" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Exemplo (Rayleigh)</h3>
@@ -794,7 +795,7 @@ plot(rw1(T = 100, x1 = 10, seed = 1), type = &quot;l&quot;,
 plot(rw1(T = 1000, x1 = 10, seed = 1), type = &quot;l&quot;,
      xlab = &quot;Tempo&quot;, ylab = &quot;x&quot;)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /> Podemos escrever essa equação como uma diferença sucessiva, <span class="math display">\[
+<p><img src="figures/08_MCMC/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /> Podemos escrever essa equação como uma diferença sucessiva, <span class="math display">\[
 x_{t+1} - x_t = \epsilon
 \]</span> Ou seja, conhecendo <span class="math inline">\(x_t\)</span>, a distribuição de <span class="math inline">\(x_{t+1}\)</span> será apenas uma função de <span class="math inline">\(\epsilon\)</span>, <span class="math display">\[
 g(x_{t+1}|x_t) = g(\epsilon)
@@ -860,7 +861,7 @@ for(i in 2:N) {
     }
 }
 plot(x, type = &quot;l&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja o que acontece se aumentarmos o valor de <span class="math inline">\(\delta\)</span></p>
 <pre class="r"><code>f &lt;- function(x) dnorm(x, 0, 1)
 delta &lt;- 2
@@ -880,7 +881,7 @@ for(i in 2:N) {
     }
 }
 plot(x2, type = &quot;l&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Compara a distribuição das amostras com a distribuição teórica</p>
 <pre class="r"><code>par(mfrow = c(1, 2))
 plot(ecdf(x))
@@ -888,13 +889,13 @@ curve(pnorm(x), add = TRUE, col = 2)
 plot(ecdf(x2))
 curve(pnorm(x), add = TRUE, col = 2)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-26-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Comparando as duas cadeias</p>
 <pre class="r"><code>par(mfrow = c(2, 1))
 plot(x, type = &quot;l&quot;, main = expression(delta == 0.5))
 plot(x2, type = &quot;l&quot;, main = expression(delta == 2))
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-27-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>No primeiro caso, os valores propostos ficam muito próximos do valor atual, e quase sempre serão aceitos. No entanto, levará muitas iterações até o algoritmo cobrir todo o espaço de <span class="math inline">\(X\)</span>.</p>
 <p>No segundo caso, a taxa de rejeição é excessivamente alta e a cadeia se movimenta muito pouco, pois os valores propostos podem ficar muito longe do atual.</p>
 <p>Nas duas situações o algoritmo pode ser ineficiente. Na prática temos que testar vários valores de <span class="math inline">\(\delta\)</span> e monitorar a taxa de aceitação. A partir disso surge um importante conceito em amostradores MCMC: <em>tuning</em>, ou “refinamento”. Em teoria, não existe um valor ideal para <span class="math inline">\(\delta\)</span>, ambas as cadeias irão eventualmente convergir para a distribuição alvo (normal nesse caso). No entanto, a velocidade de convergência e a quantidade de espaço amostral explorado dependem de <span class="math inline">\(\delta\)</span>. Portanto, o amostrador pode ser refinado para melhorar sua eficiência.</p>
@@ -903,10 +904,11 @@ par(mfrow = c(1, 1))</code></pre>
 acf(x, lag.max = 50)
 acf(x2, lag.max = 50)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-28-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="rwsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="animation/MH_RW_normal_unif.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
+<!-- Ver MH_RW_normal_mixture.R -->
 </div>
 <div id="exemplo-normal" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Exemplo (normal)</h3>
@@ -934,13 +936,13 @@ par(mfrow = c(1, 1))</code></pre>
 N &lt;- 2000
 sigma &lt;- c(.05, .5, 2,  16)
 x0 &lt;- 25
-rw1 &lt;- rw.Metropolis(n, sigma[1], x0, N)
-rw2 &lt;- rw.Metropolis(n, sigma[2], x0, N)
-rw3 &lt;- rw.Metropolis(n, sigma[3], x0, N)
-rw4 &lt;- rw.Metropolis(n, sigma[4], x0, N)
+rw1 &lt;- rw.Metropolis(nu, sigma[1], x0, N)
+rw2 &lt;- rw.Metropolis(nu, sigma[2], x0, N)
+rw3 &lt;- rw.Metropolis(nu, sigma[3], x0, N)
+rw4 &lt;- rw.Metropolis(nu, sigma[4], x0, N)
 ## Resultado das cadeias
 par(mfrow = c(2, 2))
-refline &lt;- qt(c(.025, .975), df = n)
+refline &lt;- qt(c(.025, .975), df = nu)
 rw &lt;- cbind(rw1, rw2, rw3,  rw4)
 for (j in 1:4) {
     plot(rw[, j], type = &quot;l&quot;,
@@ -949,7 +951,7 @@ for (j in 1:4) {
     abline(h = refline)
 }
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-35-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-28-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Com <span class="math inline">\(\sigma = 0.05\)</span> a probabilidade de aceitação <span class="math inline">\(\alpha\)</span> tende a ser grande, portanto quase todos os valores candidatos são aceitos. Os incrementos são pequenos e a cadeia não converge para a distribuição estacionária.</li>
 <li>Com <span class="math inline">\(\sigma = 0.5\)</span>, converge lentamente para a distribuição estacionária. Isso mostra que é importante definir um período de <em>burn-in</em> ou aquecimento da cadeia, descartando os primeiros valores gerados.</li>
@@ -1009,7 +1011,7 @@ curve(f, 0, 1)
 curve(g, add=TRUE, col=2)
 legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
        bty=&quot;n&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-36-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-29-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>N &lt;- 500
 x &lt;- numeric(N)
 x[1] &lt;- 0.5
@@ -1027,13 +1029,13 @@ for(i in 2:N) {
 
 ## Cadeia
 plot(x, type = &quot;l&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-36-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-29-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Compara com teorica
 plot(ecdf(x))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-36-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-29-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="iidsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="animation/MH_IID_beta_unif.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Outro exemplo:</p>
 <pre class="r"><code>## Distribuição alvo: X ~ Beta(2, 3)
@@ -1047,7 +1049,7 @@ curve(f, 0, 1)
 curve(g, add=TRUE, col=2)
 legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
        bty=&quot;n&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-41-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-31-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>N &lt;- 500
 x2 &lt;- numeric(N)
 x2[1] &lt;- 0.5
@@ -1065,13 +1067,13 @@ for(i in 2:N) {
 
 ## Cadeia
 plot(x2, type = &quot;l&quot;)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-41-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-31-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Compara com teorica
 plot(ecdf(x2))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-41-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-31-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="iidsampler2.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="animation/MH_IID_beta_normal.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Comparando as cadeias geradas com as duas diferentes propostas:</p>
 <pre class="r"><code>par(mfrow = c(2, 2))
@@ -1080,7 +1082,8 @@ plot(x2, type = &quot;l&quot;)
 acf(x)
 acf(x2)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-46-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/08_MCMC/unnamed-chunk-33-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<!-- Ver MH_IID_gama_normal.R -->
 </div>
 </div>
 </div>
