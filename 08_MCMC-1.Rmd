@@ -20,10 +20,6 @@ Em situações em que $\theta$ (ou $X$) tem dimensão elevada, o
 procedimento a ser apresentado é geralmente mais eficiente para gerar
 quantidades aleatórias.
 
-O ponto crítico do método MCMC está na formulação de probabilidades de
-transição apropriadas. O algoritmo de Metropolis-Hastings é uma forma
-conveniente de obter uma amostra simulada, a partir do uso de uma cadeia
-de Markov generalizada para um espaço de estado contínuo.
 
 Segue abaixo uma descrição das probabilidades de transição especificadas
 conforme algumas das alternativas que podem ser adotadas para

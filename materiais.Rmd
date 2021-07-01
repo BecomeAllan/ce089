@@ -44,10 +44,10 @@ De acordo com os itens do [cronograma](aulas.html):
 9. Distribuições aproximadas baseadas em simulação de Monte Carlo.
   [HTML](07_MC_aprox.html).
 10. MCMC: Metropolis random walk e amostrador independente.
-[HTML](08_MCMC-1.html) e [script](scripts/08_MCMC-1.R) com mais exemplos
+[HTML](08_MCMC.html) e [script](scripts/08_MCMC-1.R) com mais exemplos
 mostrados em aula.
 11. MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings.
-  [HTML](08_MCMC-2.html).
+  [HTML](08_MCMC.html).
 12. Métodos de Monte Carlo para inferência estatística: estimação.
   [HTML](09_MC_inf-1.html).
 13. Propriedades de estimadores pontuais por simulação de Monte Carlo.
