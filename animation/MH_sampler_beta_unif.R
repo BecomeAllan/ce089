@@ -117,8 +117,8 @@ par(mfrow=c(1,1))
 animation::saveHTML(
                mhsampler1(nsim = 20, x1 = .2,
                           plot = TRUE, go = "none"),
-               img.name = "MH_sampler_beta_unif-",
-               imgdir = "MH_sampler_beta_unif",
+               img.name = "MH_sampler_beta_unif",
+               imgdir = "../figures/MH_sampler_beta_unif",
                htmlfile = "MH_sampler_beta_unif.html",
                autobrowse = FALSE,
                verbose = FALSE,
