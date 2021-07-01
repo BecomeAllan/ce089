@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fernando P. Mayer" />
+
+
+<title>Métodos de Monte Carlo via Cadeias de Markov</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-66454501-13"></script>
+<script>
+ window.dataLayer = window.dataLayer || [];
+ function gtag(){dataLayer.push(arguments);}
+ gtag('js', new Date());
+
+ gtag('config', 'UA-66454501-13');
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<link rel="stylesheet" href="default" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site.css" type="text/css" />
+<link rel="stylesheet" href="config/sydney-site-fonts.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">CE089</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="aulas.html">Aulas</a>
+</li>
+<li>
+  <a href="referencias.html">Referências</a>
+</li>
+<li>
+  <a href="materiais.html">Materiais</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leg-ufpr/ce089">
+    <span class="fas fa-github fa-lg"></span>
+     
+    GitHub
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Métodos de Monte Carlo via Cadeias de Markov</h1>
+<h3 class="subtitle">Cadeias de Markov, algoritmos de Metropolis-Hastings e amostrador de Gibbs</h3>
+<h4 class="author">Fernando P. Mayer</h4>
+
+</div>
+
+
+<div id="introdução" class="section level1">
+<h1><span class="header-section-number">1</span> Introdução</h1>
+<p>O termo “Monte Carlo via Cadeia de Markov” abrange uma grande gama de métodos introduzidos por <span class="citation">Metropolis et al. (1953)</span> e <span class="citation">Hastings (1970)</span> para integração de Monte Carlo, e que possuem algumas ideias em comum:</p>
+<ol style="list-style-type: decimal">
+<li>Queremos amostrar de alguma função densidade de probabilidade complicada <span class="math inline">\(f\)</span>. A suposição aqui é que nós conseguimos <strong>calcular</strong> <span class="math inline">\(f\)</span>, mas não podemos amostrar dela.</li>
+<li>Sabemos que certos processos estocáticos chamados de <strong>cadeias de Markov</strong> convergem para uma <strong>distribuição estacionária</strong> (se certas condições forem satisfeitas). Simular desta cadeia de Markov por um período longo, eventualmente nos levará a uma amostra da distribuição estacionária da cadeia.</li>
+<li>Dada a forma funcional de <span class="math inline">\(f\)</span>, queremos construir uma cadeia de Markov que possui <span class="math inline">\(f\)</span> como sua distribuição estacionária.</li>
+<li>Queremos amostrar valores da cadeia de Markov de forma que a sequência de valores <span class="math inline">\(\{x_n\}\)</span>, gerada pela cadeia, irá <strong>convergir em distribuição</strong> para a densidade <span class="math inline">\(f\)</span>.</li>
+</ol>
+<p>Portanto, a ideia básica dos métodos de Monte Carlo via Cadeias de Markov (MCMC) para amostrar de <span class="math inline">\(f\)</span> é construir uma cadeia de Markov com distribuição estacionária <span class="math inline">\(f\)</span>, e rodar essa cadeia por um longo período de tempo, até que ela convirja (aproximadamente) para sua distribuição estacionária.</p>
+<p>Os métodos de MCMC servem basicamente para gerar valores de uma distribuição. No entanto, ao contrário dos métodos anteriores (e.g. aceitação-rejeição), os valores obtidos por MCMC são <strong>correlacionados</strong>.</p>
+<p>Uma amostra com valores correlacionados não é desejável, mas mesmo assim, os métodos de MCMC são preferidos em situações mais complexas. O primeiro motivo é que, mesmo com valores correlacionados, é possível selecionar uma (sub) amostra de valores que não seja correlacionada. O segundo motivo é que as <strong>cadeias de Markov possuem diferentes propriedades de convergência</strong>, que podem ser exploradas para se obter distribuições propostas mais fáceis de tratar numericamente, quando os métodos mais gerais de amostragem por importância (por exemplo) não se aplicam diretamente.</p>
+<p>Além disso, o conhecimento necessário da distribuição alvo que se quer gerar é mínimo, geralmente não é necessário saber a constante de integração por exemplo. Além disso, estes métodos via cadeias de Markov facilitam a resolução de problemas de alta dimensão, através de uma sequência de problemas menores que são mais fáceis de resolver (e.g. amostrador de Gibbs).</p>
+<p>O ponto crítico do método MCMC está na formulação de probabilidades de transição apropriadas. O algoritmo de Metropolis-Hastings é uma forma conveniente de obter uma amostra simulada, a partir do uso de uma cadeia de Markov generalizada para um espaço de estado contínuo.</p>
+<!-- # Integração com MCMC -->
+<!-- Ver 11.1.2 do livro -->
+</div>
+<div id="cadeias-de-markov" class="section level1">
+<h1><span class="header-section-number">2</span> Cadeias de Markov</h1>
+<!-- Advanced Statistical Computing. Roger Peng. -->
+<p>Uma cadeia de Markov é um <strong>processo estocático</strong> que evolui ao longo do tempo, passando por diversos <strong>estados</strong>. A sequência de estados é denotada pela coleção de valores <span class="math inline">\(\{X_t\}\)</span>, ou seja, é uma sequência de variáveis aleatórias dependentes <span class="math display">\[
+X_0, X_1, \ldots, X_t, \ldots
+\]</span> onde a transição entre os estados é aleatória, segundo a regra <span class="math display">\[
+P[X_t | X_{t-1}, X_{t-2}, \ldots, X_0] = P[X_t | X_{t-1}]
+\]</span> Essa relação significa que a distribuição de probabilidade de um processo no tempo <span class="math inline">\(t\)</span>, dado todos os outros valores da cadeia, é igual à distribuição de probabilidade condicionada apenas ao valor imediatamente anterior (essa propriedade é conhecida como <strong>propriedade de Markov</strong>).</p>
+<p>Dessa forma, para determinar a sequência de valores que a cadeia pode assumir, podemos <strong>determinar a distribuição do próximo valor conhecendo apenas o valor anterior</strong>.</p>
+<p>A coleção de estados que uma cadeia de Markov pode visitar é chamada de <strong>espaço de estados</strong>. A distribuição de probabilidade condicional, que determina se a cadeia se move de um estado para outro é chamada de <strong>kernel de transição</strong> ou <strong>matriz de transição</strong>, e pode ser denotada por <span class="math display">\[
+X_t | X_{t-1}, X_{t-2}, \ldots, X_0 \sim K(X_{t}, X_{t-1})
+\]</span> Por exemplo, uma cadeia de Markov do tipo <em>random walk</em> satisfaz <span class="math display">\[
+X_t = X_{t-1} + \epsilon
+\]</span> onde <span class="math inline">\(\epsilon \sim \text{N}(0,1)\)</span>, independente de <span class="math inline">\(X_t\)</span>. portanto, o kernel de transição <span class="math inline">\(K(X_{t}, X_{t-1})\)</span> corresponde a uma densidade <span class="math inline">\(\text{N}(X_{t-1},1)\)</span>.</p>
+<p>Considere o seguinte exemplo com 3 estados e matriz de transição <span class="math inline">\(P\)</span>:</p>
+<pre class="r"><code>estados &lt;- c(&quot;PR&quot;, &quot;RS&quot;, &quot;SC&quot;)
+P &lt;- matrix(c(.3, .3, .4, .4, .4, .2, .5, .3, .2),
+             byrow = TRUE, ncol = 3)
+dimnames(P) &lt;- list(estados, estados); P</code></pre>
+<pre><code>#     PR  RS  SC
+# PR 0.3 0.3 0.4
+# RS 0.4 0.4 0.2
+# SC 0.5 0.3 0.2</code></pre>
+<pre class="r"><code>rowSums(P)</code></pre>
+<pre><code># PR RS SC 
+#  1  1  1</code></pre>
+<pre class="r"><code>colSums(P)</code></pre>
+<pre><code>#  PR  RS  SC 
+# 1.2 1.0 0.8</code></pre>
+<pre class="r"><code>## DAG
+diagram::plotmat(t(P), relsize = .75)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>A interpretação das entradas da matriz é que, se estivermos no estado <span class="math inline">\(i\)</span> no tempo <span class="math inline">\(t\)</span>, a probabilidade de mover para o estado <span class="math inline">\(j\)</span> no tempo <span class="math inline">\(t+1\)</span> será <span class="math display">\[
+P[X_{t+1} = j | X_t = i] = P_{ij}
+\]</span> Por exemplo, se estamos no PR, a probabilidade de ir para SC é 0.4, ou seja, <span class="math inline">\(P[X_{t+1} = \text{SC}|X_t = \text{PR}] = P_{13} = 0.4\)</span>.</p>
+<p>Suponha que inicialmente estamos em SC com probabilidade 1. Então a distribuição de probabilidade inicial para os três estados é <span class="math inline">\(\pi_0 = (0,0,1)\)</span>. Após uma iteração, a distribuição de probabilidade dos estados será então <span class="math display">\[
+\pi_1 = \pi_0 P = (0.5, 0.3, 0.2)
+\]</span></p>
+<pre class="r"><code>pi0 &lt;- c(0, 0, 1)
+(pi1 &lt;- pi0 %*% P)</code></pre>
+<pre><code>#       PR  RS  SC
+# [1,] 0.5 0.3 0.2</code></pre>
+<p>Após duas iterações, a probabilidade será</p>
+<pre class="r"><code>(pi2 &lt;- pi1 %*% P)</code></pre>
+<pre><code>#        PR   RS  SC
+# [1,] 0.37 0.33 0.3</code></pre>
+<p>Se continuarmos o processo acima <span class="math inline">\(n\)</span> vezes, obtemos a distribuição de probabilidade para os estados após <span class="math inline">\(n\)</span> iterações, que podemos escrever como <span class="math display">\[
+\pi_n = \pi_0 \underbrace{PPP \cdots P}_{n \text{ vezes}} = \pi_0 P^{(n)}
+\]</span> Por exemplo, após 50 iterações, obtemos</p>
+<pre class="r"><code>library(expm) # potencia de matriz
+pi0 %*% (P %^% 50)</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<p>Para <span class="math inline">\(n \to \infty\)</span> iterações, existe uma distribuição <span class="math inline">\(\pi_e\)</span> tal que <span class="math display">\[
+||\pi_e - \pi_n || \longrightarrow 0
+\]</span> onde <span class="math inline">\(||\cdot||\)</span> é a distância total entre as duas densidades. Outra forma de definir esse fato é <span class="math display">\[
+\lim_{n \to \infty} \pi_n(i) = \pi_e(i)
+\]</span> para todos os estados <span class="math inline">\(i\)</span> no espaço de estados.</p>
+<p>A distribuição <span class="math inline">\(\pi_e\)</span> é chamada de <strong>distribuição estacionária</strong> de uma cadeia de Markov, e deve satisfazer a seguinte propriedade <span class="math display">\[
+\pi_e P = \pi_e
+\]</span> Isso significa que, não importa onde a cadeia é iniciada (<span class="math inline">\(\pi_0\)</span>), a distribuição <span class="math inline">\(\pi_n\)</span> eventualmente chegará na distribuição estacionária <span class="math inline">\(\pi_e\)</span>.</p>
+<p>No exemplo anterior, temos que</p>
+<pre class="r"><code>pi0 %*% (P %^% 5)</code></pre>
+<pre><code>#           PR      RS      SC
+# [1,] 0.38905 0.33333 0.27762</code></pre>
+<pre class="r"><code>pi0 %*% (P %^% 10)</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888888 0.3333333 0.2777778</code></pre>
+<pre class="r"><code>pi0 %*% (P %^% 1e2)</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<pre class="r"><code>pi0 %*% (P %^% 1e3)</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<pre class="r"><code>pi0 %*% (P %^% 1e4)</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<p>ou seja, após poucas iterações (<span class="math inline">\(\sim 100\)</span>) a distribuição estacionária já é atingida. Note portanto que</p>
+<pre class="r"><code>## Distribuição estacionária
+(pi_e &lt;- pi0 %*% (P %^% 1e4))</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<pre class="r"><code>## Propriedade da distribuição estacionária
+pi_e %*% P</code></pre>
+<pre><code>#             PR        RS        SC
+# [1,] 0.3888889 0.3333333 0.2777778</code></pre>
+<p>A distribuição estacionária também pode ser <strong>aproximada</strong> a partir da frequência relativa de “visitas” em cada estado após muitas iterações. Para isso, inicia-se a cadeia em um estado qualquer, e os movimentos levarão aos outros estados a cada iteração, conforme estabelecido pela matriz de transição. O número de vezes que um estado é visitado a longo prazo (muitas iterações) levará a uma <strong>aproximação da distribuição estacionária</strong>, através das <strong>frequências relativas</strong>.</p>
+<pre class="r"><code>## Cria função para gerar cadeia
+mc &lt;- function(n, x1, P, states) {
+    x &lt;- character(n)
+    x[1] &lt;- x1
+    for(i in 2:n) {
+        x[i] &lt;- sample(states, size = 1, prob = P[x[i - 1], ])
+    }
+    return(x)
+}
+## Tamanho da cadeia
+N &lt;- c(1e2, 1e3, 1e4, 1e5)
+res &lt;- lapply(N, function(x) {
+    mc(n = x, x1 = &quot;SC&quot;, P = P, states = estados)
+})
+## Proporção relativa para cada tamanho de cadeia
+t(sapply(res, function(x) prop.table(table(x))))</code></pre>
+<pre><code>#          PR      RS      SC
+# [1,] 0.3600 0.33000 0.31000
+# [2,] 0.3750 0.34900 0.27600
+# [3,] 0.3879 0.33180 0.28030
+# [4,] 0.3892 0.33295 0.27785</code></pre>
+<pre class="r"><code>## Começando em outro estado
+res &lt;- lapply(N, function(x) {
+    mc(n = x, x1 = &quot;RS&quot;, P = P, states = estados)
+})
+## Proporção relativa para cada tamanho de cadeia
+t(sapply(res, function(x) prop.table(table(x))))</code></pre>
+<pre><code>#           PR      RS      SC
+# [1,] 0.43000 0.30000 0.27000
+# [2,] 0.38700 0.33500 0.27800
+# [3,] 0.38780 0.33320 0.27900
+# [4,] 0.38704 0.33411 0.27885</code></pre>
+<p>Existem ainda três suposições necessárias para que os teoremas limite sejam verdadeiros. A cadeia deve ser:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Homogênea</strong>: as probabilidades de transição de um estado para outro são invariantes.</li>
+<li><strong>Irredutível</strong>: cada estado pode ser atingido a partir de qualquer outro em um número finito de iterações.</li>
+<li><strong>Aperiódica</strong>: não deve haver estados absorventes (i.e., estados em que, uma vez inseridos, não podem mais ser deixados).</li>
+</ol>
+<p>Em geral, os algoritmos de MCMC satisfazem estas três condições.</p>
+<p>No caso de cadeias recorrentes (ou aperiódicas), <strong>a distribuição estacionária também é a distribuição limite</strong>, no sentido de que a distribuição limite de <span class="math inline">\(\{X_t\}\)</span> é <span class="math inline">\(\pi_e\)</span> para qualquer valor de estado inicial <span class="math inline">\(X_0\)</span>. Esta propriedade é chamada de <strong>ergodicidade</strong>, e obviamente é de interesse direto nos métodos de MCMC, pois eventualmente atingiremos a distribuição alvo, que é a distribuição estacionária. Particularmente, para qualquer função <span class="math inline">\(h\)</span> <span class="math display">\[
+\frac{1}{T} \sum_{t=1}^{T} h(X_t) \longrightarrow \text{E}_{\pi}[h(X)]
+\]</span> ou seja, a Lei Forte dos Grandes Números, que é a base dos métodos de Monte Carlo também é aplicada nos métodos de MCMC. Essa definição também é conhecida como <strong>teorema ergódico</strong>. Isso também mostra que, embora a cadeia seja <strong>dependente por definição</strong>, a média aritmética dos valores da cadeia é um estimador consistente da média teórica.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Encontrando a distribuição limite
+</div>
+<div class="panel-body">
+<!-- https://www.probabilitycourse.com/chapter11/11_2_6_stationary_and_limiting_distributions.php -->
+<p>A distribuição de probabilidade <span class="math inline">\(\pi = [\pi_0, \pi_1, \ldots]\)</span> é chamada de <strong>distribuição limite</strong> de uma Cadeia de Markov <span class="math inline">\(\{X_n\}\)</span> se <span class="math display">\[
+\pi_j = \lim_{n \to \infty} P(X_n = j | X_0 = i), \quad \forall \, i, j \in S
+\]</span> e <span class="math display">\[
+\sum_{j \in S} \pi_j = 1
+\]</span> onde <span class="math inline">\(S\)</span> é o conjunto de espaço de estados possíveis.</p>
+<p>Quando a cadeia satisfaz as 3 condições acima, então <strong>a distribuição estacionária também é a distribuição limite</strong>, e sendo uma cadeia ergódica, a <strong>distribuição estacionária é única</strong>. Portanto, basta acharmos a distribuição estacionária para achar a distribuição limite.</p>
+<p>Naturalmente podemos encontrar a distribuição estacionária da maneira como fizemos acima, ou seja, fazendo</p>
+<p><span class="math display">\[
+\pi_e = \lim_{n \to \infty} \pi_0 P^{(n)}
+\]</span> e conferindo a relação <span class="math display">\[
+\pi_e P = \pi_e
+\]</span></p>
+<p>No entanto, dado que a matriz de transição <span class="math inline">\(P\)</span> é fixa e conhecida, então podemos obter a distribuição estacionária “teórica” por meio dos autovetores de <span class="math inline">\(P&#39;\)</span></p>
+<pre class="r"><code>eigen(t(P))</code></pre>
+<pre><code># eigen() decomposition
+# $values
+# [1]  1.0 -0.2  0.1
+# 
+# $vectors
+#            [,1]          [,2]       [,3]
+# [1,] -0.6674238 -7.071068e-01  0.2672612
+# [2,] -0.5720776 -2.750209e-17 -0.8017837
+# [3,] -0.4767313  7.071068e-01  0.5345225</code></pre>
+<pre class="r"><code>ev &lt;- eigen(t(P))$vectors
+## Distribuição estacionária
+ev[, 1]/sum(ev[, 1])</code></pre>
+<pre><code># [1] 0.3888889 0.3333333 0.2777778</code></pre>
+<p>Para detalhes dessa relação veja este <a href="https://brilliant.org/wiki/stationary-distributions/">link</a>.</p>
+</div>
+</div>
+<p>Veja uma animação em <a href="http://setosa.io/ev/markov-chains" class="uri">http://setosa.io/ev/markov-chains</a>.</p>
+</div>
+<div id="algoritmos-de-metropolis-hastings" class="section level1">
+<h1><span class="header-section-number">3</span> Algoritmos de Metropolis-Hastings</h1>
+<p>Os algoritmos de Metropolis-Hastings (M-H) são uma classe de Métodos de Monte Carlo via Cadeias de Markov, incluindo casos especiais como o amostrador de Metropolis, o amostrador de Gibbs, o amostrador independente e o amostrador <em>random walk</em>.</p>
+<p>A ideia principal é gerar uma Cadeia de Markov <span class="math inline">\(\{X_t | t = 0, 1, 2, \ldots\}\)</span> de forma que sua distribuição estacionária seja a distribuição alvo. O algoritmo deve especificar, para um dado estado <span class="math inline">\(X_t\)</span>, como gerar o próximo estado <span class="math inline">\(X_{t+1}\)</span>. Em todos os algoritmos de M-H, existe um valor candidato <span class="math inline">\(Y\)</span>, gerado a partir de uma distribuição proposta <span class="math inline">\(g(\cdot|X_t)\)</span> e se este valor candidato:</p>
+<ul>
+<li><strong>é aceito</strong>, a cadeia se move para o estado <span class="math inline">\(Y\)</span> no tempo <span class="math inline">\(t+1\)</span> e <span class="math inline">\(X_{t+1}=Y\)</span>.</li>
+<li><strong>não é aceito</strong>, a cadeia permanece no estado <span class="math inline">\(X_t\)</span> e <span class="math inline">\(X_{t+1}=X_t\)</span>.</li>
+</ul>
+<p>Note que, por construção, os valores gerados são dependentes (ou correlacionados).</p>
+<p>A escolha para a distribuição proposta é bem flexível, mas a cadeia gerada por esta escolha deve satisfazer algumas condições de regularidade. A distribuição proposta deve ser escolhida de forma que a cadeia gerada vá, de fato, convergir para a distribuição estacionária - a distribuição alvo <span class="math inline">\(f\)</span>. As condições necessárias para a cadeia gerada são: <strong>irreducibilidade</strong>, <strong>recorrência positiva</strong> e <strong>aperiodicidade</strong>. <strong>Uma distribuição proposta com o mesmo suporte da distribuição alvo, geralmente irá satisfazer estas condições de regularidade</strong>.</p>
+<div id="amostrador-de-metropolis-hastings" class="section level2">
+<h2><span class="header-section-number">3.1</span> Amostrador de Metropolis-Hastings</h2>
+<p>O algoritmo de Metropolis-Hastings gera uma cadeia de Markov <span class="math inline">\(\{X_0, X_1, \ldots\}\)</span> conforme definido abaixo.</p>
+<ol style="list-style-type: decimal">
+<li>Defina uma distribuição proposta <span class="math inline">\(g(\cdot|X_t)\)</span></li>
+<li>Defina um valor inicial <span class="math inline">\(X_0\)</span>, dentro do domínio de <span class="math inline">\(g\)</span></li>
+<li>Repita os seguintes passos até convergir para uma distribuição estacionária:
+<ol style="list-style-type: lower-alpha">
+<li>Gere um valor <strong>candidato</strong> <span class="math inline">\(Y=X_{t+1}\)</span> a partir de <span class="math inline">\(g(\cdot|X_t)\)</span> (note que o valor candidato é dependente do valor anterior)</li>
+<li>Gere <span class="math inline">\(U\)</span> de uma <span class="math inline">\(\text{U}(0,1)\)</span></li>
+<li>Calcule a taxa de aceitação <span class="math display">\[
+\alpha(X_t, Y) = \min
+\left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right)
+\]</span> Se <span class="math display">\[
+U \leq \alpha(X_t, Y)
+\]</span> aceite <span class="math inline">\(Y\)</span> e faça <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário faça <span class="math inline">\(X_{t+1}=X_t\)</span></li>
+</ol></li>
+</ol>
+<p>Observações:</p>
+<ul>
+<li>Note que só precisamos conhecer o núcleo da densidade alvo <span class="math inline">\(f\)</span>, ou seja, não é necessário saber a constante de integração (ou de normalização), uma vez que, mesmo sem essa constante, a densidade de <span class="math inline">\(f\)</span> será proporcional.</li>
+<li>Se a distribuição proposta for adequada, a “cadeia” de Metropolis-Hastings irá convergir para uma distribuição estacionária única <span class="math inline">\(\pi\)</span>.</li>
+<li>O algoritmo foi desenvolvido de forma que a distribuição estacionária da cadeia é de fato a distribuição alvo <span class="math inline">\(f\)</span>.</li>
+</ul>
+<div id="exemplo-beta" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Exemplo (beta)</h3>
+<p>Considere o exemplo de aulas anteriores sobre o algoritmo de aceitação-rejeição, onde deseja-se gerar valores de uma distribuição <span class="math inline">\(\text{Beta}(\alpha = 2.7, \beta = 6.3)\)</span>, com uma distribuição proposta <span class="math inline">\(\text{U}(0,1)\)</span>.</p>
+<p>Para comparação, vamos gerar valores usando o método de aceitação-rejeição e agora pelo método de Metropolis-Hastings.</p>
+<pre class="r"><code>## Aceitação-rejeição --------------------------------------------------
+## Define funções
+f &lt;- function(x) dbeta(x, 2.7, 6.3)
+g &lt;- function(x) dunif(x, 0, 1)
+## Máximo M
+(M &lt;- optimize(f = function(x) {f(x)/g(x)},
+               interval = c(0, 1), maximum = TRUE)$objective)</code></pre>
+<pre><code># [1] 2.669744</code></pre>
+<pre class="r"><code>curve(f, from = 0, to = 1, col = 4)
+curve(g, from = 0, to = 1, add = TRUE, lty = 2)
+curve(M * g(x), add = TRUE, lty = 2, lwd = 2)
+legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
+       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Simula com número fixo
+N &lt;- 1e5
+## Amostra da proposta U(0,1)
+y &lt;- runif(N)
+## Amostra u também de U(0,1)
+u &lt;- runif(N)
+## Calcula a razão
+r &lt;- f(y)/(M * g(y))
+## x serão os valores de y onde u &lt; r
+x.ar &lt;- y[u &lt; r]
+## Aceitados
+ua &lt;- u[u &lt; r]</code></pre>
+<p>Pelo algoritmo de Metropolis-Hastings, a simulação seria:</p>
+<pre class="r"><code>## Metropolis-Hastings -------------------------------------------------
+## Simula com número fixo
+N &lt;- 1e5
+x &lt;- numeric(N)
+x[1] &lt;- runif(1)
+k &lt;- 0 # para contar quantos foram aceitos
+for (i in 2:N) {
+    y &lt;- runif(1)
+    num &lt;- f(y) * g(x[i - 1])
+    den &lt;- f(x[i - 1]) * g(y)
+    alpha &lt;- num/den
+    u &lt;- runif(1)
+    if (u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+        k &lt;- k + 1     # contagem doa aceitos
+    }
+}</code></pre>
+<p>Comparando as duas abordagens:</p>
+<pre class="r"><code>## Taxa de aceitação - AR
+1/M # teórica</code></pre>
+<pre><code># [1] 0.3745677</code></pre>
+<pre class="r"><code>length(ua)/N</code></pre>
+<pre><code># [1] 0.37196</code></pre>
+<pre class="r"><code>## Taxa de aceitação - MH
+k/N</code></pre>
+<pre><code># [1] 0.54318</code></pre>
+<pre class="r"><code>## Compara amostras com acumulada teórica
+par(mfrow = c(1, 2))
+plot(ecdf(x.ar), main = &quot;Aceitação-rejeição&quot;)
+curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
+plot(ecdf(x), main = &quot;Metropolis-Hastings&quot;)
+curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)
+## Compara autocorrelação
+acf(x.ar, main = &quot;Aceitação-rejeição&quot;)
+acf(x, main = &quot;Metropolis-Hastings&quot;)
+## Compara as duas cadeias
+par(mfrow = c(2, 1))
+plot.ts(x.ar[5000:5200], main = &quot;Aceitação-rejeição&quot;)
+plot.ts(x[5000:5200], main = &quot;Metropolis-Hastings&quot;)
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /><img src="figures/08_MCMC/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" /><img src="figures/08_MCMC/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="MH_sampler_beta_unif.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+</div>
+<div id="exemplo-rayleigh" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Exemplo (Rayleigh)</h3>
+<p>Usando o algoritmo de Metropolis-Hastings, gere uma amostra de uma distribuição <span class="math inline">\(\text{Rayleigh}(\sigma)\)</span>, que possui a densidade</p>
+<p><span class="math display">\[
+f(x) = \frac{x}{\sigma^2} e^{-x^2/2\sigma^2}, \quad x \geq 0, \sigma &gt; 0
+\]</span></p>
+<p>A distribuição Rayleigh é utilizada para modelar tempo de vida sujeito à rápido decaimento. A moda da distribuição é em <span class="math inline">\(\sigma\)</span> e <span class="math inline">\(\text{E}(X) = \sigma\sqrt{\pi/2}\)</span>, <span class="math inline">\(\text{Var}(X) = \sigma^2(4-\pi)/2\)</span>.</p>
+<p>Como distribuição proposta, considere uma <span class="math inline">\(\chi^2\)</span> com <span class="math inline">\(X_t\)</span> graus de liberdade.</p>
+<pre class="r"><code>## Define funções
+f &lt;- function(x, sigma) {
+    (x / sigma^2) * exp(-x^2 / (2 * sigma^2)) * (x &gt;= 0) * (sigma &gt; 0)
+}
+g &lt;- function(x, df) dchisq(x, df)
+## Visualiza _algumas_ propostas (pois os graus de liberdade da
+## qui-quadrado irá depender de cada valor sorteado em cada iteração).
+## NOTE que os graus de liberdade da qui-quadrado não precisam ser
+## inteiros
+curve(f(x, 4), from = 0, to = 20, ylim = c(0, .3), lwd = 2)
+curve(g(x, 1), from = 0, to = 20, add = TRUE, col = 2)
+curve(g(x, 2.5), from = 0, to = 20, add = TRUE, col = 3)
+curve(g(x, 3.2), from = 0, to = 20, add = TRUE, col = 4)
+curve(g(x, 4), from = 0, to = 20, add = TRUE, col = 5)
+legend(&quot;topright&quot;,
+       legend = c(&quot;Rayleigh(4)&quot;, expression(chi^2 ~ (1)),
+                  expression(chi^2 ~ (2.5)), expression(chi^2 ~ (3.2)),
+                  expression(chi^2 ~ (4))),
+       lty = 1, col = 1:5)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>O algoritmo de Metropolis-Hastings nesse caso ficaria assim:</p>
+<ol style="list-style-type: decimal">
+<li>Defina <span class="math inline">\(g(\cdot|X)\)</span> como uma densidade de <span class="math inline">\(\chi^2(X)\)</span></li>
+<li>Gere <span class="math inline">\(X_0\)</span> de <span class="math inline">\(\chi^2(1)\)</span></li>
+<li>Repita para <span class="math inline">\(i=2, \ldots, N\)</span>:
+<ol style="list-style-type: lower-alpha">
+<li>Gere <span class="math inline">\(Y = X_{t+1}\)</span> de <span class="math inline">\(\chi^2(X_t)\)</span></li>
+<li>Gere <span class="math inline">\(U\)</span> de <span class="math inline">\(\text{U}(0,1)\)</span></li>
+<li>Calcule a taxa de aceitação <span class="math display">\[
+\alpha(X_t, Y) = \min
+\left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right)
+\]</span> onde <span class="math inline">\(f\)</span> é a <span class="math inline">\(\text{Rayleigh}(\sigma)\)</span>, <span class="math inline">\(g(X_t|Y)\)</span> é <span class="math inline">\(\chi^2(Y)\)</span> avaliada no ponto <span class="math inline">\(X_t\)</span>, e <span class="math inline">\(g(Y|X_t)\)</span> é a <span class="math inline">\(\chi^2(X_t)\)</span> avaliada no ponto <span class="math inline">\(Y\)</span>.</li>
+<li>Se <span class="math display">\[
+U \leq \alpha(X_t, Y)
+\]</span> aceite <span class="math inline">\(Y\)</span> e faça <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário faça <span class="math inline">\(X_{t+1}=X_t\)</span></li>
+</ol></li>
+</ol>
+<p>Portanto, para gerar valores de uma <span class="math inline">\(\text{Rayleigh}\)</span> com <span class="math inline">\(\sigma=4\)</span>, uma implementação do algoritmo seria:</p>
+<pre class="r"><code>N &lt;- 1e4
+## Rayleigh(4)
+sigma &lt;- 4
+x &lt;- numeric(N)
+x[1] &lt;- rchisq(1, df = 1)
+k &lt;- 0 # para contar quantos foram aceitos
+for (i in 2:N) {
+    y &lt;- rchisq(1, df = x[i - 1])
+    num &lt;- f(y, sigma) * g(x[i - 1], df = y)
+    den &lt;- f(x[i - 1], sigma) * g(y, df = x[i - 1])
+    alpha &lt;- num/den
+    u &lt;- runif(1)
+    if (u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+        k &lt;- k + 1     # contagem dos aceitos
+    }
+}</code></pre>
+<pre class="r"><code>## Taxa de aceitação
+k/N</code></pre>
+<pre><code># [1] 0.4066</code></pre>
+<pre class="r"><code>## Traço da cadeia
+par(mfrow = c(2, 1))
+plot.ts(x)
+plot.ts(x[5000:5500])</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+
+## Histograma da distribuição e correlação entre as observações
+par(mfrow = c(1, 2))
+hist(x, freq = FALSE)
+ind &lt;- seq(0, max(x), length.out = 100)
+lines(ind, (f(ind, sigma)), col = 2)
+acf(x)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-19-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+
+## Compara acumulada empírica com teórica
+## Acumulada teórica da Rayleigh
+Fx &lt;- function(x, sigma) {
+    1 - exp(-x^2/(2 * sigma^2)) * (x &gt;= 0) * (sigma &gt; 0)
+}
+plot(ecdf(x))
+curve(Fx(x, 4), add = TRUE, col = 2, from = 0)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-19-3.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="metropolis-random-walk" class="section level2">
+<h2><span class="header-section-number">3.2</span> Metropolis Random Walk</h2>
+<p>O algoritmo de Metropolis-Hastings é uma generalização do algoritmo de Metropolis <em>random walk</em>. Nesse caso, a particularização é que no algoritmo de Metropolis, a distribuição proposta deve ser obrigatoriamente <strong>simétrica</strong>.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Random walk ou “passeio aleatório”
+</div>
+<div class="panel-body">
+<p>Um random walk ou “passeio aleatório” é uma equação recursiva, que basicamente diz que uma observação no tempo <span class="math inline">\(t+1\)</span> depende da observação no temo <span class="math inline">\(t\)</span> e de um <strong>ruído</strong>. Matematicamente: <span class="math display">\[
+x_{t+1} = x_t + \epsilon
+\]</span> onde <span class="math inline">\(\epsilon \sim g\)</span>, e <span class="math inline">\(g\)</span> é uma distribuição simétrica ao redor de zero.</p>
+<pre class="r"><code>## Simulação de um random walk
+rw1 &lt;- function(T, x1, seed) {
+    x &lt;- numeric(T)
+    x[1] &lt;- x1
+    set.seed(seed)
+    e &lt;- rnorm(T)
+    for(t in 1:(T - 1)) {
+        x[t + 1] &lt;- x[t] + e[t]
+    }
+    return(x)
+}
+par(mfrow = c(2, 1))
+plot(rw1(T = 100, x1 = 10, seed = 1), type = &quot;l&quot;,
+     xlab = &quot;Tempo&quot;, ylab = &quot;x&quot;)
+plot(rw1(T = 1000, x1 = 10, seed = 1), type = &quot;l&quot;,
+     xlab = &quot;Tempo&quot;, ylab = &quot;x&quot;)
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /> Podemos escrever essa equação como uma diferença sucessiva, <span class="math display">\[
+x_{t+1} - x_t = \epsilon
+\]</span> Ou seja, conhecendo <span class="math inline">\(x_t\)</span>, a distribuição de <span class="math inline">\(x_{t+1}\)</span> será apenas uma função de <span class="math inline">\(\epsilon\)</span>, <span class="math display">\[
+g(x_{t+1}|x_t) = g(\epsilon)
+\]</span> Como <span class="math inline">\(g\)</span> é simétrica, então <span class="math display">\[
+g(x_{t}|x_{t+1}) = g(-\epsilon) = g(\epsilon)
+\]</span></p>
+</div>
+</div>
+<p>Sendo assim, se <span class="math inline">\(g(\cdot|X_t)\)</span> é simétrica, podemos dizer que</p>
+<p><span class="math display">\[
+g(X_t|Y) = g(Y|X_t)
+\]</span></p>
+<p>Portanto, a taxa de aceitação fica agora simplificada</p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha(X_t, Y) &amp;= \min
+\left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right) \\
+ &amp;= \min
+\left( \frac{f(Y)}{f(X_t)}, 1 \right)
+\end{aligned}
+\]</span></p>
+<p>Sendo assim, se um valor candidato <span class="math inline">\(Y = X_{t+1}\)</span> é gerado a partir de uma distribuição proposta simétrica, então a probabilidade da cadeia se mover de <span class="math inline">\(X_t\)</span> para <span class="math inline">\(X_{t+1}\)</span> depende apenas da distância entre eles, i.e. <span class="math inline">\(g(X_{t+1}|X_t) = g(|X_{t+1} - X_t|)\)</span>. Então, a cada iteração, um increment <span class="math inline">\(Z\)</span> é gerado a partir de <span class="math inline">\(g(\cdot)\)</span>, e <span class="math inline">\(Y\)</span> é definido como <span class="math inline">\(Y = X_t + Z\)</span> (veja que é a própria definição de random walk).</p>
+<p>O incremento aleatório <span class="math inline">\(Z\)</span> pode ser, por exemplo, normal com média zero, de forma que o valor candidadto é <span class="math inline">\(Y|X_t \sim \text{N}(X_t, \sigma^2)\)</span>, para algum <span class="math inline">\(\sigma^2 &gt; 0\)</span> constante. No enatnto, o incremento <span class="math inline">\(Z\)</span> também pode ser proveniente de uma distribuição uniforme no intervalo <span class="math inline">\((-\delta, \delta)\)</span>, por exemplo.</p>
+<p>Assim, o algoritmo de Metropolis random walk pode ser definido da seguinte forma:</p>
+<ol style="list-style-type: decimal">
+<li>Defina uma distribuição proposta <span class="math inline">\(g\)</span> <strong>simétrica</strong></li>
+<li>Defina um valor inicial <span class="math inline">\(X_0\)</span>, dentro do domínio de <span class="math inline">\(f\)</span></li>
+<li>Repita os seguintes passos até convergir para uma distribuição estacionária:
+<ol style="list-style-type: lower-alpha">
+<li>Gere um valor <strong>candidato</strong> <span class="math inline">\(Y \equiv X_{t+1} = X_t+Z\)</span></li>
+<li>Gere <span class="math inline">\(U\)</span> de uma <span class="math inline">\(\text{U}(0,1)\)</span></li>
+<li>Calcule a taxa de aceitação <span class="math display">\[
+\alpha(X_t, Y) = \min
+\left( \frac{f(Y)}{f(X_t)}, 1 \right)
+\]</span> Se <span class="math display">\[
+U \leq \alpha(X_t, Y)
+\]</span> aceite <span class="math inline">\(Y\)</span> e faça <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário faça <span class="math inline">\(X_{t+1}=X_t\)</span></li>
+</ol></li>
+</ol>
+<div id="exemplo-uniforme" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Exemplo (uniforme)</h3>
+<p>Suponha que se deseja gerar valores de uma normal padrão, usando como distribuição proposta uma <span class="math inline">\(\text{U}(-\delta, \delta)\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>Simule <span class="math inline">\(z \sim \text{U}(-\delta, \delta)\)</span> e faça <span class="math inline">\(Y = X_t+Z\)</span></li>
+<li>Calcule a probabilidade de aceitação <span class="math inline">\(\alpha(X_t, Y) = \min \left( \frac{f(Y)}{f(X_t)}, 1 \right)\)</span>, onde <span class="math inline">\(f\)</span> é a densidade da normal padrão</li>
+<li>Simule <span class="math inline">\(u \sim \text{U}(0,1)\)</span>. Se <span class="math inline">\(u \leq \alpha(X_t, Y)\)</span>, então <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário <span class="math inline">\(X_{t+1}=X_t\)</span></li>
+</ol>
+<pre class="r"><code>f &lt;- function(x) dnorm(x, 0, 1)
+delta &lt;- 0.5
+N &lt;- 500
+x &lt;- numeric(N)
+x[1] &lt;- 0
+set.seed(2019-10-11)
+for(i in 2:N) {
+    z &lt;- runif(1, -delta, delta)
+    y &lt;- x[i - 1] + z
+    alpha &lt;- min(f(y)/f(x[i - 1]), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+    }
+}
+plot(x, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja o que acontece se aumentarmos o valor de <span class="math inline">\(\delta\)</span></p>
+<pre class="r"><code>f &lt;- function(x) dnorm(x, 0, 1)
+delta &lt;- 2
+N &lt;- 500
+x2 &lt;- numeric(N)
+x2[1] &lt;- 0
+set.seed(2019-10-11)
+for(i in 2:N) {
+    z &lt;- runif(1, -delta, delta)
+    y &lt;- x2[i - 1] + z
+    alpha &lt;- min(f(y)/f(x2[i - 1]), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x2[i] &lt;- y
+    } else {
+        x2[i] &lt;- x2[i - 1]
+    }
+}
+plot(x2, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Compara a distribuição das amostras com a distribuição teórica</p>
+<pre class="r"><code>par(mfrow = c(1, 2))
+plot(ecdf(x))
+curve(pnorm(x), add = TRUE, col = 2)
+plot(ecdf(x2))
+curve(pnorm(x), add = TRUE, col = 2)
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-26-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Comparando as duas cadeias</p>
+<pre class="r"><code>par(mfrow = c(2, 1))
+plot(x, type = &quot;l&quot;, main = expression(delta == 0.5))
+plot(x2, type = &quot;l&quot;, main = expression(delta == 2))
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-27-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>No primeiro caso, os valores propostos ficam muito próximos do valor atual, e quase sempre serão aceitos. No entanto, levará muitas iterações até o algoritmo cobrir todo o espaço de <span class="math inline">\(X\)</span>.</p>
+<p>No segundo caso, a taxa de rejeição é excessivamente alta e a cadeia se movimenta muito pouco, pois os valores propostos podem ficar muito longe do atual.</p>
+<p>Nas duas situações o algoritmo pode ser ineficiente. Na prática temos que testar vários valores de <span class="math inline">\(\delta\)</span> e monitorar a taxa de aceitação. A partir disso surge um importante conceito em amostradores MCMC: <em>tuning</em>, ou “refinamento”. Em teoria, não existe um valor ideal para <span class="math inline">\(\delta\)</span>, ambas as cadeias irão eventualmente convergir para a distribuição alvo (normal nesse caso). No entanto, a velocidade de convergência e a quantidade de espaço amostral explorado dependem de <span class="math inline">\(\delta\)</span>. Portanto, o amostrador pode ser refinado para melhorar sua eficiência.</p>
+<p>Veja também que no primeiro caso, como os valores propostos são mais próximos do atual, eles também terão uma correlação maior.</p>
+<pre class="r"><code>par(mfrow = c(1, 2))
+acf(x, lag.max = 50)
+acf(x2, lag.max = 50)
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-28-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="rwsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+</div>
+<div id="exemplo-normal" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Exemplo (normal)</h3>
+<p>Considere gerar valores de uma distribuição <span class="math inline">\(t\)</span> de Student com <span class="math inline">\(\nu\)</span> graus de liberdade, usando como distribuição proposta uma <span class="math inline">\(\text{N}(X_t, \sigma)\)</span>.</p>
+<pre class="r"><code>rw.Metropolis &lt;- function(nu, sigma, x0, N) {
+    f &lt;- function(x, nu) dt(x, nu)
+    x &lt;- numeric(N)
+    x[1] &lt;- x0
+    u &lt;- runif(N)
+    for(i in 2:N) {
+        z &lt;- rnorm(1, mean = 0, sd = sigma)
+        y &lt;- x[i - 1] + z
+        alpha &lt;- min(f(y, nu)/f(x[i - 1], nu), 1)
+        u &lt;- runif(1)
+        if(u &lt;= alpha) {
+            x[i] &lt;- y
+        } else {
+            x[i] &lt;- x[i - 1]
+        }
+    }
+    return(x)
+}</code></pre>
+<p>Supondo que queremos gerar uma distribuição <span class="math inline">\(t(\nu = 4)\)</span>. Vamos fazer isso com valores diferentes de <span class="math inline">\(\sigma\)</span> da distribuição normal proposta.</p>
+<pre class="r"><code>nu &lt;- 4
+N &lt;- 2000
+sigma &lt;- c(.05, .5, 2,  16)
+x0 &lt;- 25
+rw1 &lt;- rw.Metropolis(n, sigma[1], x0, N)
+rw2 &lt;- rw.Metropolis(n, sigma[2], x0, N)
+rw3 &lt;- rw.Metropolis(n, sigma[3], x0, N)
+rw4 &lt;- rw.Metropolis(n, sigma[4], x0, N)
+## Resultado das cadeias
+par(mfrow = c(2, 2))
+refline &lt;- qt(c(.025, .975), df = n)
+rw &lt;- cbind(rw1, rw2, rw3,  rw4)
+for (j in 1:4) {
+    plot(rw[, j], type = &quot;l&quot;,
+         main = bquote(sigma == .(round(sigma[j], 3))),
+         ylab = &quot;X&quot;, ylim = range(rw[, j]))
+    abline(h = refline)
+}
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-35-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Com <span class="math inline">\(\sigma = 0.05\)</span> a probabilidade de aceitação <span class="math inline">\(\alpha\)</span> tende a ser grande, portanto quase todos os valores candidatos são aceitos. Os incrementos são pequenos e a cadeia não converge para a distribuição estacionária.</li>
+<li>Com <span class="math inline">\(\sigma = 0.5\)</span>, converge lentamente para a distribuição estacionária. Isso mostra que é importante definir um período de <em>burn-in</em> ou aquecimento da cadeia, descartando os primeiros valores gerados.</li>
+<li>Com <span class="math inline">\(\sigma = 2\)</span>, a cadeia possui uma boa mistura e converge rapidamente para a distribuição estacionária.</li>
+<li>Com <span class="math inline">\(\sigma = 16\)</span>, a probabilidade de aceitação <span class="math inline">\(\alpha\)</span> é pequena, e a maioria dos valores candidatos são rejeitados. A cadeia converge, mas é ineficiente.</li>
+</ul>
+</div>
+</div>
+<div id="amostrador-independente" class="section level2">
+<h2><span class="header-section-number">3.3</span> Amostrador independente</h2>
+<p>Outro caso particular do método geral de Metropolis-Hastings é o chamado amostrador independente. Nesse caso, a particularidade é que a distribuição proposta não depende mais de valores anteriores da cadeia, ou seja,</p>
+<p><span class="math display">\[
+g(Y|X_t) = g(Y)
+\]</span></p>
+<p>Dessa forma, a probabilidade de aceitação simplifica para</p>
+<p><span class="math display">\[
+\begin{aligned}
+\alpha(X_t, Y) &amp;= \min
+\left( \frac{f(Y)g(X_t|Y)}{f(X_t)g(Y|X_t)}, 1 \right) \\
+ &amp;= \min
+\left( \frac{f(Y)g(X_t)}{f(X_t)g(Y)}, 1 \right) \\
+ &amp;= \min
+\left( \frac{f(Y)}{f(X_t)} \bigg/ \frac{g(X_t)}{g(Y)}, 1 \right)
+\end{aligned}
+\]</span></p>
+<p>Note que, embora os valores de <span class="math inline">\(Y=X_{t+1}\)</span> sejam gerados de forma independente, a cadeia resultante <strong>não será iid</strong>, já que a probabilidade de aceitação ainda depende de <span class="math inline">\(X_t\)</span>.</p>
+<p>O amostrador independente é de fácil implementação, mas tende a funcionar bem apenas quando a distribuição proposta é parecida (em forma) com a distribuição alvo.</p>
+<p>Assim, o método do amostrador independente pode ser definido da seguinte forma:</p>
+<ol style="list-style-type: decimal">
+<li>Defina uma distribuição proposta <span class="math inline">\(g\)</span> <strong>similar</strong> à distribuição alvo</li>
+<li>Defina um valor inicial <span class="math inline">\(X_0\)</span>, dentro do domínio de <span class="math inline">\(g\)</span></li>
+<li>Repita os seguintes passos até convergir para uma distribuição estacionária:
+<ol style="list-style-type: lower-alpha">
+<li>Gere um valor <strong>candidato</strong> <span class="math inline">\(Y\)</span> a partir de <span class="math inline">\(g\)</span></li>
+<li>Gere <span class="math inline">\(U\)</span> de uma <span class="math inline">\(\text{U}(0,1)\)</span></li>
+<li>Calcule a taxa de aceitação <span class="math display">\[
+\alpha(X_t, Y) = \min
+\left( \frac{f(Y)g(X_t)}{f(X_t)g(Y)}, 1 \right)
+\]</span> Se <span class="math display">\[
+U \leq \alpha(X_t, Y)
+\]</span> aceite <span class="math inline">\(Y\)</span> e faça <span class="math inline">\(X_{t+1}=Y\)</span>; caso contrário faça <span class="math inline">\(X_{t+1}=X_t\)</span></li>
+</ol></li>
+</ol>
+<div id="exemplo-beta-1" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Exemplo (beta)</h3>
+<pre class="r"><code>## Gerar números de uma distribuição Beta usando a distribuição Uniforme
+## e/ou normal.
+
+## Distribuição alvo: X ~ Beta(2, 3)
+f &lt;- function(x) dbeta(x, shape1 = 2, shape2 = 3)
+curve(f, 0, 1)
+## Distribuição candidata (proposal): X ~ Uniforme(0,1)
+g &lt;- function(x) dunif(x, 0, 1)
+
+## Gráfico das densidados sobrepostas.
+curve(f, 0, 1)
+curve(g, add=TRUE, col=2)
+legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
+       bty=&quot;n&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-36-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>N &lt;- 500
+x &lt;- numeric(N)
+x[1] &lt;- 0.5
+set.seed(2019-10-11)
+for(i in 2:N) {
+    y &lt;- runif(1) # Distribuição proposta
+    alpha &lt;- min((f(y) * g(x[i - 1])) / (f(x[i - 1]) * g(y)), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x[i] &lt;- y
+    } else {
+        x[i] &lt;- x[i - 1]
+    }
+}
+
+## Cadeia
+plot(x, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-36-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Compara com teorica
+plot(ecdf(x))
+curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-36-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="iidsampler1.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+<p>Outro exemplo:</p>
+<pre class="r"><code>## Distribuição alvo: X ~ Beta(2, 3)
+f &lt;- function(x) dbeta(x, shape1 = 2, shape2 = 3)
+curve(f, 0, 1)
+## Distribuição candidata (proposal): X ~ Normal(0.5, 0.25)
+g &lt;- function(x) dnorm(x, 0.5, 0.25)
+
+## Gráfico das densidados sobrepostas.
+curve(f, 0, 1)
+curve(g, add=TRUE, col=2)
+legend(&quot;topright&quot;, legend=c(&quot;Alvo&quot;, &quot;Candidata&quot;), lty=1, col=1:2,
+       bty=&quot;n&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-41-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>N &lt;- 500
+x2 &lt;- numeric(N)
+x2[1] &lt;- 0.5
+set.seed(2019-10-11)
+for(i in 2:N) {
+    y &lt;- rnorm(1, 0.5, 0.25) # Distribuição proposta
+    alpha &lt;- min((f(y) * g(x2[i - 1])) / (f(x2[i - 1]) * g(y)), 1)
+    u &lt;- runif(1)
+    if(u &lt;= alpha) {
+        x2[i] &lt;- y
+    } else {
+        x2[i] &lt;- x2[i - 1]
+    }
+}
+
+## Cadeia
+plot(x2, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-41-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Compara com teorica
+plot(ecdf(x2))
+curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-41-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Veja como fica uma animação com o método em funcionamento:</p>
+<iframe src="iidsampler2.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+</iframe>
+<p>Comparando as cadeias geradas com as duas diferentes propostas:</p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(x, type = &quot;l&quot;)
+plot(x2, type = &quot;l&quot;)
+acf(x)
+acf(x2)
+par(mfrow = c(1, 1))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-46-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references">
+<div id="ref-Hastings1970">
+<p>Hastings, W. K. 1970. “Monte Carlo Sampling Methods Using Markov Chains and Their Applications.” <em>Biometrika</em> 57 (1): 97–109. <a href="https://academic.oup.com/biomet/article-abstract/57/1/97/284580">https://academic.oup.com/biomet/article-abstract/57/1/97/284580</a>.</p>
+</div>
+<div id="ref-Metropolis1953">
+<p>Metropolis, Nicholas, Arianna W. Rosenbluth, Marshall N. Rosenbluth, Augusta H. Teller, and Edward Teller. 1953. “Equation of state calculations by fast computing machines.” <em>The Journal of Chemical Physics</em> 21 (6): 1087–92. <a href="https://doi.org/10.1063/1.1699114">https://doi.org/10.1063/1.1699114</a>.</p>
+</div>
+</div>
+</div>
+
+<center>
+  <hr width="100%" size="3px">
+  <p> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR">
+      <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" alt="Licença Creative Commons 4.0"> </a>
+  </p>
+  <p> <font size="2"> Este conteúdo
+      está disponível por meio da Licença Creative Commons 4.0 </font>
+  </p>
+</center>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
