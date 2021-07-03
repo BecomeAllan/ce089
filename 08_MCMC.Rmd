@@ -12,6 +12,7 @@ output:
 ```{r, cache=FALSE, include=FALSE}
 source("setup_knitr.R")
 opts_chunk$set(fig.path = "figures/08_MCMC/")
+read_chunk("animation/MH_sampler_beta_unif.R")
 ```
 
 # Introdução
@@ -515,9 +516,9 @@ for (i in 2:N) {
     u <- runif(1)
     if (u <= alpha) {
         x[i] <- y
+        k <- k + 1     # contagem dos aceitos
     } else {
         x[i] <- x[i - 1]
-        k <- k + 1     # contagem doa aceitos
     }
 }
 ```
@@ -538,9 +539,16 @@ plot(ecdf(x), main = "Metropolis-Hastings")
 curve(pbeta(x, 2.7, 6.3), add = TRUE, from = 0, to = 1, col = 2)
 legend("right", legend = c("Empírica", "Teórica"),
        lty = 1, col = 1:2, bty = "n")
+```
+
+```{r, fig.sho='hold'}
 ## Compara autocorrelação
+par(mfrow = c(1, 2))
 acf(x.ar, main = "Aceitação-rejeição")
 acf(x, main = "Metropolis-Hastings")
+```
+
+```{r, fig.show='hold'}
 ## Compara as duas cadeias
 par(mfrow = c(2, 1))
 plot.ts(x.ar[5000:5200], main = "Aceitação-rejeição")
@@ -550,11 +558,28 @@ par(mfrow = c(1, 1))
 
 Veja como fica uma animação com o método em funcionamento:
 
-```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
-knitr::include_url("animation/MH_sampler_beta_unif.html", height = "735px")
+```{r mh_sampler_beta_unif, include=FALSE}
+## animation/MH_sampler_beta_unif.R
 ```
 
-<!-- Tem o outro exemplo da beta -->
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               mhsampler1(nsim = 20, x1 = .2,
+                          plot = TRUE, go = "none"),
+               img.name = "MH_sampler_beta_unif",
+               imgdir = "figures/MH_sampler_beta_unif",
+               htmlfile = "MH_sampler_beta_unif.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("MH_sampler_beta_unif.html", height = "735px")
+```
+
+<!-- Tem o outro exemplo da beta: MH_sampler_beta_beta -->
 
 ### Exemplo (Rayleigh)
 
@@ -633,9 +658,9 @@ for (i in 2:N) {
     u <- runif(1)
     if (u <= alpha) {
         x[i] <- y
+        k <- k + 1     # contagem dos aceitos
     } else {
         x[i] <- x[i - 1]
-        k <- k + 1     # contagem dos aceitos
     }
 }
 ```
@@ -648,7 +673,6 @@ k/N
 par(mfrow = c(2, 1))
 plot.ts(x)
 plot.ts(x[5000:5500])
-par(mfrow = c(1, 1))
 
 ## Histograma da distribuição e correlação entre as observações
 par(mfrow = c(1, 2))
@@ -830,11 +854,10 @@ Compara a distribuição das amostras com a distribuição teórica
 
 ```{r, fig.show='hold'}
 par(mfrow = c(1, 2))
-plot(ecdf(x))
+plot(ecdf(x), main = expression(delta == 0.5))
 curve(pnorm(x), add = TRUE, col = 2)
-plot(ecdf(x2))
+plot(ecdf(x2), main = expression(delta == 2))
 curve(pnorm(x), add = TRUE, col = 2)
-par(mfrow = c(1, 1))
 ```
 
 Comparando as duas cadeias
@@ -874,10 +897,48 @@ acf(x2, lag.max = 50)
 par(mfrow = c(1, 1))
 ```
 
-Veja como fica uma animação com o método em funcionamento:
+Veja como fica uma animação com o método em funcionamento com:
+
+```{r, mh_rw_normal_unif, include=F}
+## animation/MH_RW_normal_unif.R
+```
+
+**$\delta = 0.5$**
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               rwsampler1(nsim = 20, x1 = -1, delta = 0.5, mu = 0,
+                          sigma = 1, plot = TRUE, go = "none"),
+               img.name = "MH_RW_normal_unif_05",
+               imgdir = "figures/MH_RW_normal_unif_05",
+               htmlfile = "MH_RW_normal_unif_05.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
 
 ```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
-knitr::include_url("animation/MH_RW_normal_unif.html", height = "715px")
+knitr::include_url("MH_RW_normal_unif_05.html", height = "715px")
+```
+
+**$\delta = 2$**
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               rwsampler1(nsim = 20, x1 = -1, delta = 2, mu = 0,
+                          sigma = 1, plot = TRUE, go = "none"),
+               img.name = "MH_RW_normal_unif_2",
+               imgdir = "figures/MH_RW_normal_unif_2",
+               htmlfile = "MH_RW_normal_unif_2.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
+```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
+knitr::include_url("MH_RW_normal_unif_2.html", height = "715px")
 ```
 
 <!-- Ver MH_RW_normal_mixture.R -->
@@ -968,7 +1029,7 @@ $$
  &= \min
 \left( \frac{f(Y)g(X_t)}{f(X_t)g(Y)}, 1 \right) \\
  &= \min
-\left( \frac{f(Y)}{f(X_t)} \bigg/ \frac{g(X_t)}{g(Y)}, 1 \right)
+\left( \frac{f(Y)}{f(X_t)} \bigg/ \frac{g(Y)}{g(X_t)}, 1 \right)
 \end{aligned}
 $$
 
@@ -1041,11 +1102,26 @@ plot(ecdf(x))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)
 ```
 
-
 Veja como fica uma animação com o método em funcionamento:
 
+```{r mh_iid_beta_unif, include=F}
+## animation/MH_IID_beta_unif.R
+```
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               iidsampler1(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
+               img.name = "MH_IID_beta_unif",
+               imgdir = "figures/MH_IID_beta_unif",
+               htmlfile = "MH_IID_beta_unif.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
 ```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
-knitr::include_url("animation/MH_IID_beta_unif.html", height = "715px")
+knitr::include_url("MH_IID_beta_unif.html", height = "715px")
 ```
 
 Outro exemplo:
@@ -1088,8 +1164,24 @@ curve(pbeta(x, 2, 3), add = TRUE, col = 2)
 
 Veja como fica uma animação com o método em funcionamento:
 
+```{r mh_iid_beta_normal, include=F}
+## animation/MH_IID_beta_normal.R
+```
+
+```{r, include=FALSE, results='hide', cache=TRUE}
+animation::saveHTML(
+               iidsampler2(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
+               img.name = "MH_IID_beta_normal",
+               imgdir = "figures/MH_IID_beta_normal",
+               htmlfile = "MH_IID_beta_normal.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+```
+
 ```{r, echo=FALSE, results='asis', out.extra='style="display:block; margin: auto;" frameborder="0"'}
-knitr::include_url("animation/MH_IID_beta_normal.html", height = "715px")
+knitr::include_url("MH_IID_beta_normal.html", height = "715px")
 ```
 
 Comparando as cadeias geradas com as duas diferentes propostas:
@@ -1129,6 +1221,5 @@ for(i in 2:m) {
 hist(x)
 plot(x, type = "l")
 ```
-
 
 # Referências {-}

@@ -1,3 +1,4 @@
+## ----- mh_iid_beta_normal
 ## Alvo: Beta.
 ## Canditada: Normal.
 ## curve(dbeta(x, 2, 3), 0, 1)
@@ -86,6 +87,8 @@ iidsampler2 <- function(nsim, x1, plot=FALSE,
     return(out)
 }
 
+## ----- NOT
+
 n <- 10
 x <- iidsampler2(n, x1=0.5, plot=TRUE, go="console")
 
@@ -101,7 +104,7 @@ curve(pbeta(x, 2, 3), add=TRUE, col=2); layout(1)
 animation::saveHTML(
                iidsampler2(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
                img.name = "MH_IID_beta_normal",
-               imgdir = "../figures/MH_IID_beta_normal",
+               imgdir = "figures/MH_IID_beta_normal",
                htmlfile = "MH_IID_beta_normal.html",
                autobrowse = FALSE,
                verbose = FALSE,

@@ -1,3 +1,5 @@
+## ----- mh_rw_normal_unif
+
 ## Ilustrando o procedimento (com um exemplo bem simples). Obter
 ## realizações de uma distribuição Normal(0, 1). Definir a distribuição
 ## candidata qX(x,.) como sendo a uniforme(-delta, delta) que é
@@ -60,6 +62,8 @@ rwsampler1 <- function(nsim, x1, delta, mu, sigma,
     return(out)
 }
 
+## ----- NOT
+
 mu <- 0; sigma <- 1
 x <- rwsampler1(nsim=10, x1=-1, delta= .5, mu, sigma, plot=TRUE,
                 go="console")
@@ -71,11 +75,22 @@ x <- rwsampler1(nsim=10, x1=-1, delta=2, mu, sigma, plot=TRUE,
 ##                 go="click")
 
 animation::saveHTML(
+               rwsampler1(nsim = 20, x1 = -1, delta = 0.5, mu = 0,
+                          sigma = 1, plot = TRUE, go = "none"),
+               img.name = "MH_RW_normal_unif_05",
+               imgdir = "figures/MH_RW_normal_unif_05",
+               htmlfile = "MH_RW_normal_unif_05.html",
+               autobrowse = FALSE,
+               verbose = FALSE,
+               ani.width = 600,
+               ani.height = 600)
+
+animation::saveHTML(
                rwsampler1(nsim = 20, x1 = -1, delta = 2, mu = 0,
                           sigma = 1, plot = TRUE, go = "none"),
-               img.name = "MH_RW_normal_unif",
-               imgdir = "../figures/MH_RW_normal_unif",
-               htmlfile = "MH_RW_normal_unif.html",
+               img.name = "MH_RW_normal_unif_2",
+               imgdir = "figures/MH_RW_normal_unif_2",
+               htmlfile = "MH_RW_normal_unif_2.html",
                autobrowse = FALSE,
                verbose = FALSE,
                ani.width = 600,

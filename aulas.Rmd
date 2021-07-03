@@ -37,7 +37,7 @@ str(dd)
 ```{r echo=FALSE}
 dd |>
     mutate(Item = replace_na(Item, "")) |>
-    select(Data, Dia, Item, Conteúdo, Avaliação) |>
+    dplyr::select(Data, Dia, Item, Conteúdo, Avaliação) |>
     kable() |>
     kable_styling(bootstrap_options = c("striped", "bordered")) |>
     column_spec(1, bold = TRUE) |>
