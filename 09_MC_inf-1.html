@@ -432,21 +432,21 @@ for (i in 1:N) {
     g[i] &lt;- abs(x[1] - x[2])
 }
 (est &lt;- mean(g))</code></pre>
-<pre><code># [1] 1.12821</code></pre>
+<pre><code># [1] 1.118879</code></pre>
 <pre class="r"><code>hist(g)</code></pre>
 <p><img src="figures/09_MC_inf-1/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Por integração, o resultado é <span class="math inline">\(\text{E}(|X_1 - X_2|) = 2/\sqrt{\pi} = 1.1284\)</span>.</p>
 <p>Em uma amostra de Monte Carlo, o tamanho da amostra é <span class="math inline">\(N\)</span>, por isso, o erro padrão da estimativa será</p>
 <pre class="r"><code>## Variância da distribuição amostral
 sum((g - est)^2)/(N - 1)</code></pre>
-<pre><code># [1] 0.7331423</code></pre>
+<pre><code># [1] 0.7073853</code></pre>
 <pre class="r"><code>var(g)</code></pre>
-<pre><code># [1] 0.7331423</code></pre>
+<pre><code># [1] 0.7073853</code></pre>
 <pre class="r"><code>## Erro padrão = desvio padrão da distribuição amostral
 sqrt(sum((g - est)^2))/(N - 1)</code></pre>
-<pre><code># [1] 0.02709015</code></pre>
+<pre><code># [1] 0.02661002</code></pre>
 <pre class="r"><code>sd(g)/sqrt(N - 1)</code></pre>
-<pre><code># [1] 0.02709015</code></pre>
+<pre><code># [1] 0.02661002</code></pre>
 <p>Pode-se mostrar que o valor exato é <span class="math inline">\(ep = \sqrt{(2 - 4/\pi)/N} = 0.0269\)</span>.</p>
 </div>
 <div id="exemplo-erro-quadrático-médio" class="section level2">
@@ -494,16 +494,16 @@ for (i in 1:N) {
 }
 ## Estimativa pontual
 (m.tmean1 &lt;- mean(tmean1))</code></pre>
-<pre><code># [1] 0.002157871</code></pre>
+<pre><code># [1] 0.004566708</code></pre>
 <pre class="r"><code>## Variância
 sum((tmean1 - m.tmean1)^2)/(N - 1)</code></pre>
-<pre><code># [1] 0.05349793</code></pre>
+<pre><code># [1] 0.05139245</code></pre>
 <pre class="r"><code>## Erro padrão = desvio padrão da distribuição amostral
 sqrt(sum((tmean1 - m.tmean1)^2))/(N - 1)</code></pre>
-<pre><code># [1] 0.007317888</code></pre>
+<pre><code># [1] 0.00717244</code></pre>
 <pre class="r"><code>## EQM
 (eqm1 &lt;- mean(tmean1^2))</code></pre>
-<pre><code># [1] 0.05344909</code></pre>
+<pre><code># [1] 0.05136191</code></pre>
 <pre class="r"><code>hist(tmean1)</code></pre>
 <p><img src="figures/09_MC_inf-1/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Note que a média aparada é um estimador não viesado para a média populacional, portanto <span class="math inline">\(\text{EQM}[\theta] = \text{Var}[\theta] = \text{Var}[X]/n\)</span>, que é igual a <span class="math inline">\(1/20 = 0.05\)</span>, o que mostra que nossa estimativa está próxima.</p>
@@ -517,16 +517,16 @@ for (i in 1:N) {
 }
 ## Estimativa pontual
 (m.tmean2 &lt;- mean(tmean2))</code></pre>
-<pre><code># [1] 0.02353545</code></pre>
+<pre><code># [1] -0.002878179</code></pre>
 <pre class="r"><code>## Variância
 sum((tmean2 - m.tmean2)^2)/(N - 1)</code></pre>
-<pre><code># [1] 0.0755841</code></pre>
+<pre><code># [1] 0.07697938</code></pre>
 <pre class="r"><code>## Erro padrão = desvio padrão da distribuição amostral
 sqrt(sum((tmean2 - m.tmean2)^2))/(N - 1)</code></pre>
-<pre><code># [1] 0.008698262</code></pre>
+<pre><code># [1] 0.00877818</code></pre>
 <pre class="r"><code>## EQM
 (eqm2 &lt;- mean(tmean2^2))</code></pre>
-<pre><code># [1] 0.07606244</code></pre>
+<pre><code># [1] 0.07691069</code></pre>
 <pre class="r"><code>hist(tmean2)</code></pre>
 <p><img src="figures/09_MC_inf-1/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora podemos comparar qual dos dois estimadores é o melhor para a média populacional, através dos EQMs.</p>
@@ -535,7 +535,7 @@ eqm1 &lt;= eqm2</code></pre>
 <pre><code># [1] TRUE</code></pre>
 <pre class="r"><code>## Eficiência relativa
 eqm1/eqm2</code></pre>
-<pre><code># [1] 0.7027002</code></pre>
+<pre><code># [1] 0.6678124</code></pre>
 <p>Na última linha calculamos também a <strong>eficiência relativa</strong> entre dois estimadores, ou seja, a eficiência relativa de <span class="math inline">\(\hat{\theta}_1\)</span> em relação a <span class="math inline">\(\hat{\theta}_2\)</span> é <span class="math display">\[
 \text{ER}[\hat{\theta}_1, \hat{\theta}_2] =
 \frac{\text{Var}[\hat{\theta}_1]}{\text{Var}[\hat{\theta}_2]}
@@ -588,7 +588,7 @@ P\left(\frac{(n-1)s^2}{\chi^2_{.05}(n-1)} &gt; \sigma^2 \right) &amp;= 0.95
 alpha &lt;- .05
 x &lt;- rnorm(n, mean = 0, sd = 2)
 (UCL &lt;- (n - 1) * var(x) / qchisq(alpha, df = n - 1))</code></pre>
-<pre><code># [1] 7.369659</code></pre>
+<pre><code># [1] 7.151597</code></pre>
 <p>que contém o verdadeiro valor <span class="math inline">\(\sigma^2 = 4\)</span>. Se repetirmos esse processo várias vezes, esperamos então que aproximadamente <span class="math inline">\(95\%\)</span> das vezes, o intervalo contenha o verdadeiro valor de <span class="math inline">\(\sigma^2\)</span>, <strong>assumindo que a população amostrada é normal</strong> com variância <span class="math inline">\(\sigma^2\)</span>.</p>
 <p>De maneira geral, um algoritmo para calcular o nível de confiança <strong>empírico</strong> para uma estimativa de algum parâmetro <span class="math inline">\(\theta\)</span> é:</p>
 <ol style="list-style-type: decimal">
@@ -611,12 +611,12 @@ UCL &lt;- replicate(m, expr = {
 })
 ## Número de intervalos que contém sigma^2 = 4
 sum(UCL &gt; 4)</code></pre>
-<pre><code># [1] 948</code></pre>
+<pre><code># [1] 968</code></pre>
 <pre class="r"><code>## Nível de confiança empírico
 sum(UCL &gt; 4)/N</code></pre>
-<pre><code># [1] 0.948</code></pre>
+<pre><code># [1] 0.968</code></pre>
 <pre class="r"><code>mean(UCL &gt; 4)</code></pre>
-<pre><code># [1] 0.948</code></pre>
+<pre><code># [1] 0.968</code></pre>
 <p>Veja que o nível de confiança empírico é muito próximo do nível de confiança teórico, de <span class="math inline">\(95\%\)</span>. Para 100 intervalos calculados, podemos visualizar o procedimento:</p>
 <pre class="r"><code>UCL.sim &lt;- replicate(100, expr = {
     x &lt;- rnorm(n, mean = 0, sd = 2)
@@ -643,12 +643,12 @@ UCL &lt;- replicate(m, expr = {
 })
 ## Número de intervalos que contém sigma^2 = 4
 sum(UCL &gt; 4)</code></pre>
-<pre><code># [1] 774</code></pre>
+<pre><code># [1] 755</code></pre>
 <pre class="r"><code>## Nível de confiança empírico
 sum(UCL &gt; 4)/N</code></pre>
-<pre><code># [1] 0.774</code></pre>
+<pre><code># [1] 0.755</code></pre>
 <pre class="r"><code>mean(UCL &gt; 4)</code></pre>
-<pre><code># [1] 0.774</code></pre>
+<pre><code># [1] 0.755</code></pre>
 <p>Veja que, embora estamos calculando intervalos <strong>teóricos</strong> de <span class="math inline">\(95\%\)</span>, o nível de confiança é na verdade bem mais baixo, o que pode levar à conclusões equivocadas nesse caso onde a população não é normal.</p>
 <p>Visualmente temos:</p>
 <pre class="r"><code>UCL.sim &lt;- replicate(100, expr = {

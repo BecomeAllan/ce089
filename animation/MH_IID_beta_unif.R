@@ -1,3 +1,4 @@
+## ----- mh_iid_beta_unif
 ## Alvo: Beta.
 ## Canditada: Uniforme.
 iidsampler1 <- function(nsim, x1, plot=FALSE,
@@ -90,8 +91,11 @@ iidsampler1 <- function(nsim, x1, plot=FALSE,
     return(out)
 }
 
+## ----- NOT
+
 n <- 10
 x <- iidsampler1(n, x1=0.5, plot=TRUE, go="console")
+
 ## Gerando muitos números pelo método.
 x <- iidsampler1(5000, x1=0.5)
 par(mfrow=c(2,2))
@@ -104,7 +108,7 @@ curve(pbeta(x, 2, 3), add=TRUE, col=2); layout(1)
 animation::saveHTML(
                iidsampler1(n = 20, x1 = 0.5, plot = TRUE, go = "none"),
                img.name = "MH_IID_beta_unif",
-               imgdir = "../figures/MH_IID_beta_unif",
+               imgdir = "figures/MH_IID_beta_unif",
                htmlfile = "MH_IID_beta_unif.html",
                autobrowse = FALSE,
                verbose = FALSE,

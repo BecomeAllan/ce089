@@ -1,3 +1,4 @@
+## ----- mh_sampler_beta_unif
 ## Alvo: Beta.
 ## Canditada: Uniforme.
 mhsampler1 <- function(nsim, x1, plot=FALSE,
@@ -101,6 +102,8 @@ mhsampler1 <- function(nsim, x1, plot=FALSE,
     return(out)
 }
 
+## ----- NOT
+
 n <- 10
 x <- mhsampler1(n, x1 = .5, plot=TRUE, go="console")
 
@@ -118,7 +121,7 @@ animation::saveHTML(
                mhsampler1(nsim = 20, x1 = .2,
                           plot = TRUE, go = "none"),
                img.name = "MH_sampler_beta_unif",
-               imgdir = "../figures/MH_sampler_beta_unif",
+               imgdir = "figures/MH_sampler_beta_unif",
                htmlfile = "MH_sampler_beta_unif.html",
                autobrowse = FALSE,
                verbose = FALSE,
