@@ -440,8 +440,14 @@ P[X_{t+1} = j | X_t = i] = P_{ij}
 <p>Se continuarmos o processo acima <span class="math inline">\(n\)</span> vezes, obtemos a distribuição de probabilidade para os estados após <span class="math inline">\(n\)</span> iterações, que podemos escrever como <span class="math display">\[
 \pi_n = \pi_0 \underbrace{PPP \cdots P}_{n \text{ vezes}} = \pi_0 P^{(n)}
 \]</span> Por exemplo, após 50 iterações, obtemos</p>
-<pre class="r"><code>library(expm) # potencia de matriz
-pi0 %*% (P %^% 50)</code></pre>
+<pre class="r"><code>library(expm) # potencia de matriz</code></pre>
+<pre><code># Loading required package: Matrix</code></pre>
+<pre><code># 
+# Attaching package: &#39;expm&#39;</code></pre>
+<pre><code># The following object is masked from &#39;package:Matrix&#39;:
+# 
+#     expm</code></pre>
+<pre class="r"><code>pi0 %*% (P %^% 50)</code></pre>
 <pre><code>#             PR        RS        SC
 # [1,] 0.3888889 0.3333333 0.2777778</code></pre>
 <p>Para <span class="math inline">\(n \to \infty\)</span> iterações, existe uma distribuição <span class="math inline">\(\pi_e\)</span> tal que <span class="math display">\[
@@ -494,22 +500,22 @@ res &lt;- lapply(N, function(x) {
 })
 ## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))</code></pre>
-<pre><code>#          PR      RS      SC
-# [1,] 0.3600 0.33000 0.31000
-# [2,] 0.3750 0.34900 0.27600
-# [3,] 0.3879 0.33180 0.28030
-# [4,] 0.3892 0.33295 0.27785</code></pre>
+<pre><code>#           PR      RS      SC
+# [1,] 0.36000 0.34000 0.30000
+# [2,] 0.38100 0.33500 0.28400
+# [3,] 0.38650 0.33650 0.27700
+# [4,] 0.38707 0.33406 0.27887</code></pre>
 <pre class="r"><code>## Começando em outro estado
 res &lt;- lapply(N, function(x) {
     mc(n = x, x1 = &quot;RS&quot;, P = P, states = estados)
 })
 ## Proporção relativa para cada tamanho de cadeia
 t(sapply(res, function(x) prop.table(table(x))))</code></pre>
-<pre><code>#           PR      RS      SC
-# [1,] 0.43000 0.30000 0.27000
-# [2,] 0.38700 0.33500 0.27800
-# [3,] 0.38780 0.33320 0.27900
-# [4,] 0.38704 0.33411 0.27885</code></pre>
+<pre><code>#           PR     RS      SC
+# [1,] 0.37000 0.3300 0.30000
+# [2,] 0.38500 0.3290 0.28600
+# [3,] 0.39100 0.3374 0.27160
+# [4,] 0.39028 0.3331 0.27662</code></pre>
 <p>Existem ainda três suposições necessárias para que os teoremas limite sejam verdadeiros. A cadeia deve ser:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Homogênea</strong>: as probabilidades de transição de um estado para outro são invariantes.</li>
@@ -647,10 +653,10 @@ for (i in 2:N) {
 1/M # teórica</code></pre>
 <pre><code># [1] 0.3745677</code></pre>
 <pre class="r"><code>length(ua)/N</code></pre>
-<pre><code># [1] 0.37196</code></pre>
+<pre><code># [1] 0.3744</code></pre>
 <pre class="r"><code>## Taxa de aceitação - MH
 k/N</code></pre>
-<pre><code># [1] 0.45681</code></pre>
+<pre><code># [1] 0.45724</code></pre>
 <pre class="r"><code>## Compara amostras com acumulada teórica
 par(mfrow = c(1, 2))
 plot(ecdf(x.ar), main = &quot;Aceitação-rejeição&quot;)
@@ -743,7 +749,7 @@ for (i in 2:N) {
 }</code></pre>
 <pre class="r"><code>## Taxa de aceitação
 k/N</code></pre>
-<pre><code># [1] 0.5998</code></pre>
+<pre><code># [1] 0.5913</code></pre>
 <pre class="r"><code>## Traço da cadeia
 par(mfrow = c(2, 1))
 plot.ts(x)
