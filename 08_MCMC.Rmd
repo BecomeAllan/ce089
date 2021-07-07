@@ -13,6 +13,9 @@ output:
 source("setup_knitr.R")
 opts_chunk$set(fig.path = "figures/08_MCMC/")
 read_chunk("animation/MH_sampler_beta_unif.R")
+read_chunk("animation/MH_RW_normal_unif.R")
+read_chunk("animation/MH_IID_beta_unif.R")
+read_chunk("animation/MH_IID_beta_normal.R")
 ```
 
 # Introdução
