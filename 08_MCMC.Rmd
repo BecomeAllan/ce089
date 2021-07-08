@@ -1336,7 +1336,7 @@ Considere gerar valores da distribuição Normal bivariada
 $$
 (X_1, X_2) \sim \mathcal{N}_2 \left(
   \begin{bmatrix} \mu_1\\ \mu_2 \end{bmatrix},
-  \begin{bmatrix} \sigma_1 & \rho \\ \rho & \sigma_2 \end{bmatrix}
+  \begin{bmatrix} \sigma_1^2 & \rho \\ \rho & \sigma_2^2 \end{bmatrix}
   \right)
 $$
 
@@ -1357,9 +1357,9 @@ e as cadeias são então geradas amostrando de
 $$
 \begin{aligned}
 f(x_1|x_2) &\sim \text{N}(\mu_1 + \rho \frac{\sigma_1}{\sigma_2}
-  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2 \\
+  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2) \\
 f(x_2|x_1) &\sim \text{N}(\mu_2 + \rho \frac{\sigma_2}{\sigma_1}
-  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2 \\
+  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2) \\
 \end{aligned}
 $$
 
@@ -1393,8 +1393,7 @@ sigma2 <- .5
 s1 <- sqrt(1 - rho^2) * sigma1
 s2 <- sqrt(1-rho^2) * sigma2
 
-## Valores iniciais
-X[1, ] <- c(mu1, mu2)
+## Valores iniciais: propositalmente valores discrepantes
 X[1, ] <- c(10, 15)
 
 ## Gera a cadeia
@@ -1422,12 +1421,12 @@ plot(X, main = "", xlab = bquote(X[1]),
 b <- burn + 1
 x <- X[b:N, ]
 matplot(x, type = "l")
-## Nao elimina o problema de autocorrelacao
+## Nao elimina o problema de autocorrelacao...
 par(mfrow = c(1, 2))
 acf(x[,1])
 acf(x[,2])
 par(mfrow = c(1, 1))
-## Conjunta
+## ... mas elimina o problema dos valores iniciais discrepantes
 plot(x, main = "", xlab = bquote(X[1]),
      ylab = bquote(X[2]), ylim = range(x[, 2]))
 
@@ -1440,7 +1439,7 @@ dim(x)
 
 ## Confere novamente
 matplot(x, type = "l")
-## Nao elimina o problema de autocorrelacao
+## Agora elimina o problema de autocorrelacao
 par(mfrow = c(1, 2))
 acf(x[,1])
 acf(x[,2])
@@ -1450,6 +1449,8 @@ plot(x, main = "", xlab = bquote(X[1]),
      ylab = bquote(X[2]), ylim = range(x[, 2]))
 
 ## Compara com as marginais
+## NOTE que no caso da normal bivariada, as marginais são normais com os
+## respectivos parâmetros mu e sigma
 par(mfrow = c(1, 2))
 hist(x[, 1], freq = FALSE)
 curve(dnorm(x, mu1, sigma1), col = 2, add = TRUE)
@@ -1474,31 +1475,50 @@ X|\theta &\sim \text{Bin}(n, \theta) \\
 \end{aligned}
 $$
 
-A distribuição conjunta  de $X$ e $\theta$ é
+A distribuição conjunta  de $X$ e $\theta$ é (note que, por definição,
+as distribuições de $X$ e $\theta$ não são independentes)
 
 $$
 \begin{aligned}
-f(x, \theta) &= \binom{n}{x}
+f(x, \theta) &= f(X|\theta) \cdot f(\theta) & \textsf{definição de conjunta} \\
+  &= \binom{n}{x} \theta^x (1-\theta)^{n-x} \cdot
   \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \\
-  &\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} & \textsf{binomial}\cdot\textsf{beta} \\
+  &= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^x (1-\theta)^{n-x} \cdot \theta^{\alpha-1} (1-\theta)^{\beta-1}
+  & \textsf{junta as constantes}  \\
+  &= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} & \textsf{soma os
+  expoentes} \\
 \end{aligned}
 $$
 
-A correspondente distribuição condicional de $X|\theta$ foi definida
-acima, enquanto que a condicional $\theta|x$ é
+A correspondente distribuição condicional de $X|\theta$ é $\text{Bin}(n,
+\theta)$, cono foi definido acima, enquanto que a condicional $\theta|x$ é
 
 $$
 \begin{aligned}
-f(\theta|x) &\propto f(X|\theta) \cdot f(\theta) \\
-  &\propto \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \theta^{\alpha-1} (1-\theta)^{\beta-1} \cdot
-  \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
-  &\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+f(\theta|x) &= \frac{f(X|\theta) \cdot f(\theta)}{f(x)} &
+\textsf{teorema de bayes} \\
+  &= \frac{f(X|\theta) \cdot f(\theta)}{\int f(x, \theta) \, \text{d}\theta} &
+  \textsf{integra denominador} \\
+  &= \frac{f(X|\theta) \cdot f(\theta)}
+  {\int f(X|\theta) \cdot f(\theta) \, \text{d}\theta} &
+  \textsf{expande denominador} \\
+  &= c \cdot f(X|\theta) \cdot f(\theta) & \textsf{constante de
+  integração = } c \\
+  &\propto f(X|\theta) \cdot f(\theta) & \textsf{proporcionalidade} \\
+  &\propto \theta^x (1-\theta)^{n-x} \cdot
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} &
+  \textsf{binomial}\cdot\textsf{beta} \\
+  &\propto \theta^{x+\alpha-1} (1-\theta)^{\beta+n-x-1} & \textsf{soma
+  os expoentes}
 \end{aligned}
 $$
 
-Portanto, $f(\theta|x) \sim Beta(\alpha^* = \alpha+x, \beta^* = \beta +
+Portanto, $f(\theta|x) \sim Beta(\alpha^* = x+\alpha, \beta^* = \beta +
 n - x)$
 
 
@@ -1525,9 +1545,7 @@ curve(dbeta(x, a, b), from = 0, to = 1)
 
 ## Define valores
 n <- 15
-## Valores iniciais
-T[1] <- rbeta(1, a, b)
-X[1] <- rbinom(1, n, T[1])
+## Valores iniciais: propositalmente discrepantes
 T[1] <- 1
 X[1] <- 50
 
@@ -1549,7 +1567,7 @@ acf(X)
 acf(T)
 par(mfrow = c(1, 1))
 ## Conjunta
-plot(X, T)
+plot(T, X, xlab = bquote(theta), ylab = bquote(X * "|" * theta))
 
 ## Tamnho da amostra
 length(X)
@@ -1575,21 +1593,27 @@ plot(t, type = "l")
 par(mfrow = c(1, 1))
 
 ## Conjunta
-plot(x, t)
+plot(t, x, xlab = bquote(theta), ylab = bquote(X * "|" * theta))
 ```
 
-A distribuição marginal de $\theta$ é $\text{Beta}(\alpha, \beta)$. Já a
-distribuição marginal de $X$ é menos comum, e é chamada de beta-binomial
+A distribuição marginal de $\theta$ é $\text{Beta}(\alpha, \beta)$, por
+definição. Já a distribuição marginal de $X$ é menos comum, e é chamada
+de beta-binomial
 
 $$
 \begin{aligned}
-f(x) &= \int f(x, \theta) \text{d}\theta \\
-  &= \binom{n}{x}
-  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \frac{\Gamma{(x+\alpha)}
-  \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
+f(x) &= \int f(x, \theta) \, \text{d}\theta \\
+     &= \int f(X|\theta) \cdot f(\theta) \, \text{d}\theta \\
+     &= \int \binom{n}{x}
+     \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+     \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \, \text{d}\theta \\
+     &= \binom{n}{x}
+     \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+     \frac{\Gamma{(x+\alpha)}
+     \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
 \end{aligned}
 $$
+
 
 ```{r}
 ## Integrando a conjunta em relação a theta, chega na marginal de X, que
@@ -1610,6 +1634,8 @@ hist(t, freq = FALSE, main = "", xlab = expression(theta))
 curve(dbeta(x, a, b), add = TRUE, col = 2)
 par(mfrow = c(1, 1))
 ```
+
+#### Usando o JAGS {-}
 
 ```{r, eval=FALSE}
 library(runjags)
@@ -1668,9 +1694,7 @@ qbeta(c(0.025, 0.5, 0.975), a + 10, b + 15 - 10)
 plot(m.jags)
 ```
 
-## Exemplo (Poisson-Gama - baleia)
-
-```{r}
+```{r, include=FALSE, eval=FALSE}
 ##======================================================================
 ## Exemplo da baleia (ver slides)
 x <- 10
@@ -1713,9 +1737,7 @@ m.jags <- run.jags(
 m.jags
 qgamma(c(0.025, 0.5, 0.975), alfa.star, beta.star)
 plot(m.jags)
-```
 
-```{r}
 ## Usando prioris informativas
 alfa.i <- 4.5
 beta.i <- 10
@@ -1748,11 +1770,7 @@ m.jags <- run.jags(
 ## Resultados
 m.jags
 qgamma(c(0.025, 0.5, 0.975), alfa.star.i, beta.star.i)
-```
-
-```{r}
 plot(m.jags)
 ```
-
 
 # Referências {-}
