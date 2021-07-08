@@ -1225,4 +1225,534 @@ hist(x)
 plot(x, type = "l")
 ```
 
+# Amostrador de Gibbs
+
+O amostrador de Gibbs é mais um caso especial do amostrador de
+Metropolis-Hastings, e pode ser aplicado a uma grande variedade de
+distribuições.
+
+O amostrador de Gibbs é utilizado principalmente quando a
+distribuição alvo é multivariada. Suponha que todas as **densidades
+univariadas condicionais** possam ser determinadas, e que seja possível
+amostrar de cada uma destas distribuições. A cadeia é gerada a partir de
+amostras da distribuição marginal da distribuição alvo, e, portanto,
+todos os valores candidatos são aceitos (*i.e.* a taxa de aceitação é de
+100%).
+
+Inicialmente veremos o amostrador de Gibbs no seu caso mais geral, o de
+multiestágios. No entanto, daremos mais ênfase ao seu caso particular de
+dois estágios, uma vez que ele possui propriedades de convergência
+superior e se aplica naturalmente a uma grande variedade de modelos
+estatísticos.
+
+O amostrador de Gibbs possui muitas propriedades interessantes que o
+fazem ser o método "padrão" dos algoritmos de MCMC atualmente. Algumas
+dessas propriedades incluem:
+
+- A "calibração" do algoritmo é feita diretamente a partir da distribuição
+  alvo.
+- Todos os valores candidatos são aceitos, portanto não há "desperdício"
+  de tempo computacional amostrando valores que não farão parte da
+  amostra.
+- Problemas complexos envolvendo distribuições multivariadas são
+  "decompostos" em problemas menores, usando distribuições univariadas.
+
+## Amostrador de Gibbs multiestágios
+
+Seja $X = (X_1, X_2, \ldots, X_d)$ um vetor $d$-dimensional de variáveis
+aleatórias. Podemos denotar o vetor aleatório $(d-1)$-dimensional como
+
+$$
+X_{(-j)} = (X_1, \ldots, X_{j-1}, X_{j+1}, \ldots, X_d)
+$$
+
+ou seja, o vetor $X$ **excluindo** o elemento na posição $j$. Além
+disso, suponha que podemos simular das correspondentes **densidades
+condicionais univariadas**, $f_1, f_2, \ldots, f_d$, ou seja, podemos
+amostrar de
+
+$$
+\begin{aligned}
+X_j|X_{(-j)} \, &\sim \, f_j(X_j|X_{(-j)}) \\
+X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d
+   \, &\sim \, f_j(X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d)
+\end{aligned}
+$$
+
+para $j = 1, 2, \ldots, d$. Dessa forma, o algoritmo amostrador de Gibbs
+é dado pela seguinte transição de $X^{(t)}$ para $X^{(t+1)}$
+
+1. Defina valores iniciais $\mathbf{x}^{(0)} = (x_1^{(0)}, x_2^{(0)},
+   \ldots, x_d^{(0)})$ para $t=0$
+2. Faça $\mathbf{x}^{(1)} = \mathbf{x}^{(0)}$
+3. Para cada iteração, indexadas por $t=1, 2, \ldots$, dado
+   $\mathbf{x}^{(t)} = (x_1^{(t)}, x_2^{(t)}, \ldots, x_d^{(t)})$, gere
+   a. $X_1^{(t+1)} \sim f_1(x_1|x_2^{(t)}, \ldots, x_d^{(t)})$
+   b. $X_2^{(t+1)} \sim f_2(x_2|x_1^{(t+1)}, x_3^{(t)}, \ldots,
+   x_d^{(t)})$
+   c. $\ldots$
+   d. $X_d^{(t+1)} \sim f_d(x_d|x_1^{(t+1)}, \ldots, x_{d-1}^{(t+1)})$
+
+As densidades $f_1, f_2, \ldots, f_d$ são chamadas de **condicionais
+completas** (*full conditionals*), e um fato particular do amostrador de
+Gibbs é que estas são as **únicas densidades usadas para a simulação**.
+Portanto, mesmo em um problema de alta dimensão, **todas as simulações
+são univariadas**, o que traz uma grande vantagem teórica e
+computacional.
+
+## Amostrador de Gibbs em dois estágios
+
+O amostrador de Gibbs em dois estágios gera uma cadeia de Markov a
+partir de uma distribuição conjunta da seguinte maneira. Se duas
+variáveis aleatórioas $X$ e $Y$ possuem uma distribuição conjunta $f(x,
+y)$, com as correspondentes densidades condicionais $f_{Y|X}$ e
+$f_{X|Y}$, o amostrador de Gibbs em dois estágios gera uma cadeia de
+Markov ($X_t$, $Y_t$) de acordo com os seguintes passos:
+
+1. Defina $X^{(0)} = x^{(0)}$
+2. Para cada iteração, indexadas por $t=1, 2, \ldots$, gere
+   a. $Y^{(t)} \sim f_{Y|X}(\cdot|x^{(t-1)})$
+   b. $X^{(t)} \sim f_{X|Y}(\cdot|y^{(t)})$
+
+Este algoritmo é facilmente implementado desde que a simulação de
+ambas as condicionais seja viável. Quando $f(x,y)$ está disponível,
+até a constante de normalização, $f_{Y|X}$ e $f_{X|Y}$ também estarão
+(poderão ser conhecidas ou determinadas). Portanto, se a simulação
+direta destas condicionais não for possível, podemos usar novamente um
+algoritmo de MCMC para simular destas condicionais. Este método é
+chamado de **Metropolis dentro do Gibbs** (*Metropolis whitin Gibbs*).
+
+Outro fato importante é que, se ($X_t$, $Y_t$) são provenientes da
+diistribuição $f$, então ($X_{t+1}$, $Y_{t+1}$) também será, porque
+ambos os passos da iteração $t$ são simulados das verdadeiras
+condicionais. A convergência da cadeia de Markov (e do algoritmo) é
+então assegurada, ao menos que o suporte das condicionais não sejam
+conectadas.
+
+### Exemplo (normal bivariada)
+
+Considere gerar valores da distribuição Normal bivariada
+
+$$
+(X_1, X_2) \sim \mathcal{N}_2 \left(
+  \begin{bmatrix} \mu_1\\ \mu_2 \end{bmatrix},
+  \begin{bmatrix} \sigma_1 & \rho \\ \rho & \sigma_2 \end{bmatrix}
+  \right)
+$$
+
+Nesse caso, $X = (X_1, X_2)$, $X_{(-1)} = X_2$, $X_{(-2)} = X_1$. As
+densidades condicionais de uma normal biivariada são normais univariadas
+com parâmetros
+
+$$
+\begin{aligned}
+\text{E}[X_2|x_1] &= \mu_2 + \rho \frac{\sigma_2}{\sigma_1}
+  (x_1 - \mu_1) \\
+\text{V}[X_2|x_1] &= (1 - \rho^2) \sigma_2^2
+\end{aligned}
+$$
+
+e as cadeias são então geradas amostrando de
+
+$$
+\begin{aligned}
+f(x_1|x_2) &\sim \text{N}(\mu_1 + \rho \frac{\sigma_1}{\sigma_2}
+  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2 \\
+f(x_2|x_1) &\sim \text{N}(\mu_2 + \rho \frac{\sigma_2}{\sigma_1}
+  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2 \\
+\end{aligned}
+$$
+
+Portanto, para uma Normal bivariada ($X_1$, $X_2$), em cada iteração:
+
+1. Faça $(x_1, x_2) = X^{(t-1)}$
+2. Gere $X_1^{(t)}$ a partir de $f(X_1|x_2)$
+3. Atualize $x_1 = X_1^{(t)}$
+4. Gere $X_2^{(t)}$ a partir de $f(X_2|x_1)$
+5. Faça $X^{(t)} = (X_1^{(t)}, X_2^{(t)})$
+
+
+```{r, echo=-(1:4)}
+##======================================================================
+## Exemplo de Rizzo, pg. 320
+## Example 11.10 (Gibbs sampler: Bivariate distribution)
+
+## Define constantes
+N <- 1e4
+## Burnin
+burn <- 1000
+## Matriz para armazenar as amostras
+X <- matrix(0, N, 2)
+
+## Define parametros da Normal bivariada
+rho <- -.75
+mu1 <- 0
+mu2 <- 2
+sigma1 <- 1
+sigma2 <- .5
+s1 <- sqrt(1 - rho^2) * sigma1
+s2 <- sqrt(1-rho^2) * sigma2
+
+## Valores iniciais
+X[1, ] <- c(mu1, mu2)
+X[1, ] <- c(10, 15)
+
+## Gera a cadeia
+for (i in 2:N) {
+    x2 <- X[i-1, 2]
+    m1 <- mu1 + rho * (x2 - mu2) * sigma1/sigma2
+    X[i, 1] <- rnorm(1, m1, s1)
+    x1 <- X[i, 1]
+    m2 <- mu2 + rho * (x1 - mu1) * sigma2/sigma1
+    X[i, 2] <- rnorm(1, m2, s2)
+}
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+matplot(X, type = "l")
+## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(X[,1])
+acf(X[,2])
+par(mfrow = c(1, 1))
+## Conjunta
+plot(X, main = "", xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(X[, 2]))
+
+## Descarta os primeiros 1000 valores
+b <- burn + 1
+x <- X[b:N, ]
+matplot(x, type = "l")
+## Nao elimina o problema de autocorrelacao
+par(mfrow = c(1, 2))
+acf(x[,1])
+acf(x[,2])
+par(mfrow = c(1, 1))
+## Conjunta
+plot(x, main = "", xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(x[, 2]))
+
+## Tamanho da amostra após o burnin
+dim(x)
+
+## Faz o thinning
+x <- x[seq(1, nrow(x), 5), ]
+dim(x)
+
+## Confere novamente
+matplot(x, type = "l")
+## Nao elimina o problema de autocorrelacao
+par(mfrow = c(1, 2))
+acf(x[,1])
+acf(x[,2])
+par(mfrow = c(1, 1))
+## Conjunta
+plot(x, main = "", xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(x[, 2]))
+
+## Compara com as marginais
+par(mfrow = c(1, 2))
+hist(x[, 1], freq = FALSE)
+curve(dnorm(x, mu1, sigma1), col = 2, add = TRUE)
+hist(x[, 2], freq = FALSE)
+curve(dnorm(x, mu2, sigma2), col = 2, add = TRUE)
+par(mfrow = c(1, 1))
+
+## Compara estatisticas
+colMeans(x)
+cov(x)
+cor(x)
+```
+
+## Exemplo (beta-binomial)
+
+Considerando as seguintes distribuições
+
+$$
+\begin{aligned}
+X|\theta &\sim \text{Bin}(n, \theta) \\
+\theta &\sim \text{Beta}(\alpha, \beta)
+\end{aligned}
+$$
+
+A distribuição conjunta  de $X$ e $\theta$ é
+
+$$
+\begin{aligned}
+f(x, \theta) &= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \\
+  &\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+\end{aligned}
+$$
+
+A correspondente distribuição condicional de $X|\theta$ foi definida
+acima, enquanto que a condicional $\theta|x$ é
+
+$$
+\begin{aligned}
+f(\theta|x) &\propto f(X|\theta) \cdot f(\theta) \\
+  &\propto \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} \cdot
+  \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
+  &\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+\end{aligned}
+$$
+
+Portanto, $f(\theta|x) \sim Beta(\alpha^* = \alpha+x, \beta^* = \beta +
+n - x)$
+
+
+```{r, echo=-(1:2)}
+##======================================================================
+## Exemplo 7.2 do Casella e Robert - Beta-binomial
+## X | theta ~ Bin(n, theta)
+## theta ~ Beta(a, b)
+
+## Condicionais são
+## X | theta ~ Bin(n, theta)
+## theta | X ~ Beta(x + a, n - x + b)
+
+## Define constantes
+N <- 1e4
+## Vetores para armazenar as amostras
+T <- numeric(N)
+X <- numeric(N)
+
+## Aqui da para testar varios valores para ver o impacto da priori
+a <- 3
+b <- 7
+curve(dbeta(x, a, b), from = 0, to = 1)
+
+## Define valores
+n <- 15
+## Valores iniciais
+T[1] <- rbeta(1, a, b)
+X[1] <- rbinom(1, n, T[1])
+T[1] <- 1
+X[1] <- 50
+
+## Amostrador de Gibbs
+for (i in 2:N) {
+    X[i] <- rbinom(1, n, T[i - 1])
+    T[i] <- rbeta(1, X[i] + a, n - X[i] + b)
+}
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+par(mfrow = c(2, 1))
+plot(X, type = "l")
+plot(T, type = "l")
+par(mfrow = c(1, 2))
+
+## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(X)
+acf(T)
+par(mfrow = c(1, 1))
+## Conjunta
+plot(X, T)
+
+## Tamnho da amostra
+length(X)
+
+## Faz o burnin
+X <- X[-(1:1000)]
+T <- T[-(1:1000)]
+
+## Fazendo o thinning
+x <- X[seq(1, length(X), 5)]
+t <- T[seq(1, length(T), 5)]
+
+## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(x)
+acf(t)
+par(mfrow = c(2, 1))
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+par(mfrow = c(2, 1))
+plot(x, type = "l")
+plot(t, type = "l")
+par(mfrow = c(1, 1))
+
+## Conjunta
+plot(x, t)
+```
+
+A distribuição marginal de $\theta$ é $\text{Beta}(\alpha, \beta)$. Já a
+distribuição marginal de $X$ é menos comum, e é chamada de beta-binomial
+
+$$
+\begin{aligned}
+f(x) &= \int f(x, \theta) \text{d}\theta \\
+  &= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \frac{\Gamma{(x+\alpha)}
+  \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
+\end{aligned}
+$$
+
+```{r}
+## Integrando a conjunta em relação a theta, chega na marginal de X, que
+## é uma Beta-Binomial
+betabinom <- function(x, a, b, n) {
+    choose(n, x) * (gamma(a + b)/(gamma(a) * gamma(b))) *
+        ((gamma(x + a) * gamma(n - x + b))/
+        gamma(a + b + n))
+}
+
+## Compara amostra com distribuicoes teoricas
+par(mfrow = c(1, 2))
+## A Beta-binomial é uma distribuição discreta
+plot(prop.table(table(x)), type = "h")
+points((0:14) + 0.2,
+       betabinom(x = 0:14, a = a, b = b, n = n), type = "h", col = 2)
+hist(t, freq = FALSE, main = "", xlab = expression(theta))
+curve(dbeta(x, a, b), add = TRUE, col = 2)
+par(mfrow = c(1, 1))
+```
+
+```{r, eval=FALSE}
+library(runjags)
+
+##----------------------------------------------------------------------
+## Com X como VA
+## Dados
+datalist <- dump.format(list(n = 15))
+params <- c("x", "theta")
+inicial <- dump.format(list(x = 1, theta = 0.5))
+
+## Modelo
+mod <- "model{
+x ~ dbin(theta, n)
+theta ~ dbeta(3, 7)
+}"
+
+## Ajuste
+m.jags <- run.jags(
+    model = mod, monitor = params, data = datalist,
+    inits = c(inicial, inicial), n.chains = 2,
+    burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qbeta(c(0.025, 0.5, 0.975), a, b)
+plot(m.jags)
+
+str(m.jags$mcmc)
+dim(m.jags$mcmc[[1]])
+head(m.jags$mcmc[[1]])
+
+##----------------------------------------------------------------------
+## Com X observado
+## Dados
+datalist <- dump.format(list(x = 10, n = 15))
+params <- c("theta")
+inicial <- dump.format(list(theta = 0.5))
+
+## Modelo
+mod <- "model{
+x ~ dbin(theta, n)
+theta ~ dbeta(3, 7)
+}"
+
+## Ajuste
+m.jags <- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial, inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qbeta(c(0.025, 0.5, 0.975), a + 10, b + 15 - 10)
+plot(m.jags)
+```
+
+## Exemplo (Poisson-Gama - baleia)
+
+```{r}
+##======================================================================
+## Exemplo da baleia (ver slides)
+x <- 10
+n <- 15
+teta <- seq(0, 2, length = 200)
+alfa <- 1
+beta <- 0.1
+## Calcula a densidade da priori
+priori.ni <- dgamma(teta, alfa, beta)
+(alfa.star <- alfa + x)
+(beta.star <- beta + n)
+
+post.ni <- dgamma(teta, alfa.star, beta.star)
+plot(teta, post.ni, type = "l", xlab = expression(theta),
+     ylab = "Densidade de probabilidade")
+lines(teta, priori.ni, lty = 2)
+lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
+legend("topright",  lty = c(1, 2, 2), col = c(1, 1, 2),
+       legend = c("Posterior", "Priori", "Verossimilhança"))
+
+## Dados
+library(runjags)
+datalist <- dump.format(list(x = x, n = n))
+params <- c("theta")
+inicial <- dump.format(list(theta = 0.5))
+
+## Modelo
+mod <- "model{
+x ~ dpois(n * theta)
+theta ~ dgamma(1, 0.1)
+}"
+
+## Ajuste
+m.jags <- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qgamma(c(0.025, 0.5, 0.975), alfa.star, beta.star)
+plot(m.jags)
+```
+
+```{r}
+## Usando prioris informativas
+alfa.i <- 4.5
+beta.i <- 10
+## Calcula a densidade da priori
+priori.i <- dgamma(teta, alfa.i, beta.i)
+alfa.star.i <- alfa.i + x
+beta.star.i <- beta.i + n
+## Cálculo da densidade da posterior com a priori informativa
+post.i <- dgamma(teta, alfa.star.i, beta.star.i)
+## Visualização
+plot(teta, post.i, type = "l", xlab = expression(theta),
+     ylab = "Densidade de probabilidade")
+lines(teta, priori.i, lty = 2)
+lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
+legend("topright",  lty = c(1, 2, 2), col = c(1, 1, 2),
+       legend = c("Posterior", "Priori", "Verossimilhança"))
+
+## Modelo
+mod <- "model{
+x ~ dpois(n * theta)
+theta ~ dgamma(4.5, 10)
+}"
+
+## Ajuste
+m.jags <- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qgamma(c(0.025, 0.5, 0.975), alfa.star.i, beta.star.i)
+```
+
+```{r}
+plot(m.jags)
+```
+
+
 # Referências {-}
