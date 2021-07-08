@@ -1155,7 +1155,7 @@ X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d
 <p><span class="math display">\[
 (X_1, X_2) \sim \mathcal{N}_2 \left(
   \begin{bmatrix} \mu_1\\ \mu_2 \end{bmatrix},
-  \begin{bmatrix} \sigma_1 &amp; \rho \\ \rho &amp; \sigma_2 \end{bmatrix}
+  \begin{bmatrix} \sigma_1^2 &amp; \rho \\ \rho &amp; \sigma_2^2 \end{bmatrix}
   \right)
 \]</span></p>
 <p>Nesse caso, <span class="math inline">\(X = (X_1, X_2)\)</span>, <span class="math inline">\(X_{(-1)} = X_2\)</span>, <span class="math inline">\(X_{(-2)} = X_1\)</span>. As densidades condicionais de uma normal biivariada são normais univariadas com parâmetros</p>
@@ -1170,9 +1170,9 @@ X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d
 <p><span class="math display">\[
 \begin{aligned}
 f(x_1|x_2) &amp;\sim \text{N}(\mu_1 + \rho \frac{\sigma_1}{\sigma_2}
-  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2 \\
+  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2) \\
 f(x_2|x_1) &amp;\sim \text{N}(\mu_2 + \rho \frac{\sigma_2}{\sigma_1}
-  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2 \\
+  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2) \\
 \end{aligned}
 \]</span></p>
 <p>Portanto, para uma Normal bivariada (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>), em cada iteração:</p>
@@ -1199,8 +1199,7 @@ sigma2 &lt;- .5
 s1 &lt;- sqrt(1 - rho^2) * sigma1
 s2 &lt;- sqrt(1-rho^2) * sigma2
 
-## Valores iniciais
-X[1, ] &lt;- c(mu1, mu2)
+## Valores iniciais: propositalmente valores discrepantes
 X[1, ] &lt;- c(10, 15)
 
 ## Gera a cadeia
@@ -1231,13 +1230,13 @@ b &lt;- burn + 1
 x &lt;- X[b:N, ]
 matplot(x, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-43-4.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>## Nao elimina o problema de autocorrelacao
+<pre class="r"><code>## Nao elimina o problema de autocorrelacao...
 par(mfrow = c(1, 2))
 acf(x[,1])
 acf(x[,2])</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-43-5.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))
-## Conjunta
+## ... mas elimina o problema dos valores iniciais discrepantes
 plot(x, main = &quot;&quot;, xlab = bquote(X[1]),
      ylab = bquote(X[2]), ylim = range(x[, 2]))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-43-6.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -1251,7 +1250,7 @@ dim(x)</code></pre>
 <pre class="r"><code>## Confere novamente
 matplot(x, type = &quot;l&quot;)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-43-7.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>## Nao elimina o problema de autocorrelacao
+<pre class="r"><code>## Agora elimina o problema de autocorrelacao
 par(mfrow = c(1, 2))
 acf(x[,1])
 acf(x[,2])</code></pre>
@@ -1262,6 +1261,8 @@ plot(x, main = &quot;&quot;, xlab = bquote(X[1]),
      ylab = bquote(X[2]), ylim = range(x[, 2]))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-43-9.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Compara com as marginais
+## NOTE que no caso da normal bivariada, as marginais são normais com os
+## respectivos parâmetros mu e sigma
 par(mfrow = c(1, 2))
 hist(x[, 1], freq = FALSE)
 curve(dnorm(x, mu1, sigma1), col = 2, add = TRUE)
@@ -1292,26 +1293,44 @@ X|\theta &amp;\sim \text{Bin}(n, \theta) \\
 \theta &amp;\sim \text{Beta}(\alpha, \beta)
 \end{aligned}
 \]</span></p>
-<p>A distribuição conjunta de <span class="math inline">\(X\)</span> e <span class="math inline">\(\theta\)</span> é</p>
+<p>A distribuição conjunta de <span class="math inline">\(X\)</span> e <span class="math inline">\(\theta\)</span> é (note que, por definição, as distribuições de <span class="math inline">\(X\)</span> e <span class="math inline">\(\theta\)</span> não são independentes)</p>
 <p><span class="math display">\[
 \begin{aligned}
-f(x, \theta) &amp;= \binom{n}{x}
+f(x, \theta) &amp;= f(X|\theta) \cdot f(\theta) &amp; \textsf{definição de conjunta} \\
+  &amp;= \binom{n}{x} \theta^x (1-\theta)^{n-x} \cdot
   \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \\
-  &amp;\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} &amp; \textsf{binomial}\cdot\textsf{beta} \\
+  &amp;= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^x (1-\theta)^{n-x} \cdot \theta^{\alpha-1} (1-\theta)^{\beta-1}
+  &amp; \textsf{junta as constantes}  \\
+  &amp;= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} &amp; \textsf{soma os
+  expoentes} \\
 \end{aligned}
 \]</span></p>
-<p>A correspondente distribuição condicional de <span class="math inline">\(X|\theta\)</span> foi definida acima, enquanto que a condicional <span class="math inline">\(\theta|x\)</span> é</p>
+<p>A correspondente distribuição condicional de <span class="math inline">\(X|\theta\)</span> é <span class="math inline">\(\text{Bin}(n, \theta)\)</span>, cono foi definido acima, enquanto que a condicional <span class="math inline">\(\theta|x\)</span> é</p>
 <p><span class="math display">\[
 \begin{aligned}
-f(\theta|x) &amp;\propto f(X|\theta) \cdot f(\theta) \\
-  &amp;\propto \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \theta^{\alpha-1} (1-\theta)^{\beta-1} \cdot
-  \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
-  &amp;\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+f(\theta|x) &amp;= \frac{f(X|\theta) \cdot f(\theta)}{f(x)} &amp;
+\textsf{teorema de bayes} \\
+  &amp;= \frac{f(X|\theta) \cdot f(\theta)}{\int f(x, \theta) \, \text{d}\theta} &amp;
+  \textsf{integra denominador} \\
+  &amp;= \frac{f(X|\theta) \cdot f(\theta)}
+  {\int f(X|\theta) \cdot f(\theta) \, \text{d}\theta} &amp;
+  \textsf{expande denominador} \\
+  &amp;= c \cdot f(X|\theta) \cdot f(\theta) &amp; \textsf{constante de
+  integração = } c \\
+  &amp;\propto f(X|\theta) \cdot f(\theta) &amp; \textsf{proporcionalidade} \\
+  &amp;\propto \theta^x (1-\theta)^{n-x} \cdot
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} &amp;
+  \textsf{binomial}\cdot\textsf{beta} \\
+  &amp;\propto \theta^{x+\alpha-1} (1-\theta)^{\beta+n-x-1} &amp; \textsf{soma
+  os expoentes}
 \end{aligned}
 \]</span></p>
-<p>Portanto, <span class="math inline">\(f(\theta|x) \sim Beta(\alpha^* = \alpha+x, \beta^* = \beta + n - x)\)</span></p>
+<p>Portanto, <span class="math inline">\(f(\theta|x) \sim Beta(\alpha^* = x+\alpha, \beta^* = \beta + n - x)\)</span></p>
 <pre class="r"><code>## X | theta ~ Bin(n, theta)
 ## theta ~ Beta(a, b)
 
@@ -1332,9 +1351,7 @@ curve(dbeta(x, a, b), from = 0, to = 1)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-44-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Define valores
 n &lt;- 15
-## Valores iniciais
-T[1] &lt;- rbeta(1, a, b)
-X[1] &lt;- rbinom(1, n, T[1])
+## Valores iniciais: propositalmente discrepantes
 T[1] &lt;- 1
 X[1] &lt;- 50
 
@@ -1358,7 +1375,7 @@ acf(T)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-44-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))
 ## Conjunta
-plot(X, T)</code></pre>
+plot(T, X, xlab = bquote(theta), ylab = bquote(X * &quot;|&quot; * theta))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-44-4.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Tamnho da amostra
 length(X)</code></pre>
@@ -1386,16 +1403,20 @@ plot(t, type = &quot;l&quot;)</code></pre>
 <pre class="r"><code>par(mfrow = c(1, 1))
 
 ## Conjunta
-plot(x, t)</code></pre>
+plot(t, x, xlab = bquote(theta), ylab = bquote(X * &quot;|&quot; * theta))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-44-7.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>A distribuição marginal de <span class="math inline">\(\theta\)</span> é <span class="math inline">\(\text{Beta}(\alpha, \beta)\)</span>. Já a distribuição marginal de <span class="math inline">\(X\)</span> é menos comum, e é chamada de beta-binomial</p>
+<p>A distribuição marginal de <span class="math inline">\(\theta\)</span> é <span class="math inline">\(\text{Beta}(\alpha, \beta)\)</span>, por definição. Já a distribuição marginal de <span class="math inline">\(X\)</span> é menos comum, e é chamada de beta-binomial</p>
 <p><span class="math display">\[
 \begin{aligned}
-f(x) &amp;= \int f(x, \theta) \text{d}\theta \\
-  &amp;= \binom{n}{x}
-  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
-  \frac{\Gamma{(x+\alpha)}
-  \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
+f(x) &amp;= \int f(x, \theta) \, \text{d}\theta \\
+     &amp;= \int f(X|\theta) \cdot f(\theta) \, \text{d}\theta \\
+     &amp;= \int \binom{n}{x}
+     \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+     \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \, \text{d}\theta \\
+     &amp;= \binom{n}{x}
+     \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+     \frac{\Gamma{(x+\alpha)}
+     \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
 \end{aligned}
 \]</span></p>
 <pre class="r"><code>## Integrando a conjunta em relação a theta, chega na marginal de X, que
@@ -1416,6 +1437,8 @@ hist(t, freq = FALSE, main = &quot;&quot;, xlab = expression(theta))
 curve(dbeta(x, a, b), add = TRUE, col = 2)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-45-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<div id="usando-o-jags" class="section level4 unnumbered">
+<h4>Usando o JAGS</h4>
 <pre class="r"><code>library(runjags)
 
 ##----------------------------------------------------------------------
@@ -1471,170 +1494,6 @@ m.jags
 qbeta(c(0.025, 0.5, 0.975), a + 10, b + 15 - 10)
 plot(m.jags)</code></pre>
 </div>
-<div id="exemplo-poisson-gama---baleia" class="section level2">
-<h2><span class="header-section-number">4.4</span> Exemplo (Poisson-Gama - baleia)</h2>
-<pre class="r"><code>##======================================================================
-## Exemplo da baleia (ver slides)
-x &lt;- 10
-n &lt;- 15
-teta &lt;- seq(0, 2, length = 200)
-alfa &lt;- 1
-beta &lt;- 0.1
-## Calcula a densidade da priori
-priori.ni &lt;- dgamma(teta, alfa, beta)
-(alfa.star &lt;- alfa + x)</code></pre>
-<pre><code># [1] 11</code></pre>
-<pre class="r"><code>(beta.star &lt;- beta + n)</code></pre>
-<pre><code># [1] 15.1</code></pre>
-<pre class="r"><code>post.ni &lt;- dgamma(teta, alfa.star, beta.star)
-plot(teta, post.ni, type = &quot;l&quot;, xlab = expression(theta),
-     ylab = &quot;Densidade de probabilidade&quot;)
-lines(teta, priori.ni, lty = 2)
-lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
-legend(&quot;topright&quot;,  lty = c(1, 2, 2), col = c(1, 1, 2),
-       legend = c(&quot;Posterior&quot;, &quot;Priori&quot;, &quot;Verossimilhança&quot;))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-47-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>## Dados
-library(runjags)
-datalist &lt;- dump.format(list(x = x, n = n))
-params &lt;- c(&quot;theta&quot;)
-inicial &lt;- dump.format(list(theta = 0.5))
-
-## Modelo
-mod &lt;- &quot;model{
-x ~ dpois(n * theta)
-theta ~ dgamma(1, 0.1)
-}&quot;
-
-## Ajuste
-m.jags &lt;- run.jags(
-    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
-    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
-)</code></pre>
-<pre><code># Calling the simulation...
-# Welcome to JAGS 4.3.0 on Thu Jul  8 02:49:03 2021
-# JAGS is free software and comes with ABSOLUTELY NO WARRANTY
-# Loading module: basemod: ok
-# Loading module: bugs: ok
-# . . Reading data file data.txt
-# . Compiling model graph
-#    Resolving undeclared variables
-#    Allocating nodes
-# Graph information:
-#    Observed stochastic nodes: 1
-#    Unobserved stochastic nodes: 1
-#    Total graph size: 6
-# . Reading parameter file inits1.txt
-# . Reading parameter file inits2.txt
-# . Initializing model
-# . Adaptation skipped: model is not in adaptive mode.
-# . Updating 5000
-# -------------------------------------------------| 5000
-# ************************************************** 100%
-# . . Updating 50000
-# -------------------------------------------------| 50000
-# ************************************************** 100%
-# . . . . . Updating 0
-# . Deleting model
-# . 
-# Note: the model did not require adaptation
-# Simulation complete.  Reading coda files...
-# Coda files loaded successfully
-# Calculating summary statistics...
-# Calculating the Gelman-Rubin statistic for 1 variables....
-# Finished running the simulation</code></pre>
-<pre class="r"><code>## Resultados
-m.jags</code></pre>
-<pre><code># 
-# JAGS model summary statistics from 20000 samples (thin = 5; chains = 2; adapt+burnin = 6000):
-#                                                                           
-#       Lower95  Median Upper95    Mean      SD Mode     MCerr MC%ofSD SSeff
-# theta 0.32888 0.70497  1.1673 0.72849 0.21936   -- 0.0015043     0.7 21266
-#                        
-#            AC.50   psrf
-# theta -0.0022769 1.0001
-# 
-# Total time taken: 0.4 seconds</code></pre>
-<pre class="r"><code>qgamma(c(0.025, 0.5, 0.975), alfa.star, beta.star)</code></pre>
-<pre><code># [1] 0.3636530 0.7065247 1.2179044</code></pre>
-<pre class="r"><code>plot(m.jags)</code></pre>
-<pre><code># Generating plots...</code></pre>
-<pre class="r"><code>## Usando prioris informativas
-alfa.i &lt;- 4.5
-beta.i &lt;- 10
-## Calcula a densidade da priori
-priori.i &lt;- dgamma(teta, alfa.i, beta.i)
-alfa.star.i &lt;- alfa.i + x
-beta.star.i &lt;- beta.i + n
-## Cálculo da densidade da posterior com a priori informativa
-post.i &lt;- dgamma(teta, alfa.star.i, beta.star.i)
-## Visualização
-plot(teta, post.i, type = &quot;l&quot;, xlab = expression(theta),
-     ylab = &quot;Densidade de probabilidade&quot;)
-lines(teta, priori.i, lty = 2)
-lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
-legend(&quot;topright&quot;,  lty = c(1, 2, 2), col = c(1, 1, 2),
-       legend = c(&quot;Posterior&quot;, &quot;Priori&quot;, &quot;Verossimilhança&quot;))</code></pre>
-<p><img src="figures/08_MCMC/unnamed-chunk-48-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>## Modelo
-mod &lt;- &quot;model{
-x ~ dpois(n * theta)
-theta ~ dgamma(4.5, 10)
-}&quot;
-
-## Ajuste
-m.jags &lt;- run.jags(
-    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
-    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
-)</code></pre>
-<pre><code># Calling the simulation...
-# Welcome to JAGS 4.3.0 on Thu Jul  8 02:49:04 2021
-# JAGS is free software and comes with ABSOLUTELY NO WARRANTY
-# Loading module: basemod: ok
-# Loading module: bugs: ok
-# . . Reading data file data.txt
-# . Compiling model graph
-#    Resolving undeclared variables
-#    Allocating nodes
-# Graph information:
-#    Observed stochastic nodes: 1
-#    Unobserved stochastic nodes: 1
-#    Total graph size: 6
-# . Reading parameter file inits1.txt
-# . Reading parameter file inits2.txt
-# . Initializing model
-# . Adaptation skipped: model is not in adaptive mode.
-# . Updating 5000
-# -------------------------------------------------| 5000
-# ************************************************** 100%
-# . . Updating 50000
-# -------------------------------------------------| 50000
-# ************************************************** 100%
-# . . . . . Updating 0
-# . Deleting model
-# . 
-# Note: the model did not require adaptation
-# Simulation complete.  Reading coda files...
-# Coda files loaded successfully
-# Calculating summary statistics...
-# Calculating the Gelman-Rubin statistic for 1 variables....
-# Finished running the simulation</code></pre>
-<pre class="r"><code>## Resultados
-m.jags</code></pre>
-<pre><code># 
-# JAGS model summary statistics from 20000 samples (thin = 5; chains = 2; adapt+burnin = 6000):
-#                                                                          
-#       Lower95 Median Upper95    Mean      SD Mode     MCerr MC%ofSD SSeff
-# theta 0.30397 0.5683 0.88309 0.58089 0.15105   -- 0.0010766     0.7 19685
-#                        
-#            AC.50   psrf
-# theta -0.0032716 1.0001
-# 
-# Total time taken: 0.9 seconds</code></pre>
-<pre class="r"><code>qgamma(c(0.025, 0.5, 0.975), alfa.star.i, beta.star.i)</code></pre>
-<pre><code># [1] 0.3209414 0.5667225 0.9144457</code></pre>
-<pre class="r"><code>plot(m.jags)</code></pre>
-<pre><code># Generating plots...</code></pre>
 </div>
 </div>
 <div id="referências" class="section level1 unnumbered">
