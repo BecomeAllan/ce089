@@ -1097,6 +1097,546 @@ par(mfrow = c(1, 1))</code></pre>
 </div>
 </div>
 </div>
+<div id="amostrador-de-gibbs" class="section level1">
+<h1><span class="header-section-number">4</span> Amostrador de Gibbs</h1>
+<p>O amostrador de Gibbs é mais um caso especial do amostrador de Metropolis-Hastings, e pode ser aplicado a uma grande variedade de distribuições.</p>
+<p>O amostrador de Gibbs é utilizado principalmente quando a distribuição alvo é multivariada. Suponha que todas as <strong>densidades univariadas condicionais</strong> possam ser determinadas, e que seja possível amostrar de cada uma destas distribuições. A cadeia é gerada a partir de amostras da distribuição marginal da distribuição alvo, e, portanto, todos os valores candidatos são aceitos (<em>i.e.</em> a taxa de aceitação é de 100%).</p>
+<p>Inicialmente veremos o amostrador de Gibbs no seu caso mais geral, o de multiestágios. No entanto, daremos mais ênfase ao seu caso particular de dois estágios, uma vez que ele possui propriedades de convergência superior e se aplica naturalmente a uma grande variedade de modelos estatísticos.</p>
+<p>O amostrador de Gibbs possui muitas propriedades interessantes que o fazem ser o método “padrão” dos algoritmos de MCMC atualmente. Algumas dessas propriedades incluem:</p>
+<ul>
+<li>A “calibração” do algoritmo é feita diretamente a partir da distribuição alvo.</li>
+<li>Todos os valores candidatos são aceitos, portanto não há “desperdício” de tempo computacional amostrando valores que não farão parte da amostra.</li>
+<li>Problemas complexos envolvendo distribuições multivariadas são “decompostos” em problemas menores, usando distribuições univariadas.</li>
+</ul>
+<div id="amostrador-de-gibbs-multiestágios" class="section level2">
+<h2><span class="header-section-number">4.1</span> Amostrador de Gibbs multiestágios</h2>
+<p>Seja <span class="math inline">\(X = (X_1, X_2, \ldots, X_d)\)</span> um vetor <span class="math inline">\(d\)</span>-dimensional de variáveis aleatórias. Podemos denotar o vetor aleatório <span class="math inline">\((d-1)\)</span>-dimensional como</p>
+<p><span class="math display">\[
+X_{(-j)} = (X_1, \ldots, X_{j-1}, X_{j+1}, \ldots, X_d)
+\]</span></p>
+<p>ou seja, o vetor <span class="math inline">\(X\)</span> <strong>excluindo</strong> o elemento na posição <span class="math inline">\(j\)</span>. Além disso, suponha que podemos simular das correspondentes <strong>densidades condicionais univariadas</strong>, <span class="math inline">\(f_1, f_2, \ldots, f_d\)</span>, ou seja, podemos amostrar de</p>
+<p><span class="math display">\[
+\begin{aligned}
+X_j|X_{(-j)} \, &amp;\sim \, f_j(X_j|X_{(-j)}) \\
+X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d
+   \, &amp;\sim \, f_j(X_j|x_1, \ldots, x_{j-1}, x_{j+1}, \ldots, x_d)
+\end{aligned}
+\]</span></p>
+<p>para <span class="math inline">\(j = 1, 2, \ldots, d\)</span>. Dessa forma, o algoritmo amostrador de Gibbs é dado pela seguinte transição de <span class="math inline">\(X^{(t)}\)</span> para <span class="math inline">\(X^{(t+1)}\)</span></p>
+<ol style="list-style-type: decimal">
+<li>Defina valores iniciais <span class="math inline">\(\mathbf{x}^{(0)} = (x_1^{(0)}, x_2^{(0)}, \ldots, x_d^{(0)})\)</span> para <span class="math inline">\(t=0\)</span></li>
+<li>Faça <span class="math inline">\(\mathbf{x}^{(1)} = \mathbf{x}^{(0)}\)</span></li>
+<li>Para cada iteração, indexadas por <span class="math inline">\(t=1, 2, \ldots\)</span>, dado <span class="math inline">\(\mathbf{x}^{(t)} = (x_1^{(t)}, x_2^{(t)}, \ldots, x_d^{(t)})\)</span>, gere
+<ol style="list-style-type: lower-alpha">
+<li><span class="math inline">\(X_1^{(t+1)} \sim f_1(x_1|x_2^{(t)}, \ldots, x_d^{(t)})\)</span></li>
+<li><span class="math inline">\(X_2^{(t+1)} \sim f_2(x_2|x_1^{(t+1)}, x_3^{(t)}, \ldots, x_d^{(t)})\)</span></li>
+<li><span class="math inline">\(\ldots\)</span></li>
+<li><span class="math inline">\(X_d^{(t+1)} \sim f_d(x_d|x_1^{(t+1)}, \ldots, x_{d-1}^{(t+1)})\)</span></li>
+</ol></li>
+</ol>
+<p>As densidades <span class="math inline">\(f_1, f_2, \ldots, f_d\)</span> são chamadas de <strong>condicionais completas</strong> (<em>full conditionals</em>), e um fato particular do amostrador de Gibbs é que estas são as <strong>únicas densidades usadas para a simulação</strong>. Portanto, mesmo em um problema de alta dimensão, <strong>todas as simulações são univariadas</strong>, o que traz uma grande vantagem teórica e computacional.</p>
+</div>
+<div id="amostrador-de-gibbs-em-dois-estágios" class="section level2">
+<h2><span class="header-section-number">4.2</span> Amostrador de Gibbs em dois estágios</h2>
+<p>O amostrador de Gibbs em dois estágios gera uma cadeia de Markov a partir de uma distribuição conjunta da seguinte maneira. Se duas variáveis aleatórioas <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> possuem uma distribuição conjunta <span class="math inline">\(f(x, y)\)</span>, com as correspondentes densidades condicionais <span class="math inline">\(f_{Y|X}\)</span> e <span class="math inline">\(f_{X|Y}\)</span>, o amostrador de Gibbs em dois estágios gera uma cadeia de Markov (<span class="math inline">\(X_t\)</span>, <span class="math inline">\(Y_t\)</span>) de acordo com os seguintes passos:</p>
+<ol style="list-style-type: decimal">
+<li>Defina <span class="math inline">\(X^{(0)} = x^{(0)}\)</span></li>
+<li>Para cada iteração, indexadas por <span class="math inline">\(t=1, 2, \ldots\)</span>, gere
+<ol style="list-style-type: lower-alpha">
+<li><span class="math inline">\(Y^{(t)} \sim f_{Y|X}(\cdot|x^{(t-1)})\)</span></li>
+<li><span class="math inline">\(X^{(t)} \sim f_{X|Y}(\cdot|y^{(t)})\)</span></li>
+</ol></li>
+</ol>
+<p>Este algoritmo é facilmente implementado desde que a simulação de ambas as condicionais seja viável. Quando <span class="math inline">\(f(x,y)\)</span> está disponível, até a constante de normalização, <span class="math inline">\(f_{Y|X}\)</span> e <span class="math inline">\(f_{X|Y}\)</span> também estarão (poderão ser conhecidas ou determinadas). Portanto, se a simulação direta destas condicionais não for possível, podemos usar novamente um algoritmo de MCMC para simular destas condicionais. Este método é chamado de <strong>Metropolis dentro do Gibbs</strong> (<em>Metropolis whitin Gibbs</em>).</p>
+<p>Outro fato importante é que, se (<span class="math inline">\(X_t\)</span>, <span class="math inline">\(Y_t\)</span>) são provenientes da diistribuição <span class="math inline">\(f\)</span>, então (<span class="math inline">\(X_{t+1}\)</span>, <span class="math inline">\(Y_{t+1}\)</span>) também será, porque ambos os passos da iteração <span class="math inline">\(t\)</span> são simulados das verdadeiras condicionais. A convergência da cadeia de Markov (e do algoritmo) é então assegurada, ao menos que o suporte das condicionais não sejam conectadas.</p>
+<div id="exemplo-normal-bivariada" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Exemplo (normal bivariada)</h3>
+<p>Considere gerar valores da distribuição Normal bivariada</p>
+<p><span class="math display">\[
+(X_1, X_2) \sim \mathcal{N}_2 \left(
+  \begin{bmatrix} \mu_1\\ \mu_2 \end{bmatrix},
+  \begin{bmatrix} \sigma_1 &amp; \rho \\ \rho &amp; \sigma_2 \end{bmatrix}
+  \right)
+\]</span></p>
+<p>Nesse caso, <span class="math inline">\(X = (X_1, X_2)\)</span>, <span class="math inline">\(X_{(-1)} = X_2\)</span>, <span class="math inline">\(X_{(-2)} = X_1\)</span>. As densidades condicionais de uma normal biivariada são normais univariadas com parâmetros</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{E}[X_2|x_1] &amp;= \mu_2 + \rho \frac{\sigma_2}{\sigma_1}
+  (x_1 - \mu_1) \\
+\text{V}[X_2|x_1] &amp;= (1 - \rho^2) \sigma_2^2
+\end{aligned}
+\]</span></p>
+<p>e as cadeias são então geradas amostrando de</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x_1|x_2) &amp;\sim \text{N}(\mu_1 + \rho \frac{\sigma_1}{\sigma_2}
+  (x_2 - \mu_2), (1 - \rho^2) \sigma_1^2 \\
+f(x_2|x_1) &amp;\sim \text{N}(\mu_2 + \rho \frac{\sigma_2}{\sigma_1}
+  (x_1 - \mu_1), (1 - \rho^2) \sigma_2^2 \\
+\end{aligned}
+\]</span></p>
+<p>Portanto, para uma Normal bivariada (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>), em cada iteração:</p>
+<ol style="list-style-type: decimal">
+<li>Faça <span class="math inline">\((x_1, x_2) = X^{(t-1)}\)</span></li>
+<li>Gere <span class="math inline">\(X_1^{(t)}\)</span> a partir de <span class="math inline">\(f(X_1|x_2)\)</span></li>
+<li>Atualize <span class="math inline">\(x_1 = X_1^{(t)}\)</span></li>
+<li>Gere <span class="math inline">\(X_2^{(t)}\)</span> a partir de <span class="math inline">\(f(X_2|x_1)\)</span></li>
+<li>Faça <span class="math inline">\(X^{(t)} = (X_1^{(t)}, X_2^{(t)})\)</span></li>
+</ol>
+<pre class="r"><code>## Define constantes
+N &lt;- 1e4
+## Burnin
+burn &lt;- 1000
+## Matriz para armazenar as amostras
+X &lt;- matrix(0, N, 2)
+
+## Define parametros da Normal bivariada
+rho &lt;- -.75
+mu1 &lt;- 0
+mu2 &lt;- 2
+sigma1 &lt;- 1
+sigma2 &lt;- .5
+s1 &lt;- sqrt(1 - rho^2) * sigma1
+s2 &lt;- sqrt(1-rho^2) * sigma2
+
+## Valores iniciais
+X[1, ] &lt;- c(mu1, mu2)
+X[1, ] &lt;- c(10, 15)
+
+## Gera a cadeia
+for (i in 2:N) {
+    x2 &lt;- X[i-1, 2]
+    m1 &lt;- mu1 + rho * (x2 - mu2) * sigma1/sigma2
+    X[i, 1] &lt;- rnorm(1, m1, s1)
+    x1 &lt;- X[i, 1]
+    m2 &lt;- mu2 + rho * (x1 - mu1) * sigma2/sigma1
+    X[i, 2] &lt;- rnorm(1, m2, s2)
+}
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+matplot(X, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(X[,1])
+acf(X[,2])</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+## Conjunta
+plot(X, main = &quot;&quot;, xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(X[, 2]))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Descarta os primeiros 1000 valores
+b &lt;- burn + 1
+x &lt;- X[b:N, ]
+matplot(x, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-4.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Nao elimina o problema de autocorrelacao
+par(mfrow = c(1, 2))
+acf(x[,1])
+acf(x[,2])</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-5.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+## Conjunta
+plot(x, main = &quot;&quot;, xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(x[, 2]))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-6.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Tamanho da amostra após o burnin
+dim(x)</code></pre>
+<pre><code># [1] 9000    2</code></pre>
+<pre class="r"><code>## Faz o thinning
+x &lt;- x[seq(1, nrow(x), 5), ]
+dim(x)</code></pre>
+<pre><code># [1] 1800    2</code></pre>
+<pre class="r"><code>## Confere novamente
+matplot(x, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-7.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Nao elimina o problema de autocorrelacao
+par(mfrow = c(1, 2))
+acf(x[,1])
+acf(x[,2])</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-8.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+## Conjunta
+plot(x, main = &quot;&quot;, xlab = bquote(X[1]),
+     ylab = bquote(X[2]), ylim = range(x[, 2]))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-9.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Compara com as marginais
+par(mfrow = c(1, 2))
+hist(x[, 1], freq = FALSE)
+curve(dnorm(x, mu1, sigma1), col = 2, add = TRUE)
+hist(x[, 2], freq = FALSE)
+curve(dnorm(x, mu2, sigma2), col = 2, add = TRUE)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-43-10.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+
+## Compara estatisticas
+colMeans(x)</code></pre>
+<pre><code># [1] -0.02109675  2.02465073</code></pre>
+<pre class="r"><code>cov(x)</code></pre>
+<pre><code>#            [,1]       [,2]
+# [1,]  0.9693544 -0.3615163
+# [2,] -0.3615163  0.2375652</code></pre>
+<pre class="r"><code>cor(x)</code></pre>
+<pre><code>#            [,1]       [,2]
+# [1,]  1.0000000 -0.7533472
+# [2,] -0.7533472  1.0000000</code></pre>
+</div>
+</div>
+<div id="exemplo-beta-binomial" class="section level2">
+<h2><span class="header-section-number">4.3</span> Exemplo (beta-binomial)</h2>
+<p>Considerando as seguintes distribuições</p>
+<p><span class="math display">\[
+\begin{aligned}
+X|\theta &amp;\sim \text{Bin}(n, \theta) \\
+\theta &amp;\sim \text{Beta}(\alpha, \beta)
+\end{aligned}
+\]</span></p>
+<p>A distribuição conjunta de <span class="math inline">\(X\)</span> e <span class="math inline">\(\theta\)</span> é</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x, \theta) &amp;= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{x+\alpha-1} (1-\theta)^{n-x+\beta-1} \\
+  &amp;\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+\end{aligned}
+\]</span></p>
+<p>A correspondente distribuição condicional de <span class="math inline">\(X|\theta\)</span> foi definida acima, enquanto que a condicional <span class="math inline">\(\theta|x\)</span> é</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(\theta|x) &amp;\propto f(X|\theta) \cdot f(\theta) \\
+  &amp;\propto \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \theta^{\alpha-1} (1-\theta)^{\beta-1} \cdot
+  \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
+  &amp;\propto \theta^{\alpha+x-1} (1-\theta)^{\beta+n-x-1}
+\end{aligned}
+\]</span></p>
+<p>Portanto, <span class="math inline">\(f(\theta|x) \sim Beta(\alpha^* = \alpha+x, \beta^* = \beta + n - x)\)</span></p>
+<pre class="r"><code>## X | theta ~ Bin(n, theta)
+## theta ~ Beta(a, b)
+
+## Condicionais são
+## X | theta ~ Bin(n, theta)
+## theta | X ~ Beta(x + a, n - x + b)
+
+## Define constantes
+N &lt;- 1e4
+## Vetores para armazenar as amostras
+T &lt;- numeric(N)
+X &lt;- numeric(N)
+
+## Aqui da para testar varios valores para ver o impacto da priori
+a &lt;- 3
+b &lt;- 7
+curve(dbeta(x, a, b), from = 0, to = 1)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Define valores
+n &lt;- 15
+## Valores iniciais
+T[1] &lt;- rbeta(1, a, b)
+X[1] &lt;- rbinom(1, n, T[1])
+T[1] &lt;- 1
+X[1] &lt;- 50
+
+## Amostrador de Gibbs
+for (i in 2:N) {
+    X[i] &lt;- rbinom(1, n, T[i - 1])
+    T[i] &lt;- rbeta(1, X[i] + a, n - X[i] + b)
+}
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+par(mfrow = c(2, 1))
+plot(X, type = &quot;l&quot;)
+plot(T, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 2))
+
+## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(X)
+acf(T)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+## Conjunta
+plot(X, T)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-4.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Tamnho da amostra
+length(X)</code></pre>
+<pre><code># [1] 10000</code></pre>
+<pre class="r"><code>## Faz o burnin
+X &lt;- X[-(1:1000)]
+T &lt;- T[-(1:1000)]
+
+## Fazendo o thinning
+x &lt;- X[seq(1, length(X), 5)]
+t &lt;- T[seq(1, length(T), 5)]
+
+## Correlacao entre os valores
+par(mfrow = c(1, 2))
+acf(x)
+acf(t)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-5.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(2, 1))
+
+## Cadeias (mude os valores iniciais para ver convergencia)
+par(mfrow = c(2, 1))
+plot(x, type = &quot;l&quot;)
+plot(t, type = &quot;l&quot;)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-6.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+
+## Conjunta
+plot(x, t)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-44-7.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>A distribuição marginal de <span class="math inline">\(\theta\)</span> é <span class="math inline">\(\text{Beta}(\alpha, \beta)\)</span>. Já a distribuição marginal de <span class="math inline">\(X\)</span> é menos comum, e é chamada de beta-binomial</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x) &amp;= \int f(x, \theta) \text{d}\theta \\
+  &amp;= \binom{n}{x}
+  \frac{\Gamma{(\alpha+\beta)}}{\Gamma{(\alpha)}\Gamma{(\beta)}}
+  \frac{\Gamma{(x+\alpha)}
+  \Gamma{(n-x+\beta)}}{\Gamma{(\alpha+\beta+n)}}
+\end{aligned}
+\]</span></p>
+<pre class="r"><code>## Integrando a conjunta em relação a theta, chega na marginal de X, que
+## é uma Beta-Binomial
+betabinom &lt;- function(x, a, b, n) {
+    choose(n, x) * (gamma(a + b)/(gamma(a) * gamma(b))) *
+        ((gamma(x + a) * gamma(n - x + b))/
+        gamma(a + b + n))
+}
+
+## Compara amostra com distribuicoes teoricas
+par(mfrow = c(1, 2))
+## A Beta-binomial é uma distribuição discreta
+plot(prop.table(table(x)), type = &quot;h&quot;)
+points((0:14) + 0.2,
+       betabinom(x = 0:14, a = a, b = b, n = n), type = &quot;h&quot;, col = 2)
+hist(t, freq = FALSE, main = &quot;&quot;, xlab = expression(theta))
+curve(dbeta(x, a, b), add = TRUE, col = 2)</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-45-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<pre class="r"><code>library(runjags)
+
+##----------------------------------------------------------------------
+## Com X como VA
+## Dados
+datalist &lt;- dump.format(list(n = 15))
+params &lt;- c(&quot;x&quot;, &quot;theta&quot;)
+inicial &lt;- dump.format(list(x = 1, theta = 0.5))
+
+## Modelo
+mod &lt;- &quot;model{
+x ~ dbin(theta, n)
+theta ~ dbeta(3, 7)
+}&quot;
+
+## Ajuste
+m.jags &lt;- run.jags(
+    model = mod, monitor = params, data = datalist,
+    inits = c(inicial, inicial), n.chains = 2,
+    burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qbeta(c(0.025, 0.5, 0.975), a, b)
+plot(m.jags)
+
+str(m.jags$mcmc)
+dim(m.jags$mcmc[[1]])
+head(m.jags$mcmc[[1]])
+
+##----------------------------------------------------------------------
+## Com X observado
+## Dados
+datalist &lt;- dump.format(list(x = 10, n = 15))
+params &lt;- c(&quot;theta&quot;)
+inicial &lt;- dump.format(list(theta = 0.5))
+
+## Modelo
+mod &lt;- &quot;model{
+x ~ dbin(theta, n)
+theta ~ dbeta(3, 7)
+}&quot;
+
+## Ajuste
+m.jags &lt;- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial, inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)
+
+## Resultados
+m.jags
+qbeta(c(0.025, 0.5, 0.975), a + 10, b + 15 - 10)
+plot(m.jags)</code></pre>
+</div>
+<div id="exemplo-poisson-gama---baleia" class="section level2">
+<h2><span class="header-section-number">4.4</span> Exemplo (Poisson-Gama - baleia)</h2>
+<pre class="r"><code>##======================================================================
+## Exemplo da baleia (ver slides)
+x &lt;- 10
+n &lt;- 15
+teta &lt;- seq(0, 2, length = 200)
+alfa &lt;- 1
+beta &lt;- 0.1
+## Calcula a densidade da priori
+priori.ni &lt;- dgamma(teta, alfa, beta)
+(alfa.star &lt;- alfa + x)</code></pre>
+<pre><code># [1] 11</code></pre>
+<pre class="r"><code>(beta.star &lt;- beta + n)</code></pre>
+<pre><code># [1] 15.1</code></pre>
+<pre class="r"><code>post.ni &lt;- dgamma(teta, alfa.star, beta.star)
+plot(teta, post.ni, type = &quot;l&quot;, xlab = expression(theta),
+     ylab = &quot;Densidade de probabilidade&quot;)
+lines(teta, priori.ni, lty = 2)
+lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
+legend(&quot;topright&quot;,  lty = c(1, 2, 2), col = c(1, 1, 2),
+       legend = c(&quot;Posterior&quot;, &quot;Priori&quot;, &quot;Verossimilhança&quot;))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-47-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Dados
+library(runjags)
+datalist &lt;- dump.format(list(x = x, n = n))
+params &lt;- c(&quot;theta&quot;)
+inicial &lt;- dump.format(list(theta = 0.5))
+
+## Modelo
+mod &lt;- &quot;model{
+x ~ dpois(n * theta)
+theta ~ dgamma(1, 0.1)
+}&quot;
+
+## Ajuste
+m.jags &lt;- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)</code></pre>
+<pre><code># Calling the simulation...
+# Welcome to JAGS 4.3.0 on Thu Jul  8 02:49:03 2021
+# JAGS is free software and comes with ABSOLUTELY NO WARRANTY
+# Loading module: basemod: ok
+# Loading module: bugs: ok
+# . . Reading data file data.txt
+# . Compiling model graph
+#    Resolving undeclared variables
+#    Allocating nodes
+# Graph information:
+#    Observed stochastic nodes: 1
+#    Unobserved stochastic nodes: 1
+#    Total graph size: 6
+# . Reading parameter file inits1.txt
+# . Reading parameter file inits2.txt
+# . Initializing model
+# . Adaptation skipped: model is not in adaptive mode.
+# . Updating 5000
+# -------------------------------------------------| 5000
+# ************************************************** 100%
+# . . Updating 50000
+# -------------------------------------------------| 50000
+# ************************************************** 100%
+# . . . . . Updating 0
+# . Deleting model
+# . 
+# Note: the model did not require adaptation
+# Simulation complete.  Reading coda files...
+# Coda files loaded successfully
+# Calculating summary statistics...
+# Calculating the Gelman-Rubin statistic for 1 variables....
+# Finished running the simulation</code></pre>
+<pre class="r"><code>## Resultados
+m.jags</code></pre>
+<pre><code># 
+# JAGS model summary statistics from 20000 samples (thin = 5; chains = 2; adapt+burnin = 6000):
+#                                                                           
+#       Lower95  Median Upper95    Mean      SD Mode     MCerr MC%ofSD SSeff
+# theta 0.32888 0.70497  1.1673 0.72849 0.21936   -- 0.0015043     0.7 21266
+#                        
+#            AC.50   psrf
+# theta -0.0022769 1.0001
+# 
+# Total time taken: 0.4 seconds</code></pre>
+<pre class="r"><code>qgamma(c(0.025, 0.5, 0.975), alfa.star, beta.star)</code></pre>
+<pre><code># [1] 0.3636530 0.7065247 1.2179044</code></pre>
+<pre class="r"><code>plot(m.jags)</code></pre>
+<pre><code># Generating plots...</code></pre>
+<pre class="r"><code>## Usando prioris informativas
+alfa.i &lt;- 4.5
+beta.i &lt;- 10
+## Calcula a densidade da priori
+priori.i &lt;- dgamma(teta, alfa.i, beta.i)
+alfa.star.i &lt;- alfa.i + x
+beta.star.i &lt;- beta.i + n
+## Cálculo da densidade da posterior com a priori informativa
+post.i &lt;- dgamma(teta, alfa.star.i, beta.star.i)
+## Visualização
+plot(teta, post.i, type = &quot;l&quot;, xlab = expression(theta),
+     ylab = &quot;Densidade de probabilidade&quot;)
+lines(teta, priori.i, lty = 2)
+lines(teta, dgamma(teta, 1 + x, n), col = 2, lty = 2)
+legend(&quot;topright&quot;,  lty = c(1, 2, 2), col = c(1, 1, 2),
+       legend = c(&quot;Posterior&quot;, &quot;Priori&quot;, &quot;Verossimilhança&quot;))</code></pre>
+<p><img src="figures/08_MCMC/unnamed-chunk-48-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Modelo
+mod &lt;- &quot;model{
+x ~ dpois(n * theta)
+theta ~ dgamma(4.5, 10)
+}&quot;
+
+## Ajuste
+m.jags &lt;- run.jags(
+    model = mod, monitor = params, data = datalist, inits = c(inicial,inicial),
+    n.chains = 2, burnin = 5000, thin = 5, sample = 10000
+)</code></pre>
+<pre><code># Calling the simulation...
+# Welcome to JAGS 4.3.0 on Thu Jul  8 02:49:04 2021
+# JAGS is free software and comes with ABSOLUTELY NO WARRANTY
+# Loading module: basemod: ok
+# Loading module: bugs: ok
+# . . Reading data file data.txt
+# . Compiling model graph
+#    Resolving undeclared variables
+#    Allocating nodes
+# Graph information:
+#    Observed stochastic nodes: 1
+#    Unobserved stochastic nodes: 1
+#    Total graph size: 6
+# . Reading parameter file inits1.txt
+# . Reading parameter file inits2.txt
+# . Initializing model
+# . Adaptation skipped: model is not in adaptive mode.
+# . Updating 5000
+# -------------------------------------------------| 5000
+# ************************************************** 100%
+# . . Updating 50000
+# -------------------------------------------------| 50000
+# ************************************************** 100%
+# . . . . . Updating 0
+# . Deleting model
+# . 
+# Note: the model did not require adaptation
+# Simulation complete.  Reading coda files...
+# Coda files loaded successfully
+# Calculating summary statistics...
+# Calculating the Gelman-Rubin statistic for 1 variables....
+# Finished running the simulation</code></pre>
+<pre class="r"><code>## Resultados
+m.jags</code></pre>
+<pre><code># 
+# JAGS model summary statistics from 20000 samples (thin = 5; chains = 2; adapt+burnin = 6000):
+#                                                                          
+#       Lower95 Median Upper95    Mean      SD Mode     MCerr MC%ofSD SSeff
+# theta 0.30397 0.5683 0.88309 0.58089 0.15105   -- 0.0010766     0.7 19685
+#                        
+#            AC.50   psrf
+# theta -0.0032716 1.0001
+# 
+# Total time taken: 0.9 seconds</code></pre>
+<pre class="r"><code>qgamma(c(0.025, 0.5, 0.975), alfa.star.i, beta.star.i)</code></pre>
+<pre><code># [1] 0.3209414 0.5667225 0.9144457</code></pre>
+<pre class="r"><code>plot(m.jags)</code></pre>
+<pre><code># Generating plots...</code></pre>
+</div>
+</div>
 <div id="referências" class="section level1 unnumbered">
 <h1>Referências</h1>
 <div id="refs" class="references">
