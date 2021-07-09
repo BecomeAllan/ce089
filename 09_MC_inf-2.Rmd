@@ -31,14 +31,11 @@ A inferência pode ser feita de duas formas:
 
 - Um experimentador usa as informações em uma amostra aleatória $X_1,
 \ldots, X_n$ para se fazer inferências sobre $\theta$.
-
 - Normalmente $n$ é grande e fica inviável tirar conclusões baseadas em
 uma longa **lista** de números.
-
 - Por isso, um dos objetivos da inferência estatística é **resumir** as
 informações de uma amostra, da maneira mais **compacta** possível, mas
 que ao mesmo tempo seja também **informativa**.
-
 - Normalmente esse resumo é feito por meio de **estatísticas**, por
 exemplo, a média amostral e a variância amostral.
 
@@ -46,12 +43,10 @@ exemplo, a média amostral e a variância amostral.
 
 - O  conjunto de valores de uma característica associada a uma coleção
 de indivíduos ou objetos de interesse é dito ser uma população.
-
 - Uma sequência $X_1, \ldots, X_n$ de $n$ variáveis aleatórias
 independentes e identicamente distribuídas (iid) com função
 densidade (ou de probabilidade) $f(x,\theta)$ é dita ser uma amostra
 aleatória de tamanho $n$ da distribuição de $X$.
-
 - Como normalmente $n>1$, então temos que a fdp ou fp conjunta será
 $$
 f(\boldsymbol{x, \theta}) = f(x_1, \ldots, x_n, \theta) = \prod_{i=1}^n
@@ -76,30 +71,26 @@ para $\theta$.
 estatística que possa ser usada para estimar esse parâmetro, ou seja,
 $$\hat{\theta} = T(\mathbf{X})$$
 
-**Observações:**
-
-1. Todo estimador é uma estatística, mas nem toda estatística é um
-estimador.
-2. O valor assumido pelo estimador pontual é chamado de **estimativa
-pontual**,$$\hat{\theta} = T(\mathbf{X}) = T(X_1, \ldots, X_n) = t$$ ou
-seja, o estimador é uma **função** da amostra, e a estimativa é o
-**valor observado** de um estimador (um número) de uma amostra
-particular.
+- Observações:
+   1. Todo estimador é uma estatística, mas nem toda estatística é um
+   estimador.
+   2. O valor assumido pelo estimador pontual é chamado de **estimativa
+   pontual**,$$\hat{\theta} = T(\mathbf{X}) = T(X_1, \ldots, X_n) = t$$
+   ou seja, o estimador é uma **função** da amostra, e a estimativa é o
+   **valor observado** de um estimador (um número) de uma amostra
+   particular.
 
 **Estimação pontual**
 
 - A ideia geral por trás da estimação pontual é muito simples:
-
-- Quando a amostragem é feita a partir de uma população descrita por uma
-função $f(x,\theta)$, o conhecimento de $\theta$ a partir da amostra,
-gera todo o conhecimento para a população.
-
-- Dessa forma, é natural que se procure um **método** para se
-achar um **bom** estimador para $\theta$.
-
-- Existem algumas **propriedades** que definem o que é um bom
-estimador, ou o ``**melhor**'' estimador entre uma série de
-candidatos.
+   - Quando a amostragem é feita a partir de uma população descrita por
+   uma função $f(x,\theta)$, o conhecimento de $\theta$ a partir da
+   amostra, gera todo o conhecimento para a população.
+   - Dessa forma, é natural que se procure um **método** para se
+   achar um **bom** estimador para $\theta$.
+   - Existem algumas **propriedades** que definem o que é um bom
+   estimador, ou o "**melhor**" estimador entre uma série de
+   candidatos.
 
 **Localização do problema:**
 
@@ -111,25 +102,24 @@ $$
 T_2(X_1, ..., X_n)
 $$
 Qual dos dois estimadores pontuais é **melhor** para $\theta$?
-
-- Como não conhecemos $\theta$, não podemos afirmar que $\hat{\theta}_1$
-é melhor do que $\hat{\theta}_2$ e vice-versa.
-
-- O problema da estimação pontual é então escolher um estimador
-$\hat{\theta}$ que se aproxime de $\theta$ segundo algumas
-**propriedades**.
+   - Como não conhecemos $\theta$, não podemos afirmar que
+   $\hat{\theta}_1$ é melhor do que $\hat{\theta}_2$ e vice-versa.
+   - O problema da estimação pontual é então escolher um estimador
+   $\hat{\theta}$ que se aproxime de $\theta$ segundo algumas
+   **propriedades**.
 
 # Propriedades dos estimadores
 
-De modo geral, um ``**bom**'' estimador deve ser:
+De modo geral, um "**bom**" estimador deve ser:
 
-1. Não viciado
+1. Não viesado
 2. Consistente
 3. Eficiente
 
-### Vício {-}
+## Viés
 
-#### Erro quadrático médio (EQM) {-}
+### Erro quadrático médio (EQM) {-}
+
 O Erro Quadrático Médio (EQM) de um estimador $\hat{\theta}$ de
 $\theta$ é dado por
 \begin{align*}
@@ -139,26 +129,28 @@ $\theta$ é dado por
 onde
 $$\text{B}[\hat{\theta}] = \text{E}[\hat\theta] - \theta$$
 é denominado de **vício** do estimador $\hat\theta$. Portanto,
-dizemos que um estimador é **não viciado** para $\theta$ quando
+dizemos que um estimador é **não viesado** para $\theta$ quando
 $$\text{B}[\hat{\theta}] = 0 \quad \Rightarrow \quad \text{E}[\hat{\theta}] =
 \theta$$
 
-#### Estimador não viciado {-}
+### Estimador não viesado {-}
+
 Seja $(X_1, \ldots, X_n)$, uma amostra aleatória de uma variável
 aleatória com fdp ou fp $f(x,\theta)$, $\theta \in \Theta$, dizemos
-que o estimador $\hat{\theta} = T(\mathbf{X})$ é não viciado para
+que o estimador $\hat{\theta} = T(\mathbf{X})$ é não viesado para
 $\theta$ se
 $$\text{E}[\hat{\theta}] = \text{E}[T(\mathbf{X})] = \theta \qquad \forall \, \theta
 \in \Theta$$
 
-Um estimador $\hat\theta$ é dito **assintoticamente não viciado**
+Um estimador $\hat\theta$ é dito **assintoticamente não viesado**
 se
 $$\lim_{n \to \infty} \text{E}[\hat{\theta}] = \theta$$
 Ou seja, para grandes amostras, $\hat\theta$ passa a ser imparcial.
 
-### Consistência {-}
+## Consistência
 
-#### Estimador consistente {-}
+### Estimador consistente {-}
+
 Seja $(X_1, \ldots, X_n)$, uma amostra aleatória de uma variável
 aleatória com fdp ou fp $f(x,\theta)$, $\theta \in \Theta$, o
 estimador $\hat{\theta} = T(\mathbf{X})$ é consistente para $\theta$ se
@@ -167,7 +159,9 @@ $$\lim_{n \to \infty} \text{E}[\hat{\theta}] = \theta$$
 e
 $$\lim_{n \to \infty} \text{Var}[\hat{\theta}] = 0$$
 
-**Exemplo**: média amostral $\bar{x} = \frac{1}{n} \sum_{i=1}^{n}
+#### Exemplo (média amostral) {-}
+
+Média amostral $\bar{x} = \frac{1}{n} \sum_{i=1}^{n}
 x_i$ como estimador da média populacional $\mu$:
 $$
 \text{E}(\bar{x}) = \text{E} \left[ \frac{1}{n} \sum_{i=1}^{n} x_i
@@ -178,10 +172,12 @@ $$
 \text{Var}(\bar{x}) = \text{Var} \left[ \frac{1}{n} \sum_{i=1}^{n} x_i
 \right] = \frac{\sigma^2}{n}
 $$
-Portanto $\bar{x}$ é um estimador **não viciado** e **consistente** para
+Portanto $\bar{x}$ é um estimador **não viesado** e **consistente** para
 $\mu$.
 
-**Exemplo**: variância amostral $\hat{\sigma}^2 = \frac{1}{n}
+#### Exemplo  (variância amostral) {-}
+
+Variância amostral $\hat{\sigma}^2 = \frac{1}{n}
 \sum_{i=1}^{n} (x_i - \bar{x})^2$ como estimador da variância populacional
 $\sigma^2$:
 $$
@@ -189,9 +185,9 @@ $$
 (x_i - \bar{x})^2 \right]
 = \left( \frac{n-1}{n} \right) \sigma^2
 $$
-Portanto $\hat{\sigma}^2$ é um estimador **viciado** para
+Portanto $\hat{\sigma}^2$ é um estimador **viesado** para
 $\sigma^2$. (Embora seja um estimador **assintoticamente** não
-viciado).
+viesado).
 
 Para eliminar esse vício, podemos definir então um novo
 estimador: $S^2 = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2$, e
@@ -199,13 +195,14 @@ $$
 \text{E}(S^2) = \text{E} \left[ \frac{1}{n-1} \sum_{i=1}^{n} (x_i -
 \bar{x})^2 \right] = \sigma^2
 $$
-que é então um estimador **não viciado** para $\sigma^2$.
+que é então um estimador **não viesado** para $\sigma^2$.
 
-### Eficiência {-}
+## Eficiência
 
-#### Eficiência relativa {-}
+### Eficiência relativa {-}
+
 Sejam $\hat{\theta}_1 = T_1(\mathbf{X})$ e $\hat{\theta}_2 =
-T_2(\mathbf{X})$ dois estimadores pontuais **não viciados** para
+T_2(\mathbf{X})$ dois estimadores pontuais **não viesados** para
 $\theta$. A eficiência relativa de $\hat{\theta}_1$ em relação a
 $\hat{\theta}_2$ é
 $$\text{ER}[\hat{\theta}_1, \hat{\theta}_2] =
@@ -218,7 +215,7 @@ $\hat\theta_2$ é mais eficiente
 - $\text{ER}[\hat{\theta}_1, \hat{\theta}_2] < 1$ $\Rightarrow$
 $\hat\theta_1$ é mais eficiente
 
-#### Exemplo {-}
+#### Exemplo (média e mediana) {-}
 
 Uma amostra $(X_1, \ldots, X_n)$ é retirada de uma população com $X \sim
 \text{N}(\mu, \sigma^2)$, e dois estimadores são propostos para $\mu$:
@@ -238,7 +235,7 @@ Podemos notar que
 \text{Var}(\hat{\mu}_2) &= \text{Var}(\text{mediana}(X_1, \ldots, X_n))
 = (\pi/2)(\sigma^2/n)
 \end{align*}
-Portanto, ambos são estimadores não viciados e consistentes. Mas:
+Portanto, ambos são estimadores não viesados e consistentes. Mas:
 $$
 \text{ER}[\hat{\mu}_1, \hat{\mu}_2] =
 \frac{\text{Var}[\hat{\mu}_1]}{\text{Var}[\hat{\mu}_2]} =
@@ -258,14 +255,18 @@ $$
 \text{EP}(\hat\theta) = \sqrt{\text{Var}(\hat\theta)}
 $$
 
-**Exemplo:** Sabemos que a distribuição de $\bar{X}$ tem média $\mu$ e
+#### Exemplo (erro padrão da média)
+
+Sabemos que a distribuição de $\bar{X}$ tem média $\mu$ e
 variância $\sigma^2/n$. Então o erro padrão de $\bar{X}$ é
 $$
 \text{EP}(\bar{X}) = \sqrt{\text{Var}(\bar{X})} =
 \sqrt{\frac{\sigma^2}{n}} = \frac{\sigma}{\sqrt{n}}
 $$
 
-### Exemplo 1 {-}
+# Avaliação de estimadores
+
+## Exemplo 1 (normal)
 
 Considere uma amostra aleatória ($X_1, \ldots,
 X_n$) de uma variável aleatória $X \sim \text{N}(\mu = 3, \sigma^2 = 1)$ e os
@@ -376,7 +377,7 @@ xyplot(
     layer(panel.abline(h = 3))
 ```
 
-### Exemplo 2 {-}
+## Exemplo 2 (uniforme)
 
 Considere uma amostra aleatória ($X_1, \ldots,
 X_n$) de uma variável aleatória $Y \sim \text{U}(\text{min} = 2,
