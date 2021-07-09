@@ -384,19 +384,19 @@ div.tocify {
 </ul>
 <p><strong>Redução de dados</strong></p>
 <ul>
-<li><p>Um experimentador usa as informações em uma amostra aleatória <span class="math inline">\(X_1, \ldots, X_n\)</span> para se fazer inferências sobre <span class="math inline">\(\theta\)</span>.</p></li>
-<li><p>Normalmente <span class="math inline">\(n\)</span> é grande e fica inviável tirar conclusões baseadas em uma longa <strong>lista</strong> de números.</p></li>
-<li><p>Por isso, um dos objetivos da inferência estatística é <strong>resumir</strong> as informações de uma amostra, da maneira mais <strong>compacta</strong> possível, mas que ao mesmo tempo seja também <strong>informativa</strong>.</p></li>
-<li><p>Normalmente esse resumo é feito por meio de <strong>estatísticas</strong>, por exemplo, a média amostral e a variância amostral.</p></li>
+<li>Um experimentador usa as informações em uma amostra aleatória <span class="math inline">\(X_1, \ldots, X_n\)</span> para se fazer inferências sobre <span class="math inline">\(\theta\)</span>.</li>
+<li>Normalmente <span class="math inline">\(n\)</span> é grande e fica inviável tirar conclusões baseadas em uma longa <strong>lista</strong> de números.</li>
+<li>Por isso, um dos objetivos da inferência estatística é <strong>resumir</strong> as informações de uma amostra, da maneira mais <strong>compacta</strong> possível, mas que ao mesmo tempo seja também <strong>informativa</strong>.</li>
+<li>Normalmente esse resumo é feito por meio de <strong>estatísticas</strong>, por exemplo, a média amostral e a variância amostral.</li>
 </ul>
 <p><strong>População e amostra</strong></p>
 <ul>
-<li><p>O conjunto de valores de uma característica associada a uma coleção de indivíduos ou objetos de interesse é dito ser uma população.</p></li>
-<li><p>Uma sequência <span class="math inline">\(X_1, \ldots, X_n\)</span> de <span class="math inline">\(n\)</span> variáveis aleatórias independentes e identicamente distribuídas (iid) com função densidade (ou de probabilidade) <span class="math inline">\(f(x,\theta)\)</span> é dita ser uma amostra aleatória de tamanho <span class="math inline">\(n\)</span> da distribuição de <span class="math inline">\(X\)</span>.</p></li>
-<li><p>Como normalmente <span class="math inline">\(n&gt;1\)</span>, então temos que a fdp ou fp conjunta será <span class="math display">\[
+<li>O conjunto de valores de uma característica associada a uma coleção de indivíduos ou objetos de interesse é dito ser uma população.</li>
+<li>Uma sequência <span class="math inline">\(X_1, \ldots, X_n\)</span> de <span class="math inline">\(n\)</span> variáveis aleatórias independentes e identicamente distribuídas (iid) com função densidade (ou de probabilidade) <span class="math inline">\(f(x,\theta)\)</span> é dita ser uma amostra aleatória de tamanho <span class="math inline">\(n\)</span> da distribuição de <span class="math inline">\(X\)</span>.</li>
+<li>Como normalmente <span class="math inline">\(n&gt;1\)</span>, então temos que a fdp ou fp conjunta será <span class="math display">\[
 f(\boldsymbol{x, \theta}) = f(x_1, \ldots, x_n, \theta) = \prod_{i=1}^n
 f(x_i, \theta).
-\]</span></p></li>
+\]</span></li>
 </ul>
 </div>
 <div id="estimadores" class="section level1">
@@ -411,93 +411,102 @@ f(x_i, \theta).
 </ul>
 <p><strong>Estimador pontual</strong></p>
 <ul>
-<li>Dessa forma, um <strong>estimador pontual</strong> para <span class="math inline">\(\theta\)</span> é qualquer estatística que possa ser usada para estimar esse parâmetro, ou seja, <span class="math display">\[\hat{\theta} = T(\mathbf{X})\]</span></li>
-</ul>
-<p><strong>Observações:</strong></p>
+<li><p>Dessa forma, um <strong>estimador pontual</strong> para <span class="math inline">\(\theta\)</span> é qualquer estatística que possa ser usada para estimar esse parâmetro, ou seja, <span class="math display">\[\hat{\theta} = T(\mathbf{X})\]</span></p></li>
+<li><p>Observações:</p>
 <ol style="list-style-type: decimal">
 <li>Todo estimador é uma estatística, mas nem toda estatística é um estimador.</li>
 <li>O valor assumido pelo estimador pontual é chamado de <strong>estimativa pontual</strong>,<span class="math display">\[\hat{\theta} = T(\mathbf{X}) = T(X_1, \ldots, X_n) = t\]</span> ou seja, o estimador é uma <strong>função</strong> da amostra, e a estimativa é o <strong>valor observado</strong> de um estimador (um número) de uma amostra particular.</li>
-</ol>
+</ol></li>
+</ul>
 <p><strong>Estimação pontual</strong></p>
 <ul>
-<li><p>A ideia geral por trás da estimação pontual é muito simples:</p></li>
-<li><p>Quando a amostragem é feita a partir de uma população descrita por uma função <span class="math inline">\(f(x,\theta)\)</span>, o conhecimento de <span class="math inline">\(\theta\)</span> a partir da amostra, gera todo o conhecimento para a população.</p></li>
-<li><p>Dessa forma, é natural que se procure um <strong>método</strong> para se achar um <strong>bom</strong> estimador para <span class="math inline">\(\theta\)</span>.</p></li>
-<li><p>Existem algumas <strong>propriedades</strong> que definem o que é um bom estimador, ou o ``<strong>melhor</strong>’’ estimador entre uma série de candidatos.</p></li>
+<li>A ideia geral por trás da estimação pontual é muito simples:
+<ul>
+<li>Quando a amostragem é feita a partir de uma população descrita por uma função <span class="math inline">\(f(x,\theta)\)</span>, o conhecimento de <span class="math inline">\(\theta\)</span> a partir da amostra, gera todo o conhecimento para a população.</li>
+<li>Dessa forma, é natural que se procure um <strong>método</strong> para se achar um <strong>bom</strong> estimador para <span class="math inline">\(\theta\)</span>.</li>
+<li>Existem algumas <strong>propriedades</strong> que definem o que é um bom estimador, ou o “<strong>melhor</strong>” estimador entre uma série de candidatos.</li>
+</ul></li>
 </ul>
 <p><strong>Localização do problema:</strong></p>
 <ul>
-<li><p>Considere <span class="math inline">\(X_1, \ldots, X_n\)</span> uma amostra aleatóra de uma variável aleatória <span class="math inline">\(X\)</span> com fdp ou fp <span class="math inline">\(f(x,\theta)\)</span>, <span class="math inline">\(\theta \in \Theta\)</span>. Sejam: <span class="math display">\[
+<li>Considere <span class="math inline">\(X_1, \ldots, X_n\)</span> uma amostra aleatóra de uma variável aleatória <span class="math inline">\(X\)</span> com fdp ou fp <span class="math inline">\(f(x,\theta)\)</span>, <span class="math inline">\(\theta \in \Theta\)</span>. Sejam: <span class="math display">\[
 \hat{\theta}_1 = T_1(X_1, ..., X_n) \quad \quad \hat{\theta}_2 =
 T_2(X_1, ..., X_n)
-\]</span> Qual dos dois estimadores pontuais é <strong>melhor</strong> para <span class="math inline">\(\theta\)</span>?</p></li>
-<li><p>Como não conhecemos <span class="math inline">\(\theta\)</span>, não podemos afirmar que <span class="math inline">\(\hat{\theta}_1\)</span> é melhor do que <span class="math inline">\(\hat{\theta}_2\)</span> e vice-versa.</p></li>
-<li><p>O problema da estimação pontual é então escolher um estimador <span class="math inline">\(\hat{\theta}\)</span> que se aproxime de <span class="math inline">\(\theta\)</span> segundo algumas <strong>propriedades</strong>.</p></li>
+\]</span> Qual dos dois estimadores pontuais é <strong>melhor</strong> para <span class="math inline">\(\theta\)</span>?
+<ul>
+<li>Como não conhecemos <span class="math inline">\(\theta\)</span>, não podemos afirmar que <span class="math inline">\(\hat{\theta}_1\)</span> é melhor do que <span class="math inline">\(\hat{\theta}_2\)</span> e vice-versa.</li>
+<li>O problema da estimação pontual é então escolher um estimador <span class="math inline">\(\hat{\theta}\)</span> que se aproxime de <span class="math inline">\(\theta\)</span> segundo algumas <strong>propriedades</strong>.</li>
+</ul></li>
 </ul>
 </div>
 <div id="propriedades-dos-estimadores" class="section level1">
 <h1><span class="header-section-number">3</span> Propriedades dos estimadores</h1>
-<p>De modo geral, um ``<strong>bom</strong>’’ estimador deve ser:</p>
+<p>De modo geral, um “<strong>bom</strong>” estimador deve ser:</p>
 <ol style="list-style-type: decimal">
-<li>Não viciado</li>
+<li>Não viesado</li>
 <li>Consistente</li>
 <li>Eficiente</li>
 </ol>
-<div id="vício" class="section level3 unnumbered">
-<h3>Vício</h3>
-<div id="erro-quadrático-médio-eqm" class="section level4 unnumbered">
-<h4>Erro quadrático médio (EQM)</h4>
+<div id="viés" class="section level2">
+<h2><span class="header-section-number">3.1</span> Viés</h2>
+<div id="erro-quadrático-médio-eqm" class="section level3 unnumbered">
+<h3>Erro quadrático médio (EQM)</h3>
 <p>O Erro Quadrático Médio (EQM) de um estimador <span class="math inline">\(\hat{\theta}\)</span> de <span class="math inline">\(\theta\)</span> é dado por <span class="math display">\[\begin{align*}
 \text{EQM}[\hat{\theta}] &amp;= \text{E}[(\hat{\theta} - \theta)^2] \\
   &amp;= \text{Var}[\hat{\theta}] + \text{B}[\hat{\theta}]^2
-\end{align*}\]</span> onde <span class="math display">\[\text{B}[\hat{\theta}] = \text{E}[\hat\theta] - \theta\]</span> é denominado de <strong>vício</strong> do estimador <span class="math inline">\(\hat\theta\)</span>. Portanto, dizemos que um estimador é <strong>não viciado</strong> para <span class="math inline">\(\theta\)</span> quando <span class="math display">\[\text{B}[\hat{\theta}] = 0 \quad \Rightarrow \quad \text{E}[\hat{\theta}] =
+\end{align*}\]</span> onde <span class="math display">\[\text{B}[\hat{\theta}] = \text{E}[\hat\theta] - \theta\]</span> é denominado de <strong>vício</strong> do estimador <span class="math inline">\(\hat\theta\)</span>. Portanto, dizemos que um estimador é <strong>não viesado</strong> para <span class="math inline">\(\theta\)</span> quando <span class="math display">\[\text{B}[\hat{\theta}] = 0 \quad \Rightarrow \quad \text{E}[\hat{\theta}] =
 \theta\]</span></p>
 </div>
-<div id="estimador-não-viciado" class="section level4 unnumbered">
-<h4>Estimador não viciado</h4>
-<p>Seja <span class="math inline">\((X_1, \ldots, X_n)\)</span>, uma amostra aleatória de uma variável aleatória com fdp ou fp <span class="math inline">\(f(x,\theta)\)</span>, <span class="math inline">\(\theta \in \Theta\)</span>, dizemos que o estimador <span class="math inline">\(\hat{\theta} = T(\mathbf{X})\)</span> é não viciado para <span class="math inline">\(\theta\)</span> se <span class="math display">\[\text{E}[\hat{\theta}] = \text{E}[T(\mathbf{X})] = \theta \qquad \forall \, \theta
+<div id="estimador-não-viesado" class="section level3 unnumbered">
+<h3>Estimador não viesado</h3>
+<p>Seja <span class="math inline">\((X_1, \ldots, X_n)\)</span>, uma amostra aleatória de uma variável aleatória com fdp ou fp <span class="math inline">\(f(x,\theta)\)</span>, <span class="math inline">\(\theta \in \Theta\)</span>, dizemos que o estimador <span class="math inline">\(\hat{\theta} = T(\mathbf{X})\)</span> é não viesado para <span class="math inline">\(\theta\)</span> se <span class="math display">\[\text{E}[\hat{\theta}] = \text{E}[T(\mathbf{X})] = \theta \qquad \forall \, \theta
 \in \Theta\]</span></p>
-<p>Um estimador <span class="math inline">\(\hat\theta\)</span> é dito <strong>assintoticamente não viciado</strong> se <span class="math display">\[\lim_{n \to \infty} \text{E}[\hat{\theta}] = \theta\]</span> Ou seja, para grandes amostras, <span class="math inline">\(\hat\theta\)</span> passa a ser imparcial.</p>
+<p>Um estimador <span class="math inline">\(\hat\theta\)</span> é dito <strong>assintoticamente não viesado</strong> se <span class="math display">\[\lim_{n \to \infty} \text{E}[\hat{\theta}] = \theta\]</span> Ou seja, para grandes amostras, <span class="math inline">\(\hat\theta\)</span> passa a ser imparcial.</p>
 </div>
 </div>
-<div id="consistência" class="section level3 unnumbered">
-<h3>Consistência</h3>
-<div id="estimador-consistente" class="section level4 unnumbered">
-<h4>Estimador consistente</h4>
+<div id="consistência" class="section level2">
+<h2><span class="header-section-number">3.2</span> Consistência</h2>
+<div id="estimador-consistente" class="section level3 unnumbered">
+<h3>Estimador consistente</h3>
 <p>Seja <span class="math inline">\((X_1, \ldots, X_n)\)</span>, uma amostra aleatória de uma variável aleatória com fdp ou fp <span class="math inline">\(f(x,\theta)\)</span>, <span class="math inline">\(\theta \in \Theta\)</span>, o estimador <span class="math inline">\(\hat{\theta} = T(\mathbf{X})\)</span> é consistente para <span class="math inline">\(\theta\)</span> se satisfaz simultaneamente <span class="math display">\[\lim_{n \to \infty} \text{E}[\hat{\theta}] = \theta\]</span> e <span class="math display">\[\lim_{n \to \infty} \text{Var}[\hat{\theta}] = 0\]</span></p>
-<p><strong>Exemplo</strong>: média amostral <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i\)</span> como estimador da média populacional <span class="math inline">\(\mu\)</span>: <span class="math display">\[
+<div id="exemplo-média-amostral" class="section level4 unnumbered">
+<h4>Exemplo (média amostral)</h4>
+<p>Média amostral <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i\)</span> como estimador da média populacional <span class="math inline">\(\mu\)</span>: <span class="math display">\[
 \text{E}(\bar{x}) = \text{E} \left[ \frac{1}{n} \sum_{i=1}^{n} x_i
 \right] = \mu
 \]</span></p>
 <p><span class="math display">\[
 \text{Var}(\bar{x}) = \text{Var} \left[ \frac{1}{n} \sum_{i=1}^{n} x_i
 \right] = \frac{\sigma^2}{n}
-\]</span> Portanto <span class="math inline">\(\bar{x}\)</span> é um estimador <strong>não viciado</strong> e <strong>consistente</strong> para <span class="math inline">\(\mu\)</span>.</p>
-<p><strong>Exemplo</strong>: variância amostral <span class="math inline">\(\hat{\sigma}^2 = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2\)</span> como estimador da variância populacional <span class="math inline">\(\sigma^2\)</span>: <span class="math display">\[
+\]</span> Portanto <span class="math inline">\(\bar{x}\)</span> é um estimador <strong>não viesado</strong> e <strong>consistente</strong> para <span class="math inline">\(\mu\)</span>.</p>
+</div>
+<div id="exemplo-variância-amostral" class="section level4 unnumbered">
+<h4>Exemplo (variância amostral)</h4>
+<p>Variância amostral <span class="math inline">\(\hat{\sigma}^2 = \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2\)</span> como estimador da variância populacional <span class="math inline">\(\sigma^2\)</span>: <span class="math display">\[
 \text{E}(\hat{\sigma}^2) = \text{E} \left[ \frac{1}{n} \sum_{i=1}^{n}
 (x_i - \bar{x})^2 \right]
 = \left( \frac{n-1}{n} \right) \sigma^2
-\]</span> Portanto <span class="math inline">\(\hat{\sigma}^2\)</span> é um estimador <strong>viciado</strong> para <span class="math inline">\(\sigma^2\)</span>. (Embora seja um estimador <strong>assintoticamente</strong> não viciado).</p>
+\]</span> Portanto <span class="math inline">\(\hat{\sigma}^2\)</span> é um estimador <strong>viesado</strong> para <span class="math inline">\(\sigma^2\)</span>. (Embora seja um estimador <strong>assintoticamente</strong> não viesado).</p>
 <p>Para eliminar esse vício, podemos definir então um novo estimador: <span class="math inline">\(S^2 = \frac{1}{n-1} \sum_{i=1}^{n} (x_i - \bar{x})^2\)</span>, e <span class="math display">\[
 \text{E}(S^2) = \text{E} \left[ \frac{1}{n-1} \sum_{i=1}^{n} (x_i -
 \bar{x})^2 \right] = \sigma^2
-\]</span> que é então um estimador <strong>não viciado</strong> para <span class="math inline">\(\sigma^2\)</span>.</p>
+\]</span> que é então um estimador <strong>não viesado</strong> para <span class="math inline">\(\sigma^2\)</span>.</p>
 </div>
 </div>
-<div id="eficiência" class="section level3 unnumbered">
-<h3>Eficiência</h3>
-<div id="eficiência-relativa" class="section level4 unnumbered">
-<h4>Eficiência relativa</h4>
-<p>Sejam <span class="math inline">\(\hat{\theta}_1 = T_1(\mathbf{X})\)</span> e <span class="math inline">\(\hat{\theta}_2 = T_2(\mathbf{X})\)</span> dois estimadores pontuais <strong>não viciados</strong> para <span class="math inline">\(\theta\)</span>. A eficiência relativa de <span class="math inline">\(\hat{\theta}_1\)</span> em relação a <span class="math inline">\(\hat{\theta}_2\)</span> é <span class="math display">\[\text{ER}[\hat{\theta}_1, \hat{\theta}_2] =
+</div>
+<div id="eficiência" class="section level2">
+<h2><span class="header-section-number">3.3</span> Eficiência</h2>
+<div id="eficiência-relativa" class="section level3 unnumbered">
+<h3>Eficiência relativa</h3>
+<p>Sejam <span class="math inline">\(\hat{\theta}_1 = T_1(\mathbf{X})\)</span> e <span class="math inline">\(\hat{\theta}_2 = T_2(\mathbf{X})\)</span> dois estimadores pontuais <strong>não viesados</strong> para <span class="math inline">\(\theta\)</span>. A eficiência relativa de <span class="math inline">\(\hat{\theta}_1\)</span> em relação a <span class="math inline">\(\hat{\theta}_2\)</span> é <span class="math display">\[\text{ER}[\hat{\theta}_1, \hat{\theta}_2] =
 \frac{\text{Var}[\hat{\theta}_1]}{\text{Var}[\hat{\theta}_2]}\]</span></p>
 <p>Se:</p>
 <ul>
 <li><span class="math inline">\(\text{ER}[\hat{\theta}_1, \hat{\theta}_2] &gt; 1\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\hat\theta_2\)</span> é mais eficiente</li>
 <li><span class="math inline">\(\text{ER}[\hat{\theta}_1, \hat{\theta}_2] &lt; 1\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\hat\theta_1\)</span> é mais eficiente</li>
 </ul>
-</div>
-<div id="exemplo" class="section level4 unnumbered">
-<h4>Exemplo</h4>
+<div id="exemplo-média-e-mediana" class="section level4 unnumbered">
+<h4>Exemplo (média e mediana)</h4>
 <p>Uma amostra <span class="math inline">\((X_1, \ldots, X_n)\)</span> é retirada de uma população com <span class="math inline">\(X \sim \text{N}(\mu, \sigma^2)\)</span>, e dois estimadores são propostos para <span class="math inline">\(\mu\)</span>: <span class="math display">\[
 \hat{\mu}_1 = \bar{X} \quad \text{e} \quad \hat{\mu}_2 =
 \text{mediana}(X_1, \ldots, X_n)
@@ -509,7 +518,7 @@ T_2(X_1, ..., X_n)
 \text{E}(\hat{\mu}_2) &amp;= \text{E}(\text{mediana}(X_1, \ldots, X_n)) = \mu \\
 \text{Var}(\hat{\mu}_2) &amp;= \text{Var}(\text{mediana}(X_1, \ldots, X_n))
 = (\pi/2)(\sigma^2/n)
-\end{align*}\]</span> Portanto, ambos são estimadores não viciados e consistentes. Mas: <span class="math display">\[
+\end{align*}\]</span> Portanto, ambos são estimadores não viesados e consistentes. Mas: <span class="math display">\[
 \text{ER}[\hat{\mu}_1, \hat{\mu}_2] =
 \frac{\text{Var}[\hat{\mu}_1]}{\text{Var}[\hat{\mu}_2]} =
 \frac{\sigma^2/n}{(\pi/2)(\sigma^2/n)} = \frac{2}{\pi} = 0,63
@@ -522,13 +531,20 @@ T_2(X_1, ..., X_n)
 <p>O erro padrão (EP) de um estimador é o seu desvio-padrão (raíz quadrada da variância), ou seja, <span class="math display">\[
 \text{EP}(\hat\theta) = \sqrt{\text{Var}(\hat\theta)}
 \]</span></p>
-<p><strong>Exemplo:</strong> Sabemos que a distribuição de <span class="math inline">\(\bar{X}\)</span> tem média <span class="math inline">\(\mu\)</span> e variância <span class="math inline">\(\sigma^2/n\)</span>. Então o erro padrão de <span class="math inline">\(\bar{X}\)</span> é <span class="math display">\[
+<div id="exemplo-erro-padrão-da-média" class="section level4">
+<h4><span class="header-section-number">3.3.0.1</span> Exemplo (erro padrão da média)</h4>
+<p>Sabemos que a distribuição de <span class="math inline">\(\bar{X}\)</span> tem média <span class="math inline">\(\mu\)</span> e variância <span class="math inline">\(\sigma^2/n\)</span>. Então o erro padrão de <span class="math inline">\(\bar{X}\)</span> é <span class="math display">\[
 \text{EP}(\bar{X}) = \sqrt{\text{Var}(\bar{X})} =
 \sqrt{\frac{\sigma^2}{n}} = \frac{\sigma}{\sqrt{n}}
 \]</span></p>
 </div>
-<div id="exemplo-1" class="section level3 unnumbered">
-<h3>Exemplo 1</h3>
+</div>
+</div>
+</div>
+<div id="avaliação-de-estimadores" class="section level1">
+<h1><span class="header-section-number">4</span> Avaliação de estimadores</h1>
+<div id="exemplo-1-normal" class="section level2">
+<h2><span class="header-section-number">4.1</span> Exemplo 1 (normal)</h2>
 <p>Considere uma amostra aleatória (<span class="math inline">\(X_1, \ldots, X_n\)</span>) de uma variável aleatória <span class="math inline">\(X \sim \text{N}(\mu = 3, \sigma^2 = 1)\)</span> e os estimadores pontuais para <span class="math inline">\(\mu\)</span> <span class="math display">\[\hat{\theta}_1 = \frac{1}{n} \sum_{i=1}^n X_i \qquad \text{e} \qquad
 \hat{\theta}_2 = \frac{X_{(1)}+X_{(n)}}{2}\]</span> Qual dos dois estimadores pode ser considerado como o <strong>melhor</strong> para estimar o verdadeiro valor de <span class="math inline">\(\mu\)</span>?</p>
 <p>Considere os seguintes pseudo-códigos para um estudo de simulação do comportamento destes dois estimadores:</p>
@@ -623,8 +639,8 @@ xyplot(
     layer(panel.abline(h = 3))</code></pre>
 <p><img src="figures/09_MC_inf-2/unnamed-chunk-4-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="exemplo-2" class="section level3 unnumbered">
-<h3>Exemplo 2</h3>
+<div id="exemplo-2-uniforme" class="section level2">
+<h2><span class="header-section-number">4.2</span> Exemplo 2 (uniforme)</h2>
 <p>Considere uma amostra aleatória (<span class="math inline">\(X_1, \ldots, X_n\)</span>) de uma variável aleatória <span class="math inline">\(Y \sim \text{U}(\text{min} = 2, \text{max} = 4)\)</span> (distribuição uniforme no intervalo [2,4]) e os estimadores pontuais para <span class="math inline">\(\mu\)</span> <span class="math display">\[\hat{\theta}_1 = \frac{1}{n} \sum_{i=1}^n X_i \qquad \text{e} \qquad
 \hat{\theta}_2 = \frac{X_{(1)}+X_{(n)}}{2}\]</span> Qual dos dois estimadores pode ser considerado como o <strong>melhor</strong> para estimar a média de <span class="math inline">\(Y\)</span>?</p>
 <p><strong>Pseudo-código 1</strong></p>
@@ -703,7 +719,7 @@ xyplot(
 </div>
 </div>
 <div id="distribuição-amostral-da-média" class="section level1">
-<h1><span class="header-section-number">4</span> Distribuição amostral da média</h1>
+<h1><span class="header-section-number">5</span> Distribuição amostral da média</h1>
 <pre class="r"><code>##======================================================================
 ## Script Teorema do Limite Central - TLC
 ##======================================================================
@@ -785,7 +801,7 @@ par(mfrow = c(1, 1))
 ## dev.off()</code></pre>
 </div>
 <div id="teste-de-hipótese-de-monte-carlo" class="section level1">
-<h1><span class="header-section-number">5</span> Teste de hipótese de Monte Carlo</h1>
+<h1><span class="header-section-number">6</span> Teste de hipótese de Monte Carlo</h1>
 <ul>
 <li><strong>Erro Tipo I</strong>: rejeitar <span class="math inline">\(H_0\)</span>, quando <span class="math inline">\(H_0\)</span> é verdadeira.</li>
 <li><strong>Erro Tipo II</strong>: não rejeitar <span class="math inline">\(H_0\)</span> quando <span class="math inline">\(H_0\)</span> é falsa.</li>
