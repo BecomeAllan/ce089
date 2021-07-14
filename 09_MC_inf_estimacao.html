@@ -585,15 +585,39 @@ f_{\hat\theta} \longrightarrow \mathbf{x}^{(j)} \longrightarrow
 <li>Em casos mais complexos, a forma analítica pode não existir e mesmo a distribuição amostral pode ser desconhecida</li>
 <li>Nesses casos, a distribuição amostral <strong>empírica</strong> construída pelo método de Monte Carlo pode ser utilizada</li>
 </ul>
-<p>Portanto, a estimativa do erro padrão pelo método de Monte Carlo é o <strong>desvio padrão empírico</strong> da amostra dos <span class="math inline">\(\hat\theta^{(j)}\)</span>, <span class="math display">\[
-\text{EP}_{MC} = \frac{1}{N-1} \sqrt{\sum_{j=1}^{N} (\hat\theta^{(j)} -
-\hat\theta_{MC})^2}
+<p>Como a estimativa pontual (de Monte Carlo) para <span class="math inline">\(\theta\)</span> é uma média (<span class="math inline">\(\hat{\theta}_{MC}\)</span>), então seu erro padrão será <span class="math inline">\(\sqrt{\text{Var}(\theta)/N}\)</span> (definição de erro padrão de uma média). Quando a distribuição exata de <span class="math inline">\(\theta\)</span> for desconhecida, podemos substituir a distribuição <span class="math inline">\(F_{\theta}\)</span> pela distribuição empírica <span class="math inline">\(F_N\)</span> da amostra <span class="math inline">\(\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(N)}\)</span>. Um estimador do tipo <em>plug-in</em> para a variância de <span class="math inline">\(\theta\)</span> será então</p>
+<p><span class="math display">\[
+\widehat{\text{Var}}(\theta) = \frac{1}{N} \sum_{j=1}^{N} (\theta^{(j)} -
+\hat{\theta}_{MC})^2
 \]</span></p>
+<p>Note que <span class="math inline">\(\widehat{\text{Var}}(\theta)\)</span> é a <strong>variância populacional da pseudo-população finita</strong> <span class="math inline">\(\{\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(N)}\}\)</span> com distribuição <span class="math inline">\(F_N\)</span>. Com isso, o correspondente estimador para o erro padrão de <span class="math inline">\(\hat{\theta}_{MC}\)</span> é</p>
+<p><span class="math display">\[\begin{align*}
+\widehat{\text{EP}}_{MC} &amp;= \frac{1}{\sqrt{N}} \sqrt{\frac{1}{N}
+  \sum_{j=1}^{N} (\hat\theta^{(j)} - \hat\theta_{MC})^2} \\
+  &amp;= \frac{1}{N} \sqrt{\sum_{j=1}^{N} (\hat\theta^{(j)} -
+  \hat\theta_{MC})^2}
+\end{align*}\]</span></p>
+<p>Usando o estimador não viesado para <span class="math inline">\(\text{Var}(\theta)\)</span>, temos</p>
+<p><span class="math display">\[
+\widehat{\text{EP}}_{MC} = \frac{1}{\sqrt{N}} \sqrt{\frac{1}{N-1}
+  \sum_{j=1}^{N} (\hat\theta^{(j)} - \hat\theta_{MC})^2}
+\]</span></p>
+<p>No entanto, em um experimento de Monte Carlo, o tamanho amostral (<span class="math inline">\(N\)</span>) é grande, de forma que as duas estimativas serão aproximadamente iguais.</p>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Observação: erro padrão no R
+</div>
+<div class="panel-body">
+<p>No R, as funções <code>var()</code> e <code>sd()</code> calculam a variância e o desvio padrão não viesados (com o denominador <span class="math inline">\(n-1\)</span>). Dessa forma, se for utilizar alguma destas funções para calcular o erro-padrão, utilize a última equação mostrada acima.</p>
+<p>Por exemplo, se <code>x</code> é um vetor de tamanho <span class="math inline">\(N\)</span> com as estimativas <span class="math inline">\(\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(N)}\)</span>, então o erro padrão pode ser calculado como</p>
+<pre class="r"><code>sd(x)/sqrt(N)</code></pre>
+</div>
+</div>
 </div>
 <div id="avaliação-de-estimadores" class="section level1">
 <h1><span class="header-section-number">6</span> Avaliação de estimadores</h1>
-<div id="exemplo-1-normal" class="section level2">
-<h2><span class="header-section-number">6.1</span> Exemplo 1 (normal)</h2>
+<div id="exemplo-normal" class="section level2">
+<h2><span class="header-section-number">6.1</span> Exemplo (normal)</h2>
 <p>Considere uma amostra aleatória (<span class="math inline">\(X_1, \ldots, X_n\)</span>) de uma variável aleatória <span class="math inline">\(X \sim \text{N}(\mu = 3, \sigma^2 = 1)\)</span> e os estimadores pontuais para <span class="math inline">\(\mu\)</span> <span class="math display">\[\hat{\theta}_1 = \frac{1}{n} \sum_{i=1}^n X_i \qquad \text{e} \qquad
 \hat{\theta}_2 = \frac{X_{(1)}+X_{(n)}}{2}\]</span> Qual dos dois estimadores pode ser considerado como o <strong>melhor</strong> para estimar o verdadeiro valor de <span class="math inline">\(\mu\)</span>?</p>
 <p>Considere os seguintes pseudo-códigos para um estudo de simulação do comportamento destes dois estimadores:</p>
@@ -633,15 +657,15 @@ densityplot(
         factor.levels = c(expression(hat(theta[1])),
                           expression(hat(theta[2]))))
 )</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-3-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-4-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Média das estimativas
 tapply(L$est, L$.id, mean)</code></pre>
 <pre><code>#      th1      th2 
 # 2.993463 3.019900</code></pre>
 <pre class="r"><code>## Erro padrão das estimativas
-tapply(L$est, L$.id, sd)</code></pre>
-<pre><code>#       th1       th2 
-# 0.3232719 0.4263769</code></pre>
+tapply(L$est, L$.id, function(x) sd(x)/sqrt(N))</code></pre>
+<pre><code>#        th1        th2 
+# 0.01022276 0.01348322</code></pre>
 <pre class="r"><code>## Eficiência relativa
 var(L$est[L$.id == &quot;th1&quot;])/var(L$est[L$.id == &quot;th2&quot;])</code></pre>
 <pre><code># [1] 0.5748422</code></pre>
@@ -695,10 +719,10 @@ xyplot(
               expression(hat(theta[2])))),
     scales = list(x = list(log = 10))) +
     layer(panel.abline(h = 3))</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-4-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="exemplo-2-uniforme" class="section level2">
-<h2><span class="header-section-number">6.2</span> Exemplo 2 (uniforme)</h2>
+<div id="exemplo-uniforme" class="section level2">
+<h2><span class="header-section-number">6.2</span> Exemplo (uniforme)</h2>
 <p>Considere uma amostra aleatória (<span class="math inline">\(X_1, \ldots, X_n\)</span>) de uma variável aleatória <span class="math inline">\(Y \sim \text{U}(\text{min} = 2, \text{max} = 4)\)</span> (distribuição uniforme no intervalo [2,4]) e os estimadores pontuais para <span class="math inline">\(\mu\)</span> <span class="math display">\[\hat{\theta}_1 = \frac{1}{n} \sum_{i=1}^n X_i \qquad \text{e} \qquad
 \hat{\theta}_2 = \frac{X_{(1)}+X_{(n)}}{2}\]</span> Qual dos dois estimadores pode ser considerado como o <strong>melhor</strong> para estimar a média de <span class="math inline">\(Y\)</span>?</p>
 <p><strong>Pseudo-código 1 (viés, precisão e eficiência)</strong></p>
@@ -726,7 +750,7 @@ str(L)</code></pre>
         factor.levels =
             c(expression(hat(theta[1])),
               expression(hat(theta[2])))))</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-5-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-7-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Média das estimativas
 tapply(L$est, L$.id, mean)</code></pre>
 <pre><code>#      th1      th2 
@@ -781,7 +805,7 @@ xyplot(
               expression(hat(theta[2])))),
     scales = list(x = list(log = 10))) +
     layer(panel.abline(h = 3))</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-8-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="exemplo-média-aparada" class="section level2">
 <h2><span class="header-section-number">6.3</span> Exemplo (média aparada)</h2>
@@ -821,7 +845,7 @@ sqrt(sum((tmean1 - m.tmean1)^2))/(N - 1)</code></pre>
 (eqm1 &lt;- mean(tmean1^2))</code></pre>
 <pre><code># [1] 0.05042546</code></pre>
 <pre class="r"><code>hist(tmean1)</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Note que a média aparada é um estimador não viesado para a média populacional, portanto <span class="math inline">\(\text{EQM}[\theta] = \text{Var}[\theta] = \text{Var}[X]/n\)</span>, que é igual a <span class="math inline">\(1/20 = 0.05\)</span>, o que mostra que nossa estimativa está próxima.</p>
 <p>Repare que a mediana também é uma média aparada: ela “apara” todos os valores das caudas menos um (quando <span class="math inline">\(n\)</span> for ímpar), ou dois (quando <span class="math inline">\(n\)</span> for par), e calcula a média. Portanto, podemos reptir o mesmo procedimento para a mediana.</p>
 <pre class="r"><code>n &lt;- 20
@@ -844,7 +868,7 @@ sqrt(sum((tmean2 - m.tmean2)^2))/(N - 1)</code></pre>
 (eqm2 &lt;- mean(tmean2^2))</code></pre>
 <pre><code># [1] 0.06867678</code></pre>
 <pre class="r"><code>hist(tmean2)</code></pre>
-<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora podemos comparar qual dos dois estimadores é o melhor para a média populacional, através dos EQMs.</p>
 <pre class="r"><code>## Qual dos dois possui menor EQM
 eqm1 &lt;= eqm2</code></pre>
@@ -857,6 +881,38 @@ eqm1/eqm2</code></pre>
 \frac{\text{Var}[\hat{\theta}_1]}{\text{Var}[\hat{\theta}_2]}
 \]</span></p>
 <p>Por esses resultados concluimos que ambos estimadores, média aparada de primeiro nível e mediana, são não viesados para estimar a média populacional <span class="math inline">\(\mu\)</span>, mas a média aparada é um estimador melhor, ou mais eficiente do que a mediana.</p>
+</div>
+<div id="exemplo-erro-padrão" class="section level2">
+<h2><span class="header-section-number">6.4</span> Exemplo (erro padrão)</h2>
+<p>Suponha <span class="math inline">\(X_1, X_2\)</span> são duas VAs iid de uma normal padrão. Usando simulação de Monte Carlo, obtenha uma estimativa de <span class="math inline">\(\text{E}(|X_1 - X_2|)\)</span>, e seu erro padrão.</p>
+<p>Para estimar <span class="math inline">\(\theta = \text{E}(g(X_1, X_2)) = \text{E}(|X_1 - X_2|)\)</span>, baseado em <span class="math inline">\(N\)</span> amostras:</p>
+<ol style="list-style-type: decimal">
+<li>Gere as variáveis aleatórias <span class="math inline">\(\mathbb{x}^{(j)} = (x_1^{(j)}, x_2^{(j)})\)</span> da normal padrão, <span class="math inline">\(j = 1, \ldots, N\)</span>.</li>
+<li>Calcule <span class="math inline">\(\hat\theta^{(j)} = g_j(x_1^{(j)}, x_2^{(j)}) = |x_1^{(j)} - x_2^{(j)}|\)</span>, e calcule a média.</li>
+</ol>
+<pre class="r"><code>N &lt;- 1000
+g &lt;- numeric(N)
+for (i in 1:N) {
+    x &lt;- rnorm(2)
+    g[i] &lt;- abs(x[1] - x[2])
+}
+(est &lt;- mean(g))</code></pre>
+<pre><code># [1] 1.105322</code></pre>
+<pre class="r"><code>hist(g)</code></pre>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Por integração, o resultado é <span class="math inline">\(\text{E}(|X_1 - X_2|) = 2/\sqrt{\pi} = 1.1284\)</span>.</p>
+<p>Em uma amostra de Monte Carlo, o tamanho da amostra é <span class="math inline">\(N\)</span>, por isso, o erro padrão da estimativa será</p>
+<pre class="r"><code>## Variância da distribuição amostral
+sum((g - est)^2)/(N - 1)</code></pre>
+<pre><code># [1] 0.6719454</code></pre>
+<pre class="r"><code>var(g)</code></pre>
+<pre><code># [1] 0.6719454</code></pre>
+<pre class="r"><code>## Erro padrão = desvio padrão da distribuição amostral
+sqrt(sum((g - est)^2))/N # viesado</code></pre>
+<pre><code># [1] 0.02590895</code></pre>
+<pre class="r"><code>sd(g)/sqrt(N)            # não viiesado</code></pre>
+<pre><code># [1] 0.02592191</code></pre>
+<p>Pode-se mostrar que o valor exato é <span class="math inline">\(ep = \sqrt{(2 - 4/\pi)/N} = 0.0269\)</span>.</p>
 </div>
 </div>
 <div id="distribuição-amostral-da-média" class="section level1">
@@ -970,7 +1026,7 @@ simula0(n=10, mu0=0, sig0=1)
 ```
 
 ```
-# [1] -1.002181
+# [1] -0.5407376
 ```
 
 ```r
@@ -982,7 +1038,7 @@ curve(pt(x, df=10-1), add=TRUE, col=2)
 curve(pnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## Comparação pela densidade.
@@ -991,7 +1047,7 @@ curve(dt(x, df=10-1), add=TRUE, col=2)
 curve(dnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-11-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## p-valor da simulação.
@@ -999,7 +1055,7 @@ sum(abs(t) >= qt(0.975, df=10-1))/length(t)
 ```
 
 ```
-# [1] 0.0485
+# [1] 0.0481
 ```
 
 ```r
@@ -1020,7 +1076,7 @@ curve(pt(x, df=n-1), add=TRUE, col=2)
 curve(pnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-11-3.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## p-valor real vs nível se significância nominal.
@@ -1028,7 +1084,7 @@ sum(abs(t) >= qt(0.975, df=n-1))/length(t)
 ```
 
 ```
-# [1] 0.1154
+# [1] 0.1165
 ```
 
 ```r
