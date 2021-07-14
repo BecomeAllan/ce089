@@ -771,6 +771,181 @@ sd(g)/sqrt(N)            # não viiesado
 Pode-se mostrar que o valor exato é $ep = \sqrt{(2 - 4/\pi)/N} =
 0.0269$.
 
+## Exemplo (estimativa de nível de confiança)
+
+Seja $X_1, \ldots, X_n$ uma amostra aleatória de uma $\text{N}(\mu,
+\sigma^2)$, onde $s^2$ é a variância amostral. Considere o problema de
+estimar um **intervalo de confiança** para $s^2$.
+
+Do Teorema Central do Limite (TCL) sabemos que $\bar{X} \sim
+\text{N}(\mu, \frac{\sigma^2}{n})$. Como não conhecemos $\sigma^2$,
+usamos $s^2$ no lugar. Assim, temos que:
+$$
+\widehat{Var[\bar{X}]} = \frac{s^2}{n} \quad \text{e} \quad
+\widehat{EP[\bar{X}]} = \frac{s}{\sqrt{n}}
+$$
+
+Para obter a variância de $s^2$, precisamos lembrar que
+$$
+\frac{(n-1)s^2}{\sigma^2} \sim \chi_{(n-1)}^{2}
+$$
+
+Lembrando também que para uma variável aleatória $X$ com distribuição
+qui-quadrado com $k$ graus de liberdade, $X \sim \chi^2_k$, temos $E[X]
+= k$, e $Var[X] = 2k$. Assim, calculamos a esperança como
+
+\begin{align*}
+E\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &= n-1 \\
+\frac{(n-1)}{\sigma^2} E[s^2] &= n-1 \\
+E[s^2] &= \frac{(n-1)\sigma^2}{(n-1)} \\
+E[s^2] &= \sigma^2
+\end{align*}
+
+Portanto, confirmamos que essa é uma estimativa não viesada. Da mesma
+forma, calculamos a variância como:
+
+\begin{align*}
+Var\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &= 2(n-1) \\
+\frac{(n-1)^2}{\sigma^4} Var[s^2] &= 2(n-1) \\
+Var[s^2] &= \frac{2(n-1)\sigma^4}{(n-1)^2} \\
+Var[s^2] &= \frac{2\sigma^4}{n-1} = \frac{2(\sigma^2)^2}{n-1}
+\end{align*}
+
+Como usamos $s^2$ no lugar de $\sigma^2$, temos então que
+
+$$
+\widehat{Var[s^2]} = \frac{2(s^2)^2}{n-1}
+$$
+
+O erro-padrão de $s^2$ é então a raíz quadrada desta variância, ou seja,
+
+$$
+\widehat{EP[s^2]} = \sqrt{\widehat{Var[s^2]}} =
+  \sqrt{\frac{2(s^2)^2}{n-1}} = s^2 \sqrt{\frac{2}{n-1}}
+$$
+
+Um intervalo de confiança **unilateral** de $100(1-\alpha)\%$ de
+confiança é dado por
+$$
+\left(0, \frac{(n-1)s^2}{\chi^2_{\alpha}} \right)
+$$
+onde $\chi^2_{\alpha}$ é o $\alpha$-quantil de uma distribuição
+$\chi^2 (n-1)$. Se a população amostrada é normal com variância
+$\sigma^2$, então a probabilidade de que o intervalo contenha $\sigma^2$
+é **exatamente** $1-\alpha$. Por exemplo, para $\alpha = 0.05$,
+$$
+\begin{align*}
+P\left(\frac{(n-1)s^2}{\sigma^2} > \chi^2_{.05}(n-1) \right) &= 0.95 \\
+P\left(\frac{(n-1)s^2}{\chi^2_{.05}(n-1)} > \sigma^2 \right) &= 0.95
+\end{align*}
+$$
+
+Por exemplo, o cáculo do limite superior do intervalo de $95\%$ de
+confiança para uma amostra de tamanho $n=20$ de uma $\text{N}(0, 4)$ é
+```{r}
+n <- 20
+alpha <- .05
+x <- rnorm(n, mean = 0, sd = 2)
+(UCL <- (n - 1) * var(x) / qchisq(alpha, df = n - 1))
+```
+que contém o verdadeiro valor $\sigma^2 = 4$. Se repetirmos esse
+processo várias vezes, esperamos então que aproximadamente $95\%$ das
+vezes, o intervalo contenha o verdadeiro valor de $\sigma^2$, **assumindo
+que a população amostrada é normal** com variância $\sigma^2$.
+
+De maneira geral, um algoritmo para calcular o nível de confiança
+**empírico** para uma estimativa de algum parâmetro $\theta$ é:
+
+1. Para cada repetição, indexada em $j = 1, \ldots, N$
+   a. Gere a $j$-ésima amostra aleatória, $x_1^{(j)}, \ldots, x_n^{(j)}$
+   b. Calcule o intervalo de confiança $C_j$ para a $j$-ésima amostra
+   c. Calcule $y_j = I(\theta \in C_j)$ para a $j$-ésima amostra
+2. Calcule o nível de confiança empírico $\bar{y} =
+   \frac{1}{N}\sum_{j=1}^{N} y_j$
+
+A proporção amostral de intervalos que contém $\theta$ é então uma
+estimativa de Monte Carlo do verdadeiro nível de confiança $(1-\alpha)$.
+
+(Note aqui o uso da função `replicate()` no lugar do `for()`).
+
+```{r}
+n <- 20
+m <- 1000
+alpha <- .05
+UCL <- replicate(m, expr = {
+    x <- rnorm(n, mean = 0, sd = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+## Número de intervalos que contém sigma^2 = 4
+sum(UCL > 4)
+## Nível de confiança empírico
+sum(UCL > 4)/N
+mean(UCL > 4)
+```
+
+Veja que o nível de confiança empírico é muito próximo do nível de
+confiança teórico, de $95\%$. Para 100 intervalos calculados, podemos
+visualizar o procedimento:
+
+```{r}
+UCL.sim <- replicate(100, expr = {
+    x <- rnorm(n, mean = 0, sd = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+plot(NULL, NULL, xlim = c(0, 100), ylim = c(0, max(UCL.sim)), ylab = "")
+segments(1:100, 0, 1:100, UCL.sim)
+abline(h = 4, col = 2)
+```
+
+Sabemos que o cálculo de intervalos de confiança para a variância é
+bastante sensível à fugas da normalidade. Ou seja, se a população
+amostrada não for normal, então o cálculo do intervalo de confiança
+possivelmente será afetado, refletindo no nível de confiança.
+
+Por exemplo, suponha que ao invés de normal, os dados foram obtidos a
+partir de uma população que segue uma distribuição $\chi^2$ com 2 graus
+de liberdade, que também possui variância 4, mas claramente não é
+normal.
+
+```{r}
+curve(dchisq(x, df = 2), to = 10)
+```
+
+Podemos repetir o procedimento acima, substituindo as amostras de $X$ da
+normal pela $\chi^2(2)$ e verificar qual seria então o nível de
+confiança empírico.
+
+```{r}
+n <- 20
+m <- 1000
+alpha <- .05
+UCL <- replicate(m, expr = {
+    x <- rchisq(n, df = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+## Número de intervalos que contém sigma^2 = 4
+sum(UCL > 4)
+## Nível de confiança empírico
+sum(UCL > 4)/N
+mean(UCL > 4)
+```
+
+Veja que, embora estamos calculando intervalos **teóricos** de $95\%$, o
+nível de confiança é na verdade bem mais baixo, o que pode levar à
+conclusões equivocadas nesse caso onde a população não é normal.
+
+Visualmente temos:
+
+```{r}
+UCL.sim <- replicate(100, expr = {
+    x <- rchisq(n, df = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+plot(NULL, NULL, xlim = c(0, 100), ylim = c(0, max(UCL.sim)), ylab = "")
+segments(1:100, 0, 1:100, UCL.sim)
+abline(h = 4, col = 2)
+```
+
 
 # Distribuição amostral da média
 
@@ -961,7 +1136,7 @@ sum(abs(t) >= qt(0.975, df=n-1))/length(t)
 <!-- Como estamos calculando a probabilidade para apenas uma das caudas, -->
 <!-- então esse valor é multiplicado por 2. -->
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 ## Dados
 n <- 250
 y <- 32
