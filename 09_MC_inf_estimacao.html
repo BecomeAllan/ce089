@@ -914,6 +914,121 @@ sqrt(sum((g - est)^2))/N # viesado</code></pre>
 <pre><code># [1] 0.02592191</code></pre>
 <p>Pode-se mostrar que o valor exato é <span class="math inline">\(ep = \sqrt{(2 - 4/\pi)/N} = 0.0269\)</span>.</p>
 </div>
+<div id="exemplo-estimativa-de-nível-de-confiança" class="section level2">
+<h2><span class="header-section-number">6.5</span> Exemplo (estimativa de nível de confiança)</h2>
+<p>Seja <span class="math inline">\(X_1, \ldots, X_n\)</span> uma amostra aleatória de uma <span class="math inline">\(\text{N}(\mu, \sigma^2)\)</span>, onde <span class="math inline">\(s^2\)</span> é a variância amostral. Considere o problema de estimar um <strong>intervalo de confiança</strong> para <span class="math inline">\(s^2\)</span>.</p>
+<p>Do Teorema Central do Limite (TCL) sabemos que <span class="math inline">\(\bar{X} \sim \text{N}(\mu, \frac{\sigma^2}{n})\)</span>. Como não conhecemos <span class="math inline">\(\sigma^2\)</span>, usamos <span class="math inline">\(s^2\)</span> no lugar. Assim, temos que: <span class="math display">\[
+\widehat{Var[\bar{X}]} = \frac{s^2}{n} \quad \text{e} \quad
+\widehat{EP[\bar{X}]} = \frac{s}{\sqrt{n}}
+\]</span></p>
+<p>Para obter a variância de <span class="math inline">\(s^2\)</span>, precisamos lembrar que <span class="math display">\[
+\frac{(n-1)s^2}{\sigma^2} \sim \chi_{(n-1)}^{2}
+\]</span></p>
+<p>Lembrando também que para uma variável aleatória <span class="math inline">\(X\)</span> com distribuição qui-quadrado com <span class="math inline">\(k\)</span> graus de liberdade, <span class="math inline">\(X \sim \chi^2_k\)</span>, temos <span class="math inline">\(E[X] = k\)</span>, e <span class="math inline">\(Var[X] = 2k\)</span>. Assim, calculamos a esperança como</p>
+<p><span class="math display">\[\begin{align*}
+E\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &amp;= n-1 \\
+\frac{(n-1)}{\sigma^2} E[s^2] &amp;= n-1 \\
+E[s^2] &amp;= \frac{(n-1)\sigma^2}{(n-1)} \\
+E[s^2] &amp;= \sigma^2
+\end{align*}\]</span></p>
+<p>Portanto, confirmamos que essa é uma estimativa não viesada. Da mesma forma, calculamos a variância como:</p>
+<p><span class="math display">\[\begin{align*}
+Var\left[ \frac{(n-1)s^2}{\sigma^2} \right ] &amp;= 2(n-1) \\
+\frac{(n-1)^2}{\sigma^4} Var[s^2] &amp;= 2(n-1) \\
+Var[s^2] &amp;= \frac{2(n-1)\sigma^4}{(n-1)^2} \\
+Var[s^2] &amp;= \frac{2\sigma^4}{n-1} = \frac{2(\sigma^2)^2}{n-1}
+\end{align*}\]</span></p>
+<p>Como usamos <span class="math inline">\(s^2\)</span> no lugar de <span class="math inline">\(\sigma^2\)</span>, temos então que</p>
+<p><span class="math display">\[
+\widehat{Var[s^2]} = \frac{2(s^2)^2}{n-1}
+\]</span></p>
+<p>O erro-padrão de <span class="math inline">\(s^2\)</span> é então a raíz quadrada desta variância, ou seja,</p>
+<p><span class="math display">\[
+\widehat{EP[s^2]} = \sqrt{\widehat{Var[s^2]}} =
+  \sqrt{\frac{2(s^2)^2}{n-1}} = s^2 \sqrt{\frac{2}{n-1}}
+\]</span></p>
+<p>Um intervalo de confiança <strong>unilateral</strong> de <span class="math inline">\(100(1-\alpha)\%\)</span> de confiança é dado por <span class="math display">\[
+\left(0, \frac{(n-1)s^2}{\chi^2_{\alpha}} \right)
+\]</span> onde <span class="math inline">\(\chi^2_{\alpha}\)</span> é o <span class="math inline">\(\alpha\)</span>-quantil de uma distribuição <span class="math inline">\(\chi^2 (n-1)\)</span>. Se a população amostrada é normal com variância <span class="math inline">\(\sigma^2\)</span>, então a probabilidade de que o intervalo contenha <span class="math inline">\(\sigma^2\)</span> é <strong>exatamente</strong> <span class="math inline">\(1-\alpha\)</span>. Por exemplo, para <span class="math inline">\(\alpha = 0.05\)</span>, <span class="math display">\[
+\begin{align*}
+P\left(\frac{(n-1)s^2}{\sigma^2} &gt; \chi^2_{.05}(n-1) \right) &amp;= 0.95 \\
+P\left(\frac{(n-1)s^2}{\chi^2_{.05}(n-1)} &gt; \sigma^2 \right) &amp;= 0.95
+\end{align*}
+\]</span></p>
+<p>Por exemplo, o cáculo do limite superior do intervalo de <span class="math inline">\(95\%\)</span> de confiança para uma amostra de tamanho <span class="math inline">\(n=20\)</span> de uma <span class="math inline">\(\text{N}(0, 4)\)</span> é</p>
+<pre class="r"><code>n &lt;- 20
+alpha &lt;- .05
+x &lt;- rnorm(n, mean = 0, sd = 2)
+(UCL &lt;- (n - 1) * var(x) / qchisq(alpha, df = n - 1))</code></pre>
+<pre><code># [1] 5.331845</code></pre>
+<p>que contém o verdadeiro valor <span class="math inline">\(\sigma^2 = 4\)</span>. Se repetirmos esse processo várias vezes, esperamos então que aproximadamente <span class="math inline">\(95\%\)</span> das vezes, o intervalo contenha o verdadeiro valor de <span class="math inline">\(\sigma^2\)</span>, <strong>assumindo que a população amostrada é normal</strong> com variância <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>De maneira geral, um algoritmo para calcular o nível de confiança <strong>empírico</strong> para uma estimativa de algum parâmetro <span class="math inline">\(\theta\)</span> é:</p>
+<ol style="list-style-type: decimal">
+<li>Para cada repetição, indexada em <span class="math inline">\(j = 1, \ldots, N\)</span>
+<ol style="list-style-type: lower-alpha">
+<li>Gere a <span class="math inline">\(j\)</span>-ésima amostra aleatória, <span class="math inline">\(x_1^{(j)}, \ldots, x_n^{(j)}\)</span></li>
+<li>Calcule o intervalo de confiança <span class="math inline">\(C_j\)</span> para a <span class="math inline">\(j\)</span>-ésima amostra</li>
+<li>Calcule <span class="math inline">\(y_j = I(\theta \in C_j)\)</span> para a <span class="math inline">\(j\)</span>-ésima amostra</li>
+</ol></li>
+<li>Calcule o nível de confiança empírico <span class="math inline">\(\bar{y} = \frac{1}{N}\sum_{j=1}^{N} y_j\)</span></li>
+</ol>
+<p>A proporção amostral de intervalos que contém <span class="math inline">\(\theta\)</span> é então uma estimativa de Monte Carlo do verdadeiro nível de confiança <span class="math inline">\((1-\alpha)\)</span>.</p>
+<p>(Note aqui o uso da função <code>replicate()</code> no lugar do <code>for()</code>).</p>
+<pre class="r"><code>n &lt;- 20
+m &lt;- 1000
+alpha &lt;- .05
+UCL &lt;- replicate(m, expr = {
+    x &lt;- rnorm(n, mean = 0, sd = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+## Número de intervalos que contém sigma^2 = 4
+sum(UCL &gt; 4)</code></pre>
+<pre><code># [1] 963</code></pre>
+<pre class="r"><code>## Nível de confiança empírico
+sum(UCL &gt; 4)/N</code></pre>
+<pre><code># [1] 0.963</code></pre>
+<pre class="r"><code>mean(UCL &gt; 4)</code></pre>
+<pre><code># [1] 0.963</code></pre>
+<p>Veja que o nível de confiança empírico é muito próximo do nível de confiança teórico, de <span class="math inline">\(95\%\)</span>. Para 100 intervalos calculados, podemos visualizar o procedimento:</p>
+<pre class="r"><code>UCL.sim &lt;- replicate(100, expr = {
+    x &lt;- rnorm(n, mean = 0, sd = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+plot(NULL, NULL, xlim = c(0, 100), ylim = c(0, max(UCL.sim)), ylab = &quot;&quot;)
+segments(1:100, 0, 1:100, UCL.sim)
+abline(h = 4, col = 2)</code></pre>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Sabemos que o cálculo de intervalos de confiança para a variância é bastante sensível à fugas da normalidade. Ou seja, se a população amostrada não for normal, então o cálculo do intervalo de confiança possivelmente será afetado, refletindo no nível de confiança.</p>
+<p>Por exemplo, suponha que ao invés de normal, os dados foram obtidos a partir de uma população que segue uma distribuição <span class="math inline">\(\chi^2\)</span> com 2 graus de liberdade, que também possui variância 4, mas claramente não é normal.</p>
+<pre class="r"><code>curve(dchisq(x, df = 2), to = 10)</code></pre>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Podemos repetir o procedimento acima, substituindo as amostras de <span class="math inline">\(X\)</span> da normal pela <span class="math inline">\(\chi^2(2)\)</span> e verificar qual seria então o nível de confiança empírico.</p>
+<pre class="r"><code>n &lt;- 20
+m &lt;- 1000
+alpha &lt;- .05
+UCL &lt;- replicate(m, expr = {
+    x &lt;- rchisq(n, df = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+## Número de intervalos que contém sigma^2 = 4
+sum(UCL &gt; 4)</code></pre>
+<pre><code># [1] 766</code></pre>
+<pre class="r"><code>## Nível de confiança empírico
+sum(UCL &gt; 4)/N</code></pre>
+<pre><code># [1] 0.766</code></pre>
+<pre class="r"><code>mean(UCL &gt; 4)</code></pre>
+<pre><code># [1] 0.766</code></pre>
+<p>Veja que, embora estamos calculando intervalos <strong>teóricos</strong> de <span class="math inline">\(95\%\)</span>, o nível de confiança é na verdade bem mais baixo, o que pode levar à conclusões equivocadas nesse caso onde a população não é normal.</p>
+<p>Visualmente temos:</p>
+<pre class="r"><code>UCL.sim &lt;- replicate(100, expr = {
+    x &lt;- rchisq(n, df = 2)
+    (n - 1) * var(x) / qchisq(alpha, df = n - 1)
+})
+plot(NULL, NULL, xlim = c(0, 100), ylim = c(0, max(UCL.sim)), ylab = &quot;&quot;)
+segments(1:100, 0, 1:100, UCL.sim)
+abline(h = 4, col = 2)</code></pre>
+<p><img src="figures/09_MC_inf_estimacao/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
 </div>
 <div id="distribuição-amostral-da-média" class="section level1">
 <h1><span class="header-section-number">7</span> Distribuição amostral da média</h1>
@@ -1026,7 +1141,7 @@ simula0(n=10, mu0=0, sig0=1)
 ```
 
 ```
-# [1] -0.5407376
+# [1] 0.3698479
 ```
 
 ```r
@@ -1038,7 +1153,7 @@ curve(pt(x, df=10-1), add=TRUE, col=2)
 curve(pnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## Comparação pela densidade.
@@ -1047,7 +1162,7 @@ curve(dt(x, df=10-1), add=TRUE, col=2)
 curve(dnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-2.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-21-2.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## p-valor da simulação.
@@ -1055,7 +1170,7 @@ sum(abs(t) >= qt(0.975, df=10-1))/length(t)
 ```
 
 ```
-# [1] 0.0481
+# [1] 0.049
 ```
 
 ```r
@@ -1076,7 +1191,7 @@ curve(pt(x, df=n-1), add=TRUE, col=2)
 curve(pnorm(x), add=TRUE, col=3)
 ```
 
-<img src="figures/09_MC_inf_estimacao/unnamed-chunk-15-3.png" width="80%" style="display: block; margin: auto;" />
+<img src="figures/09_MC_inf_estimacao/unnamed-chunk-21-3.png" width="80%" style="display: block; margin: auto;" />
 
 ```r
 ## p-valor real vs nível se significância nominal.
@@ -1084,7 +1199,7 @@ sum(abs(t) >= qt(0.975, df=n-1))/length(t)
 ```
 
 ```
-# [1] 0.1165
+# [1] 0.1162
 ```
 
 ```r
