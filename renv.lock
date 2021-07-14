@@ -268,6 +268,20 @@
       "Repository": "CRAN",
       "Hash": "c98eb5133d9cb9e1622b8691487f11bb"
     },
+    "future": {
+      "Package": "future",
+      "Version": "1.21.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f25fad6bee82b7ab01f055e2d813b96f"
+    },
+    "future.apply": {
+      "Package": "future.apply",
+      "Version": "1.7.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7fb0dc1961807da107ab2078366052bd"
+    },
     "gdata": {
       "Package": "gdata",
       "Version": "2.18.0",
@@ -281,6 +295,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "4d243a9c10b00589889fe32314ffd902"
+    },
+    "globals": {
+      "Package": "globals",
+      "Version": "0.14.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "eca8023ed5ca6372479ebb9b3207f5ae"
     },
     "glue": {
       "Package": "glue",
@@ -401,6 +422,13 @@
       "Repository": "CRAN",
       "Hash": "3471fb65971f1a7b2d4ae7848cf2db8d"
     },
+    "listenv": {
+      "Package": "listenv",
+      "Version": "0.8.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0bde42ee282efb18c7c4e63822f5b4f7"
+    },
     "lubridate": {
       "Package": "lubridate",
       "Version": "1.7.10",
@@ -491,6 +519,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "f4dbc5a47fd93d3415249884d31d6791"
+    },
+    "parallelly": {
+      "Package": "parallelly",
+      "Version": "1.26.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "267fe92836a0eb43becabd3306cc75d1"
     },
     "perm": {
       "Package": "perm",
@@ -629,13 +664,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "06c85365a03fdaf699966cc1d3cf53ea"
-    },
-    "runjags": {
-      "Package": "runjags",
-      "Version": "2.2.0-2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "7985484787207b45ec9b2e9386385691"
     },
     "rvest": {
       "Package": "rvest",
