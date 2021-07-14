@@ -349,16 +349,63 @@ estimativa, expressa geralmente pelo **erro padrão**.
 - Nesses casos, a distribuição amostral **empírica** construída pelo
   método de Monte Carlo pode ser utilizada
 
-Portanto, a estimativa do erro padrão pelo método de Monte Carlo é o
-**desvio padrão empírico** da amostra dos $\hat\theta^{(j)}$,
+Como a estimativa pontual (de Monte Carlo) para $\theta$ é uma média
+($\hat{\theta}_{MC}$), então seu erro padrão será
+$\sqrt{\text{Var}(\theta)/N}$ (definição de erro padrão de uma média).
+Quando a distribuição exata de $\theta$ for desconhecida, podemos
+substituir a distribuição $F_{\theta}$ pela distribuição empírica $F_N$
+da amostra $\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(N)}$. Um
+estimador do tipo *plug-in* para a variância de $\theta$ será então
+
 $$
-\text{EP}_{MC} = \frac{1}{N-1} \sqrt{\sum_{j=1}^{N} (\hat\theta^{(j)} -
-\hat\theta_{MC})^2}
+\widehat{\text{Var}}(\theta) = \frac{1}{N} \sum_{j=1}^{N} (\theta^{(j)} -
+\hat{\theta}_{MC})^2
 $$
+
+
+Note que $\widehat{\text{Var}}(\theta)$ é a **variância populacional da
+pseudo-população finita** $\{\hat{\theta}^{(1)}, \ldots,
+\hat{\theta}^{(N)}\}$ com distribuição $F_N$. Com isso, o correspondente
+estimador para o erro padrão de $\hat{\theta}_{MC}$ é
+
+\begin{align*}
+\widehat{\text{EP}}_{MC} &= \frac{1}{\sqrt{N}} \sqrt{\frac{1}{N}
+  \sum_{j=1}^{N} (\hat\theta^{(j)} - \hat\theta_{MC})^2} \\
+  &= \frac{1}{N} \sqrt{\sum_{j=1}^{N} (\hat\theta^{(j)} -
+  \hat\theta_{MC})^2}
+\end{align*}
+
+Usando o estimador não viesado para $\text{Var}(\theta)$, temos
+
+$$
+\widehat{\text{EP}}_{MC} = \frac{1}{\sqrt{N}} \sqrt{\frac{1}{N-1}
+  \sum_{j=1}^{N} (\hat\theta^{(j)} - \hat\theta_{MC})^2}
+$$
+
+No entanto, em um experimento de Monte Carlo, o tamanho amostral ($N$) é
+grande, de forma que as duas estimativas serão aproximadamente iguais.
+
+<div class="panel panel-primary">
+<div class="panel-heading">Observação: erro padrão no R</div>
+<div class="panel-body">
+No R, as funções `var()` e `sd()` calculam a variância e o desvio padrão
+não viesados (com o denominador $n-1$). Dessa forma, se for utilizar
+alguma destas funções para calcular o erro-padrão, utilize a última
+equação mostrada acima.
+
+Por exemplo, se `x` é um vetor de tamanho $N$ com as estimativas
+$\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{(N)}$, então o erro padrão
+pode ser calculado como
+
+```{r, eval=FALSE}
+sd(x)/sqrt(N)
+```
+</div>
+</div>
 
 # Avaliação de estimadores
 
-## Exemplo 1 (normal)
+## Exemplo (normal)
 
 Considere uma amostra aleatória ($X_1, \ldots,
 X_n$) de uma variável aleatória $X \sim \text{N}(\mu = 3, \sigma^2 = 1)$ e os
@@ -413,9 +460,21 @@ densityplot(
 ## Média das estimativas
 tapply(L$est, L$.id, mean)
 ## Erro padrão das estimativas
-tapply(L$est, L$.id, sd)
+tapply(L$est, L$.id, function(x) sd(x)/sqrt(N))
 ## Eficiência relativa
 var(L$est[L$.id == "th1"])/var(L$est[L$.id == "th2"])
+```
+
+```{r, eval=FALSE, include=FALSE}
+sum((th1 - mean(th1))^2)/N
+var(th1) * ((N - 1)/N)
+sum((th1 - mean(th1))^2)/(N - 1)
+var(th1)
+sqrt(sum((th1 - mean(th1))^2))/N
+sd(th1)
+sqrt(sum((th1 - mean(th1))^2))/(N - 1)
+sqrt(sum((th1 - mean(th1))^2))/N
+sqrt(sum((th1 - mean(th1))^2))/(N - 1)
 ```
 
 **Pseudo-código 2 (viés e consistência)**
@@ -473,7 +532,7 @@ xyplot(
     layer(panel.abline(h = 3))
 ```
 
-## Exemplo 2 (uniforme)
+## Exemplo (uniforme)
 
 Considere uma amostra aleatória ($X_1, \ldots,
 X_n$) de uma variável aleatória $Y \sim \text{U}(\text{min} = 2,
@@ -668,6 +727,50 @@ Por esses resultados concluimos que ambos estimadores, média aparada de
 primeiro nível e mediana, são não viesados para estimar a média
 populacional $\mu$, mas a média aparada é um estimador melhor, ou mais
 eficiente do que a mediana.
+
+## Exemplo (erro padrão)
+
+Suponha $X_1, X_2$ são duas VAs iid de uma normal padrão. Usando
+simulação de Monte Carlo, obtenha uma estimativa de $\text{E}(|X_1 -
+X_2|)$, e seu erro padrão.
+
+Para estimar $\theta = \text{E}(g(X_1, X_2)) = \text{E}(|X_1 - X_2|)$,
+baseado em $N$ amostras:
+
+1. Gere as variáveis aleatórias $\mathbb{x}^{(j)} = (x_1^{(j)},
+   x_2^{(j)})$ da normal padrão, $j = 1, \ldots, N$.
+2. Calcule $\hat\theta^{(j)} = g_j(x_1^{(j)}, x_2^{(j)}) = |x_1^{(j)} -
+   x_2^{(j)}|$, e calcule a média.
+
+```{r}
+N <- 1000
+g <- numeric(N)
+for (i in 1:N) {
+    x <- rnorm(2)
+    g[i] <- abs(x[1] - x[2])
+}
+(est <- mean(g))
+hist(g)
+```
+
+Por integração, o resultado é
+ $\text{E}(|X_1 - X_2|) = 2/\sqrt{\pi} = 1.1284$.
+
+Em uma amostra de Monte Carlo, o tamanho da amostra é $N$, por isso, o
+erro padrão da estimativa será
+
+```{r}
+## Variância da distribuição amostral
+sum((g - est)^2)/(N - 1)
+var(g)
+## Erro padrão = desvio padrão da distribuição amostral
+sqrt(sum((g - est)^2))/N # viesado
+sd(g)/sqrt(N)            # não viiesado
+```
+
+Pode-se mostrar que o valor exato é $ep = \sqrt{(2 - 4/\pi)/N} =
+0.0269$.
+
 
 # Distribuição amostral da média
 
