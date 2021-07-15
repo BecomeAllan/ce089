@@ -16,8 +16,8 @@ opts_chunk$set(fig.path = "figures/09_MC_inf_testes/")
 
 # Introdução
 
-Besag e Clifford (1989) definiram que um teste de Monte Carlo
-generalizado é um que possui as seguintes características:
+@Besag1989 definiram que um teste de Monte Carlo generalizado é um que
+possui as seguintes características:
 
 1. Um conjunto de dados observado, é apenas um entre muitos conjuntos
    que poderiam ter ocorrido
@@ -341,7 +341,7 @@ distintos
 ### Exemplo (chacais)
 
 O exemplo abaixo é uma adaptação de um exemplo clássico analisado por
-Manly (1997). Os dados se referem ao comprimento das mandíbulas de 20
+@Manly2006. Os dados se referem ao comprimento das mandíbulas de 20
 exemplares de chacais (10 de cada sexo) disponíveis no Museu de História
 Natural Britânico.
 
@@ -481,7 +481,7 @@ sum(tpad >= tcalc)/N
 
 #### Quando o método pode não ser muito bom {-}
 
-Aqui usamos os dados originais do Manly (1997).
+Aqui usamos os dados originais de @Manly2006.
 
 ```{r, cache=TRUE}
 ## Exemplo original do Manly (1997)
@@ -868,3 +868,5 @@ curve(pnorm(x), add=TRUE, col=3)
 sum(abs(t) >= qt(0.975, df=n-1))/length(t)
 sum(abs(t) >= qt(0.95, df=n-1))/length(t)
 ```
+
+# Referências {-}
