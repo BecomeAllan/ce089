@@ -376,7 +376,7 @@ div.tocify {
 
 <div id="introdução" class="section level1">
 <h1><span class="header-section-number">1</span> Introdução</h1>
-<p>Besag e Clifford (1989) definiram que um teste de Monte Carlo generalizado é um que possui as seguintes características:</p>
+<p><span class="citation">Besag and Clifford (1989)</span> definiram que um teste de Monte Carlo generalizado é um que possui as seguintes características:</p>
 <ol style="list-style-type: decimal">
 <li>Um conjunto de dados observado, é apenas um entre muitos conjuntos que poderiam ter ocorrido</li>
 <li>Todos os possíveis conjuntos de dados podem ser gerados a partir de uma série de mudanças incrementais nos dados (<strong>randomização</strong>)
@@ -670,7 +670,7 @@ s^2 = \frac{(n_1 - 1) \cdot s_1^2 + (n_2 - 1)
 </ul>
 <div id="exemplo-chacais" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> Exemplo (chacais)</h3>
-<p>O exemplo abaixo é uma adaptação de um exemplo clássico analisado por Manly (1997). Os dados se referem ao comprimento das mandíbulas de 20 exemplares de chacais (10 de cada sexo) disponíveis no Museu de História Natural Britânico.</p>
+<p>O exemplo abaixo é uma adaptação de um exemplo clássico analisado por <span class="citation">Manly (2006)</span>. Os dados se referem ao comprimento das mandíbulas de 20 exemplares de chacais (10 de cada sexo) disponíveis no Museu de História Natural Britânico.</p>
 <p>Considere que <span class="math inline">\(\mu_1\)</span> seja a média populacional dos comprimentos das mandíbulas de chacaias machos, e que <span class="math inline">\(\mu_2\)</span> se refere às fêmeas. Os pesquisadores supõem que as mandíbulas dos machos são, em média, maiores que as das fêmeas. Dessa forma um teste de hipótese pode ser formulado com as seguintes hipóteses</p>
 <p><span class="math display">\[
 \begin{align*}
@@ -815,7 +815,7 @@ sum(tpad &gt;= tcalc)/N</code></pre>
 </div>
 <div id="quando-o-método-pode-não-ser-muito-bom" class="section level4 unnumbered">
 <h4>Quando o método pode não ser muito bom</h4>
-<p>Aqui usamos os dados originais do Manly (1997).</p>
+<p>Aqui usamos os dados originais de <span class="citation">Manly (2006)</span>.</p>
 <pre class="r"><code>## Exemplo original do Manly (1997)
 machos &lt;- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112)
 femeas &lt;- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
@@ -1337,6 +1337,17 @@ sum(abs(t) &gt;= qt(0.975, df=n-1))/length(t)</code></pre>
 <pre><code># [1] 0.0631</code></pre>
 <pre class="r"><code>sum(abs(t) &gt;= qt(0.95, df=n-1))/length(t)</code></pre>
 <pre><code># [1] 0.1115</code></pre>
+</div>
+<div id="referências" class="section level1 unnumbered">
+<h1>Referências</h1>
+<div id="refs" class="references">
+<div id="ref-Besag1989">
+<p>Besag, Julian, and Peter Clifford. 1989. “Generalized Monte Carlo Significance Tests.” <em>Biometrika</em> 76 (4): 633. <a href="https://doi.org/10.2307/2336623">https://doi.org/10.2307/2336623</a>.</p>
+</div>
+<div id="ref-Manly2006">
+<p>Manly, Bryan F. J. 2006. <em>Randomization, Bootstrap and Monte Carlo Methods in Biology</em>. Boca Raton: Chapman &amp; Hall/CRC.</p>
+</div>
+</div>
 </div>
 
 <center>
