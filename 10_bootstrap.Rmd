@@ -189,7 +189,10 @@ t.test(x = machos, y = femeas, alternative = "greater",
 pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)
 
 ## Teste por simulação via Bootstrap
-N <- 10000
+N <- 1e5 # NOTE o aumento no número de simulações
+## Simula direto da distribuição amostral
+library(future.apply) # para um replicate mais eficiente (em paralelo)
+plan(multicore, workers = 4)
 ## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
 ## de machos e fêmeas são provenientes da mesma poplação, e portanto
 ## podem ser pensados como uma única amostra.
@@ -197,7 +200,7 @@ amostra <- c(machos, femeas)
 ## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
 ## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
 ## então as diferenças entre as médias devem ser próximas de zero.
-am <- replicate(
+am <- future_replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
 ## Visualização
@@ -224,7 +227,7 @@ prop.table(table(am))
 cumsum(prop.table(table(am)))
 
 ## B passos
-B <- 1000
+B <- 1e4
 am <- sample(x, size = B, replace = TRUE)
 prop.table(table(am))
 cumsum(prop.table(table(am)))
@@ -260,7 +263,7 @@ plot(law82$LSAT, law82$GPA)
 cor(law82$LSAT, law82$GPA)
 
 ## Definições
-B <- 200
+B <- 2000
 n <- nrow(law)
 R <- numeric(B)
 
@@ -276,6 +279,8 @@ for (b in 1:B) {
 mean(R)
 (se.R <- sd(R))
 hist(R)
+## Viẽs
+mean(R) - cor(law$LSAT, law$GPA)
 ```
 
 ```{r}
@@ -297,6 +302,8 @@ plot(obj)
 y <- as.vector(obj$t)
 mean(y)
 sd(y)
+## Viẽs
+mean(y) - cor(law$LSAT, law$GPA)
 ```
 
 ```{r}
@@ -310,8 +317,11 @@ r <- function(x, xdata) {
 ## Procedimento
 n <- nrow(law)
 obj2 <- bootstrap(x = 1:n, nboot = 2000, theta = r, law)
+str(obj2)
 mean(obj2$thetastar)
 sd(obj2$thetastar)
+## Viẽs
+mean(obj2$thetastar) - cor(law$LSAT, law$GPA)
 ```
 
 # Estimativa do viés via bootstrap
@@ -427,7 +437,7 @@ estimativas de bootstrap $\hat{\theta}^{\star}$.
   quantis $\alpha/2$ e $1-\alpha/2$ de $\hat{\theta}$
 - Portanto o intervalo percentil de bootstrap $100(1-\alpha)\%$ é
 $$
-(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2})
+(\hat{\theta}_{\alpha/2}^{\star}, \hat{\theta}_{1-\alpha/2}^{\star})
 $$
 - Pode-se mostrar que o intervalo percentil de bootstrap possui
   vantagens teóricas e maior taxa de cobertura, quando comparado aos
@@ -448,6 +458,8 @@ boot.obj <- boot(data = law, statistic = r, R = 2000)
 boot.obj
 ## Estatśitica amostral
 boot.obj$t0
+## Viés
+(vies <- mean(boot.obj$t) - boot.obj$t0)
 ## Distribuição das estimativas de bootstrap
 plot(boot.obj)
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
@@ -462,6 +474,7 @@ alpha <- c(.025, .975)
 theta.hat + qnorm(alpha) * se.theta
 ## Note que é diferente do resultado da função pois a função corrige
 ## pelo viés internamente
+(theta.hat + qnorm(alpha) * se.theta) - vies
 boot.ci(boot.obj, type = "norm")
 
 ## Básico
@@ -477,7 +490,8 @@ Observações:
 
 1. A função `quantile()` possui 9 formas diferentes de calcular os
    quantis, por isso aqui foi escolhido `type = 6` para ficar mais
-   próximo do que é usado internamente na função `boot::boot.ci()`
+   próximo do que é usado internamente na função `boot::boot.ci()` (veja
+   `?quantile`)
 2. O intervalo normal fornecido pela função é corrigido pelo viés (*bias
    corrected* ou intervalo BCa)
 3. A grande diferença entre os limites dos intervalos normal e percentil
@@ -600,6 +614,8 @@ ci$CI
 ci$Qt
 length(ci$stat)
 length(ci$t.stats)
+
+
 ## Distribuições
 par(mfrow = c(1, 2))
 ## Distribuição amostral
@@ -607,6 +623,37 @@ hist(ci$stat)
 ## Distribuição "estudentizada" de referência
 hist(ci$t.stats); abline(v = ci$Qt, col = 2)
 par(mfrow = c(1, 1))
+```
+
+```{r, include=FALSE, eval=FALSE}
+##----------------------------------------------------------------------
+## Comparar com
+## Usando a função bootstrap::bootstrap()
+## Define a função que calcula a estatística
+r <- function(x, xdata) {
+    cor(xdata[x, 1], xdata[x, 2])
+}
+## Procedimento
+n <- nrow(law)
+obj2 <- bootstrap(x = 1:n, nboot = 2000, theta = r, law)
+boott(x = 1:n, theta = r, law)$confpoints
+boott(x = 1:n, theta = r, VS = TRUE, law)$confpoints
+
+##----------------------------------------------------------------------
+## Define a função que calcula a estatística de interesse
+r <- function(x, i) {
+    rr <- cor(x[i, 1], x[i, 2])
+    vv <- var(as.numeric(x[i, ]))
+    c(rr, vv)
+}
+r(law, 1)
+## Roda o processo
+boot.obj <- boot(data = law, statistic = r, R = 2000)
+## Resumo
+boot.obj
+## Estatśitica amostral
+boot.obj$t0
+##----------------------------------------------------------------------
 ```
 
 Observações:
@@ -698,4 +745,10 @@ hist(ci$stat)
 ## Distribuição "estudentizada" de referência
 hist(ci$t.stats); abline(v = ci$Qt, col = 2)
 par(mfrow = c(1, 1))
+```
+
+```{r, eval=FALSE, include=FALSE}
+quantile(boot.obj$t, probs = c(.025, .975), type = 6)
+(ics <- quantile(boot.obj$t, probs = c(.025, .975)))
+abs(ics) <= 0.2
 ```
