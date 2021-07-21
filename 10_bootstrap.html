@@ -566,7 +566,10 @@ t.test(x = machos, y = femeas, alternative = &quot;greater&quot;,
 pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.001323634</code></pre>
 <pre class="r"><code>## Teste por simulação via Bootstrap
-N &lt;- 10000
+N &lt;- 1e5 # NOTE o aumento no número de simulações
+## Simula direto da distribuição amostral
+library(future.apply) # para um replicate mais eficiente (em paralelo)
+plan(multicore, workers = 4)
 ## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
 ## de machos e fêmeas são provenientes da mesma poplação, e portanto
 ## podem ser pensados como uma única amostra.
@@ -574,7 +577,7 @@ amostra &lt;- c(machos, femeas)
 ## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
 ## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
 ## então as diferenças entre as médias devem ser próximas de zero.
-am &lt;- replicate(
+am &lt;- future_replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
 ## Visualização
@@ -583,7 +586,7 @@ abline(v = med.amostral, col = 2)</code></pre>
 <p><img src="figures/10_bootstrap/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## p-valor empírico
 sum(am &gt;= med.amostral)/N</code></pre>
-<pre><code># [1] 0.0025</code></pre>
+<pre><code># [1] 0.00228</code></pre>
 </div>
 <div id="uma-nota-de-precaução" class="section level3 unnumbered">
 <h3>Uma nota de precaução</h3>
@@ -604,20 +607,20 @@ am &lt;- sample(x, replace = TRUE)
 prop.table(table(am))</code></pre>
 <pre><code># am
 #   1   2   4   5 
-# 0.1 0.3 0.5 0.1</code></pre>
+# 0.1 0.5 0.3 0.1</code></pre>
 <pre class="r"><code>cumsum(prop.table(table(am)))</code></pre>
 <pre><code>#   1   2   4   5 
-# 0.1 0.4 0.9 1.0</code></pre>
+# 0.1 0.6 0.9 1.0</code></pre>
 <pre class="r"><code>## B passos
-B &lt;- 1000
+B &lt;- 1e4
 am &lt;- sample(x, size = B, replace = TRUE)
 prop.table(table(am))</code></pre>
 <pre><code># am
-#     1     2     3     4     5 
-# 0.308 0.303 0.084 0.206 0.099</code></pre>
+#      1      2      3      4      5 
+# 0.2989 0.3035 0.0938 0.2096 0.0942</code></pre>
 <pre class="r"><code>cumsum(prop.table(table(am)))</code></pre>
-<pre><code>#     1     2     3     4     5 
-# 0.308 0.611 0.695 0.901 1.000</code></pre>
+<pre><code>#      1      2      3      4      5 
+# 0.2989 0.6024 0.6962 0.9058 1.0000</code></pre>
 <pre class="r"><code>## Qual o problema então?
 ## Distribuição empírica
 plot(0:5, c(0, prop.table(table(am))), type = &quot;h&quot;)
@@ -655,7 +658,7 @@ str(law82)</code></pre>
 <pre class="r"><code>cor(law82$LSAT, law82$GPA)</code></pre>
 <pre><code># [1] 0.7599979</code></pre>
 <pre class="r"><code>## Definições
-B &lt;- 200
+B &lt;- 2000
 n &lt;- nrow(law)
 R &lt;- numeric(B)
 
@@ -669,11 +672,14 @@ for (b in 1:B) {
 
 ## Resultado
 mean(R)</code></pre>
-<pre><code># [1] 0.7722927</code></pre>
+<pre><code># [1] 0.7709778</code></pre>
 <pre class="r"><code>(se.R &lt;- sd(R))</code></pre>
-<pre><code># [1] 0.132016</code></pre>
+<pre><code># [1] 0.1368193</code></pre>
 <pre class="r"><code>hist(R)</code></pre>
 <p><img src="figures/10_bootstrap/unnamed-chunk-5-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Viẽs
+mean(R) - cor(law$LSAT, law$GPA)</code></pre>
+<pre><code># [1] -0.005396721</code></pre>
 <pre class="r"><code>## Usando a função boot::boot()
 
 ## Define a função que calcula a estatística de interesse
@@ -700,19 +706,19 @@ obj</code></pre>
 # 
 # Bootstrap Statistics :
 #      original       bias    std. error
-# t1* 0.7763745 -0.004350115   0.1331296</code></pre>
+# t1* 0.7763745 -0.001896919   0.1359209</code></pre>
 <pre class="r"><code>str(obj)</code></pre>
 <pre><code># List of 11
 #  $ t0       : num 0.776
-#  $ t        : num [1:2000, 1] 0.926 0.698 0.642 0.586 0.8 ...
+#  $ t        : num [1:2000, 1] 0.848 0.801 0.763 0.855 0.75 ...
 #  $ R        : num 2000
 #  $ data     :&#39;data.frame&#39;:    15 obs. of  2 variables:
 #   ..$ LSAT: num [1:15] 576 635 558 578 666 580 555 661 651 605 ...
 #   ..$ GPA : num [1:15] 3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...
-#  $ seed     : int [1:626] 10403 432 1781087344 386800285 1300146352 -1043896737 -961725389 1610237524 1487280467 -2089005861 ...
+#  $ seed     : int [1:626] 10403 67 374337935 -66916328 796352990 -1344538218 7326455 801261936 -841320945 1823181309 ...
 #  $ statistic:function (x, i)  
 #   ..- attr(*, &quot;srcref&quot;)= &#39;srcref&#39; int [1:8] 4 6 6 1 6 1 4 6
-#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0x55f65203bc40&gt; 
+#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0x55a56d026020&gt; 
 #  $ sim      : chr &quot;ordinary&quot;
 #  $ call     : language boot(data = law, statistic = r, R = 2000)
 #  $ stype    : chr &quot;i&quot;
@@ -725,9 +731,12 @@ obj</code></pre>
 <pre class="r"><code>## Acessa os valores calculados
 y &lt;- as.vector(obj$t)
 mean(y)</code></pre>
-<pre><code># [1] 0.7720244</code></pre>
+<pre><code># [1] 0.7744776</code></pre>
 <pre class="r"><code>sd(y)</code></pre>
-<pre><code># [1] 0.1331296</code></pre>
+<pre><code># [1] 0.1359209</code></pre>
+<pre class="r"><code>## Viẽs
+mean(y) - cor(law$LSAT, law$GPA)</code></pre>
+<pre><code># [1] -0.001896919</code></pre>
 <pre class="r"><code>## Usando a função bootstrap::bootstrap()
 
 ## Define a função que calcula a estatística
@@ -738,10 +747,20 @@ r &lt;- function(x, xdata) {
 ## Procedimento
 n &lt;- nrow(law)
 obj2 &lt;- bootstrap(x = 1:n, nboot = 2000, theta = r, law)
-mean(obj2$thetastar)</code></pre>
-<pre><code># [1] 0.7729704</code></pre>
+str(obj2)</code></pre>
+<pre><code># List of 5
+#  $ thetastar     : num [1:2000] 0.689 0.545 0.775 0.719 0.614 ...
+#  $ func.thetastar: NULL
+#  $ jack.boot.val : NULL
+#  $ jack.boot.se  : NULL
+#  $ call          : language bootstrap(x = 1:n, nboot = 2000, theta = r, law)</code></pre>
+<pre class="r"><code>mean(obj2$thetastar)</code></pre>
+<pre><code># [1] 0.7691919</code></pre>
 <pre class="r"><code>sd(obj2$thetastar)</code></pre>
-<pre><code># [1] 0.1341259</code></pre>
+<pre><code># [1] 0.1344538</code></pre>
+<pre class="r"><code>## Viẽs
+mean(obj2$thetastar) - cor(law$LSAT, law$GPA)</code></pre>
+<pre><code># [1] -0.007182551</code></pre>
 </div>
 <div id="estimativa-do-viés-via-bootstrap" class="section level1">
 <h1><span class="header-section-number">3</span> Estimativa do viés via bootstrap</h1>
@@ -778,7 +797,7 @@ for (b in 1:B) {
 
 ## Viés
 mean(theta.b) - theta.hat</code></pre>
-<pre><code># [1] -0.003264248</code></pre>
+<pre><code># [1] -0.0004970639</code></pre>
 </div>
 <div id="intervalos-de-confiança-via-bootstrap" class="section level1">
 <h1><span class="header-section-number">4</span> Intervalos de confiança via Bootstrap</h1>
@@ -827,7 +846,7 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <li>Suponha que <span class="math inline">\(\hat{\theta}^{(1)}, \ldots, \hat{\theta}^{B}\)</span> são as estimativas de bootstrap de <span class="math inline">\(\hat{\theta}\)</span></li>
 <li>A partir da distribuição empírica das estimativas, determine os quantis <span class="math inline">\(\alpha/2\)</span> e <span class="math inline">\(1-\alpha/2\)</span> de <span class="math inline">\(\hat{\theta}\)</span></li>
 <li>Portanto o intervalo percentil de bootstrap <span class="math inline">\(100(1-\alpha)\%\)</span> é <span class="math display">\[
-(\hat{\theta}_{\alpha/2}, \hat{\theta}_{1-\alpha/2})
+(\hat{\theta}_{\alpha/2}^{\star}, \hat{\theta}_{1-\alpha/2}^{\star})
 \]</span></li>
 <li>Pode-se mostrar que o intervalo percentil de bootstrap possui vantagens teóricas e maior taxa de cobertura, quando comparado aos intervalos normal e básico</li>
 <li>A função <code>boot::boot.ci()</code> calcula estes três tipos de intervalos</li>
@@ -853,10 +872,13 @@ boot.obj</code></pre>
 # 
 # Bootstrap Statistics :
 #      original       bias    std. error
-# t1* 0.7763745 -0.002348834   0.1330581</code></pre>
+# t1* 0.7763745 -0.008545694   0.1334486</code></pre>
 <pre class="r"><code>## Estatśitica amostral
 boot.obj$t0</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
+<pre class="r"><code>## Viés
+(vies &lt;- mean(boot.obj$t) - boot.obj$t0)</code></pre>
+<pre><code># [1] -0.008545694</code></pre>
 <pre class="r"><code>## Distribuição das estimativas de bootstrap
 plot(boot.obj)</code></pre>
 <p><img src="figures/10_bootstrap/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -869,7 +891,7 @@ plot(boot.obj)</code></pre>
 # 
 # Intervals : 
 # Level      Normal              Basic              Percentile     
-# 95%   ( 0.5179,  1.0395 )   ( 0.5896,  1.1062 )   ( 0.4465,  0.9631 )  
+# 95%   ( 0.5234,  1.0465 )   ( 0.5859,  1.0971 )   ( 0.4557,  0.9669 )  
 # Calculations and Intervals on Original Scale</code></pre>
 <pre class="r"><code>## Calcule intervalos manualmente
 ## Define intervalo com alpha = 0.05
@@ -879,12 +901,14 @@ alpha &lt;- c(.025, .975)
 (theta.hat &lt;- boot.obj$t0)</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
 <pre class="r"><code>(se.theta &lt;- sd(boot.obj$t))</code></pre>
-<pre><code># [1] 0.1330581</code></pre>
+<pre><code># [1] 0.1334486</code></pre>
 <pre class="r"><code>theta.hat + qnorm(alpha) * se.theta</code></pre>
-<pre><code># [1] 0.5155853 1.0371636</code></pre>
+<pre><code># [1] 0.5148201 1.0379289</code></pre>
 <pre class="r"><code>## Note que é diferente do resultado da função pois a função corrige
 ## pelo viés internamente
-boot.ci(boot.obj, type = &quot;norm&quot;)</code></pre>
+(theta.hat + qnorm(alpha) * se.theta) - vies</code></pre>
+<pre><code># [1] 0.5233658 1.0464746</code></pre>
+<pre class="r"><code>boot.ci(boot.obj, type = &quot;norm&quot;)</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
 # 
@@ -893,12 +917,12 @@ boot.ci(boot.obj, type = &quot;norm&quot;)</code></pre>
 # 
 # Intervals : 
 # Level      Normal        
-# 95%   ( 0.5179,  1.0395 )  
+# 95%   ( 0.5234,  1.0465 )  
 # Calculations and Intervals on Original Scale</code></pre>
 <pre class="r"><code>## Básico
 2 * theta.hat - quantile(boot.obj$t, probs = rev(alpha), type = 6)</code></pre>
 <pre><code>#     97.5%      2.5% 
-# 0.5896451 1.1062186</code></pre>
+# 0.5858779 1.0970886</code></pre>
 <pre class="r"><code>boot.ci(boot.obj, type = &quot;basic&quot;)</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
@@ -908,12 +932,12 @@ boot.ci(boot.obj, type = &quot;norm&quot;)</code></pre>
 # 
 # Intervals : 
 # Level      Basic         
-# 95%   ( 0.5896,  1.1062 )  
+# 95%   ( 0.5859,  1.0971 )  
 # Calculations and Intervals on Original Scale</code></pre>
 <pre class="r"><code>## Percentil
 quantile(boot.obj$t, probs = alpha, type = 6)</code></pre>
 <pre><code>#      2.5%     97.5% 
-# 0.4465304 0.9631039</code></pre>
+# 0.4556604 0.9668711</code></pre>
 <pre class="r"><code>boot.ci(boot.obj, type = &quot;perc&quot;)</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
@@ -923,11 +947,11 @@ quantile(boot.obj$t, probs = alpha, type = 6)</code></pre>
 # 
 # Intervals : 
 # Level     Percentile     
-# 95%   ( 0.4465,  0.9631 )  
+# 95%   ( 0.4557,  0.9669 )  
 # Calculations and Intervals on Original Scale</code></pre>
 <p>Observações:</p>
 <ol style="list-style-type: decimal">
-<li>A função <code>quantile()</code> possui 9 formas diferentes de calcular os quantis, por isso aqui foi escolhido <code>type = 6</code> para ficar mais próximo do que é usado internamente na função <code>boot::boot.ci()</code></li>
+<li>A função <code>quantile()</code> possui 9 formas diferentes de calcular os quantis, por isso aqui foi escolhido <code>type = 6</code> para ficar mais próximo do que é usado internamente na função <code>boot::boot.ci()</code> (veja <code>?quantile</code>)</li>
 <li>O intervalo normal fornecido pela função é corrigido pelo viés (<em>bias corrected</em> ou intervalo BCa)</li>
 <li>A grande diferença entre os limites dos intervalos normal e percentil é que a distribuição amostral da correlação não é normal (veja gráfico acima)
 <ul>
@@ -1026,10 +1050,10 @@ ci &lt;- boot.t.ci(law, statistic = r, B = 2000, R = 200)
 ## Resultados
 ci$CI</code></pre>
 <pre><code>#       2.5%      97.5% 
-# -0.2041483  0.9812997</code></pre>
+# -0.2431553  0.9856186</code></pre>
 <pre class="r"><code>ci$Qt</code></pre>
 <pre><code>#      2.5%     97.5% 
-# -1.569855  7.511420</code></pre>
+# -1.565874  7.629633</code></pre>
 <pre class="r"><code>length(ci$stat)</code></pre>
 <pre><code># [1] 2000</code></pre>
 <pre class="r"><code>length(ci$t.stats)</code></pre>
@@ -1093,11 +1117,11 @@ for (b in 1:B) {
 
 ## Estimativas
 mean(theta.b)</code></pre>
-<pre><code># [1] -0.06407866</code></pre>
+<pre><code># [1] -0.06287142</code></pre>
 <pre class="r"><code>(bias &lt;- mean(theta.b) - theta.hat)</code></pre>
-<pre><code># [1] 0.007227438</code></pre>
+<pre><code># [1] 0.008434677</code></pre>
 <pre class="r"><code>(se &lt;- sd(theta.b))</code></pre>
-<pre><code># [1] 0.1034864</code></pre>
+<pre><code># [1] 0.1011584</code></pre>
 <pre class="r"><code>## Intervalos de confiança para a estimativa
 ## Usando o pacote boot
 theta.boot &lt;- function(dat, ind) {
@@ -1118,8 +1142,8 @@ boot.obj</code></pre>
 # 
 # 
 # Bootstrap Statistics :
-#       original     bias    std. error
-# t1* -0.0713061 0.00984133   0.1030833</code></pre>
+#       original      bias    std. error
+# t1* -0.0713061 0.008436566   0.1025824</code></pre>
 <pre class="r"><code>boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
@@ -1129,24 +1153,24 @@ boot.obj</code></pre>
 # 
 # Intervals : 
 # Level      Normal              Basic              Percentile     
-# 95%   (-0.2832,  0.1209 )   (-0.3126,  0.0941 )   (-0.2367,  0.1700 )  
+# 95%   (-0.2808,  0.1213 )   (-0.3045,  0.0914 )   (-0.2340,  0.1619 )  
 # Calculations and Intervals on Original Scale</code></pre>
 <pre class="r"><code>## Intervalo t de bootstrap
 ci &lt;- boot.t.ci(dat, statistic = theta.boot, B = 2000, R = 200)
 ## Resultados
 ci$CI</code></pre>
 <pre><code>#       2.5%      97.5% 
-# -0.2633727  0.4707715</code></pre>
+# -0.2653063  0.4066662</code></pre>
 <pre class="r"><code>ci$Qt</code></pre>
 <pre><code>#      2.5%     97.5% 
-# -5.185837  1.837424</code></pre>
+# -4.627971  1.878408</code></pre>
 <pre class="r"><code>## Distribuições
 par(mfrow = c(1, 2))
 ## Distribuição amostral
 hist(ci$stat)
 ## Distribuição &quot;estudentizada&quot; de referência
 hist(ci$t.stats); abline(v = ci$Qt, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 </div>
 </div>
