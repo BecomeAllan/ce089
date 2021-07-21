@@ -19,22 +19,19 @@ opts_chunk$set(fig.path = "figures/10_bootstrap/")
 - Os métodos de Bootstrap são uma classe de métodos de Monte Carlo não
 paramétricos, que estimam a distribuição de uma população por
 reamostragem
-
 - Métodos de reamostragem tratam a amostra observada como uma população
   finita
   - A distribuição da população finita representada pela amostra
-  observada, pode ser pode ser entendida como uma pseudo-população, com
+  observada, pode ser entendida como uma pseudo-população, com
   características similares às da população original
-
 - Amostra aleatórias são geradas (reamostragem) a partir da amostra
   original, para estimar características populacionais e fazer
   inferência sobre a população amostrada
   - Através da reamostragem, a distribuição amostral de uma estatística
     pode ser estimada, e as propriedades de um estimador podem então ser
     calculadas através do erro padrão e cálculos de viés
-
 - Métodos de bootstrap são utilizados quando a distribuição da população
-  alvo não é especificada (ou conhecida), e a amsotra é a única
+  alvo não é especificada (ou conhecida), e a amostra é a única
   informação disponível
 
 **Justificativas**
