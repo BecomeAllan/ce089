@@ -388,6 +388,12 @@ div.tocify {
 </ul></li>
 <li>Métodos de bootstrap são utilizados quando a distribuição da população alvo não é especificada (ou conhecida), e a amostra é a única informação disponível</li>
 </ul>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;F \rightarrow X \rightarrow F_n \\
+&amp;F_n \rightarrow X^{\star} \rightarrow F_n^{\star}
+\end{aligned}
+\]</span></p>
 <p><strong>Justificativas</strong></p>
 <ul>
 <li>Métodos computacionalmente intensivos para inferência estatística são usados quando as abordagens tradicionais não são adequadas.</li>
@@ -464,7 +470,7 @@ v2 &lt;- var(femeas)
 (s.pond &lt;- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))</code></pre>
 <pre><code># [1] 3.690024</code></pre>
 <pre class="r"><code>## Teste de hipótese para
-## H0: mu1 &lt;= mu2
+## H0: mu1 = mu2
 ## Ha: mu1 &gt; mu2
 mu0 &lt;- 0
 t.test(x = machos, y = femeas, alternative = &quot;greater&quot;,
@@ -489,33 +495,33 @@ t.test(x = machos, y = femeas, alternative = &quot;greater&quot;,
 <pre class="r"><code>## p-valor
 pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.2355338</code></pre>
-<pre class="r"><code>## Teste por simulação via Bootstrap
-N &lt;- 10000
-## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
-## de machos e fêmeas são provenientes da mesma poplação, e portanto
-## podem ser pensados como uma única amostra.
+<div id="teste-por-simulação-via-bootstrap" class="section level4 unnumbered">
+<h4>Teste por simulação via Bootstrap</h4>
+<p>Se a hipótese nula é verdadeira, então o comprimento das mandíbulas de machos e fêmeas são provenientes da mesma população, e portanto podem ser pensados como uma única amostra.</p>
+<p>No Bootstrap fazemos então uma reamostragem COM REPOSIÇÃO dos 20 valores, e atribui aleatoriamente 10 para cada grupo (macho ou fêmea). Se forem de fato da mesma população, então as diferenças entre as médias devem ser próximas de zero.</p>
+<pre class="r"><code>## Amostra bootstrap
+N &lt;- 1e4
+## Suposicao de igualdade
 amostra &lt;- c(machos, femeas)
-## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
-## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
-## então as diferenças entre as médias devem ser próximas de zero.
+## Bootstrap
 am &lt;- replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
 ## Visualização
 hist(am, main = &quot;Distribuição amostral&quot;)
 abline(v = med.amostral, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-2-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## p-valor empírico
 sum(am &gt;= med.amostral)/N</code></pre>
 <pre><code># [1] 0.2174</code></pre>
-<pre class="r"><code>## Exemplo adaptado de Manly (1997)
-## Comparação do comprimento da mandíbula de chacais machos e fêmeas
+<p>Exemplo original de Manly (1997)</p>
+<pre class="r"><code>## Comparação do comprimento da mandíbula de chacais machos e fêmeas
 machos &lt;- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112)
 femeas &lt;- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
 da &lt;- data.frame(comp = c(machos, femeas),
                  sexo = c(rep(&quot;M&quot;, 10), rep(&quot;F&quot;, 10)))
 densityplot(~comp, groups = sexo, data = da, auto.key = TRUE)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Média por sexo
 tapply(da$comp, da$sexo, mean)</code></pre>
 <pre><code>#     F     M 
@@ -540,7 +546,7 @@ v2 &lt;- var(femeas)
 (s.pond &lt;- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))</code></pre>
 <pre><code># [1] 3.080404</code></pre>
 <pre class="r"><code>## Teste de hipótese para
-## H0: mu1 &lt;= mu2
+## H0: mu1 = mu2
 ## Ha: mu1 &gt; mu2
 mu0 &lt;- 0
 t.test(x = machos, y = femeas, alternative = &quot;greater&quot;,
@@ -570,23 +576,20 @@ N &lt;- 1e5 # NOTE o aumento no número de simulações
 ## Simula direto da distribuição amostral
 library(future.apply) # para um replicate mais eficiente (em paralelo)
 plan(multicore, workers = 4)
-## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
-## de machos e fêmeas são provenientes da mesma poplação, e portanto
-## podem ser pensados como uma única amostra.
+## Suposicao de igualdade
 amostra &lt;- c(machos, femeas)
-## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
-## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
-## então as diferenças entre as médias devem ser próximas de zero.
+## Bootstrap
 am &lt;- future_replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
 ## Visualização
 hist(am, main = &quot;Distribuição amostral&quot;)
 abline(v = med.amostral, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## p-valor empírico
 sum(am &gt;= med.amostral)/N</code></pre>
 <pre><code># [1] 0.00228</code></pre>
+</div>
 </div>
 <div id="uma-nota-de-precaução" class="section level3 unnumbered">
 <h3>Uma nota de precaução</h3>
@@ -626,7 +629,7 @@ prop.table(table(am))</code></pre>
 plot(0:5, c(0, prop.table(table(am))), type = &quot;h&quot;)
 ## Distribuição teórica
 points((0:5) + .1, dpois(0:5, 2), type = &quot;h&quot;, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="estimativa-de-erro-padrão-via-bootstrap" class="section level1">
@@ -636,6 +639,8 @@ points((0:5) + .1, dpois(0:5, 2), type = &quot;h&quot;, col = 2)</code></pre>
 se(\hat{\theta}^{\star}) = \sqrt{\frac{1}{B-1}
 \sum_{b=1}^{B} (\hat{\theta}^{(b)} - \overline{\hat{\theta}^{\star}})}
 \]</span></p>
+<div id="exemplo-notas" class="section level2">
+<h2><span class="header-section-number">2.1</span> Exemplo (notas)</h2>
 <pre class="r"><code>## Estimativa de erro padrão via bootstrap
 library(bootstrap) # para carregar os dados
 ## Uma amostra dos dados originais
@@ -644,8 +649,8 @@ str(law)</code></pre>
 #  $ LSAT: num  576 635 558 578 666 580 555 661 651 605 ...
 #  $ GPA : num  3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...</code></pre>
 <pre class="r"><code>plot(law$LSAT, law$GPA)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>cor(law$LSAT, law$GPA)</code></pre>
+<p><img src="figures/10_bootstrap/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(coram &lt;- cor(law$LSAT, law$GPA))</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
 <pre class="r"><code>## Dados originais
 str(law82)</code></pre>
@@ -654,7 +659,7 @@ str(law82)</code></pre>
 #  $ LSAT  : num  622 542 579 653 606 576 620 615 553 607 ...
 #  $ GPA   : num  3.23 2.83 3.24 3.12 3.09 3.39 3.1 3.4 2.97 2.91 ...</code></pre>
 <pre class="r"><code>plot(law82$LSAT, law82$GPA)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-5-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-6-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>cor(law82$LSAT, law82$GPA)</code></pre>
 <pre><code># [1] 0.7599979</code></pre>
 <pre class="r"><code>## Definições
@@ -676,13 +681,14 @@ mean(R)</code></pre>
 <pre class="r"><code>(se.R &lt;- sd(R))</code></pre>
 <pre><code># [1] 0.1368193</code></pre>
 <pre class="r"><code>hist(R)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-5-3.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>## Viẽs
-mean(R) - cor(law$LSAT, law$GPA)</code></pre>
-<pre><code># [1] -0.005396721</code></pre>
-<pre class="r"><code>## Usando a função boot::boot()
-
-## Define a função que calcula a estatística de interesse
+<p><img src="figures/10_bootstrap/unnamed-chunk-6-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## sqrt((1 - coram^2)/(n - 2))
+## (sd(law$GPA) * sqrt((1 - coram^2)))/(n - 2)</code></pre>
+</div>
+<div id="exemplo-notas-com-boot" class="section level2">
+<h2><span class="header-section-number">2.2</span> Exemplo (notas com <code>boot</code>)</h2>
+<p>Usando a função <code>boot::boot()</code></p>
+<pre class="r"><code>## Define a função que calcula a estatística de interesse
 r &lt;- function(x, i) {
     cor(x[i, 1], x[i, 2])
 }
@@ -717,8 +723,8 @@ obj</code></pre>
 #   ..$ GPA : num [1:15] 3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...
 #  $ seed     : int [1:626] 10403 67 374337935 -66916328 796352990 -1344538218 7326455 801261936 -841320945 1823181309 ...
 #  $ statistic:function (x, i)  
-#   ..- attr(*, &quot;srcref&quot;)= &#39;srcref&#39; int [1:8] 4 6 6 1 6 1 4 6
-#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0x55a56d026020&gt; 
+#   ..- attr(*, &quot;srcref&quot;)= &#39;srcref&#39; int [1:8] 2 6 4 1 6 1 2 4
+#   .. ..- attr(*, &quot;srcfile&quot;)=Classes &#39;srcfilecopy&#39;, &#39;srcfile&#39; &lt;environment: 0x56098ab3d9e0&gt; 
 #  $ sim      : chr &quot;ordinary&quot;
 #  $ call     : language boot(data = law, statistic = r, R = 2000)
 #  $ stype    : chr &quot;i&quot;
@@ -727,19 +733,18 @@ obj</code></pre>
 #  - attr(*, &quot;class&quot;)= chr &quot;boot&quot;
 #  - attr(*, &quot;boot_type&quot;)= chr &quot;boot&quot;</code></pre>
 <pre class="r"><code>plot(obj)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Acessa os valores calculados
 y &lt;- as.vector(obj$t)
 mean(y)</code></pre>
 <pre><code># [1] 0.7744776</code></pre>
 <pre class="r"><code>sd(y)</code></pre>
 <pre><code># [1] 0.1359209</code></pre>
-<pre class="r"><code>## Viẽs
-mean(y) - cor(law$LSAT, law$GPA)</code></pre>
-<pre><code># [1] -0.001896919</code></pre>
-<pre class="r"><code>## Usando a função bootstrap::bootstrap()
-
-## Define a função que calcula a estatística
+</div>
+<div id="exemplo-notas-com-bootstrap" class="section level2">
+<h2><span class="header-section-number">2.3</span> Exemplo (notas com <code>bootstrap</code>)</h2>
+<p>Usando a função <code>bootstrap::bootstrap()</code></p>
+<pre class="r"><code>## Define a função que calcula a estatística
 r &lt;- function(x, xdata) {
     cor(xdata[x, 1], xdata[x, 2])
 }
@@ -758,9 +763,7 @@ str(obj2)</code></pre>
 <pre><code># [1] 0.7691919</code></pre>
 <pre class="r"><code>sd(obj2$thetastar)</code></pre>
 <pre><code># [1] 0.1344538</code></pre>
-<pre class="r"><code>## Viẽs
-mean(obj2$thetastar) - cor(law$LSAT, law$GPA)</code></pre>
-<pre><code># [1] -0.007182551</code></pre>
+</div>
 </div>
 <div id="estimativa-do-viés-via-bootstrap" class="section level1">
 <h1><span class="header-section-number">3</span> Estimativa do viés via bootstrap</h1>
@@ -805,15 +808,15 @@ mean(theta.b) - theta.hat</code></pre>
 <div id="intervalo-normal-padrão" class="section level2">
 <h2><span class="header-section-number">4.1</span> Intervalo normal padrão</h2>
 <ul>
-<li><p>É o método mais simples.</p></li>
-<li><p>Suponha que conhecemos <span class="math inline">\(\hat{\theta}\)</span> e seu erro padrão <span class="math inline">\(se(\hat{\theta})\)</span></p></li>
-<li><p>Se <span class="math inline">\(\hat{\theta}\)</span> é uma média, e o tamanho da amostra é grande, então o Teorema do Limite Central implica que <span class="math display">\[
+<li>É o método mais simples.</li>
+<li>Suponha que conhecemos <span class="math inline">\(\hat{\theta}\)</span> e seu erro padrão <span class="math inline">\(se(\hat{\theta})\)</span></li>
+<li>Se <span class="math inline">\(\hat{\theta}\)</span> é uma média, e o tamanho da amostra é grande, então o Teorema do Limite Central implica que <span class="math display">\[
 Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
-\]</span> possui distribuição aproximadamente normal padrão.</p></li>
-<li><p>Portanto, se <span class="math inline">\(\hat{\theta}\)</span> é um estimador não viesado para <span class="math inline">\(\theta\)</span>, então um intervalo <span class="math inline">\(100(1-\alpha)\%\)</span> para <span class="math inline">\(\theta\)</span> é <span class="math display">\[
+\]</span> possui distribuição aproximadamente normal padrão.</li>
+<li>Portanto, se <span class="math inline">\(\hat{\theta}\)</span> é um estimador não viesado para <span class="math inline">\(\theta\)</span>, então um intervalo <span class="math inline">\(100(1-\alpha)\%\)</span> para <span class="math inline">\(\theta\)</span> é <span class="math display">\[
 \hat{\theta} \pm z_{\alpha/2} se(\hat{\theta})
-\]</span></p></li>
-<li><p>Esse intervalo é fácil de calcular, mas fizemos diversas suposições:</p>
+\]</span></li>
+<li>Esse intervalo é fácil de calcular, mas fizemos diversas suposições:
 <ul>
 <li>A distribuição de <span class="math inline">\(\hat{\theta}\)</span> é normal
 <ul>
@@ -831,8 +834,8 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 <li>Os quantis da amostra transformada <span class="math inline">\(\hat{\theta}^{\star} - \hat{\theta}\)</span> são utilizados para a determinação dos limites de confiança</li>
 <li>O intervalo básico de bootstrap <span class="math inline">\(100(1-\alpha)\%\)</span> de confiança é <span class="math display">\[
 ( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
-\quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
-\]</span> onde <span class="math inline">\(\hat{\theta}^{\star}_{\alpha}\)</span> denota o <span class="math inline">\(\alpha\)</span>-quantil das estimativas de bootstrap <span class="math inline">\(\hat{\theta}^{\star}\)</span>.</li>
+  \quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
+\]</span> onde <span class="math inline">\(\hat{\theta}^{\star}_{\alpha}\)</span> denota o <span class="math inline">\(\alpha\)</span>-quantil das estimativas de bootstrap <span class="math inline">\(\hat{\theta}^{\star}\)</span>. A derivação é longa e pode ser vista em Davison e Hinkley (1997).</li>
 </ul>
 </div>
 <div id="intervalo-percentil-de-bootstrap" class="section level2">
@@ -849,8 +852,8 @@ Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
 (\hat{\theta}_{\alpha/2}^{\star}, \hat{\theta}_{1-\alpha/2}^{\star})
 \]</span></li>
 <li>Pode-se mostrar que o intervalo percentil de bootstrap possui vantagens teóricas e maior taxa de cobertura, quando comparado aos intervalos normal e básico</li>
-<li>A função <code>boot::boot.ci()</code> calcula estes três tipos de intervalos</li>
 </ul>
+<p>A função <code>boot::boot.ci()</code> calcula estes três tipos de intervalos</p>
 <pre class="r"><code>## Exemplo para correlação
 
 ## Define a função que calcula a estatística de interesse
@@ -873,7 +876,7 @@ boot.obj</code></pre>
 # Bootstrap Statistics :
 #      original       bias    std. error
 # t1* 0.7763745 -0.008545694   0.1334486</code></pre>
-<pre class="r"><code>## Estatśitica amostral
+<pre class="r"><code>## Estatística amostral
 boot.obj$t0</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
 <pre class="r"><code>## Viés
@@ -881,8 +884,9 @@ boot.obj$t0</code></pre>
 <pre><code># [1] -0.008545694</code></pre>
 <pre class="r"><code>## Distribuição das estimativas de bootstrap
 plot(boot.obj)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</code></pre>
+<p><img src="figures/10_bootstrap/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Intervalos
+boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
 # 
@@ -893,8 +897,8 @@ plot(boot.obj)</code></pre>
 # Level      Normal              Basic              Percentile     
 # 95%   ( 0.5234,  1.0465 )   ( 0.5859,  1.0971 )   ( 0.4557,  0.9669 )  
 # Calculations and Intervals on Original Scale</code></pre>
-<pre class="r"><code>## Calcule intervalos manualmente
-## Define intervalo com alpha = 0.05
+<p>Calcula intervalos manualmente</p>
+<pre class="r"><code>## Define intervalo com alpha = 0.05
 alpha &lt;- c(.025, .975)
 
 ## Normal
@@ -1061,10 +1065,10 @@ ci$CI</code></pre>
 <pre class="r"><code>## Distribuições
 par(mfrow = c(1, 2))
 ## Distribuição amostral
-hist(ci$stat)
+hist(ci$stat, xlim = c(-0.5, 1)); abline(v = ci$CI, col = 2)
 ## Distribuição &quot;estudentizada&quot; de referência
 hist(ci$t.stats); abline(v = ci$Qt, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/10_bootstrap/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 <p>Observações:</p>
 <ul>
@@ -1122,6 +1126,8 @@ mean(theta.b)</code></pre>
 <pre><code># [1] 0.008434677</code></pre>
 <pre class="r"><code>(se &lt;- sd(theta.b))</code></pre>
 <pre><code># [1] 0.1011584</code></pre>
+<pre class="r"><code>hist(theta.b)</code></pre>
+<p><img src="figures/10_bootstrap/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Intervalos de confiança para a estimativa
 ## Usando o pacote boot
 theta.boot &lt;- function(dat, ind) {
@@ -1144,6 +1150,8 @@ boot.obj</code></pre>
 # Bootstrap Statistics :
 #       original      bias    std. error
 # t1* -0.0713061 0.008436566   0.1025824</code></pre>
+<pre class="r"><code>hist(boot.obj$t)</code></pre>
+<p><img src="figures/10_bootstrap/unnamed-chunk-16-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 # Based on 2000 bootstrap replicates
@@ -1157,22 +1165,48 @@ boot.obj</code></pre>
 # Calculations and Intervals on Original Scale</code></pre>
 <pre class="r"><code>## Intervalo t de bootstrap
 ci &lt;- boot.t.ci(dat, statistic = theta.boot, B = 2000, R = 200)
-## Resultados
 ci$CI</code></pre>
 <pre><code>#       2.5%      97.5% 
 # -0.2653063  0.4066662</code></pre>
-<pre class="r"><code>ci$Qt</code></pre>
-<pre><code>#      2.5%     97.5% 
-# -4.627971  1.878408</code></pre>
-<pre class="r"><code>## Distribuições
-par(mfrow = c(1, 2))
-## Distribuição amostral
-hist(ci$stat)
-## Distribuição &quot;estudentizada&quot; de referência
-hist(ci$t.stats); abline(v = ci$Qt, col = 2)</code></pre>
-<p><img src="figures/10_bootstrap/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<p>Lembre que se <span class="math inline">\(|\theta| \leq 0.2\)</span> ou <span class="math inline">\(-0.2 \leq \theta \leq 0.2\)</span>, então os adesivos são bioequivalentes. Pelos intervalos, não é possível fazer essa afirmação.</p>
 </div>
+</div>
+<div id="exercício" class="section level1">
+<h1><span class="header-section-number">5</span> Exercício</h1>
+<p>Simula de um modelo linear: <span class="math display">\[
+Y_i = \beta_0 + \beta_1 X_i + \epsilon_i, \quad i = 1, \ldots, n
+\]</span> Onde: <span class="math display">\[
+\begin{aligned}
+X_i &amp;\sim N(150, 15^2) \\
+\epsilon_i &amp;\sim N(0, \sigma^2) \\
+\beta_0 &amp;= 10 \\
+\beta_1 &amp;= 0.5 \\
+\sigma^2 &amp;= 20 \\
+n &amp;= 30
+\end{aligned}
+\]</span></p>
+<p>E, para todos os parâmetros (supostamente) desconhecidos (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> e <span class="math inline">\(\sigma^2\)</span>):</p>
+<ol style="list-style-type: decimal">
+<li>Identifique as distribuições assintóticas dos estimadores de máxima verossimilhança e
+<ul>
+<li>Obtenha as estimativas pontuais</li>
+<li>Obtenha os erros-padrão</li>
+<li>Calcule intervalos de confiança</li>
+</ul></li>
+<li>Faça uma simulação de bootstrap (não paramétrico) com <span class="math inline">\(B = 10000\)</span> repetições para construir as distribuições amostrais empíricas e
+<ul>
+<li>Obtenha as estimativas pontuais</li>
+<li>Obtenha os erros-padrão</li>
+<li>Calcule intervalos de confiança (percentil e <span class="math inline">\(t\)</span>)</li>
+</ul></li>
+<li>Repita o item acima com <span class="math inline">\(B = 100000\)</span> repetições</li>
+<li>Compare as distribuições amostrais, estimativas pontuais e erros-padrão obtidos nos itens acima.</li>
+</ol>
+<p>Perguntas:</p>
+<ul>
+<li>As distribuições amostrais, estimativas pontuais e erros-padrão obtidos via bootstrap parecem estar de acordo com a teoria assintótiica?</li>
+<li>No bootstrap, o que acontece quando <span class="math inline">\(B\)</span> aumenta?</li>
+</ul>
 </div>
 
 <center>
