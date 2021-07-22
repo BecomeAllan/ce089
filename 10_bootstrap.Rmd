@@ -34,6 +34,13 @@ reamostragem
   alvo não é especificada (ou conhecida), e a amostra é a única
   informação disponível
 
+$$
+\begin{aligned}
+&F \rightarrow X \rightarrow F_n \\
+&F_n \rightarrow X^{\star} \rightarrow F_n^{\star}
+\end{aligned}
+$$
+
 **Justificativas**
 
 - Métodos computacionalmente intensivos para inferência
@@ -119,7 +126,7 @@ v2 <- var(femeas)
 (s.pond <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))
 
 ## Teste de hipótese para
-## H0: mu1 <= mu2
+## H0: mu1 = mu2
 ## Ha: mu1 > mu2
 mu0 <- 0
 t.test(x = machos, y = femeas, alternative = "greater",
@@ -130,16 +137,25 @@ t.test(x = machos, y = femeas, alternative = "greater",
 (tcrit <- qt(.025, df = n1 + n2 - 2, lower.tail = FALSE))
 ## p-valor
 pt(tcalc, df = n1 + n2 - 2, lower.tail = FALSE)
+```
 
-## Teste por simulação via Bootstrap
-N <- 10000
-## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
-## de machos e fêmeas são provenientes da mesma poplação, e portanto
-## podem ser pensados como uma única amostra.
+#### Teste por simulação via Bootstrap {-}
+
+Se a hipótese nula é verdadeira, então o comprimento das mandíbulas de
+machos e fêmeas são provenientes da mesma população, e portanto podem ser
+pensados como uma única amostra.
+
+No Bootstrap fazemos então uma reamostragem COM REPOSIÇÃO dos 20
+valores, e atribui aleatoriamente 10 para cada grupo (macho ou fêmea).
+Se forem de fato da mesma população, então as diferenças entre as médias
+devem ser próximas de zero.
+
+```{r}
+## Amostra bootstrap
+N <- 1e4
+## Suposicao de igualdade
 amostra <- c(machos, femeas)
-## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
-## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
-## então as diferenças entre as médias devem ser próximas de zero.
+## Bootstrap
 am <- replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
@@ -150,8 +166,9 @@ abline(v = med.amostral, col = 2)
 sum(am >= med.amostral)/N
 ```
 
+Exemplo original de Manly (1997)
+
 ```{r}
-## Exemplo adaptado de Manly (1997)
 ## Comparação do comprimento da mandíbula de chacais machos e fêmeas
 machos <- c(120, 107, 110, 116, 114, 111, 113, 117, 114, 112)
 femeas <- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
@@ -176,7 +193,7 @@ v2 <- var(femeas)
 (s.pond <- sqrt(((n1 - 1) * v1 + (n2 - 1) * v2)/(n1 + n2 - 2)))
 
 ## Teste de hipótese para
-## H0: mu1 <= mu2
+## H0: mu1 = mu2
 ## Ha: mu1 > mu2
 mu0 <- 0
 t.test(x = machos, y = femeas, alternative = "greater",
@@ -193,13 +210,9 @@ N <- 1e5 # NOTE o aumento no número de simulações
 ## Simula direto da distribuição amostral
 library(future.apply) # para um replicate mais eficiente (em paralelo)
 plan(multicore, workers = 4)
-## Se a hipótese nula é verdadeira, então o comprimento das mandíbulas
-## de machos e fêmeas são provenientes da mesma poplação, e portanto
-## podem ser pensados como uma única amostra.
+## Suposicao de igualdade
 amostra <- c(machos, femeas)
-## Amostra COM REPOSIÇÃO os 20 valores, e atribui aleatoriamente 10 para
-## cada grupo (macho ou fêmea). Se forem de fato da mesma população,
-## então as diferenças entre as médias devem ser próximas de zero.
+## Bootstrap
 am <- future_replicate(
     N, diff(tapply(sample(amostra, replace = TRUE), da$sexo, mean))
 )
@@ -250,13 +263,15 @@ se(\hat{\theta}^{\star}) = \sqrt{\frac{1}{B-1}
 \sum_{b=1}^{B} (\hat{\theta}^{(b)} - \overline{\hat{\theta}^{\star}})}
 $$
 
+## Exemplo (notas)
+
 ```{r}
 ## Estimativa de erro padrão via bootstrap
 library(bootstrap) # para carregar os dados
 ## Uma amostra dos dados originais
 str(law)
 plot(law$LSAT, law$GPA)
-cor(law$LSAT, law$GPA)
+(coram <- cor(law$LSAT, law$GPA))
 ## Dados originais
 str(law82)
 plot(law82$LSAT, law82$GPA)
@@ -279,13 +294,15 @@ for (b in 1:B) {
 mean(R)
 (se.R <- sd(R))
 hist(R)
-## Viẽs
-mean(R) - cor(law$LSAT, law$GPA)
+## sqrt((1 - coram^2)/(n - 2))
+## (sd(law$GPA) * sqrt((1 - coram^2)))/(n - 2)
 ```
 
-```{r}
-## Usando a função boot::boot()
+## Exemplo (notas com `boot`)
 
+Usando a função `boot::boot()`
+
+```{r}
 ## Define a função que calcula a estatística de interesse
 r <- function(x, i) {
     cor(x[i, 1], x[i, 2])
@@ -302,13 +319,13 @@ plot(obj)
 y <- as.vector(obj$t)
 mean(y)
 sd(y)
-## Viẽs
-mean(y) - cor(law$LSAT, law$GPA)
 ```
 
-```{r}
-## Usando a função bootstrap::bootstrap()
+## Exemplo (notas com `bootstrap`)
 
+Usando a função `bootstrap::bootstrap()`
+
+```{r}
 ## Define a função que calcula a estatística
 r <- function(x, xdata) {
     cor(xdata[x, 1], xdata[x, 2])
@@ -320,8 +337,6 @@ obj2 <- bootstrap(x = 1:n, nboot = 2000, theta = r, law)
 str(obj2)
 mean(obj2$thetastar)
 sd(obj2$thetastar)
-## Viẽs
-mean(obj2$thetastar) - cor(law$LSAT, law$GPA)
 ```
 
 # Estimativa do viés via bootstrap
@@ -390,16 +405,15 @@ via bootstrap. Os principais serão descritos abaixo.
   $se(\hat{\theta})$
 - Se $\hat{\theta}$ é uma média, e o tamanho da amostra é grande, então
   o Teorema do Limite Central implica que
-$$
-Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
-$$
+  $$
+  Z = \frac{\hat{\theta} - \text{E}[\hat{\theta}]}{se(\hat{\theta})}
+  $$
 possui distribuição aproximadamente normal padrão.
 - Portanto, se $\hat{\theta}$ é um estimador não viesado para $\theta$,
   então um intervalo $100(1-\alpha)\%$ para $\theta$ é
 $$
 \hat{\theta} \pm z_{\alpha/2} se(\hat{\theta})
 $$
-
 - Esse intervalo é fácil de calcular, mas fizemos diversas suposições:
   - A distribuição de $\hat{\theta}$ é normal
     - OU $\hat{\theta}$ é uma média e o tamanho da amostra é grande
@@ -416,12 +430,13 @@ $$
   \hat{\theta}$ são utilizados para a determinação dos limites de
   confiança
 - O intervalo básico de bootstrap $100(1-\alpha)\%$ de confiança é
-$$
-( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
-  \quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
-$$
-onde $\hat{\theta}^{\star}_{\alpha}$ denota o $\alpha$-quantil das
-estimativas de bootstrap $\hat{\theta}^{\star}$.
+  $$
+  ( 2\hat{\theta} - \hat{\theta}^{\star}_{1-\alpha/2},
+    \quad 2\hat{\theta} - \hat{\theta}^{\star}_{\alpha/2} )
+  $$
+  onde $\hat{\theta}^{\star}_{\alpha}$ denota o $\alpha$-quantil das
+  estimativas de bootstrap $\hat{\theta}^{\star}$. A derivação é longa e
+  pode ser vista em Davison e Hinkley (1997).
 
 ## Intervalo percentil de bootstrap
 
@@ -436,13 +451,14 @@ estimativas de bootstrap $\hat{\theta}^{\star}$.
 - A partir da distribuição empírica das estimativas, determine os
   quantis $\alpha/2$ e $1-\alpha/2$ de $\hat{\theta}$
 - Portanto o intervalo percentil de bootstrap $100(1-\alpha)\%$ é
-$$
-(\hat{\theta}_{\alpha/2}^{\star}, \hat{\theta}_{1-\alpha/2}^{\star})
-$$
+  $$
+  (\hat{\theta}_{\alpha/2}^{\star}, \hat{\theta}_{1-\alpha/2}^{\star})
+  $$
 - Pode-se mostrar que o intervalo percentil de bootstrap possui
   vantagens teóricas e maior taxa de cobertura, quando comparado aos
   intervalos normal e básico
-- A função `boot::boot.ci()` calcula estes três tipos de intervalos
+
+A função `boot::boot.ci()` calcula estes três tipos de intervalos
 
 ```{r}
 ## Exemplo para correlação
@@ -456,15 +472,19 @@ r <- function(x, i) {
 boot.obj <- boot(data = law, statistic = r, R = 2000)
 ## Resumo
 boot.obj
-## Estatśitica amostral
+## Estatística amostral
 boot.obj$t0
 ## Viés
 (vies <- mean(boot.obj$t) - boot.obj$t0)
 ## Distribuição das estimativas de bootstrap
 plot(boot.obj)
+## Intervalos
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
+```
 
-## Calcule intervalos manualmente
+Calcula intervalos manualmente
+
+```{r}
 ## Define intervalo com alpha = 0.05
 alpha <- c(.025, .975)
 
@@ -605,7 +625,7 @@ boot.t.ci <- function(x, B = 500, R = 100, level = .95, statistic){
 }
 ```
 
-```{r}
+```{r, cache=TRUE}
 ## Aplica a função
 ci <- boot.t.ci(law, statistic = r, B = 2000, R = 200)
 
@@ -619,7 +639,7 @@ length(ci$t.stats)
 ## Distribuições
 par(mfrow = c(1, 2))
 ## Distribuição amostral
-hist(ci$stat)
+hist(ci$stat, xlim = c(-0.5, 1)); abline(v = ci$CI, col = 2)
 ## Distribuição "estudentizada" de referência
 hist(ci$t.stats); abline(v = ci$Qt, col = 2)
 par(mfrow = c(1, 1))
@@ -700,7 +720,7 @@ $$
 \hat{\theta} = \frac{\bar{Y}}{\bar{Z}}
 $$
 
-```{r}
+```{r, cache=TRUE}
 ## Estimativas básicas
 (theta.hat <- mean(patch$y)/mean(patch$z))
 
@@ -719,6 +739,7 @@ for (b in 1:B) {
 mean(theta.b)
 (bias <- mean(theta.b) - theta.hat)
 (se <- sd(theta.b))
+hist(theta.b)
 
 ## Intervalos de confiança para a estimativa
 ## Usando o pacote boot
@@ -731,24 +752,62 @@ theta.boot <- function(dat, ind) {
 dat <- cbind(patch$y, patch$z)
 boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
 boot.obj
+hist(boot.obj$t)
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
 
 ## Intervalo t de bootstrap
 ci <- boot.t.ci(dat, statistic = theta.boot, B = 2000, R = 200)
-## Resultados
 ci$CI
-ci$Qt
-## Distribuições
-par(mfrow = c(1, 2))
-## Distribuição amostral
-hist(ci$stat)
-## Distribuição "estudentizada" de referência
-hist(ci$t.stats); abline(v = ci$Qt, col = 2)
-par(mfrow = c(1, 1))
 ```
+
+Lembre que se $|\theta| \leq 0.2$ ou $-0.2 \leq \theta \leq 0.2$, então
+os adesivos são bioequivalentes. Pelos intervalos, não é possível fazer
+essa afirmação.
 
 ```{r, eval=FALSE, include=FALSE}
 quantile(boot.obj$t, probs = c(.025, .975), type = 6)
 (ics <- quantile(boot.obj$t, probs = c(.025, .975)))
 abs(ics) <= 0.2
 ```
+
+# Exercício
+
+Simula de um modelo linear:
+$$
+Y_i = \beta_0 + \beta_1 X_i + \epsilon_i, \quad i = 1, \ldots, n
+$$
+Onde:
+$$
+\begin{aligned}
+X_i &\sim N(150, 15^2) \\
+\epsilon_i &\sim N(0, \sigma^2) \\
+\beta_0 &= 10 \\
+\beta_1 &= 0.5 \\
+\sigma^2 &= 20 \\
+n &= 30
+\end{aligned}
+$$
+
+E, para todos os parâmetros (supostamente) desconhecidos ($\beta_0$,
+$\beta_1$ e $\sigma^2$):
+
+1. Identifique as distribuições assintóticas dos estimadores de máxima
+   verossimilhança e
+   - Obtenha as estimativas pontuais
+   - Obtenha os erros-padrão
+   - Calcule intervalos de confiança
+2. Faça uma simulação de bootstrap (não paramétrico) com $B = 10000$
+   repetições para construir as distribuições amostrais empíricas e
+   - Obtenha as estimativas pontuais
+   - Obtenha os erros-padrão
+   - Calcule intervalos de confiança (percentil e $t$)
+3. Repita o item acima com $B = 100000$ repetições
+4. Compare as distribuições amostrais, estimativas pontuais e
+   erros-padrão obtidos nos itens acima.
+
+Perguntas:
+
+- As distribuições amostrais, estimativas pontuais e erros-padrão
+  obtidos via bootstrap parecem estar de acordo com a teoria
+  assintótiica?
+- No bootstrap, o que acontece quando $B$ aumenta?
