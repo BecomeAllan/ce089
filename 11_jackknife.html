@@ -679,6 +679,7 @@ theta.boot &lt;- function(dat, ind) {
     mean(y)/mean(z)
 }
 dat &lt;- cbind(patch$y, patch$z)
+library(boot)
 boot.obj &lt;- boot(dat, statistic = theta.boot, R = 2000)
 boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;))</code></pre>
 <pre><code># BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
