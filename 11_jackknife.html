@@ -398,7 +398,7 @@ x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
 \]</span></p>
 <p>A média com a <span class="math inline">\(i\)</span>-ésima observação removida, <span class="math inline">\(X_{(i)}\)</span>, é <span class="math display">\[
   \bar{X}_{(i)} = \frac{1}{n - 1}
-  \left( \sum_{i=1}^{n} X_i \right) - X_{i}
+  \left( \sum_{i=1}^{n} X_i  - X_{i} \right)
 \]</span></p>
 <p>Combinando as expressões anteriores, pode-se determinar o valor de <span class="math inline">\(X_i\)</span> por <span class="math display">\[
   X_i = n\bar{X} - (n - 1) \bar{X}_{(i)}.
@@ -467,12 +467,21 @@ x[1]</code></pre>
 <pre><code># [1] 99.76448</code></pre>
 <pre class="r"><code>xbar # média da amostra</code></pre>
 <pre><code># [1] 99.76448</code></pre>
+<pre class="r"><code>## É o mesmo que
+mean(theta.jack)</code></pre>
+<pre><code># [1] 99.76448</code></pre>
 <pre class="r"><code>## Erro padrão
 ## Usando os pseudo-valores
 sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
 <pre class="r"><code>ep # erro padrão da amostra</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)</code></pre>
+<pre><code># [1] 0.8296735</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/n</code></pre>
+<pre><code># [1] 0.02765578</code></pre>
+<pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
+<pre><code># [1] 0.8020177</code></pre>
 <pre class="r"><code>## Resultados
 round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
             &quot;Estimativas parciais&quot; = theta.jack), 2)</code></pre>
@@ -570,6 +579,12 @@ round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
 # [18,]    1.20           0.52                 1.09
 # [19,]    1.21           0.52                 1.09
 # [20,]    0.72           0.56                 1.09</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)</code></pre>
+<pre><code># [1] 0.08269095</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/n</code></pre>
+<pre><code># [1] 0.004134547</code></pre>
+<pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
+<pre><code># [1] 0.0785564</code></pre>
 </div>
 <div id="exemplo-correlação" class="section level2">
 <h2><span class="header-section-number">2.3</span> Exemplo: correlação</h2>
