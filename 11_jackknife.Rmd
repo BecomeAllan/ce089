@@ -272,6 +272,7 @@ theta.boot <- function(dat, ind) {
     mean(y)/mean(z)
 }
 dat <- cbind(patch$y, patch$z)
+library(boot)
 boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
 ## Via jackknife
