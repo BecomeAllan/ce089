@@ -147,6 +147,16 @@ ep # erro padrão da amostra
 sum((theta.jack - mean(theta.jack))^2)
 sum((theta.jack - mean(theta.jack))^2)/n
 ((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+## Essa foma acima foi feita para concordar com
+sqrt(sum((x - xbar)^2)/(n*(n-1)))
+## quando \het\theta e a media \bar{x}
+
+sqrt(var(theta.jack)/n)
+sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))
+sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))
+sqrt(sum((x - xbar)^2)/(n*(n-1)))
+
 
 ## Resultados
 round(cbind(Amostra = x, "Pseudo-valores" = pv,
@@ -190,11 +200,39 @@ round(cbind(Amostra = x, "Pseudo-valores" = pv,
 sum((theta.jack - mean(theta.jack))^2)
 sum((theta.jack - mean(theta.jack))^2)/n
 ((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+## sqrt((2 * var(x)**2)/(n - 1))/n
 
+sqrt(var(theta.jack)/n)
+sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))
+sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))
 
 ```
 
 ## Exemplo: correlação
+
+```{r, include=FALSE, eval=FALSE}
+url <-  "https://web.stanford.edu/~hastie/CASI_files/DATA/kidney.txt"
+da <- read.table(url, header = TRUE)
+str(da)
+plot(da)
+cor(da)
+(rho <- cor(da$age, da$tot))
+n <- nrow(da)
+
+theta.jack <- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] <- cor(da$age[-i], da$tot[-i])
+}
+theta.jack
+
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+
+(pv <- n * rho - (n - 1) * theta.jack)
+mean(pv)
+sqrt(var(pv)/n)
+
+```
 
 ```{r}
 ## Estimativa de erro padrão via bootstrap
@@ -234,7 +272,7 @@ rho # valor da amostra
 ## Erro padrão
 sqrt(var(pv)/n)
 se.R # via bootstrap
-## sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
 
 ## Intervalo de confiança Jackknife (supõe independência e normalidade).
 mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
