@@ -482,6 +482,21 @@ sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.02765578</code></pre>
 <pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
 <pre><code># [1] 0.8020177</code></pre>
+<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>## Essa foma acima foi feita para concordar com
+sqrt(sum((x - xbar)^2)/(n*(n-1)))</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>## quando \het\theta e a media \bar{x}
+
+sqrt(var(theta.jack)/n)</code></pre>
+<pre><code># [1] 0.03088119</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))</code></pre>
+<pre><code># [1] 0.0009536477</code></pre>
+<pre class="r"><code>sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))</code></pre>
+<pre><code># [1] 0.03088119</code></pre>
+<pre class="r"><code>sqrt(sum((x - xbar)^2)/(n*(n-1)))</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
 <pre class="r"><code>## Resultados
 round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
             &quot;Estimativas parciais&quot; = theta.jack), 2)</code></pre>
@@ -585,6 +600,16 @@ round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
 <pre><code># [1] 0.004134547</code></pre>
 <pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
 <pre><code># [1] 0.0785564</code></pre>
+<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.2802791</code></pre>
+<pre class="r"><code>## sqrt((2 * var(x)**2)/(n - 1))/n
+
+sqrt(var(theta.jack)/n)</code></pre>
+<pre><code># [1] 0.01475153</code></pre>
+<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))</code></pre>
+<pre><code># [1] 0.0002176078</code></pre>
+<pre class="r"><code>sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))</code></pre>
+<pre><code># [1] 0.01475153</code></pre>
 </div>
 <div id="exemplo-correlação" class="section level2">
 <h2><span class="header-section-number">2.3</span> Exemplo: correlação</h2>
@@ -595,7 +620,7 @@ str(law)</code></pre>
 #  $ LSAT: num  576 635 558 578 666 580 555 661 651 605 ...
 #  $ GPA : num  3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...</code></pre>
 <pre class="r"><code>plot(law$LSAT, law$GPA)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>(rho &lt;- cor(law$LSAT, law$GPA))</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
 <pre class="r"><code>## Definições
@@ -639,9 +664,9 @@ sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.1425186</code></pre>
 <pre class="r"><code>se.R # via bootstrap</code></pre>
 <pre><code># [1] 0.1305849</code></pre>
-<pre class="r"><code>## sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
-
-## Intervalo de confiança Jackknife (supõe independência e normalidade).
+<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.1425186</code></pre>
+<pre class="r"><code>## Intervalo de confiança Jackknife (supõe independência e normalidade).
 mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.4771761 1.0885202</code></pre>
 <pre class="r"><code>cor.test(law$LSAT, law$GPA)$conf.int # teórico</code></pre>
@@ -745,7 +770,7 @@ str(ironslag)</code></pre>
 #  $ chemical: num  24 16 24 18 18 10 14 16 18 20 ...
 #  $ magnetic: num  25 22 17 21 20 13 16 14 19 10 ...</code></pre>
 <pre class="r"><code>plot(magnetic ~ chemical, ironslag)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Modelos propostos
 a &lt;- seq(10, 40, .1) # sequencia para graficos
 ## Linear
@@ -771,7 +796,7 @@ plot(log(magnetic) ~ log(chemical), ironslag,
      main = &quot;Log-Log&quot;, pch = 19)
 logyhat4 &lt;- L4$coef[1] + L4$coef[2] * log(a)
 lines(log(a), logyhat4, lwd = 2, col = 2)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-7-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-8-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Validação cruzada
 n &lt;- length(ironslag$magnetic)
 e1 &lt;- e2 &lt;- e3 &lt;- e4 &lt;- numeric(n)
@@ -812,7 +837,7 @@ plot(L3$fit, L3$res, main = &quot;Exponencial&quot;); abline(0, 0)
 qqnorm(L3$res); qqline(L3$res)
 plot(L4$fit, L4$res, main = &quot;log-log&quot;); abline(0, 0)
 qqnorm(L4$res); qqline(L4$res)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 </div>
 
