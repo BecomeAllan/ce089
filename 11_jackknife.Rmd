@@ -1,6 +1,7 @@
 ---
-title: "Métodos de reamostragem"
-subtitle: "Jackknife"
+title: "Jackknife"
+# title: "Métodos de reamostragem"
+# subtitle: "Jackknife"
 author: "Fernando P. Mayer"
 bibliography: ref.bib
 output:
@@ -30,8 +31,6 @@ suposição implicita de comportamento suave com o tamanho da amostra.
   seja, os resultados de um jackknife sempre serão os mesmos para a
   mesma amostra.
 
-# Jackknife
-
 O jackknife é um procedimento do tipo *leave-one-out* (um caso
 particular de validação cruzada).
 
@@ -42,9 +41,113 @@ $$
 x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
 $$
 Se $\hat{\theta} = T_n(x)$, então a $i$-ésima estimativa de jackknife é
-$\hat{\theta}_{(i)} = T_{n-1}(x_{(i)})$.
+$\hat{\theta}_{(i)} = T_{n-1}(x_{(i)}), i = 1 \ldots, n$.
 
-A ideia é fundamentada no estimador da média
+Suponha que o parâmetro $\theta = t(F)$ é uma função da distribuição
+$F$. Se $F_n$ é a função (de distribuição) empírica de uma amostra de
+$F$, então o estimador "*plug-in*" de $\theta$ é $\hat\theta = t(F_n)$.
+Um estimador "*plug-in*" $\hat\theta$ é "suave" (*smooth*) no sentido de
+que pequenas mudanças nos dados correspondem a pequenas mudaças em
+$\hat\theta$. Por exemplo, a média amostral é um estimador *plug-in*
+para a média populacional, mas a mediana amostral **não é** um estimador
+*plug-in* para a mediana populacional.
+
+Se $\hat\theta$ é um estimador "suave" para $\theta$, então
+$\hat\theta_{(i)}^{\star} = (F_{n-1}(x_{(i)}))$ é chamada de
+**estimativa parcial** para $\theta$, e a média das estimativas
+parciais, ou seja,
+
+$$
+  \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
+  \hat{\theta}_{(i)}^{\star}
+$$
+
+é um estimador pontual para $\hat\theta$.
+
+O erro-padrão de Jackknife para a estimativa pontual
+\hat{\theta}^{\star} é portanto
+
+$$
+\text{EP}_{jack} = \sqrt{\frac{n-1}{n} \sum_{i=1}^n
+  (\hat\theta_{(i)}^{\star} - \hat\theta^{\star})^2}
+$$
+
+Isso faz com que o algoritmo de Jackkkife seja facilmente automatizado,
+funcionando para qualquer estimador que seja uma função suave dos dados.
+
+Nesse mesmo sentido, assumindo independência entre os valores
+$\theta_{(i)}^{\star}$, um intervalo de confiança **aproximado** de
+$100(1-\alpha)\%$ para $\theta$ pode ser definido como
+$$
+\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
+$$
+
+## Exemplo: média amostral
+
+```{r}
+## Simula valores de uma normal
+set.seed(123)
+x <- rnorm(30, 100, 5)
+(n <- length(x))
+(xbar <- mean(x))
+(s2 <- var(x))
+## Erro padrão da mẽdia amostral
+(ep <- sqrt(s2/n))
+
+## Estimativas parciais de Jackknife
+theta.jack <- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] <- mean(x[-i])
+}
+theta.jack
+
+## Nesse caso, a mẽdia das estimativas parciais será igual a média da
+## amostra
+mean(theta.jack)
+xbar # da amostra
+
+## Erro padrão
+## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+## Essa foma acima foi feita para concordar com
+sqrt(var(x)/n)
+## quando \hat\theta é a média \bar{x}
+```
+
+## Exemplo: desvio padrão amostral
+
+Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão de
+uma VA $X \sim \text{Exp}(1)$, ou seja,  $E[X] = 1$ e $Var[X] = 1$.
+
+```{r}
+x <- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
+       0.01, 0.61, 0.82, 1.7, 0.39, 0.11, 1.2, 1.21, 0.72)
+hist(x)
+(n <- length(x))
+(xbar <- mean(x))
+## Desvio padrão amostral
+(sx <- sd(x))
+
+## Queremos agora obter uma estimativa do erro padrão para o desvio
+## padrão amostral
+
+## Estimativas parciais
+theta.jack <- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] <- sd(x[-i])
+}
+theta.jack
+
+## Erro padrão
+## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+```
+
+<div class="panel panel-primary">
+<div class="panel-heading">Pseudo-valores</div>
+<div class="panel-body">
+A ideia por trás do Jackknife pode ser entendida com base na definição
+de pseudo-valores, que é fundamentada no estimador da média amostral
 $$
   \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i.
 $$
@@ -83,19 +186,19 @@ entra a estimativa ($\hat{\theta}$) e todas as observações e na
 O estimador pontual de Jackknife é definido por
 $$
   \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
-  \hat{\theta}_{(i)}^{\star},
+  \hat{\theta}_{i}^{\star},
 $$
 ou seja, é a **média dos pseudo-valores**.
 
 Os valores $\hat{\theta}$ e $\hat{\theta}^{\star}$ não são
 necessariamente iguais nos casos gerais.
 
-Se for assumido que os valores $\theta_{(i)}^{\star}$, $i = 1, \ldots,
+Se for assumido que os valores $\hat\theta_{i}^{\star}$, $i = 1, \ldots,
 n$, são independentes, a variância do estimador de Jackknife é dada por
 $$
 \text{Var}(\hat{\theta}^{\star}) = \frac{s^2}{n},
   \quad s^2 = \frac{1}{n - 1}
-  \sum_{i = 1}^n (\hat{\theta}_{(i)}^{*} - \hat{\theta}^{\star})^2.
+  \sum_{i = 1}^n (\hat{\theta}_{i}^{\star} - \hat{\theta}^{\star})^2.
 $$
 Portanto o erro padrão será
 $$
@@ -103,14 +206,7 @@ $$
 \sqrt{\frac{s^2}{n}}
 $$
 
-Nesse mesmo sentido, assumindo independência entre os valores
-$\theta_{(i)}^{\star}$, um intervalo de confiança **aproximado** de
-$100(1-\alpha)\%$ para $\theta$ pode ser definido como
-$$
-\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
-$$
-
-## Exemplo: média amostral
+#### Exemplo: média amostral {-}
 
 ```{r}
 ## Simula valores de uma normal
@@ -143,39 +239,27 @@ mean(theta.jack)
 ## Usando os pseudo-valores
 sqrt(var(pv)/n)
 ep # erro padrão da amostra
+## Conta "na mão"
+sqrt((sum((pv - mean(pv))^2)/(n - 1))/n)
 
-sum((theta.jack - mean(theta.jack))^2)
-sum((theta.jack - mean(theta.jack))^2)/n
-((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)
+## Usando estimador baseado nas estimativas parciais
 sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
-## Essa foma acima foi feita para concordar com
-sqrt(sum((x - xbar)^2)/(n*(n-1)))
-## quando \het\theta e a media \bar{x}
 
-sqrt(var(theta.jack)/n)
-sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))
-sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))
-sqrt(sum((x - xbar)^2)/(n*(n-1)))
-
-
-## Resultados
+## Resultados: quando o estimador for a média amostral, os
+## pseudo-valores serão iguais aos valores observados
 round(cbind(Amostra = x, "Pseudo-valores" = pv,
             "Estimativas parciais" = theta.jack), 2)
 ```
 
-## Exemplo: desvio padrão amostral
+#### Exemplo: desvio-padrão amostral {-}
+
 
 ```{r}
-## Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão
-## Valores de X ~ Exp(1). E[X] = 1 e Var[X] = 1
 x <- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
        0.01, 0.61, 0.82, 1.7, 0.39, 0.11, 1.2, 1.21, 0.72)
-hist(x)
 (n <- length(x))
 (xbar <- mean(x))
 (sx <- sd(x))
-
-## Obter uma estimativa do erro padrão para o desvio padrão
 
 ## Estimativas parciais
 theta.jack <- numeric(n)
@@ -186,28 +270,27 @@ theta.jack
 
 ## Pseudo valores
 (pv <- n * sx - (n - 1) * theta.jack)
+## Estimativa pontual de Jackknife para o DESVIO-PADRÃO
 mean(pv)
-sx # desvio padrão amostral
+## Desvio padrão amostral
+sx
+## Não serão iguais necessariamente
 
 ## Erro padrão
 ## Usando os pseudo-valores
 sqrt(var(pv)/n)
 
-## Resultados
+## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+
+## Resultados: os pseudo-valores não serão iguais aos valores (como
+## aconteceu com a mẽdia amostral)
 round(cbind(Amostra = x, "Pseudo-valores" = pv,
             "Estimativas parciais" = theta.jack), 2)
-
-sum((theta.jack - mean(theta.jack))^2)
-sum((theta.jack - mean(theta.jack))^2)/n
-((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)
-sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
-## sqrt((2 * var(x)**2)/(n - 1))/n
-
-sqrt(var(theta.jack)/n)
-sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))
-sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))
-
 ```
+</div>
+</div>
+
 
 ## Exemplo: correlação
 
@@ -226,6 +309,7 @@ for(i in 1:n) {
 }
 theta.jack
 
+mean(theta.jack)
 sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
 
 (pv <- n * rho - (n - 1) * theta.jack)
@@ -262,6 +346,7 @@ for(j in 1:n) {
 }
 ## Estimativas parciais
 theta.jack
+mean(theta.jack)
 
 ## Pseudo valores
 ## Note que alguns valores estão fora do intervalo [-1,1]
@@ -293,6 +378,8 @@ theta.jack <- numeric(n)
 for (i in 1:n) {
     theta.jack[i] <- mean(y[-i])/mean(z[-i])
 }
+mean(theta.jack)
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
 
 ## Pseudo valores
 (pv <- n * theta.hat - (n - 1) * theta.jack)
@@ -327,13 +414,17 @@ boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
 ## Via jackknife
 mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
 ```
+
+## Exemplo: mediana
 
 ```{r, include=FALSE, eval=FALSE}
 ## Example 8.8 (Failure of jackknife)
 set.seed(123) #for the specific example given
 n <- 10
-x <- sample(1:100, size = n)
+(x <- sample(1:100, size = n))
+x <- c(29, 79, 41, 86, 91, 5, 50, 83, 51, 42)
 ## jackknife estimate of se
 M <- numeric(n)
 for (i in 1:n) {        #leave one out
@@ -342,11 +433,32 @@ for (i in 1:n) {        #leave one out
 }
 Mbar <- mean(M)
 sqrt((n - 1)/n * sum((M - Mbar)^2))
-pv <- n * median(x) - (n - 1) * M
-mean(pv)
-mean(x) # amostral
-sqrt(var(pv)/n)
+
 ## bootstrap estimate of se
+Mb <- replicate(1000, expr = {
+    y <- sample(x, size = n, replace = TRUE)
+    median(y)
+})
+sd(Mb)
+```
+
+Este é um exemplo de quando o mẽtodo de Jackknife pode **falhar**. Isso
+ocorre quando $\hat\theta$ não é uma função "suave" da amostra, como é o
+caso da mediana.
+
+```{r}
+x <- c(29, 79, 41, 86, 91, 5, 50, 83, 51, 42)
+n <- length(x)
+## Erro padrão via Jackknife
+M <- numeric(n)
+for (i in 1:n) {
+    y <- x[-i]
+    M[i] <- median(y)
+}
+Mbar <- mean(M)
+sqrt((n - 1)/n * sum((M - Mbar)^2))
+
+## Erro padrão via bootstrap
 Mb <- replicate(1000, expr = {
     y <- sample(x, size = n, replace = TRUE)
     median(y)
