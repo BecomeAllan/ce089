@@ -778,7 +778,7 @@ st1 &lt;- system.time(
 )
 st1</code></pre>
 <pre><code>#    user  system elapsed 
-#   0.074   0.000   0.074</code></pre>
+#   0.086   0.000   0.086</code></pre>
 <pre class="r"><code>## Tempo de execução usando a regra da reciclagem
 st2 &lt;- system.time(
     y2 &lt;- x^2
@@ -786,7 +786,7 @@ st2 &lt;- system.time(
 st2</code></pre>
 <pre><code>#    user  system elapsed 
 #   0.002   0.000   0.002</code></pre>
-<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.074/0.002 = 37 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
+<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.086/0.002 = 43 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Uma nota de precaução

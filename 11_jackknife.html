@@ -12,7 +12,7 @@
 <meta name="author" content="Fernando P. Mayer" />
 
 
-<title>Métodos de reamostragem</title>
+<title>Jackknife</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -367,8 +367,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Métodos de reamostragem</h1>
-<h3 class="subtitle">Jackknife</h3>
+<h1 class="title toc-ignore">Jackknife</h1>
 <h4 class="author">Fernando P. Mayer</h4>
 
 </div>
@@ -386,14 +385,102 @@ div.tocify {
 <li>O método é baseado em amostras de tamanho <span class="math inline">\(n - 1\)</span>. Existe a suposição implicita de comportamento suave com o tamanho da amostra.</li>
 <li>Ao contrário do bootstrap, é um procedimento <strong>determinístico</strong>, ou seja, os resultados de um jackknife sempre serão os mesmos para a mesma amostra.</li>
 </ul>
-</div>
-<div id="jackknife" class="section level1">
-<h1><span class="header-section-number">2</span> Jackknife</h1>
 <p>O jackknife é um procedimento do tipo <em>leave-one-out</em> (um caso particular de validação cruzada).</p>
 <p>Seja <span class="math inline">\(x = (x_1, \ldots, x_n)\)</span> uma amostra observada, e defina a <span class="math inline">\(i\)</span>-ésima amostra de jackkinfe <span class="math inline">\(x_{(i)}\)</span> como o subconjunto de <span class="math inline">\(x\)</span>, que “deixa de fora” a <span class="math inline">\(i\)</span>-ésima observação, ou seja, <span class="math display">\[
 x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
-\]</span> Se <span class="math inline">\(\hat{\theta} = T_n(x)\)</span>, então a <span class="math inline">\(i\)</span>-ésima estimativa de jackknife é <span class="math inline">\(\hat{\theta}_{(i)} = T_{n-1}(x_{(i)})\)</span>.</p>
-<p>A ideia é fundamentada no estimador da média <span class="math display">\[
+\]</span> Se <span class="math inline">\(\hat{\theta} = T_n(x)\)</span>, então a <span class="math inline">\(i\)</span>-ésima estimativa de jackknife é <span class="math inline">\(\hat{\theta}_{(i)} = T_{n-1}(x_{(i)}), i = 1 \ldots, n\)</span>.</p>
+<p>Suponha que o parâmetro <span class="math inline">\(\theta = t(F)\)</span> é uma função da distribuição <span class="math inline">\(F\)</span>. Se <span class="math inline">\(F_n\)</span> é a função (de distribuição) empírica de uma amostra de <span class="math inline">\(F\)</span>, então o estimador “<em>plug-in</em>” de <span class="math inline">\(\theta\)</span> é <span class="math inline">\(\hat\theta = t(F_n)\)</span>. Um estimador “<em>plug-in</em>” <span class="math inline">\(\hat\theta\)</span> é “suave” (<em>smooth</em>) no sentido de que pequenas mudanças nos dados correspondem a pequenas mudaças em <span class="math inline">\(\hat\theta\)</span>. Por exemplo, a média amostral é um estimador <em>plug-in</em> para a média populacional, mas a mediana amostral <strong>não é</strong> um estimador <em>plug-in</em> para a mediana populacional.</p>
+<p>Se <span class="math inline">\(\hat\theta\)</span> é um estimador “suave” para <span class="math inline">\(\theta\)</span>, então <span class="math inline">\(\hat\theta_{(i)}^{\star} = (F_{n-1}(x_{(i)}))\)</span> é chamada de <strong>estimativa parcial</strong> para <span class="math inline">\(\theta\)</span>, e a média das estimativas parciais, ou seja,</p>
+<p><span class="math display">\[
+  \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
+  \hat{\theta}_{(i)}^{\star}
+\]</span></p>
+<p>é um estimador pontual para <span class="math inline">\(\hat\theta\)</span>.</p>
+<p>O erro-padrão de Jackknife para a estimativa pontual ^{} é portanto</p>
+<p><span class="math display">\[
+\text{EP}_{jack} = \sqrt{\frac{n-1}{n} \sum_{i=1}^n
+  (\hat\theta_{(i)}^{\star} - \hat\theta^{\star})^2}
+\]</span></p>
+<p>Isso faz com que o algoritmo de Jackkkife seja facilmente automatizado, funcionando para qualquer estimador que seja uma função suave dos dados.</p>
+<p>Nesse mesmo sentido, assumindo independência entre os valores <span class="math inline">\(\theta_{(i)}^{\star}\)</span>, um intervalo de confiança <strong>aproximado</strong> de <span class="math inline">\(100(1-\alpha)\%\)</span> para <span class="math inline">\(\theta\)</span> pode ser definido como <span class="math display">\[
+\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
+\]</span></p>
+<div id="exemplo-média-amostral" class="section level2">
+<h2><span class="header-section-number">1.1</span> Exemplo: média amostral</h2>
+<pre class="r"><code>## Simula valores de uma normal
+set.seed(123)
+x &lt;- rnorm(30, 100, 5)
+(n &lt;- length(x))</code></pre>
+<pre><code># [1] 30</code></pre>
+<pre class="r"><code>(xbar &lt;- mean(x))</code></pre>
+<pre><code># [1] 99.76448</code></pre>
+<pre class="r"><code>(s2 &lt;- var(x))</code></pre>
+<pre><code># [1] 24.06053</code></pre>
+<pre class="r"><code>## Erro padrão da mẽdia amostral
+(ep &lt;- sqrt(s2/n))</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>## Estimativas parciais de Jackknife
+theta.jack &lt;- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] &lt;- mean(x[-i])
+}
+theta.jack</code></pre>
+<pre><code>#  [1]  99.85299  99.79605  99.48762  99.74420  99.73407  99.46066  99.67689
+#  [8]  99.97447  99.87478  99.83320  99.54531  99.69432  99.68726  99.73728
+# [15]  99.85219  99.44827  99.67052 100.09543  99.63544  99.83788  99.94047
+# [22]  99.79394  99.93326  99.88203  99.86413 100.04717  99.61191  99.72992
+# [29]  99.95259  99.54018</code></pre>
+<pre class="r"><code>## Nesse caso, a mẽdia das estimativas parciais será igual a média da
+## amostra
+mean(theta.jack)</code></pre>
+<pre><code># [1] 99.76448</code></pre>
+<pre class="r"><code>xbar # da amostra</code></pre>
+<pre><code># [1] 99.76448</code></pre>
+<pre class="r"><code>## Erro padrão
+## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>## Essa foma acima foi feita para concordar com
+sqrt(var(x)/n)</code></pre>
+<pre><code># [1] 0.8955544</code></pre>
+<pre class="r"><code>## quando \hat\theta é a média \bar{x}</code></pre>
+</div>
+<div id="exemplo-desvio-padrão-amostral" class="section level2">
+<h2><span class="header-section-number">1.2</span> Exemplo: desvio padrão amostral</h2>
+<p>Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão de uma VA <span class="math inline">\(X \sim \text{Exp}(1)\)</span>, ou seja, <span class="math inline">\(E[X] = 1\)</span> e <span class="math inline">\(Var[X] = 1\)</span>.</p>
+<pre class="r"><code>x &lt;- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
+       0.01, 0.61, 0.82, 1.7, 0.39, 0.11, 1.2, 1.21, 0.72)
+hist(x)</code></pre>
+<p><img src="figures/11_jackknife/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>(n &lt;- length(x))</code></pre>
+<pre><code># [1] 20</code></pre>
+<pre class="r"><code>(xbar &lt;- mean(x))</code></pre>
+<pre><code># [1] 1.0445</code></pre>
+<pre class="r"><code>## Desvio padrão amostral
+(sx &lt;- sd(x))</code></pre>
+<pre><code># [1] 1.05968</code></pre>
+<pre class="r"><code>## Queremos agora obter uma estimativa do erro padrão para o desvio
+## padrão amostral
+
+## Estimativas parciais
+theta.jack &lt;- numeric(n)
+for(i in 1:n) {
+    theta.jack[i] &lt;- sd(x[-i])
+}
+theta.jack</code></pre>
+<pre><code>#  [1] 0.9029186 1.0853369 1.0644890 1.0715868 0.8357022 1.0875825 1.0684568
+#  [8] 1.0885209 1.0724860 1.0807253 1.0849440 1.0595853 1.0836350 1.0873628
+# [15] 1.0771155 1.0771511 1.0650050 1.0880677 1.0879814 1.0858855</code></pre>
+<pre class="r"><code>## Erro padrão
+## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.2802791</code></pre>
+<div class="panel panel-primary">
+<div class="panel-heading">
+Pseudo-valores
+</div>
+<div class="panel-body">
+<p>A ideia por trás do Jackknife pode ser entendida com base na definição de pseudo-valores, que é fundamentada no estimador da média amostral <span class="math display">\[
   \bar{X} = \frac{1}{n} \sum_{i=1}^{n} X_i.
 \]</span></p>
 <p>A média com a <span class="math inline">\(i\)</span>-ésima observação removida, <span class="math inline">\(X_{(i)}\)</span>, é <span class="math display">\[
@@ -413,22 +500,18 @@ x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
 <p>é denominada de <strong>pseudo-valor</strong> e se baseia nas diferença ponderadas entra a estimativa (<span class="math inline">\(\hat{\theta}\)</span>) e todas as observações e na <strong>estimativa parcial</strong>, ou seja, aquela sem a <span class="math inline">\(i\)</span>-ésima observação (<span class="math inline">\(\hat{\theta}_{(i)}\)</span>).</p>
 <p>O estimador pontual de Jackknife é definido por <span class="math display">\[
   \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
-  \hat{\theta}_{(i)}^{\star},
+  \hat{\theta}_{i}^{\star},
 \]</span> ou seja, é a <strong>média dos pseudo-valores</strong>.</p>
 <p>Os valores <span class="math inline">\(\hat{\theta}\)</span> e <span class="math inline">\(\hat{\theta}^{\star}\)</span> não são necessariamente iguais nos casos gerais.</p>
-<p>Se for assumido que os valores <span class="math inline">\(\theta_{(i)}^{\star}\)</span>, <span class="math inline">\(i = 1, \ldots, n\)</span>, são independentes, a variância do estimador de Jackknife é dada por <span class="math display">\[
+<p>Se for assumido que os valores <span class="math inline">\(\hat\theta_{i}^{\star}\)</span>, <span class="math inline">\(i = 1, \ldots, n\)</span>, são independentes, a variância do estimador de Jackknife é dada por <span class="math display">\[
 \text{Var}(\hat{\theta}^{\star}) = \frac{s^2}{n},
   \quad s^2 = \frac{1}{n - 1}
-  \sum_{i = 1}^n (\hat{\theta}_{(i)}^{*} - \hat{\theta}^{\star})^2.
+  \sum_{i = 1}^n (\hat{\theta}_{i}^{\star} - \hat{\theta}^{\star})^2.
 \]</span> Portanto o erro padrão será <span class="math display">\[
 \text{EP}_{jack} = \sqrt{\text{Var}(\hat{\theta}^{\star})} =
 \sqrt{\frac{s^2}{n}}
 \]</span></p>
-<p>Nesse mesmo sentido, assumindo independência entre os valores <span class="math inline">\(\theta_{(i)}^{\star}\)</span>, um intervalo de confiança <strong>aproximado</strong> de <span class="math inline">\(100(1-\alpha)\%\)</span> para <span class="math inline">\(\theta\)</span> pode ser definido como <span class="math display">\[
-\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
-\]</span></p>
-<div id="exemplo-média-amostral" class="section level2">
-<h2><span class="header-section-number">2.1</span> Exemplo: média amostral</h2>
+<h4 id="exemplo-média-amostral-1" class="unnumbered">Exemplo: média amostral</h4>
 <pre class="r"><code>## Simula valores de uma normal
 set.seed(123)
 x &lt;- rnorm(30, 100, 5)
@@ -476,28 +559,14 @@ sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
 <pre class="r"><code>ep # erro padrão da amostra</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)</code></pre>
-<pre><code># [1] 0.8296735</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/n</code></pre>
-<pre><code># [1] 0.02765578</code></pre>
-<pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
-<pre><code># [1] 0.8020177</code></pre>
-<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre class="r"><code>## Conta &quot;na mão&quot;
+sqrt((sum((pv - mean(pv))^2)/(n - 1))/n)</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
-<pre class="r"><code>## Essa foma acima foi feita para concordar com
-sqrt(sum((x - xbar)^2)/(n*(n-1)))</code></pre>
+<pre class="r"><code>## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
 <pre><code># [1] 0.8955544</code></pre>
-<pre class="r"><code>## quando \het\theta e a media \bar{x}
-
-sqrt(var(theta.jack)/n)</code></pre>
-<pre><code># [1] 0.03088119</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))</code></pre>
-<pre><code># [1] 0.0009536477</code></pre>
-<pre class="r"><code>sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))</code></pre>
-<pre><code># [1] 0.03088119</code></pre>
-<pre class="r"><code>sqrt(sum((x - xbar)^2)/(n*(n-1)))</code></pre>
-<pre><code># [1] 0.8955544</code></pre>
-<pre class="r"><code>## Resultados
+<pre class="r"><code>## Resultados: quando o estimador for a média amostral, os
+## pseudo-valores serão iguais aos valores observados
 round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
             &quot;Estimativas parciais&quot; = theta.jack), 2)</code></pre>
 <pre><code>#       Amostra Pseudo-valores Estimativas parciais
@@ -531,24 +600,16 @@ round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
 # [28,]  100.77         100.77                99.73
 # [29,]   94.31          94.31                99.95
 # [30,]  106.27         106.27                99.54</code></pre>
-</div>
-<div id="exemplo-desvio-padrão-amostral" class="section level2">
-<h2><span class="header-section-number">2.2</span> Exemplo: desvio padrão amostral</h2>
-<pre class="r"><code>## Exemplo 2.1 do Manly. Estimativa do erro padrão para o desvio padrão
-## Valores de X ~ Exp(1). E[X] = 1 e Var[X] = 1
-x &lt;- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
+<h4 id="exemplo-desvio-padrão-amostral-1" class="unnumbered">Exemplo: desvio-padrão amostral</h4>
+<pre class="r"><code>x &lt;- c(3.56, 0.69, 0.1, 1.84, 3.93, 1.25, 0.18, 1.13, 0.27, 0.5, 0.67,
        0.01, 0.61, 0.82, 1.7, 0.39, 0.11, 1.2, 1.21, 0.72)
-hist(x)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>(n &lt;- length(x))</code></pre>
+(n &lt;- length(x))</code></pre>
 <pre><code># [1] 20</code></pre>
 <pre class="r"><code>(xbar &lt;- mean(x))</code></pre>
 <pre><code># [1] 1.0445</code></pre>
 <pre class="r"><code>(sx &lt;- sd(x))</code></pre>
 <pre><code># [1] 1.05968</code></pre>
-<pre class="r"><code>## Obter uma estimativa do erro padrão para o desvio padrão
-
-## Estimativas parciais
+<pre class="r"><code>## Estimativas parciais
 theta.jack &lt;- numeric(n)
 for(i in 1:n) {
     theta.jack[i] &lt;- sd(x[-i])
@@ -562,15 +623,23 @@ theta.jack</code></pre>
 <pre><code>#  [1] 4.0381381 0.5721907 0.9683003 0.8334424 5.3152487 0.5295241 0.8929116
 #  [8] 0.5116940 0.8163565 0.6598100 0.5796552 1.0614703 0.6045255 0.5336979
 # [15] 0.7283971 0.7277214 0.9584962 0.5203059 0.5219449 0.5617665</code></pre>
-<pre class="r"><code>mean(pv)</code></pre>
+<pre class="r"><code>## Estimativa pontual de Jackknife para o DESVIO-PADRÃO
+mean(pv)</code></pre>
 <pre><code># [1] 1.09678</code></pre>
-<pre class="r"><code>sx # desvio padrão amostral</code></pre>
+<pre class="r"><code>## Desvio padrão amostral
+sx</code></pre>
 <pre><code># [1] 1.05968</code></pre>
-<pre class="r"><code>## Erro padrão
+<pre class="r"><code>## Não serão iguais necessariamente
+
+## Erro padrão
 ## Usando os pseudo-valores
 sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] 0.2802791</code></pre>
-<pre class="r"><code>## Resultados
+<pre class="r"><code>## Usando estimador baseado nas estimativas parciais
+sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.2802791</code></pre>
+<pre class="r"><code>## Resultados: os pseudo-valores não serão iguais aos valores (como
+## aconteceu com a mẽdia amostral)
 round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
             &quot;Estimativas parciais&quot; = theta.jack), 2)</code></pre>
 <pre><code>#       Amostra Pseudo-valores Estimativas parciais
@@ -594,25 +663,11 @@ round(cbind(Amostra = x, &quot;Pseudo-valores&quot; = pv,
 # [18,]    1.20           0.52                 1.09
 # [19,]    1.21           0.52                 1.09
 # [20,]    0.72           0.56                 1.09</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)</code></pre>
-<pre><code># [1] 0.08269095</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/n</code></pre>
-<pre><code># [1] 0.004134547</code></pre>
-<pre class="r"><code>((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)</code></pre>
-<pre><code># [1] 0.0785564</code></pre>
-<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
-<pre><code># [1] 0.2802791</code></pre>
-<pre class="r"><code>## sqrt((2 * var(x)**2)/(n - 1))/n
-
-sqrt(var(theta.jack)/n)</code></pre>
-<pre><code># [1] 0.01475153</code></pre>
-<pre class="r"><code>sum((theta.jack - mean(theta.jack))^2)/(n*(n-1))</code></pre>
-<pre><code># [1] 0.0002176078</code></pre>
-<pre class="r"><code>sqrt(sum((theta.jack - mean(theta.jack))^2)/(n*(n-1)))</code></pre>
-<pre><code># [1] 0.01475153</code></pre>
+</div>
+</div>
 </div>
 <div id="exemplo-correlação" class="section level2">
-<h2><span class="header-section-number">2.3</span> Exemplo: correlação</h2>
+<h2><span class="header-section-number">1.3</span> Exemplo: correlação</h2>
 <pre class="r"><code>## Estimativa de erro padrão via bootstrap
 data(law, package = &quot;bootstrap&quot;)
 str(law)</code></pre>
@@ -620,7 +675,7 @@ str(law)</code></pre>
 #  $ LSAT: num  576 635 558 578 666 580 555 661 651 605 ...
 #  $ GPA : num  3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...</code></pre>
 <pre class="r"><code>plot(law$LSAT, law$GPA)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>(rho &lt;- cor(law$LSAT, law$GPA))</code></pre>
 <pre><code># [1] 0.7763745</code></pre>
 <pre class="r"><code>## Definições
@@ -649,6 +704,8 @@ theta.jack</code></pre>
 <pre><code>#  [1] 0.8929471 0.7637068 0.7549984 0.7760968 0.7313197 0.7799687 0.7845360
 #  [8] 0.7361618 0.7517391 0.7761231 0.8181007 0.7857184 0.7403509 0.7670413
 # [15] 0.7798725</code></pre>
+<pre class="r"><code>mean(theta.jack)</code></pre>
+<pre><code># [1] 0.7759121</code></pre>
 <pre class="r"><code>## Pseudo valores
 ## Note que alguns valores estão fora do intervalo [-1,1]
 (pv &lt;- n * rho - (n - 1) * theta.jack)</code></pre>
@@ -675,7 +732,7 @@ mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)</code></pre>
 # [1] 0.95</code></pre>
 </div>
 <div id="exemplo-razão-de-médias" class="section level2">
-<h2><span class="header-section-number">2.4</span> Exemplo: razão de médias</h2>
+<h2><span class="header-section-number">1.4</span> Exemplo: razão de médias</h2>
 <pre class="r"><code>data(patch, package = &quot;bootstrap&quot;)
 n &lt;- nrow(patch)
 y &lt;- patch$y
@@ -687,8 +744,11 @@ theta.jack &lt;- numeric(n)
 for (i in 1:n) {
     theta.jack[i] &lt;- mean(y[-i])/mean(z[-i])
 }
-
-## Pseudo valores
+mean(theta.jack)</code></pre>
+<pre><code># [1] -0.07016288</code></pre>
+<pre class="r"><code>sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))</code></pre>
+<pre><code># [1] 0.1055278</code></pre>
+<pre class="r"><code>## Pseudo valores
 (pv &lt;- n * theta.hat - (n - 1) * theta.jack)</code></pre>
 <pre><code># [1] -0.17061885  0.32904914 -0.42025606  0.35670355 -0.21575610  0.01788742
 # [7] -0.11640789 -0.41506989</code></pre>
@@ -735,10 +795,34 @@ boot.ci(boot.obj, type = c(&quot;basic&quot;, &quot;norm&quot;, &quot;perc&quot;
 <pre class="r"><code>## Via jackknife
 mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)</code></pre>
 <pre><code># [1] -0.3288421  0.1702250</code></pre>
+<pre class="r"><code>mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)</code></pre>
+<pre><code># [1] -0.3288421  0.1702250</code></pre>
+</div>
+<div id="exemplo-mediana" class="section level2">
+<h2><span class="header-section-number">1.5</span> Exemplo: mediana</h2>
+<p>Este é um exemplo de quando o mẽtodo de Jackknife pode <strong>falhar</strong>. Isso ocorre quando <span class="math inline">\(\hat\theta\)</span> não é uma função “suave” da amostra, como é o caso da mediana.</p>
+<pre class="r"><code>x &lt;- c(29, 79, 41, 86, 91, 5, 50, 83, 51, 42)
+n &lt;- length(x)
+## Erro padrão via Jackknife
+M &lt;- numeric(n)
+for (i in 1:n) {
+    y &lt;- x[-i]
+    M[i] &lt;- median(y)
+}
+Mbar &lt;- mean(M)
+sqrt((n - 1)/n * sum((M - Mbar)^2))</code></pre>
+<pre><code># [1] 1.5</code></pre>
+<pre class="r"><code>## Erro padrão via bootstrap
+Mb &lt;- replicate(1000, expr = {
+    y &lt;- sample(x, size = n, replace = TRUE)
+    median(y)
+})
+sd(Mb)</code></pre>
+<pre><code># [1] 13.86033</code></pre>
 </div>
 </div>
 <div id="validação-cruzada" class="section level1">
-<h1><span class="header-section-number">3</span> Validação cruzada</h1>
+<h1><span class="header-section-number">2</span> Validação cruzada</h1>
 <p>A validação cruzada é um método de particionamento de dados que pode ser usado para verificar:</p>
 <ul>
 <li>A estabilidade de estimativas de parâmetros</li>
@@ -770,7 +854,7 @@ str(ironslag)</code></pre>
 #  $ chemical: num  24 16 24 18 18 10 14 16 18 20 ...
 #  $ magnetic: num  25 22 17 21 20 13 16 14 19 10 ...</code></pre>
 <pre class="r"><code>plot(magnetic ~ chemical, ironslag)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Modelos propostos
 a &lt;- seq(10, 40, .1) # sequencia para graficos
 ## Linear
@@ -796,7 +880,7 @@ plot(log(magnetic) ~ log(chemical), ironslag,
      main = &quot;Log-Log&quot;, pch = 19)
 logyhat4 &lt;- L4$coef[1] + L4$coef[2] * log(a)
 lines(log(a), logyhat4, lwd = 2, col = 2)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-8-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-11-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Validação cruzada
 n &lt;- length(ironslag$magnetic)
 e1 &lt;- e2 &lt;- e3 &lt;- e4 &lt;- numeric(n)
@@ -837,7 +921,7 @@ plot(L3$fit, L3$res, main = &quot;Exponencial&quot;); abline(0, 0)
 qqnorm(L3$res); qqline(L3$res)
 plot(L4$fit, L4$res, main = &quot;log-log&quot;); abline(0, 0)
 qqnorm(L4$res); qqline(L4$res)</code></pre>
-<p><img src="figures/11_jackknife/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/11_jackknife/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 </div>
 

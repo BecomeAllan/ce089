@@ -589,7 +589,7 @@ library(coin)</code></pre>
 #   Approximative Two-Sample Fisher-Pitman Permutation Test
 # 
 # data:  vals by factor(id) (x, y)
-# Z = 0.89172, p-value = 0.3842
+# Z = 0.89172, p-value = 0.3845
 # alternative hypothesis: true mu is not equal to 0</code></pre>
 <pre class="r"><code>library(perm)
 permTS(vals ~ id, data = da)</code></pre>
@@ -615,16 +615,16 @@ for(i in 1:N) {
     xydiff[i] &lt;- diff(tapply(sample(xy), da$id, mean))
 }
 str(xydiff)</code></pre>
-<pre><code>#  num [1:10000] 0.36 1.36 -0.16 -2.96 -1.72 ...</code></pre>
+<pre><code>#  num [1:10000] -4.64 0.36 -0.44 -0.64 -2.16 ...</code></pre>
 <pre class="r"><code>summary(xydiff)</code></pre>
 <pre><code>#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# -5.6800 -1.4400  0.0000  0.0113  1.4800  5.6800</code></pre>
+# -5.6800 -1.4400  0.0000  0.0197  1.4800  5.6800</code></pre>
 <pre class="r"><code>hist(xydiff)
 abline(v = obsdiff, col = 2)</code></pre>
 <p><img src="figures/12_permutacao/unnamed-chunk-2-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xydiff &gt;= obsdiff)/length(xydiff)</code></pre>
-<pre><code># [1] 0.396</code></pre>
+<pre><code># [1] 0.3934</code></pre>
 <pre class="r"><code>t.test(vals ~ id, data = da, var.equal = TRUE)$p.value</code></pre>
 <pre><code># [1] 0.404256</code></pre>
 <pre class="r"><code>coin::oneway_test(vals ~ factor(id), data = da)</code></pre>
@@ -686,7 +686,7 @@ abline(v = obscor, col = 2)</code></pre>
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 1.8, p-value = 0.0833
+# Z = 1.8, p-value = 0.0878
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 <pre class="r"><code>## Usa amostragem SEM REPOSIÇÃO
 N &lt;- 100000
@@ -699,16 +699,16 @@ for(i in 1:N) {
     xycor[i] &lt;- cor(xp, yp, method = &quot;spearman&quot;)
 }
 str(xycor)</code></pre>
-<pre><code>#  num [1:100000] -0.3 0.7 0 -0.8 0.8 -0.1 0.7 -0.5 0.2 -0.1 ...</code></pre>
+<pre><code>#  num [1:100000] 0 -0.8 0 -0.4 0.2 -0.2 0.3 0.1 0.9 -0.2 ...</code></pre>
 <pre class="r"><code>summary(xycor)</code></pre>
 <pre><code>#      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-# -1.000000 -0.400000  0.000000 -0.000821  0.400000  1.000000</code></pre>
+# -1.000000 -0.400000  0.000000 -0.000735  0.400000  1.000000</code></pre>
 <pre class="r"><code>hist(xycor)
 abline(v = obscor, col = 2)</code></pre>
 <p><img src="figures/12_permutacao/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xycor &gt;= obscor)/length(xycor) # teste aproximado</code></pre>
-<pre><code># [1] 0.08306</code></pre>
+<pre><code># [1] 0.08334</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;pearson&quot;)$p.value</code></pre>
 <pre><code># [1] 0.02541591</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;kendall&quot;)$p.value</code></pre>
@@ -721,7 +721,7 @@ abline(v = obscor, col = 2)</code></pre>
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 1.8, p-value = 0.0811
+# Z = 1.8, p-value = 0.0833
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 </div>
 </div>
@@ -753,10 +753,10 @@ for(i in 1:N) {
     xycor[i] &lt;- cor(xp, yp, method = &quot;spearman&quot;)
 }
 str(xycor)</code></pre>
-<pre><code>#  num [1:1000000] -0.0464 0.0321 -0.175 0.2393 -0.3 ...</code></pre>
+<pre><code>#  num [1:1000000] -0.2357 -0.0464 -0.1393 0.3286 -0.0286 ...</code></pre>
 <pre class="r"><code>summary(xycor)</code></pre>
 <pre><code>#       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
-# -0.9107143 -0.1857143  0.0000000 -0.0003011  0.1857143  0.9464286</code></pre>
+# -0.9107143 -0.1857143  0.0000000 -0.0002802  0.1857143  0.9464286</code></pre>
 <pre class="r"><code>hist(xycor)
 abline(v = obscor, col = 2)</code></pre>
 <p><img src="figures/12_permutacao/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
@@ -775,7 +775,7 @@ abline(v = obscor, col = 2)</code></pre>
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 2.98, p-value = 0.00056
+# Z = 2.98, p-value = 0.00077
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 </div>
 <div id="exemplo-das-aulas-anteriores" class="section level2">
