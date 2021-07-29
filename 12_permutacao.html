@@ -387,27 +387,27 @@ div.tocify {
 <p><strong>Testes de Aleatorização</strong></p>
 <ul>
 <li>Abordagem baseada em permutação das observações (<em>permutation tests</em>).</li>
-<li>São considerados testes livre de distribuição.</li>
+<li>São considerados testes <strong>livre de distribuição</strong>.</li>
 <li>Faz suposições sobre o processo gerador dos dados.</li>
 <li>Duas formas de cálculo da estatística de teste:
 <ul>
 <li><strong>Exaustiva</strong>: no conjunto de todos os arranjos possíveis <span class="math inline">\(\rightarrow\)</span> distribuição amostral exata.</li>
-<li><strong>Por reamostragem</strong>: amostra do conjunto completo de arranjos com reamostragem sem reposição.</li>
+<li><strong>Por reamostragem</strong>: amostra do conjunto completo de arranjos com <strong>reamostragem sem reposição</strong>.</li>
 </ul></li>
 <li>IMPORTANTE: Sob a hipótese nula os dados são <strong>permutáveis</strong>.</li>
 <li>Esse é o principal conceito e requisito dos testes de aleatorização.</li>
 </ul>
 <p><strong>Limitações dos testes de aleatorização</strong></p>
 <ul>
-<li>Só podem ser usados para hipóteses que envolvam comparações (trocar observações entre grupos) ou desalinhar registros (como em correlação, por exemplo).</li>
+<li>Só podem ser usados para <strong>hipóteses que envolvam comparações</strong> (trocar observações entre grupos) ou desalinhar registros (como em correlação, por exemplo).</li>
 <li>Portanto, não podem ser usados para testar hipóteses sobre parâmetros individuais.</li>
 <li>O teste de aleatorização exato de Fisher para a média é uma alternativa para testar hipótese sobre a média considerando população simétrica, porém, estritamente não é um teste de aleatorização.</li>
 </ul>
 <p>De acordo com Manly (2006):</p>
 <ul>
-<li>Compara o valor da estatística com aquele obtido da distribuição gerada pela permutação dos valores observados.</li>
+<li>Compara o valor da estatística com aquele obtido da distribuição gerada pela <strong>permutação dos valores observados</strong>.</li>
 <li>São úteis pois permitem o usuário definir a estatística de teste mais apropriada.</li>
-<li>Não necessariamente os resultados podem ser extrapolados para a população.</li>
+<li><strong>Não necessariamente os resultados podem ser extrapolados para a população</strong>.</li>
 <li>Testes de aleatorização são exatos: fonece um nível de significância que é igual ou inferior ao nível nominal.</li>
 <li>Duas estatísticas são equivalente se elas dão o mesmo nível de significância em testes de aleatorização.</li>
 <li>Testes de aleatorização e tradicionais darão similar nível de significância se as suposições do último forem atendidas.</li>
@@ -543,10 +543,11 @@ str(xyperm)</code></pre>
 # [3628799,] 10.8  9.5  8.9  8.3  7.7  5.1  4.1  3.7  1.0   2.9
 # [3628800,] 10.8  9.5  8.9  8.3  7.7  5.1  4.1  3.7  2.9   1.0</code></pre>
 <pre class="r"><code>## Calcula a diferença média para todas as permutações possíveis
-xydiff &lt;- numeric(nrow(xyperm))
-for(i in 1:nrow(xyperm)) {
-    xydiff[i] &lt;- mean(xyperm[i, 1:5]) - mean(xyperm[i, 6:10])
-}
+library(future.apply)
+plan(multicore, workers = 4)
+xydiff &lt;- future_apply(matrix(1:nrow(xyperm)), 1, function(i) {
+    mean(xyperm[i, 1:5]) - mean(xyperm[i, 6:10])
+})
 str(xydiff)</code></pre>
 <pre><code>#  num [1:3628800] -5.68 -5.68 -5.68 -5.68 -5.68 -5.68 -5.68 -5.68 -5.68 -5.68 ...</code></pre>
 <pre class="r"><code>summary(xydiff)</code></pre>
@@ -602,29 +603,23 @@ permTS(vals ~ id, data = da)</code></pre>
 # sample estimates:
 # mean id=x - mean id=y 
 #                  1.84</code></pre>
-<pre class="r"><code>## Mesmo em um caso simples como, esse, onde n = 10, já vimos que o
-## número total de permutações possíveis pode ser muito grande, o que
-## faz com que esse processo fique inviável computacionalmente.
-## A ideia então é fazer um grande número de permutações aleatórias e
-## fazer o mesmo cálculo. Isso pode ser feito retirando-se amostra COM
-## REPOSIÇÃO da amostra conjunta (concatenando os dois grupos)
-## Usando amostras sem reposição
-N &lt;- 10000
-xydiff &lt;- numeric(N)
-for(i in 1:N) {
-    xydiff[i] &lt;- diff(tapply(sample(xy), da$id, mean))
-}
+<p>Mesmo em um caso simples como, esse, onde n = 10, já vimos que o número total de permutações possíveis pode ser muito grande, o que faz com que esse processo fique inviável computacionalmente. A ideia então é fazer um grande número de permutações aleatórias e fazer o mesmo cálculo. Isso pode ser feito retirando-se amostra COM REPOSIÇÃO da amostra conjunta (concatenando os dois grupos) Usando amostras sem reposição</p>
+<pre class="r"><code>N &lt;- 10000
+xydiff &lt;- future_replicate(
+    N, diff(tapply(sample(xy), da$id, mean))
+)
 str(xydiff)</code></pre>
-<pre><code>#  num [1:10000] -4.64 0.36 -0.44 -0.64 -2.16 ...</code></pre>
+<pre><code>#  Named num [1:10000] 0.6 1.36 -1.44 1.92 0.84 ...
+#  - attr(*, &quot;names&quot;)= chr [1:10000] &quot;y&quot; &quot;y&quot; &quot;y&quot; &quot;y&quot; ...</code></pre>
 <pre class="r"><code>summary(xydiff)</code></pre>
-<pre><code>#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# -5.6800 -1.4400  0.0000  0.0197  1.4800  5.6800</code></pre>
+<pre><code>#     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+# -5.68000 -1.48000  0.00000 -0.00774  1.48000  5.68000</code></pre>
 <pre class="r"><code>hist(xydiff)
 abline(v = obsdiff, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-2-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xydiff &gt;= obsdiff)/length(xydiff)</code></pre>
-<pre><code># [1] 0.3934</code></pre>
+<pre><code># [1] 0.3948</code></pre>
 <pre class="r"><code>t.test(vals ~ id, data = da, var.equal = TRUE)$p.value</code></pre>
 <pre><code># [1] 0.404256</code></pre>
 <pre class="r"><code>coin::oneway_test(vals ~ factor(id), data = da)</code></pre>
@@ -647,10 +642,8 @@ abline(v = obsdiff, col = 2)</code></pre>
 </div>
 <div id="teste-para-correlação" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Teste para correlação</h3>
-<pre class="r"><code>## Usando o mesmo exemplo, mas agora calculando a correlação entre os
-## grupos
-## Correlação observada. NOTE que é necessário usar a correlação (de
-## postos) de Spearman
+<p>Usando o mesmo exemplo, mas agora calculando a correlação entre os grupos. NOTE que é necessário usar a correlação (de postos) de Spearman.</p>
+<pre class="r"><code>## Correlações observadas
 cor(x, y, method = &quot;pearson&quot;)</code></pre>
 <pre><code># [1] 0.9228669</code></pre>
 <pre class="r"><code>cor(x, y, method = &quot;kendall&quot;)</code></pre>
@@ -658,11 +651,9 @@ cor(x, y, method = &quot;pearson&quot;)</code></pre>
 <pre class="r"><code>(obscor &lt;- cor(x, y, method = &quot;spearman&quot;))</code></pre>
 <pre><code># [1] 0.9</code></pre>
 <pre class="r"><code>## Calcula a diferença média para todas as permutações possíveis
-xycor &lt;- numeric(nrow(xyperm))
-for(i in 1:nrow(xyperm)) {
-    xycor[i] &lt;- cor(xyperm[i, 1:5], xyperm[i, 6:10],
-                    method = &quot;spearman&quot;)
-}
+xycor &lt;- future_apply(matrix(1:nrow(xyperm)), 1, function(i) {
+    cor(xyperm[i, 1:5], xyperm[i, 6:10], method = &quot;spearman&quot;)
+})
 str(xycor)</code></pre>
 <pre><code>#  num [1:3628800] 1 0.9 0.9 0.7 0.7 0.6 0.9 0.8 0.7 0.4 ...</code></pre>
 <pre class="r"><code>summary(xycor)</code></pre>
@@ -670,7 +661,7 @@ str(xycor)</code></pre>
 #    -1.0    -0.4     0.0     0.0     0.4     1.0</code></pre>
 <pre class="r"><code>hist(xycor)
 abline(v = obscor, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xycor &gt;= obscor)/length(xycor) # teste exato</code></pre>
 <pre><code># [1] 0.08333333</code></pre>
@@ -680,48 +671,47 @@ abline(v = obscor, col = 2)</code></pre>
 <pre><code># [1] 0.08333333</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;spearman&quot;)$p.value</code></pre>
 <pre><code># [1] 0.08333333</code></pre>
-<pre class="r"><code>spearman_test(x ~ y,
+<pre class="r"><code>coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 10000))</code></pre>
 <pre><code># 
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 1.8, p-value = 0.0878
+# Z = 1.8, p-value = 0.0826
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 <pre class="r"><code>## Usa amostragem SEM REPOSIÇÃO
 N &lt;- 100000
 n &lt;- length(xy)
-xycor &lt;- numeric(N)
-for(i in 1:N) {
-    ip &lt;- sample(1:n, replace = FALSE)
-    xp &lt;- xy[ip[1:5]]
-    yp &lt;- xy[ip[6:10]]
-    xycor[i] &lt;- cor(xp, yp, method = &quot;spearman&quot;)
-}
+xycor &lt;- future_replicate(N, {
+    ip &lt;- sample(1:n, size = n/2, replace = FALSE)
+    xp &lt;- xy[ip]
+    yp &lt;- xy[-ip]
+    cor(xp, yp, method = &quot;spearman&quot;)
+})
 str(xycor)</code></pre>
-<pre><code>#  num [1:100000] 0 -0.8 0 -0.4 0.2 -0.2 0.3 0.1 0.9 -0.2 ...</code></pre>
+<pre><code>#  num [1:100000] -0.5 0.3 0.7 -0.3 -0.3 0.8 -1 0.4 0.5 0.3 ...</code></pre>
 <pre class="r"><code>summary(xycor)</code></pre>
-<pre><code>#      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-# -1.000000 -0.400000  0.000000 -0.000735  0.400000  1.000000</code></pre>
+<pre><code>#     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+# -1.00000 -0.40000  0.00000 -0.00103  0.40000  1.00000</code></pre>
 <pre class="r"><code>hist(xycor)
 abline(v = obscor, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-3-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xycor &gt;= obscor)/length(xycor) # teste aproximado</code></pre>
-<pre><code># [1] 0.08334</code></pre>
+<pre><code># [1] 0.08298</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;pearson&quot;)$p.value</code></pre>
 <pre><code># [1] 0.02541591</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;kendall&quot;)$p.value</code></pre>
 <pre><code># [1] 0.08333333</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;spearman&quot;)$p.value</code></pre>
 <pre><code># [1] 0.08333333</code></pre>
-<pre class="r"><code>spearman_test(x ~ y,
+<pre class="r"><code>coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 10000))</code></pre>
 <pre><code># 
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 1.8, p-value = 0.0833
+# Z = 1.8, p-value = 0.0898
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 </div>
 </div>
@@ -733,7 +723,7 @@ str(law)</code></pre>
 #  $ LSAT: num  576 635 558 578 666 580 555 661 651 605 ...
 #  $ GPA : num  3.39 3.3 2.81 3.03 3.44 3.07 3 3.43 3.36 3.13 ...</code></pre>
 <pre class="r"><code>plot(law$LSAT, law$GPA)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>x &lt;- law$LSAT
 y &lt;- law$GPA
 (obscor &lt;- cor(x, y, method = &quot;spearman&quot;))</code></pre>
@@ -745,37 +735,36 @@ factorial(nrow(law))</code></pre>
 N &lt;- 1000000
 xy &lt;- c(x, y)
 n &lt;- length(xy)
-xycor &lt;- numeric(N)
-for(i in 1:N) {
+xycor &lt;- future_replicate(N, {
     ip &lt;- sample(1:n, size = n/2, replace = FALSE)
     xp &lt;- xy[ip]
     yp &lt;- xy[-ip]
-    xycor[i] &lt;- cor(xp, yp, method = &quot;spearman&quot;)
-}
+    cor(xp, yp, method = &quot;spearman&quot;)
+})
 str(xycor)</code></pre>
-<pre><code>#  num [1:1000000] -0.2357 -0.0464 -0.1393 0.3286 -0.0286 ...</code></pre>
+<pre><code>#  num [1:1000000] -0.3357 -0.0714 0.2714 -0.3143 -0.6429 ...</code></pre>
 <pre class="r"><code>summary(xycor)</code></pre>
 <pre><code>#       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
-# -0.9107143 -0.1857143  0.0000000 -0.0002802  0.1857143  0.9464286</code></pre>
+# -0.9214286 -0.1857143  0.0000000 -0.0000221  0.1857143  0.9428571</code></pre>
 <pre class="r"><code>hist(xycor)
 abline(v = obscor, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-4-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-5-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## P-valor do teste.
 2 * sum(xycor &gt;= obscor)/length(xycor) # teste aproximado</code></pre>
-<pre><code># [1] 0.000618</code></pre>
+<pre><code># [1] 0.000626</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;pearson&quot;)$p.value</code></pre>
 <pre><code># [1] 0.000665102</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;kendall&quot;)$p.value</code></pre>
 <pre><code># [1] 0.0005320216</code></pre>
 <pre class="r"><code>cor.test(x, y,  method = &quot;spearman&quot;)$p.value</code></pre>
 <pre><code># [1] 0.000607857</code></pre>
-<pre class="r"><code>spearman_test(x ~ y,
+<pre class="r"><code>coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 100000))</code></pre>
 <pre><code># 
 #   Approximative Spearman Correlation Test
 # 
 # data:  x by y
-# Z = 2.98, p-value = 0.00077
+# Z = 2.98, p-value = 0.00062
 # alternative hypothesis: true rho is not equal to 0</code></pre>
 </div>
 <div id="exemplo-das-aulas-anteriores" class="section level2">
@@ -789,7 +778,7 @@ femeas &lt;- rnorm(10, mean(machos) - 2, sd = sd(machos))
 da &lt;- data.frame(comp = c(machos, femeas),
                  sexo = c(rep(&quot;M&quot;, 10), rep(&quot;F&quot;, 10)))
 densityplot(~comp, groups = sexo, data = da, auto.key = TRUE)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Média por sexo
 tapply(da$comp, da$sexo, mean)</code></pre>
 <pre><code>#       F       M 
@@ -854,7 +843,7 @@ am &lt;- replicate(
 ## Visualização
 hist(am, main = &quot;Distribuição amostral&quot;)
 abline(v = med.amostral, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-5-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-6-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## p-valor empírico
 sum(am &gt;= med.amostral)/N</code></pre>
 <pre><code># [1] 0.2309</code></pre>
@@ -865,7 +854,7 @@ femeas &lt;- c(110, 111, 107, 108, 110, 105, 107, 106, 111, 111)
 da &lt;- data.frame(comp = c(machos, femeas),
                  sexo = c(rep(&quot;M&quot;, 10), rep(&quot;F&quot;, 10)))
 densityplot(~comp, groups = sexo, data = da, auto.key = TRUE)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Média por sexo
 tapply(da$comp, da$sexo, mean)</code></pre>
 <pre><code>#     F     M 
@@ -930,7 +919,7 @@ am &lt;- replicate(
 ## Visualização
 hist(am, main = &quot;Distribuição amostral&quot;)
 abline(v = med.amostral, col = 2)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-6-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-7-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## p-valor empírico
 sum(am &gt;= med.amostral)/N</code></pre>
 <pre><code># [1] 0.0015</code></pre>
@@ -953,8 +942,9 @@ y &lt;- 1:8
 ## observações.
 ind &lt;- expand.grid(i = 1:length(x),
                    j = 1:length(y))
-
-##  Função que determina o peso entre duas localizações na malha.
+plot(ind)</code></pre>
+<p><img src="figures/12_permutacao/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##  Função que determina o peso entre duas localizações na malha.
 f &lt;- function(i, j) {
     u &lt;- min(3, sum(abs(ind[i, ] - ind[j, ])))
     w &lt;- c(0, 1, sqrt(1/2), 0)[u + 1]
@@ -973,8 +963,8 @@ for (i in 1:nrow(ind)) {
 w &lt;- w/sum(w)
 
 ## Gráfico. Valores claros indicam maior peso entre observações.
-image(w, asp = 1, col = gray.colors(100))</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /></p>
+image(w, asp = 1)</code></pre>
+<p><img src="figures/12_permutacao/unnamed-chunk-8-2.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Lógica do índica de Moran: correlação entre valores observados e
 ## média dos vizinhos. Exemplo com valores simulados.
 xx &lt;- rnorm(64)
@@ -1004,30 +994,20 @@ moran &lt;- function(x, w) {
 ## Moran para os dados simulados
 moran(xx, w)</code></pre>
 <pre><code># [1] -0.05779878</code></pre>
-<pre class="r"><code>## A ideia do teste de permutação, é trocar de lugar as observações e
-## calcular o índice de Moran, mantendo a matriz de pesos fixa. Se não
-## houver dependência espacial, então qualquer observação poderia estar
-## em qualquer lugar. Com isso, o valor calculado do índice de Moran
-## pode ser comparado com a distribuição dos índices de Moran calculados
-## para observações permutadas.
-## Se o valor observado for extremo, indica que deve haver correlação
-## espacial. Se o observado estiver no centro (ou próximo do centro) da
-## distribuição, então não há evidências de correlação espacial.
-replicate(10, moran(sample(xx), w))</code></pre>
+<pre class="r"><code>replicate(10, moran(sample(xx), w))</code></pre>
 <pre><code>#  [1]  0.034023631 -0.032555384 -0.041883483 -0.019790671  0.024932478
 #  [6] -0.005887561 -0.046625628  0.006277762  0.017167652  0.019192943</code></pre>
+<p>A ideia do teste de permutação, é trocar de lugar as observações e calcular o índice de Moran, mantendo a matriz de pesos fixa. Se não houver dependência espacial, então qualquer observação poderia estar em qualquer lugar. Com isso, o valor calculado do índice de Moran pode ser comparado com a distribuição dos índices de Moran calculados para observações permutadas. Se o valor observado for extremo, indica que deve haver correlação espacial. Se o observado estiver no centro (ou próximo do centro) da distribuição, então não há evidências de correlação espacial.</p>
 <pre class="r"><code>## Teste de permutação com saída gráfica.
 ppt &lt;- function(z, w, N = 10000, stat, ...) {
     ## Índice de Moran por reamostragem.
-    sim &lt;- replicate(N,
-                     moran(sample(z), w))
+    sim &lt;- replicate(N, moran(sample(z), w))
     ## Determina o p-valor.
     p.value &lt;- mean((all &lt;- c(stat, sim)) &gt;= stat)
     ## Histograma da distribuição empírica sob H_0.
     hist(sim,
          sub = paste(&quot;p =&quot;, round(p.value, 4)),
-         xlim = range(all),
-         ...)
+         xlim = range(all), ...)
     abline(v = stat, col = &quot;#903030&quot;, lty = 3, lwd = 2)
     return(p.value)
 }
@@ -1096,7 +1076,7 @@ cor(cbind(&quot;Valores observados&quot; = as.vector(z),
 <pre><code># [1] -0.008995086</code></pre>
 <pre class="r"><code>hist(z)
 ppt(z, w, stat = stat, main = &quot;I de Moran&quot;, xlab = &quot;I&quot;)</code></pre>
-<p><img src="figures/12_permutacao/unnamed-chunk-7-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/12_permutacao/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre><code># [1] 0.4111589</code></pre>
 <pre class="r"><code>par(mfrow = c(1, 1))
 
