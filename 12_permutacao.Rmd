@@ -31,20 +31,20 @@ adequadas.
 
 - Abordagem baseada em permutação das observações
 (*permutation tests*).
-- São considerados testes livre de distribuição.
+- São considerados testes **livre de distribuição**.
 - Faz suposições sobre o processo gerador dos dados.
 - Duas formas de cálculo da estatística de teste:
   - **Exaustiva**: no conjunto de todos os arranjos possíveis
   $\rightarrow$ distribuição amostral exata.
   - **Por reamostragem**: amostra do conjunto completo de arranjos com
-    reamostragem sem reposição.
+    **reamostragem sem reposição**.
 - IMPORTANTE: Sob a hipótese nula os dados são **permutáveis**.
 - Esse é o principal conceito e requisito dos testes de
 aleatorização.
 
 **Limitações dos testes de aleatorização**
 
-- Só podem ser usados para hipóteses que envolvam comparações
+- Só podem ser usados para **hipóteses que envolvam comparações**
 (trocar observações entre grupos) ou desalinhar registros (como em
 correlação, por exemplo).
 - Portanto, não podem ser usados para testar hipóteses sobre
@@ -57,11 +57,11 @@ aleatorização.
 De acordo com Manly (2006):
 
 - Compara o valor da estatística com aquele obtido da distribuição
-gerada pela permutação dos valores observados.
+gerada pela **permutação dos valores observados**.
 - São úteis pois permitem o usuário definir a estatística de teste
 mais apropriada.
-- Não necessariamente os resultados podem ser extrapolados para a
-população.
+- **Não necessariamente os resultados podem ser extrapolados para a
+população**.
 - Testes de aleatorização são exatos: fonece um nível de
 significância que é igual ou inferior ao nível nominal.
 - Duas estatísticas são equivalente se elas dão o mesmo nível de
@@ -126,10 +126,11 @@ head(xyperm)
 tail(xyperm)
 
 ## Calcula a diferença média para todas as permutações possíveis
-xydiff <- numeric(nrow(xyperm))
-for(i in 1:nrow(xyperm)) {
-    xydiff[i] <- mean(xyperm[i, 1:5]) - mean(xyperm[i, 6:10])
-}
+library(future.apply)
+plan(multicore, workers = 4)
+xydiff <- future_apply(matrix(1:nrow(xyperm)), 1, function(i) {
+    mean(xyperm[i, 1:5]) - mean(xyperm[i, 6:10])
+})
 str(xydiff)
 summary(xydiff)
 hist(xydiff)
@@ -146,19 +147,20 @@ oneway_test(vals ~ factor(id), data = da,
             distribution = approximate(nresample = 10000))
 library(perm)
 permTS(vals ~ id, data = da)
+```
 
-## Mesmo em um caso simples como, esse, onde n = 10, já vimos que o
-## número total de permutações possíveis pode ser muito grande, o que
-## faz com que esse processo fique inviável computacionalmente.
-## A ideia então é fazer um grande número de permutações aleatórias e
-## fazer o mesmo cálculo. Isso pode ser feito retirando-se amostra COM
-## REPOSIÇÃO da amostra conjunta (concatenando os dois grupos)
-## Usando amostras sem reposição
+Mesmo em um caso simples como, esse, onde n = 10, já vimos que o número
+total de permutações possíveis pode ser muito grande, o que faz com que
+esse processo fique inviável computacionalmente. A ideia então é fazer
+um grande número de permutações aleatórias e fazer o mesmo cálculo. Isso
+pode ser feito retirando-se amostra COM REPOSIÇÃO da amostra conjunta
+(concatenando os dois grupos) Usando amostras sem reposição
+
+```{r, cache=TRUE}
 N <- 10000
-xydiff <- numeric(N)
-for(i in 1:N) {
-    xydiff[i] <- diff(tapply(sample(xy), da$id, mean))
-}
+xydiff <- future_replicate(
+    N, diff(tapply(sample(xy), da$id, mean))
+)
 str(xydiff)
 summary(xydiff)
 hist(xydiff)
@@ -173,21 +175,19 @@ perm::permTS(vals ~ id, data = da)
 
 ### Teste para correlação
 
+Usando o mesmo exemplo, mas agora calculando a correlação entre os
+grupos. NOTE que é necessário usar a correlação (de postos) de Spearman.
+
 ```{r, cache=TRUE}
-## Usando o mesmo exemplo, mas agora calculando a correlação entre os
-## grupos
-## Correlação observada. NOTE que é necessário usar a correlação (de
-## postos) de Spearman
+## Correlações observadas
 cor(x, y, method = "pearson")
 cor(x, y, method = "kendall")
 (obscor <- cor(x, y, method = "spearman"))
 
 ## Calcula a diferença média para todas as permutações possíveis
-xycor <- numeric(nrow(xyperm))
-for(i in 1:nrow(xyperm)) {
-    xycor[i] <- cor(xyperm[i, 1:5], xyperm[i, 6:10],
-                    method = "spearman")
-}
+xycor <- future_apply(matrix(1:nrow(xyperm)), 1, function(i) {
+    cor(xyperm[i, 1:5], xyperm[i, 6:10], method = "spearman")
+})
 str(xycor)
 summary(xycor)
 hist(xycor)
@@ -198,19 +198,18 @@ abline(v = obscor, col = 2)
 cor.test(x, y,  method = "pearson")$p.value
 cor.test(x, y,  method = "kendall")$p.value
 cor.test(x, y,  method = "spearman")$p.value
-spearman_test(x ~ y,
+coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 10000))
 
 ## Usa amostragem SEM REPOSIÇÃO
 N <- 100000
 n <- length(xy)
-xycor <- numeric(N)
-for(i in 1:N) {
-    ip <- sample(1:n, replace = FALSE)
-    xp <- xy[ip[1:5]]
-    yp <- xy[ip[6:10]]
-    xycor[i] <- cor(xp, yp, method = "spearman")
-}
+xycor <- future_replicate(N, {
+    ip <- sample(1:n, size = n/2, replace = FALSE)
+    xp <- xy[ip]
+    yp <- xy[-ip]
+    cor(xp, yp, method = "spearman")
+})
 str(xycor)
 summary(xycor)
 hist(xycor)
@@ -221,7 +220,7 @@ abline(v = obscor, col = 2)
 cor.test(x, y,  method = "pearson")$p.value
 cor.test(x, y,  method = "kendall")$p.value
 cor.test(x, y,  method = "spearman")$p.value
-spearman_test(x ~ y,
+coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 10000))
 ```
 
@@ -242,13 +241,12 @@ factorial(nrow(law))
 N <- 1000000
 xy <- c(x, y)
 n <- length(xy)
-xycor <- numeric(N)
-for(i in 1:N) {
+xycor <- future_replicate(N, {
     ip <- sample(1:n, size = n/2, replace = FALSE)
     xp <- xy[ip]
     yp <- xy[-ip]
-    xycor[i] <- cor(xp, yp, method = "spearman")
-}
+    cor(xp, yp, method = "spearman")
+})
 str(xycor)
 summary(xycor)
 hist(xycor)
@@ -259,7 +257,7 @@ abline(v = obscor, col = 2)
 cor.test(x, y,  method = "pearson")$p.value
 cor.test(x, y,  method = "kendall")$p.value
 cor.test(x, y,  method = "spearman")$p.value
-spearman_test(x ~ y,
+coin::spearman_test(x ~ y,
               distribution = approximate(nresample = 100000))
 ```
 
@@ -407,6 +405,7 @@ y <- 1:8
 ## observações.
 ind <- expand.grid(i = 1:length(x),
                    j = 1:length(y))
+plot(ind)
 
 ##  Função que determina o peso entre duas localizações na malha.
 f <- function(i, j) {
@@ -427,7 +426,7 @@ for (i in 1:nrow(ind)) {
 w <- w/sum(w)
 
 ## Gráfico. Valores claros indicam maior peso entre observações.
-image(w, asp = 1, col = gray.colors(100))
+image(w, asp = 1)
 
 ## Lógica do índica de Moran: correlação entre valores observados e
 ## média dos vizinhos. Exemplo com valores simulados.
@@ -455,30 +454,30 @@ moran <- function(x, w) {
 
 ## Moran para os dados simulados
 moran(xx, w)
-
-## A ideia do teste de permutação, é trocar de lugar as observações e
-## calcular o índice de Moran, mantendo a matriz de pesos fixa. Se não
-## houver dependência espacial, então qualquer observação poderia estar
-## em qualquer lugar. Com isso, o valor calculado do índice de Moran
-## pode ser comparado com a distribuição dos índices de Moran calculados
-## para observações permutadas.
-## Se o valor observado for extremo, indica que deve haver correlação
-## espacial. Se o observado estiver no centro (ou próximo do centro) da
-## distribuição, então não há evidências de correlação espacial.
 replicate(10, moran(sample(xx), w))
+```
 
+A ideia do teste de permutação, é trocar de lugar as observações e
+calcular o índice de Moran, mantendo a matriz de pesos fixa. Se não
+houver dependência espacial, então qualquer observação poderia estar em
+qualquer lugar. Com isso, o valor calculado do índice de Moran pode ser
+comparado com a distribuição dos índices de Moran calculados para
+observações permutadas. Se o valor observado for extremo, indica que
+deve haver correlação espacial. Se o observado estiver no centro (ou
+próximo do centro) da distribuição, então não há evidências de
+correlação espacial.
+
+```{r, cache=TRUE}
 ## Teste de permutação com saída gráfica.
 ppt <- function(z, w, N = 10000, stat, ...) {
     ## Índice de Moran por reamostragem.
-    sim <- replicate(N,
-                     moran(sample(z), w))
+    sim <- replicate(N, moran(sample(z), w))
     ## Determina o p-valor.
     p.value <- mean((all <- c(stat, sim)) >= stat)
     ## Histograma da distribuição empírica sob H_0.
     hist(sim,
          sub = paste("p =", round(p.value, 4)),
-         xlim = range(all),
-         ...)
+         xlim = range(all), ...)
     abline(v = stat, col = "#903030", lty = 3, lwd = 2)
     return(p.value)
 }

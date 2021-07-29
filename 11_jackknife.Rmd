@@ -28,10 +28,10 @@ tendo como argumentos os dados e a estatística de interesse.
 - O método é baseado em amostras de tamanho $n - 1$. Existe a
 suposição implicita de comportamento suave com o tamanho da amostra.
 - Ao contrário do bootstrap, é um procedimento **determinístico**, ou
-  seja, os resultados de um jackknife sempre serão os mesmos para a
+  seja, os resultados de um Jackknife sempre serão os mesmos para a
   mesma amostra.
 
-O jackknife é um procedimento do tipo *leave-one-out* (um caso
+O Jackknife é um procedimento do tipo *leave-one-out* (um caso
 particular de validação cruzada).
 
 Seja $x = (x_1, \ldots, x_n)$ uma amostra observada, e defina a
@@ -40,12 +40,12 @@ $i$-ésima amostra de jackkinfe $x_{(i)}$ como o subconjunto de $x$, que
 $$
 x_{(i)} = (x_1, \ldots, x_{i-1}, x_{i+1}, \ldots, x_n)
 $$
-Se $\hat{\theta} = T_n(x)$, então a $i$-ésima estimativa de jackknife é
+Se $\hat{\theta} = T_n(x)$, então a $i$-ésima estimativa de Jackknife é
 $\hat{\theta}_{(i)} = T_{n-1}(x_{(i)}), i = 1 \ldots, n$.
 
-Suponha que o parâmetro $\theta = t(F)$ é uma função da distribuição
+Suponha que o parâmetro $\theta = T(F)$ é uma função da distribuição
 $F$. Se $F_n$ é a função (de distribuição) empírica de uma amostra de
-$F$, então o estimador "*plug-in*" de $\theta$ é $\hat\theta = t(F_n)$.
+$F$, então o estimador *plug-in* de $\theta$ é $\hat\theta = T(F_n)$.
 Um estimador "*plug-in*" $\hat\theta$ é "suave" (*smooth*) no sentido de
 que pequenas mudanças nos dados correspondem a pequenas mudaças em
 $\hat\theta$. Por exemplo, a média amostral é um estimador *plug-in*
@@ -53,33 +53,35 @@ para a média populacional, mas a mediana amostral **não é** um estimador
 *plug-in* para a mediana populacional.
 
 Se $\hat\theta$ é um estimador "suave" para $\theta$, então
-$\hat\theta_{(i)}^{\star} = (F_{n-1}(x_{(i)}))$ é chamada de
-**estimativa parcial** para $\theta$, e a média das estimativas
-parciais, ou seja,
-
 $$
-  \hat{\theta}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
+\hat\theta_{(i)}^{\star} = (F_{n-1}(x_{(i)}))
+$$
+é chamada de **estimativa parcial** para $\theta$, e a média das
+estimativas parciais, ou seja,
+$$
+  \hat{\theta}_{(\cdot)}^{\star} = \frac{1}{n} \sum_{i = 1}^{n}
   \hat{\theta}_{(i)}^{\star}
 $$
-
 é um estimador pontual para $\hat\theta$.
 
 O erro-padrão de Jackknife para a estimativa pontual
-\hat{\theta}^{\star} é portanto
+$\hat{\theta}_{(\cdot)}^{\star}$ é portanto
 
 $$
 \text{EP}_{jack} = \sqrt{\frac{n-1}{n} \sum_{i=1}^n
-  (\hat\theta_{(i)}^{\star} - \hat\theta^{\star})^2}
+  (\hat\theta_{(i)}^{\star} - \hat\theta_{(\cdot)}^{\star})^2}
 $$
 
-Isso faz com que o algoritmo de Jackkkife seja facilmente automatizado,
+Isso faz com que o algoritmo de Jackknife seja facilmente automatizado,
 funcionando para qualquer estimador que seja uma função suave dos dados.
+O termo $\frac{n-1}{n}$ é um fator de correção de viés para as
+estimativas de Jackknife.
 
 Nesse mesmo sentido, assumindo independência entre os valores
-$\theta_{(i)}^{\star}$, um intervalo de confiança **aproximado** de
+$\hat\theta_{(i)}^{\star}$, um intervalo de confiança **aproximado** de
 $100(1-\alpha)\%$ para $\theta$ pode ser definido como
 $$
-\hat{\theta}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
+\hat{\theta}_{(\cdot)}^{\star} \pm t_{\alpha/2,n-1} \text{EP}_{jack}
 $$
 
 ## Exemplo: média amostral
@@ -91,7 +93,7 @@ x <- rnorm(30, 100, 5)
 (n <- length(x))
 (xbar <- mean(x))
 (s2 <- var(x))
-## Erro padrão da mẽdia amostral
+## Erro padrão da média amostral
 (ep <- sqrt(s2/n))
 
 ## Estimativas parciais de Jackknife
@@ -137,10 +139,30 @@ for(i in 1:n) {
     theta.jack[i] <- sd(x[-i])
 }
 theta.jack
+mean(theta.jack)
+sx # amostral
 
 ## Erro padrão
 ## Usando estimador baseado nas estimativas parciais
-sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+(ep.jack <- sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)))
+```
+
+Comparando com Bootstrap
+
+```{r}
+## Definições
+B <- 2000
+R <- numeric(B)
+## Bootstrap para a estimativa do erro padrão do R (correlação amostral)
+for (b in 1:B) {
+    i <- sample(1:n, size = n, replace = TRUE)
+    R[b] <- sd(x[i])
+}
+## Resultado
+mean(R)
+mean(theta.jack)
+(se.R <- sd(R))
+ep.jack
 ```
 
 <div class="panel panel-primary">
@@ -211,7 +233,7 @@ $$
 ```{r}
 ## Simula valores de uma normal
 set.seed(123)
-x <- rnorm(30, 100, 5)
+(x <- rnorm(30, 100, 5))
 (n <- length(x))
 (xbar <- mean(x))
 (s2 <- var(x))
@@ -268,6 +290,11 @@ for(i in 1:n) {
 }
 theta.jack
 
+## NOTE que agora os valores não serão necessariamente iguais (isso só
+## ocorre quando a estatística é a média amostral)
+x[1]
+n * sx - (n - 1) * theta.jack[1]
+
 ## Pseudo valores
 (pv <- n * sx - (n - 1) * theta.jack)
 ## Estimativa pontual de Jackknife para o DESVIO-PADRÃO
@@ -275,6 +302,7 @@ mean(pv)
 ## Desvio padrão amostral
 sx
 ## Não serão iguais necessariamente
+mean(theta.jack)
 
 ## Erro padrão
 ## Usando os pseudo-valores
@@ -318,8 +346,10 @@ sqrt(var(pv)/n)
 
 ```
 
+Exemplo da aula anterior
+
 ```{r}
-## Estimativa de erro padrão via bootstrap
+## Estimativa de erro padrão via bootstrap (para comparação)
 data(law, package = "bootstrap")
 str(law)
 plot(law$LSAT, law$GPA)
@@ -339,7 +369,7 @@ for (b in 1:B) {
 mean(R)
 (se.R <- sd(R))
 
-## Usando jackknife
+## Usando Jackknife
 theta.jack <- numeric(n)
 for(j in 1:n) {
     theta.jack[j] <- cor(law$LSAT[-j], law$GPA[-j])
@@ -357,14 +387,17 @@ rho # valor da amostra
 ## Erro padrão
 sqrt(var(pv)/n)
 se.R # via bootstrap
-sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
+(ep.jack <- sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)))
 
 ## Intervalo de confiança Jackknife (supõe independência e normalidade).
 mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+mean(theta.jack) + qt(c(.025, .975), df = n - 1) * ep.jack
 cor.test(law$LSAT, law$GPA)$conf.int # teórico
 ```
 
 ## Exemplo: razão de médias
+
+Exemplo da aula anterior
 
 ```{r}
 data(patch, package = "bootstrap")
@@ -373,21 +406,14 @@ y <- patch$y
 z <- patch$z
 (theta.hat <- mean(y)/mean(z))
 
-## Estimativas parciais: jackknife
+## Estimativas parciais: Jackknife
 theta.jack <- numeric(n)
 for (i in 1:n) {
     theta.jack[i] <- mean(y[-i])/mean(z[-i])
 }
 mean(theta.jack)
-sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2))
-
-## Pseudo valores
-(pv <- n * theta.hat - (n - 1) * theta.jack)
-mean(pv)
-theta.hat # amostral
-
-## Erro padrão de jackknife
-sqrt(var(pv)/n)
+## Erro padrão de Jackknife
+(ep.jack <- sqrt(((n - 1)/n) * sum((theta.jack - mean(theta.jack))^2)))
 
 ## Via bootstrap
 B <- 2000
@@ -412,20 +438,19 @@ dat <- cbind(patch$y, patch$z)
 library(boot)
 boot.obj <- boot(dat, statistic = theta.boot, R = 2000)
 boot.ci(boot.obj, type = c("basic", "norm", "perc"))
-## Via jackknife
-mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
-mean(pv) + qt(c(.025, .975), df = n - 1) * sqrt(var(pv)/n)
+## Via Jackknife
+mean(theta.jack) + qt(c(.025, .975), df = n - 1) * ep.jack
 ```
 
 ## Exemplo: mediana
 
 ```{r, include=FALSE, eval=FALSE}
-## Example 8.8 (Failure of jackknife)
+## Example 8.8 (Failure of Jackknife)
 set.seed(123) #for the specific example given
 n <- 10
 (x <- sample(1:100, size = n))
 x <- c(29, 79, 41, 86, 91, 5, 50, 83, 51, 42)
-## jackknife estimate of se
+## Jackknife estimate of se
 M <- numeric(n)
 for (i in 1:n) {        #leave one out
     y <- x[-i]
@@ -442,12 +467,14 @@ Mb <- replicate(1000, expr = {
 sd(Mb)
 ```
 
-Este é um exemplo de quando o mẽtodo de Jackknife pode **falhar**. Isso
-ocorre quando $\hat\theta$ não é uma função "suave" da amostra, como é o
-caso da mediana.
+Este é um exemplo de quando o método de Jackknife pode **falhar**. Isso
+ocorre quando $\hat\theta$ **não é uma função "suave"** da amostra, como
+é o caso da mediana.
 
 ```{r}
+## Exemplo extremo
 x <- c(29, 79, 41, 86, 91, 5, 50, 83, 51, 42)
+median(x)
 n <- length(x)
 ## Erro padrão via Jackknife
 M <- numeric(n)
@@ -455,7 +482,7 @@ for (i in 1:n) {
     y <- x[-i]
     M[i] <- median(y)
 }
-Mbar <- mean(M)
+(Mbar <- mean(M))
 sqrt((n - 1)/n * sum((M - Mbar)^2))
 
 ## Erro padrão via bootstrap
@@ -463,6 +490,7 @@ Mb <- replicate(1000, expr = {
     y <- sample(x, size = n, replace = TRUE)
     median(y)
 })
+mean(Mb)
 sd(Mb)
 ```
 
@@ -479,17 +507,18 @@ usado para verificar:
   - O ajuste de qualquer modelo pode ser verificado também através de um
     conjunto de teste
 
-O jackknife pode ser considerado como um caso particular de validação
-cruzada, inde o particionamento dos dados é feito um a um.
+O Jackknife pode ser considerado como um caso particular de validação
+cruzada, onde o particionamento dos dados é feito um a um.
 
 Outra forma de validação cruzada é a *n-fold*, que particiona os dados
-em $n$ conjuntos de teste.
-  - Esse procedimento *leave-one-out* é como o jackknife
-  - Os dados podem ser divididos em qualquer número $K$ e partições,
-    portanto haverão $K$ bases de teste, e o modelo será ajustado $K$
-    vezes
+em $n$ conjuntos de teste:
 
-Algoritmo *n-fold* para validação cruzada
+- Esse procedimento *leave-one-out* é como o Jackknife
+- Os dados podem ser divididos em qualquer número $K$ de partições,
+portanto haverão $K$ bases de teste, e o modelo será ajustado $K$
+vezes
+
+Algoritmo *n-fold* para validação cruzada para o **erro de predição**
 
 1. Para $k = 1, \ldots, n$, seja $(x_k, y_k)$ os pontos de teste e use
    as observações restantes para ajustar o modelo
