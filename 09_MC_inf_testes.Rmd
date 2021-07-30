@@ -16,6 +16,10 @@ opts_chunk$set(fig.path = "figures/09_MC_inf_testes/")
 
 # Introdução
 
+```{r}
+fortunes::fortune(264)
+```
+
 @Besag1989 definiram que um teste de Monte Carlo generalizado é um que
 possui as seguintes características:
 
