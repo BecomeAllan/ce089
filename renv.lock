@@ -268,6 +268,13 @@
       "Repository": "CRAN",
       "Hash": "c98eb5133d9cb9e1622b8691487f11bb"
     },
+    "fortunes": {
+      "Package": "fortunes",
+      "Version": "1.5-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d031a520bc2c989180c772dbc6851088"
+    },
     "future": {
       "Package": "future",
       "Version": "1.21.0",
