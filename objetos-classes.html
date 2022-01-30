@@ -1512,7 +1512,7 @@ class(vec)</code></pre>
 # 
 # function (x, ...) 
 # standardGeneric(&quot;mean&quot;)
-# &lt;environment: 0x55d658cb1d58&gt;
+# &lt;environment: 0x55aa5230f678&gt;
 # Methods may be defined for arguments: x
 # Use  showMethods(mean)  for currently available ones.</code></pre>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1541,7 +1541,7 @@ class(vec)</code></pre>
 #     }
 #     .Internal(mean(x))
 # }
-# &lt;bytecode: 0x55d6592b6e00&gt;
+# &lt;bytecode: 0x55aa4fb2dd78&gt;
 # &lt;environment: namespace:base&gt;</code></pre>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <pre class="r"><code>set.seed(1)
@@ -1605,7 +1605,7 @@ class(dl)</code></pre>
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Sunday, 30 January, 2022, 01:09
+<pre><code># Sunday, 30 January, 2022, 01:23
 # ----------------------------------------
 # R version 4.1.2 (2021-11-01)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1633,7 +1633,7 @@ class(dl)</code></pre>
 # [16] knitr_1.33         
 # 
 # loaded via a namespace (and not attached):
-#  [1] nlme_3.1-155         matrixStats_0.58.0   sf_1.0-0            
+#  [1] nlme_3.1-155         matrixStats_0.58.0   sf_1.0-5            
 #  [4] gmodels_2.18.1       webshot_0.5.2        RColorBrewer_1.1-2  
 #  [7] httr_1.4.2           tools_4.1.2          utf8_1.2.1          
 # [10] R6_2.5.0             KernSmooth_2.23-20   spData_0.3.8        
@@ -1649,7 +1649,7 @@ class(dl)</code></pre>
 # [40] shape_1.4.6          generics_0.1.0       zoo_1.8-9           
 # [43] gtools_3.8.2         spdep_1.1-8          magrittr_2.0.1      
 # [46] modeltools_0.2-23    fansi_0.5.0          Rcpp_1.0.6          
-# [49] munsell_0.5.0        lifecycle_1.0.0      stringi_1.6.2       
+# [49] munsell_0.5.0        lifecycle_1.0.0      stringi_1.7.6       
 # [52] multcomp_1.4-17      yaml_2.2.1           MASS_7.3-55         
 # [55] grid_4.1.2           gdata_2.18.0         parallel_4.1.2      
 # [58] listenv_0.8.0        crayon_1.4.1         deldir_0.2-10       
