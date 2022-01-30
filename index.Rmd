@@ -17,26 +17,22 @@ source("setup_knitr.R")
 # Detalhes da oferta da disciplina
 
 - **Curso:** Estatística
-- **Período:** segundo semestre de 2020 (período especial, iniciado em
-  maio de 2021)
+- **Período:** segundo semestre de 2021 (período especial, iniciado em
+  fevereiro de 2022)
 - **Professor Responsável:**
   - [Fernando de Pol Mayer][], [LEG][]/DEST/UFPR
-  <!-- - [Walmes Marques Zeviani][], [LEG][]/DEST/UFPR -->
 - **Horários e Locais:**
-  - Quarta, 21:00 - 22:30h, **Teams**
-  - Sexta, 19:00 - 20:30h, **Teams**
+  - Segunda, 20:45 - 22:15h, **Teams** (sala a definir)
+  - Quarta, 19:00 - 20:30h, **Teams** (sala a definir)
 <!-- - **Horários de atendimento dos professores:** -->
 <!--     - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários -->
 <!--       podem ser agendados previamente por email. -->
-- **Frequência**: A frequência será computada com base nas atividades
-(enquetes) assíncronas (10 enquetes). Será calculada a frequência pela
-proporção de envios destas atividades até data e hora estabelecidas.
+<!-- - **Frequência**: A frequência será computada com base nas atividades -->
+<!-- (enquetes) assíncronas (10 enquetes). Será calculada a frequência pela -->
+<!-- proporção de envios destas atividades até data e hora estabelecidas. -->
 - **Avaliação**:
-  - A nota na disciplina será formada pelo desempenho médio (0 – 100) na
-    realização de 5 avaliações
-  - Para mitigar eventuais problemas de conexão e ambientação, a menor
-    nota dentre as 5 avaliações será desconsiderada para o cálculo do
-    desempenho médio.
+- A Nota na disciplina será dada pela média de três avaliações e uma
+  apresentação de trabalho, com pesos iguais.
   - Critérios para aprovação:
     - Frequência de pelo menos 75% e nota igual ou acima de 70 →
     Aprovação sem Exame Final.
@@ -44,14 +40,12 @@ proporção de envios destas atividades até data e hora estabelecidas.
     - Média entre Nota e Exame Final igual ou acima de 50 → Aprovação.
     - Nota inferior a 40 ou presença inferior a 75% → Reprovação.
     - Média entre Nota e Exame Final inferior a 50 → Reprovação.
-<!-- - **Oferta anterior:** [2018/2](http://leg.ufpr.br/~walmes/ensino/EC2/) -->
-- **Moodle:** [Página no
-  Moodle](https://ufprvirtual.ufpr.br/course/view.php?id=18647) da
+- **Moodle:** [Página no Moodle](https://ufprvirtual.ufpr.br/) da
   dsiciplina
 - **Datas importantes:**
-    - **19/05/21**: Início das aulas
-    - **30/07/21**: Final das aulas
-    - **13/08/21**: Exame final
+    - **31/01/22**: Início das aulas
+    - **07/05/22**: Final das aulas
+    - **11/05/22**: Exame final
 
 # Programa/objetivos da disciplina
 
