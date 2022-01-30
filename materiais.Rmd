@@ -12,25 +12,25 @@ PDF".
 </div>
 
 
-De acordo com os itens do [cronograma](aulas.html):
+<!-- De acordo com os itens do [cronograma](aulas.html): -->
 
-1. Introdução à Estatística Computacional II.
-   [Slides](slides/00_intro.html).
-2. Revisão de conceitos fundamentais da linguagem R. Ver capítulos 1, 2,
+- Introdução à Estatística Computacional II.
+[Slides](slides/00_intro.html).
+- Revisão de conceitos fundamentais da linguagem R. Ver capítulos 1, 2,
    3 e 5 da apostila [Estatística Comutacional com
    R](http://cursos.leg.ufpr.br/ecr/).
-3. Técnicas de programação: benchmarking, profiling, debugging e error
+- Técnicas de programação: benchmarking, profiling, debugging e error
    handling. [Slides](slides/01_tecnicas.html).
-4. Geração de números aleatórios uniformes.
+- Geração de números aleatórios uniformes.
    [Slides](slides/02_RNG_uniforme.html).
    - [A note on random number
      generation](http://cran-r.c3sl.ufpr.br/web/packages/randtoolbox/vignettes/fullpres.pdf).
      Christophe Dutang e Diethelm Wuertz.
-5. Geração de números aleatórios não uniformes: método da transformação
+- Geração de números aleatórios não uniformes: método da transformação
   integral de probabilidade. [Slides](slides/03_RNG_inversa.html).
-6. Geração de números aleatórios não uniformes: método de aceitação e
+- Geração de números aleatórios não uniformes: método de aceitação e
   rejeição. [HTML](04_RNG_aceitacao.html).
-7. Geração de números aleatórios não uniformes: método da relação entre
+- Geração de números aleatórios não uniformes: método da relação entre
   variáveis. [HTML](05_RNG_transform.html).
    - Implementar os métodos para aproximação do valor do $\pi$: método do
    círculo/quadrado e método da agullha de Buffon, com base nos
@@ -40,22 +40,22 @@ De acordo com os itens do [cronograma](aulas.html):
      - [Agulha de Buffon - Uma demonstração
      simples](https://www.e-publicacoes.uerj.br/index.php/cadmat/article/view/11896/9319) de R. C. Santos
      - [Métodos de Monte Carlo e Aproximações de $\pi$](misc/montecarlopi.pdf) de Fernando Henrique Ferraz Pereira da Rosa e colaboradores
-8. Integração de Monte Carlo. [HTML](06_MC_intro.html).
-9. Distribuições aproximadas baseadas em simulação de Monte Carlo.
+- Integração de Monte Carlo. [HTML](06_MC_intro.html).
+- Distribuições aproximadas baseadas em simulação de Monte Carlo.
   [HTML](07_MC_aprox.html).
-11. MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings.
+- MCMC: Cadeias de Markov e algoritmo de Metropolis-Hastings.
   [HTML](08_MCMC.html).
-11. MCMC: Metropolis random walk e amostrador independente.
+- MCMC: Metropolis random walk e amostrador independente.
 [HTML](08_MCMC.html).
-12. MCMC: Amostrador de Gibbs. [HTML](08_MCMC.html).
-13. Métodos de Monte Carlo para inferência estatística: estimadores e
+- MCMC: Amostrador de Gibbs. [HTML](08_MCMC.html).
+- Métodos de Monte Carlo para inferência estatística: estimadores e
 suas propriedades. [HTML](09_MC_inf_estimacao.html).
-14. Testes de hipótese via simulação de Monte Carlo.
+- Testes de hipótese via simulação de Monte Carlo.
     [HTML](09_MC_inf_testes.html).
-15. Métodos de reamostragem: bootstrap. [HTML](10_bootstrap.html).
-16. Intervalos de confiança via bootstrap. [HTML](10_bootstrap.html).
-17. Jackknife e validação cruzada. [HTML](11_jackknife.html).
-18. Testes de permutação. [HTML](12_permutacao.html).
+- Métodos de reamostragem: bootstrap. [HTML](10_bootstrap.html).
+- Intervalos de confiança via bootstrap. [HTML](10_bootstrap.html).
+- Jackknife e validação cruzada. [HTML](11_jackknife.html).
+- Testes de permutação. [HTML](12_permutacao.html).
 
 <!-- ### Páginas -->
 
