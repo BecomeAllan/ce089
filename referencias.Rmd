@@ -11,14 +11,17 @@ output:
   evidence and data science](https://web.stanford.edu/~hastie/CASI/).
   Cambridge University Press, 2016.
 - Gentle, JE. **Computational Statistics**. Springer, 2009.
-- Gentle, JE; Härdle, WK; Mori, Y. **Handbook of computational
-statistics: concepts and methods**. Springer, 2012.
-- Härdle, WK.; Okhrin, O; Okhrin, Y. **Basic elements of computational
-  statistics**. Springer, 2017.
+- Manly, B. **Randomization, bootstrap and Monte Carlo methods in
+biology**. Chapman & Hall, 1997.
 - Peng, RD. [R programming for data
   science](https://bookdown.org/rdpeng/rprogdatascience/).
   Leanpub, 2020.
 - Rizzo, ML. **Statistical computing with R**. CRC Press, 2019.
+- Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
+Springer, 2010.
+- Wickham, H. [Advanced R](https://adv-r.hadley.nz/). Chapman &
+  Hall, 2019.
+
 
 ## Referências complementares
 
@@ -30,11 +33,15 @@ Chapman & Hall, 2011.
 application in statistics**. Chapman & Hall, 1987.
 - Ferreira, DF. **Estatística computacional em Java**. Editora
 UFLA, 2013.
+- Gentle, JE; Härdle, WK; Mori, Y. **Handbook of computational
+statistics: concepts and methods**. Springer, 2012.
 - Gilks, WR; Richardson, S; Spiegelhalter, DJ (Eds.). **Markov chain
   Monte Carlo in practice**. Chapman & Hall, 1996.
 - Gillespie, C.; Lovelace, R. [Efficient R
 programming](https://csgillespie.github.io/efficientR/). Chapman &
 Hall, 2017.
+- Härdle, WK.; Okhrin, O; Okhrin, Y. **Basic elements of computational
+  statistics**. Springer, 2017.
 - Hastie, T.; Tibshirani, R.; Friedman, J. [The elements of statistical
 learning: data mining, inference, and
 prediction](https://web.stanford.edu/~hastie/ElemStatLearn/).
@@ -42,16 +49,10 @@ Springer, 2009.
 - James, G.; Witten, D.; Hastie, T.; Tibshirani, R. [An introduction to
   statistical learning: with applications in
   R](https://www.statlearning.com/). Springer, 2017.
-- Manly, B. **Randomization, bootstrap and Monte Carlo methods in
-biology**. Chapman & Hall, 1997.
-- Robert, CP; Casella, G. **Introducing Monte Carlo methods in R**.
-Springer, 2010.
 - Robert, CP; Casella, G. **Monte Carlo statistical methods**.
 Springer, 2004.
 - Silva, RS. Estatística Computacional. [Notas de aula
   online](http://www.im.ufrj.br/ralph/estatisticacomputacional.html).
-- Wickham, H. [Advanced R](https://adv-r.hadley.nz/). Chapman &
-  Hall, 2019.
 
 <!-- ## Referências *online* -->
 
