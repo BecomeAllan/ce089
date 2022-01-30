@@ -30,80 +30,15 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 ```
 
 ```{r echo=FALSE, results='hide'}
-dd <- read.table("misc/crono_rev.csv", header = TRUE, sep = ",")
+dd <- read.table("misc/crono.csv", header = TRUE, sep = ",")
 str(dd)
 ```
 
 ```{r echo=FALSE}
 dd |>
-    mutate(Item = replace_na(Item, "")) |>
-    dplyr::select(Data, Dia, Item, Conteúdo, Avaliação) |>
-    kable() |>
+    dplyr::select(Data, Dia, Hora, Conteúdo) |>
+    kable(align = "cccl") |>
     kable_styling(bootstrap_options = c("striped", "bordered")) |>
     column_spec(1, bold = TRUE) |>
-    row_spec(c(4, 10, 18, 22), background = "lightgray")
+    row_spec(c(8, 16, 23, 26, 27, 28), background = "lightgray")
 ```
-
-<!-- - **06/08 (Ter)**: Apresentação da disciplina. -->
-<!-- - **09/08 (Sex)**: Introdução à Estatística Computacional II. -->
-<!--   [Slides](slides/00_intro.html). -->
-<!-- - **13/08 (Ter)**: Funções, objetos e classes. Parte I: funções, -->
-<!-- argumentos e tipos primitivos de objetos. [HTML](objetos-classes.html). -->
-<!-- - **16/08 (Sex)**: Funções, objetos e classes. Parte II: Classes, -->
-<!-- atributos e funções genéricas (métodos). [HTML](objetos-classes.html). -->
-<!-- - **20/08 (Ter)**: Não haverá aula (professor em viagem). Fazer -->
-<!--   atividade disponível no [Moodle][]. -->
-<!-- - **23/08 (Sex)**: Indexação e seleção condicional. -->
-<!--   [HTML](indexacao-selecao.html). -->
-<!-- - **27/08 (Ter)**: Programando com dados: estruturas de repetição, -->
-<!--   seleção e vetorização. [HTML](programacao.html). -->
-<!-- - **30/08 (Sex)**: Técnicas de programação: benchmarking, profiling, -->
-<!-- debugging e error handling. [Slides](slides/01_tecnicas.html). -->
-<!-- [Script](slides/01_tecnicas.R) com os códigos dos slides. -->
-<!-- - **03/09 (Ter)**: Atividade disponível no [Moodle][]. -->
-<!-- - **06/09 (Sex)**: Geração de números aleatórios uniformes. -->
-<!-- [Slides](slides/02_RNG_uniforme.html). -->
-<!-- - **10/09 (Ter)**: Geração de números aleatórios não uniformes: método -->
-<!--   da transformação integral de probabilidade. -->
-<!--   [Slides](slides/03_RNG_inversa.html). -->
-<!-- - **13/09 (Sex)**: Geração de números aleatórios não uniformes: método -->
-<!--   de aceitação e rejeição. [HTML](04_RNG_aceitacao.html). -->
-<!-- - **17/09 (Ter)**: Geração de números aleatórios não uniformes: método -->
-<!--   da relação entre variáveis. [HTML](05_RNG_transform.html). -->
-<!-- - **20/09 (Sex)**: Atividade disponível no [Moodle][]. -->
-<!-- - **24/09 (Ter)**: Não haverá aula devido ao SIEPE. -->
-<!-- [Resolução 64/18 - CEPE][]. -->
-<!-- - **27/09 (Sex)**: **Prova 1**. -->
-<!-- - **01/10 (Ter)**: Integração de Monte Carlo. [HTML](06_MC_intro.html). -->
-<!-- - **04/10 (Sex)**: Distribuições aproximadas baseadas em simulação de -->
-<!--   Monte Carlo. [HTML](07_MC_aprox.html). -->
-<!-- - **08/10 (Ter)**: Correção de prova e comentários sobre atividades. -->
-<!-- - **11/10 (Sex)**: MCMC: Metropolis random walk e amostrador -->
-<!-- independente. [HTML](08_MCMC-1.html) e [script](scripts/08_MCMC-1.R) com -->
-<!-- mais exemplos mostrados em aula. -->
-<!-- - **15/10 (Ter)**: MCMC: Cadeias de Markov e algoritmo de -->
-<!--   Metropolis-Hastings. [HTML](08_MCMC-2.html). -->
-<!-- - **18/10 (Sex)**: Atividade disponível no [Moodle][]. -->
-<!-- - **22/10 (Ter)**: Métodos de Monte Carlo para inferência estatística: -->
-<!--   estimação. [HTML](09_MC_inf-1.html). -->
-<!-- - **25/10 (Sex)**: Propriedades de estimadores pontuais por simulação de -->
-<!--   Monte Carlo. Taxa empírica do erro tipo I. [HTML](09_MC_inf-2.html). -->
-<!-- - **29/10 (Ter)**: Testes de hipótese via simulação de Monte Carlo. -->
-<!--   [HTML](09_MC_inf-3.html). -->
-<!-- - **01/11 (Sex)**: Métodos de reamostragem: bootstrap. -->
-<!--   [HTML](10_bootstrap.html). -->
-<!-- - **05/11 (Ter)**: Intervalos de confiança via bootstrap. -->
-<!--   [HTML](10_bootstrap.html). -->
-<!-- - **08/11 (Sex)**: Jackknife e validação cruzada. -->
-<!--   [HTML](11_jackknife.html). -->
-<!-- - **12/11 (Ter)**: Atividade disponível no [Moodle][]. -->
-<!-- - **15/11 (Sex)**: **Feriado**. -->
-<!-- - **19/11 (Ter)**: Testes de permutação. [HTML](12_permutacao.html). -->
-<!-- - **22/11 (Sex)**: Técnicas de otimização numérica. -->
-<!-- - **26/11 (Ter)**: CH integralizada. -->
-<!-- - **29/11 (Sex)**: **Prova 2**. -->
-<!-- - **03/12 (Ter)**: CH integralizada. -->
-<!-- - **10/12 (Ter)**: **Exame final**. -->
-
-[Moodle]: https://moodle.c3sl.ufpr.br/course/view.php?id=282
-[Resolução 64/18 - CEPE]: http://www.soc.ufpr.br/portal/wp-content/uploads/2018/11/cepe-64-18-atualizada.pdf
