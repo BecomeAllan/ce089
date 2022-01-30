@@ -353,7 +353,7 @@ div.tocify {
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leg-ufpr/ce089">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fab fa-github"></span>
      
     GitHub
   </a>
@@ -778,7 +778,7 @@ st1 &lt;- system.time(
 )
 st1</code></pre>
 <pre><code>#    user  system elapsed 
-#    0.08    0.00    0.08</code></pre>
+#   0.080   0.000   0.079</code></pre>
 <pre class="r"><code>## Tempo de execução usando a regra da reciclagem
 st2 &lt;- system.time(
     y2 &lt;- x^2
@@ -786,7 +786,7 @@ st2 &lt;- system.time(
 st2</code></pre>
 <pre><code>#    user  system elapsed 
 #   0.002   0.000   0.002</code></pre>
-<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.08/0.002 = 40 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
+<p>Olhando o resultado de <code>elapsed</code>, que é o tempo total de execução de uma função medido por <code>system.time()</code>, notamos que usando a regra da reciclagem, o cálculo é aproximadamente 0.079/0.002 = 39.5 vezes mais rápido. Claramente esse é só um exemplo de um cálculo muito simples. Mas em situações mais complexas, a diferença entro o tempo de execução das duas formas pode ser muito maior.</p>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Uma nota de precaução
