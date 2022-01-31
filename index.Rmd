@@ -31,17 +31,16 @@ source("setup_knitr.R")
 <!-- (enquetes) assíncronas (10 enquetes). Será calculada a frequência pela -->
 <!-- proporção de envios destas atividades até data e hora estabelecidas. -->
 - **Avaliação**:
-- A Nota na disciplina será dada pela média de três avaliações e uma
+  - A Nota na disciplina será dada pela média de três avaliações e uma
   apresentação de trabalho, com pesos iguais.
-  - Critérios para aprovação:
-    - Frequência de pelo menos 75% e nota igual ou acima de 70 →
-    Aprovação sem Exame Final.
-    - Frequência de pelo menos 75% e Nota entre 40 e 70 → Exame Final.
-    - Média entre Nota e Exame Final igual ou acima de 50 → Aprovação.
-    - Nota inferior a 40 ou presença inferior a 75% → Reprovação.
-    - Média entre Nota e Exame Final inferior a 50 → Reprovação.
-- **Moodle:** [Página no Moodle](https://ufprvirtual.ufpr.br/) da
-  dsiciplina
+    - Critérios para aprovação:
+      - Frequência de pelo menos 75% e nota igual ou acima de 70 →
+      Aprovação sem Exame Final.
+      - Frequência de pelo menos 75% e Nota entre 40 e 70 → Exame Final.
+      - Média entre Nota e Exame Final igual ou acima de 50 → Aprovação.
+      - Nota inferior a 40 ou presença inferior a 75% → Reprovação.
+      - Média entre Nota e Exame Final inferior a 50 → Reprovação.
+- **Moodle:** [Página no Moodle](https://ufprvirtual.ufpr.br/course/view.php?id=23573) da disciplina
 - **Datas importantes:**
     - **31/01/22**: Início das aulas
     - **07/05/22**: Final das aulas
