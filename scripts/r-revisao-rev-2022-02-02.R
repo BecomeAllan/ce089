@@ -116,6 +116,9 @@ cont[is.na(cont)]
 
 !is.na(cont)
 
+c(TRUE, FALSE)
+!c(TRUE, FALSE)
+
 cont[!is.na(cont)]
 
 cont[is.na(cont)] <- 0
@@ -138,6 +141,14 @@ mat[, 1, drop = FALSE]
 mat[1, ]
 mat[1, , drop = FALSE]
 
+mat
+dim(mat)
+
+mat[ , 1]
+class(mat[ , 1])
+mat[ , 1, drop = FALSE]
+dim(mat[ , 1, drop = FALSE])
+
 2 + 2
 "+"(2, 2)
 
@@ -150,10 +161,12 @@ mat[c(1, 3), c(2, 3)]
 
 colnames(mat) <- LETTERS[1:3]
 mat[, "B"]
+mat[, "B", drop = FALSE]
 mat[1, "C"]
 
 rownames(mat) <- LETTERS[24:26]
 mat["X", ]
+mat["X", , drop = FALSE]
 mat["Y", "A"]
 
 ## Listas --------------------------------------------------------------
@@ -198,8 +211,20 @@ da[1, ]
 
 da["1", ]
 
+rownames(da)
+rownames(da) <- c("D", "U", "T", "K")
+rownames(da)
+da
+
+da["U", ]
+
 da[, "B"]
+mean(da[, "B"], na.rm = TRUE)
+class(da[, "B"])
+da["U", "B"]
 da[, "B", drop = FALSE]
+mean(da[, "B", drop = FALSE])
+class(da[, "B", drop = FALSE])
 
 da$A
 da$B[3]
@@ -215,6 +240,7 @@ da[["A"]][2:3]
 
 da
 
+is.na(da)
 da[is.na(da), ]
 
 da[is.na(da$A), ]
@@ -226,7 +252,9 @@ is.na(da$B)
 
 da[!is.na(da$B), ]
 
+is.na(da)
 complete.cases(da)
+!complete.cases(da)
 da[complete.cases(da), ]
 da[!complete.cases(da), ]
 
@@ -246,24 +274,32 @@ as.logical(0:10)
 
 dados <- c(5, 15, 42, 28, 79, 4, 7, 14)
 
+dados > 15
 dados[dados > 15]
 
 dados[dados > 15 & dados <= 35]
+dados[dados > 15 | dados <= 35]
 
 dados > 15 & dados <= 35
 dados > 15 | dados <= 35
 
 cara <- letters[1:length(dados)]
+cara
 
+cara == "c"
 dados[cara == "c"]
 
 cara == "a" & cara == "c" # porque não funciona?
 cara == "a" | cara == "c"
 dados[cara == "a" | cara == "c"]
+dados[cara == "a" | cara == "c" | cara == "f"]
 
+cara == c("a", "c")
 dados[cara == c("a", "c")] # errado
 dados[cara %in% c("a", "c")]
 cara %in% c("a", "c")
+
+dados[cara %in% c("a", "c", "f")]
 
 cara == c("a", "c")
 cara %in% c("a", "c")
@@ -343,6 +379,28 @@ soma
 ## DESAFIO
 ## Como fazer a soma dos 1000 primeiros numeros primos?
 
+qnt <- 1000 #quantidade de numeros primos a ser somada
+num <- 3 #comeca a testar a partir do numero 3
+aux <- 0
+soma <- 2 #ja considera o numero 2 na soma
+cont <- 1
+
+while(cont < qnt){
+    for(i in 2:(num-1)){
+        if(num %% i == 0){
+            aux <- aux + 1
+        }
+    }
+    if(aux == 0){
+        soma <- soma + num
+        cont <- cont + 1
+        print(num) #printa os numeros primos, caso necessario
+    }
+    aux <- 0
+    num <- num+1
+}
+soma
+
 n <- 0
 soma <- 0
 repeat{
@@ -382,6 +440,7 @@ summary(notas)
 
 notas[1, c("prova1", "prova2", "prova3")]
 mean(notas[1, c("prova1", "prova2", "prova3")])
+class(notas[1, c("prova1", "prova2", "prova3")])
 mean(as.numeric(notas[1, c("prova1", "prova2", "prova3")]))
 
 ## Antes de seguir adiante, veja o resultado de
@@ -522,10 +581,18 @@ apply(X = notas[, provas], MARGIN = 1, FUN = mean)
 ## alunos
 apply(X = notas[, provas], MARGIN = 2, FUN = mean)
 
+mean(notas$prova1)
+mean(notas$prova2)
+mean(notas$prova3)
+
 ## sapply simpilifica o resultado para um vetor
 sapply(notas[, provas],  mean)
 ## lapply retorna o resultado em formato de lista
 lapply(notas[, provas],  mean)
+
+sapply(notas[, provas],  summary)
+lapply(notas[, provas],  summary)
+
 
 ## Média da prova 1 por situação
 tapply(notas$prova1,  notas$situacao,  mean)
@@ -549,6 +616,7 @@ aggregate(cbind(prova1, prova2, prova3) ~ situacao,
 ## Funções e argumentos
 
 runif(10, 1, 100)
+runif(n = 10, min = 1, max = 100)
 args(sample)
 args(plot)
 
@@ -565,6 +633,8 @@ ola.mundo()
 ola.mundo <- function(texto){
     writeLines(texto)
 }
+
+ola.mundo()
 
 ola.mundo("Funções são legais")
 
@@ -585,6 +655,12 @@ a <- c(2, 5, 9)
 b <- c(3, 8, 4)
 soma(a, b)
 
+sum(a, b)
+sum(c(a, b))
+mean(a, b)
+mean(c(a, b))
+mean(c(a, b), trim = 1)
+
 a <- c(2, 5, NA)
 b <- c(3, 8, NA)
 soma(a, b)
@@ -601,6 +677,7 @@ soma(a, b)
 
 a <- c(2, 5, NA)
 b <- c(3, 8, NA)
+soma(a, b)
 soma(a, b, na.rm = TRUE)
 
 ## Veja que
