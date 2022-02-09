@@ -849,9 +849,9 @@ polarmethod(2)</code></pre>
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <pre class="r"><code>microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))</code></pre>
 <pre><code># Unit: microseconds
-#               expr    min     lq     mean  median     uq    max neval cld
-#    boxmuller(1000)   64.8   68.1   70.653   70.25   72.3   84.3   100  a 
-#  polarmethod(1000) 2714.4 2834.8 3192.599 2866.30 2922.5 9475.3   100   b</code></pre>
+#               expr    min      lq     mean  median      uq    max neval cld
+#    boxmuller(1000)   63.5   67.25   69.343   69.10   71.05   84.9   100  a 
+#  polarmethod(1000) 2655.2 2777.70 3087.783 2825.05 2868.75 8483.0   100   b</code></pre>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
