@@ -9,6 +9,14 @@
     ]
   },
   "Packages": {
+    "AsioHeaders": {
+      "Package": "AsioHeaders",
+      "Version": "1.16.1-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "9305444d113b052089eba3694047d42d",
+      "Requirements": []
+    },
     "DAAG": {
       "Package": "DAAG",
       "Version": "1.24",
@@ -131,6 +139,22 @@
       "Repository": "CRAN",
       "Hash": "543776ae6848fde2f48ff3816d0628bc",
       "Requirements": []
+    },
+    "bookdown": {
+      "Package": "bookdown",
+      "Version": "0.24",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "3837766a1e1b527af25fa3e2d12a2800",
+      "Requirements": [
+        "htmltools",
+        "jquerylib",
+        "knitr",
+        "rmarkdown",
+        "tinytex",
+        "xfun",
+        "yaml"
+      ]
     },
     "boot": {
       "Package": "boot",
@@ -362,6 +386,14 @@
       "Hash": "d031a520bc2c989180c772dbc6851088",
       "Requirements": []
     },
+    "fs": {
+      "Package": "fs",
+      "Version": "1.5.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7c89603d81793f0d5486d91ab1fc6f1d",
+      "Requirements": []
+    },
     "future": {
       "Package": "future",
       "Version": "1.23.0",
@@ -428,6 +460,20 @@
       "Hash": "8eb36c8125038e648e5d111c0d7b2ed4",
       "Requirements": [
         "xfun"
+      ]
+    },
+    "hms": {
+      "Package": "hms",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5b8a2dd0fdbe2ab4f6081e6c7be6dfca",
+      "Requirements": [
+        "ellipsis",
+        "lifecycle",
+        "pkgconfig",
+        "rlang",
+        "vctrs"
       ]
     },
     "htmltools": {
@@ -719,6 +765,25 @@
         "askpass"
       ]
     },
+    "pagedown": {
+      "Package": "pagedown",
+      "Version": "0.16",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "3a3a939e341260e84e4be36d8308c107",
+      "Requirements": [
+        "bookdown",
+        "htmltools",
+        "httpuv",
+        "jsonlite",
+        "later",
+        "processx",
+        "rmarkdown",
+        "servr",
+        "websocket",
+        "xfun"
+      ]
+    },
     "parallelly": {
       "Package": "parallelly",
       "Version": "1.30.0",
@@ -787,6 +852,14 @@
       "Hash": "920efbbf2d6dd33907f540591caa010a",
       "Requirements": []
     },
+    "prettyunits": {
+      "Package": "prettyunits",
+      "Version": "1.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "95ef9167b75dde9d2ccc3c7528393e7e",
+      "Requirements": []
+    },
     "processx": {
       "Package": "processx",
       "Version": "3.5.2",
@@ -807,6 +880,19 @@
       "Requirements": [
         "htmlwidgets",
         "stringr"
+      ]
+    },
+    "progress": {
+      "Package": "progress",
+      "Version": "1.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "14dc9f7a3c91ebb14ec5bb9208a07061",
+      "Requirements": [
+        "R6",
+        "crayon",
+        "hms",
+        "prettyunits"
       ]
     },
     "promises": {
@@ -1263,6 +1349,27 @@
         "magrittr"
       ]
     },
+    "websocket": {
+      "Package": "websocket",
+      "Version": "1.4.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "76e0d400757e318cca33def29ccebbc2",
+      "Requirements": [
+        "AsioHeaders",
+        "R6",
+        "cpp11",
+        "later"
+      ]
+    },
+    "withr": {
+      "Package": "withr",
+      "Version": "2.4.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a376b424c4817cda4920bbbeb3364e85",
+      "Requirements": []
+    },
     "wk": {
       "Package": "wk",
       "Version": "0.6.0",
@@ -1283,6 +1390,32 @@
         "rmarkdown",
         "servr",
         "xfun"
+      ]
+    },
+    "xaringanBuilder": {
+      "Package": "xaringanBuilder",
+      "Version": "0.0.9",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "jhelvy",
+      "RemoteRepo": "xaringanBuilder",
+      "RemoteRef": "master",
+      "RemoteSha": "235c8c41d9e720fa48171fa8567839d2e042660d",
+      "Remotes": "gadenbuie/xaringanExtra, rstudio/chromote, rstudio/webshot2",
+      "Hash": "67ab8b9d3032c428ef22467ceca634ce",
+      "Requirements": [
+        "cli",
+        "digest",
+        "fs",
+        "jsonlite",
+        "magick",
+        "pagedown",
+        "progress",
+        "rmarkdown",
+        "withr",
+        "xaringan",
+        "zip"
       ]
     },
     "xaringanExtra": {
@@ -1325,6 +1458,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "4597f73aad7d32c2913ec33a345f900b",
+      "Requirements": []
+    },
+    "zip": {
+      "Package": "zip",
+      "Version": "2.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c7eef2996ac270a18c2715c997a727c5",
       "Requirements": []
     },
     "zoo": {

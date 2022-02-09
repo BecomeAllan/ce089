@@ -23,6 +23,8 @@ xaringanExtra::use_xaringan_extra("tachyons")
 
 # Introdução
 
+<br>
+
 - "O R não é uma linguagem rápida". Não é por acaso:
   - Foi desenvolvido para análise de dados interativa
   - Não foi pensado em ser o mais eficiente possível
@@ -62,6 +64,8 @@ debugging permitem avaliar a função passo a passo quando chamada.
 
 - **Error handling** (*tratamento de erro*) é o processo de "prever"
 possíveis erros e fazer alguma ação quando ocorrerem.
+
+- Também conhecido por *exception handling* (tratamento de excessão)
 ]
 
 
@@ -83,6 +87,9 @@ Usando `system.time()`
 ```{r}
 (df <- data.frame(v = 1:4, name = letters[1:4]))
 ```
+
+- Cada expressão precisa ser executada em uma linha
+- Cada expressão é executada uma única vez
 ]
 .pull-right[
 ```{r}
@@ -92,8 +99,6 @@ system.time(df$name[3])
 ```
 ]
 
-- Cada expressão precisa ser executada em uma linha
-- Cada expressão é executada uma única vez
 
 ---
 # Benchmarking
@@ -161,6 +166,7 @@ st2 <- system.time({
 })
 st2
 ```
+
 
 ---
 # Benchmarking
@@ -349,7 +355,7 @@ estimativa pontual, e a variância será uma estimativa da variância.
 
 Implementando o bootstrap e já aplicando a função `profvis()`:
 
-```{r, eval=FALSE}
+```{r, eval=TRUE, cache=TRUE}
 ## Número de amostras
 r <- 1e4
 ## Número de elementos em cada amostra
@@ -370,14 +376,27 @@ for(i in 1:r){
     s2.boot[i] <- summary(mm)$sigma^2
 }
 }) #<<
+```
 
-## Por curiosidade, veja:
+---
+# Profiling
+
+Resultados do bootstrap
+
+.pull-left-60[
+```{r, fig.show='hold', out.width='80%'}
 par(mfrow = c(1, 3))
 hist(b0.boot); abline(v = b0, col = 2, lwd = 2)
 hist(b1.boot); abline(v = b1, col = 2, lwd = 2)
 hist(s2.boot); abline(v = sigma2, col = 2, lwd = 2)
 par(mfrow = c(1, 1))
 ```
+]
+.pull-right-40.code80[
+```{r}
+lapply(list(b0.boot, b1.boot, s2.boot), summary)
+```
+]
 
 ---
 class: center, middle, inverse
@@ -659,14 +678,21 @@ class(er2)
 
 **Usando `try()` e `tryCatch()`:**
 
-
+.pull-left-60[
 Não existe uma forma pronta de lidar com a classe `try-error`, mas você
 pode definir o que deve acontecer:
 
 ```{r}
-if(class(er2) == "try-error") c(NA, NA)
+fn <- function(...) {
+    res <- try(baskara(...))
+    ## if(class(res) == "try-error") c(NA, NA)
+    if(class(res) == "try-error") warning("Deu erro seu jaguara")
+}
+er3 <- fn(0, 2, 1)
+er3
 ```
-
+]
+.pull-right-40[
 Com `tryCatch()` podemos definir previamente o resultado quando ocorrer
 um erro:
 
@@ -676,13 +702,15 @@ tryCatch(baskara(0, 2, 1),
 tryCatch(baskara(3, 2, 1),
          error = function(cmd) c(NA, NA))
 ```
+]
 
 ---
 # Ignorando erros
 
 Isso é útil quando se deseja que a função não pare durante uma execução
 
-```{r error=TRUE}
+.pull-left[
+```{r}
 baskara2 <- function(a, b, c) {
     if(a == 0) stop("Argumento `a` não pode ser zero.") #<<
     denom <- 2 * a
@@ -694,13 +722,17 @@ baskara2 <- function(a, b, c) {
     x2 <- (-b + sqrt_delta)/denom
     return(c(x1, x2))
 }
-
+```
+]
+.pull-right[
+```{r, error=TRUE}
 baskara(0, 2, 1)
 baskara2(0, 2, 1)
 
 baskara(3, 2, 1)
 baskara2(3, 2, 1)
 ```
+]
 
 ---
 class: center, middle, inverse
@@ -711,8 +743,14 @@ class: center, middle, inverse
 
 - Analise o resultado da função `profvis()` do slide 14.
 
-- Verifique os pontos críticos da execução e propornha mudanças para
+- Verifique os pontos críticos da execução e proponha mudanças para
   otimizar o código.
 
 - Use também a função `microbenchmark()` para avaliar suas alternativas
   propostas.
+
+
+```{r, include=FALSE, eval=FALSE}
+## Para gerar o PDF
+xaringanBuilder::build_pdf("01_tecnicas.Rmd")
+```
