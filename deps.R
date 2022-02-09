@@ -1,0 +1,13 @@
+library(rmarkdown)
+library(microbenchmark)
+library(animation)
+library(expm)
+library(latticeExtra)
+library(plyr)
+library(bootstrap)
+library(DAAG)
+library(gtools)
+library(coin)
+library(perm)
+library(spdep)
+
