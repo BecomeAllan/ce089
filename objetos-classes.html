@@ -14,7 +14,7 @@
 
 <title>Funções, objetos e classes</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -1484,11 +1484,12 @@ matriz</code></pre>
 <p>Vamos entender como uma função genérica pode ser criada através de um exemplo. Usando a função <code>methods()</code>, podemos verificar quais métodos estão disponíveis para uma determinada função, por exemplo, para a função <code>mean()</code>:</p>
 <pre class="r"><code>methods(mean)</code></pre>
 <pre><code>#  [1] mean,ANY-method          mean,Matrix-method       mean,Raster-method      
-#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               
-#  [7] mean.default             mean.difftime            mean.POSIXct            
-# [10] mean.POSIXlt             mean.quosure*            mean.units*             
-# [13] mean.vctrs_vctr*         mean.yearmon*            mean.yearqtr*           
-# [16] mean.zoo*               
+#  [4] mean,sparseMatrix-method mean,sparseVector-method mean,SpatExtent-method  
+#  [7] mean,SpatRaster-method   mean,SpatVector-method   mean.Date               
+# [10] mean.default             mean.difftime            mean.POSIXct            
+# [13] mean.POSIXlt             mean.quosure*            mean.units*             
+# [16] mean.vctrs_vctr*         mean.yearmon*            mean.yearqtr*           
+# [19] mean.zoo*               
 # see &#39;?methods&#39; for accessing help and source code</code></pre>
 <p>O resultado são expressões do tipo <code>mean.&lt;classe&gt;</code>, onde <code>&lt;classe&gt;</code> é uma classe de objeto como aquelas vistas anteriormente. Isso significa que a função <code>mean()</code>, quando aplicada à um objeto da classe <code>Date</code>, por exemplo, pode ter um comportamento diferente quando a mesma função for aplicada à um objeto de outra classe (numérica).</p>
 <p>Suponha que temos o seguinte vetor numérico:</p>
@@ -1512,7 +1513,7 @@ class(vec)</code></pre>
 # 
 # function (x, ...) 
 # standardGeneric(&quot;mean&quot;)
-# &lt;environment: 0x55db1cb9a380&gt;
+# &lt;environment: 0x5567378b2728&gt;
 # Methods may be defined for arguments: x
 # Use  showMethods(mean)  for currently available ones.</code></pre>
 <p>Agora veja o código fonte da função <code>mean.default</code>, que é o método específico para vetores numéricos</p>
@@ -1541,7 +1542,7 @@ class(vec)</code></pre>
 #     }
 #     .Internal(mean(x))
 # }
-# &lt;bytecode: 0x55db1c4da2c0&gt;
+# &lt;bytecode: 0x55672b675e58&gt;
 # &lt;environment: namespace:base&gt;</code></pre>
 <p>Agora suponha que você ddeseja criar uma função que calcule a média para um objeto de uma classe diferente daquelas previamente definidas. Por exemplo, suponha que você quer que a função <code>mean()</code> retorne a média das linhas de uma matriz.</p>
 <pre class="r"><code>set.seed(1)
@@ -1553,11 +1554,12 @@ mean(mat)</code></pre>
 <p>Uma função método é sempre definida dessa forma: <code>&lt;funçãogenérica&gt;.&lt;classe&gt;</code>. Agora podemos ver novamente os métodos disponíveis para a função <code>mean()</code></p>
 <pre class="r"><code>methods(mean)</code></pre>
 <pre><code>#  [1] mean,ANY-method          mean,Matrix-method       mean,Raster-method      
-#  [4] mean,sparseMatrix-method mean,sparseVector-method mean.Date               
-#  [7] mean.default             mean.difftime            mean.matrix             
-# [10] mean.POSIXct             mean.POSIXlt             mean.quosure*           
-# [13] mean.units*              mean.vctrs_vctr*         mean.yearmon*           
-# [16] mean.yearqtr*            mean.zoo*               
+#  [4] mean,sparseMatrix-method mean,sparseVector-method mean,SpatExtent-method  
+#  [7] mean,SpatRaster-method   mean,SpatVector-method   mean.Date               
+# [10] mean.default             mean.difftime            mean.matrix             
+# [13] mean.POSIXct             mean.POSIXlt             mean.quosure*           
+# [16] mean.units*              mean.vctrs_vctr*         mean.yearmon*           
+# [19] mean.yearqtr*            mean.zoo*               
 # see &#39;?methods&#39; for accessing help and source code</code></pre>
 <p>e simplesmente aplicar a função genérica <code>mean()</code> à um objeto da classe <code>matrix</code> para obter o resultado que desejamos</p>
 <pre class="r"><code>class(mat)</code></pre>
@@ -1605,7 +1607,7 @@ class(dl)</code></pre>
 </div>
 <div id="informação-de-sessão" class="section level1">
 <h1><span class="header-section-number">11</span> Informação de Sessão</h1>
-<pre><code># Tuesday, 08 February, 2022, 01:37
+<pre><code># Wednesday, 09 February, 2022, 20:22
 # ----------------------------------------
 # R version 4.1.2 (2021-11-01)
 # Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1625,42 +1627,43 @@ class(dl)</code></pre>
 # [1] stats     graphics  grDevices datasets  utils     methods   base     
 # 
 # other attached packages:
-#  [1] tidyr_1.1.3         dplyr_1.0.6         kableExtra_1.3.4   
-#  [4] perm_1.0-0.0        coin_1.4-1          survival_3.2-13    
-#  [7] boot_1.3-28         bootstrap_2019.6    future.apply_1.7.0 
-# [10] future_1.21.0       plyr_1.8.6          latticeExtra_0.6-29
+#  [1] tidyr_1.2.0         dplyr_1.0.8         kableExtra_1.3.4   
+#  [4] perm_1.0-0.2        coin_1.4-2          survival_3.2-13    
+#  [7] boot_1.3-28         bootstrap_2019.6    future.apply_1.8.1 
+# [10] future_1.23.0       plyr_1.8.6          latticeExtra_0.6-29
 # [13] lattice_0.20-45     expm_0.999-6        Matrix_1.4-0       
-# [16] knitr_1.33         
+# [16] knitr_1.37         
 # 
 # loaded via a namespace (and not attached):
-#  [1] nlme_3.1-155         matrixStats_0.58.0   sf_1.0-5            
-#  [4] gmodels_2.18.1       webshot_0.5.2        RColorBrewer_1.1-2  
-#  [7] httr_1.4.2           tools_4.1.2          utf8_1.2.1          
-# [10] R6_2.5.0             KernSmooth_2.23-20   spData_0.3.8        
-# [13] DBI_1.1.1            colorspace_2.0-1     raster_3.4-10       
-# [16] sp_1.4-5             tidyselect_1.1.1     compiler_4.1.2      
-# [19] rvest_1.0.0          animation_2.6        xml2_1.3.2          
-# [22] microbenchmark_1.4-7 sandwich_3.0-1       scales_1.1.1        
-# [25] classInt_0.4-3       mvtnorm_1.1-1        proxy_0.4-25        
-# [28] systemfonts_1.0.2    stringr_1.4.0        digest_0.6.27       
-# [31] rmarkdown_2.8        svglite_2.0.0        pkgconfig_2.0.3     
-# [34] jpeg_0.1-8.1         htmltools_0.5.1.1    parallelly_1.26.1   
-# [37] highr_0.9            rlang_0.4.11         rstudioapi_0.13     
-# [40] shape_1.4.6          generics_0.1.0       zoo_1.8-9           
-# [43] gtools_3.8.2         spdep_1.1-8          magrittr_2.0.1      
-# [46] modeltools_0.2-23    fansi_0.5.0          Rcpp_1.0.6          
-# [49] munsell_0.5.0        lifecycle_1.0.0      stringi_1.7.6       
-# [52] multcomp_1.4-17      yaml_2.2.1           MASS_7.3-55         
-# [55] grid_4.1.2           gdata_2.18.0         parallel_4.1.2      
-# [58] listenv_0.8.0        crayon_1.4.1         deldir_0.2-10       
-# [61] fortunes_1.5-4       splines_4.1.2        pillar_1.6.1        
-# [64] codetools_0.2-18     stats4_4.1.2         LearnBayes_2.15.1   
-# [67] glue_1.4.2           evaluate_0.14        renv_0.13.2-38      
-# [70] png_0.1-7            vctrs_0.3.8          purrr_0.3.4         
-# [73] diagram_1.6.5        xfun_0.23            libcoin_1.0-8       
-# [76] e1071_1.7-6          coda_0.19-4          class_7.3-20        
-# [79] viridisLite_0.4.0    tibble_3.1.2         units_0.7-1         
-# [82] globals_0.14.0       TH.data_1.0-10       ellipsis_0.3.2</code></pre>
+#  [1] matrixStats_0.61.0   sf_1.0-6             webshot_0.5.2       
+#  [4] RColorBrewer_1.1-2   httr_1.4.2           tools_4.1.2         
+#  [7] utf8_1.2.2           R6_2.5.1             KernSmooth_2.23-20  
+# [10] spData_2.0.1         DBI_1.1.2            colorspace_2.0-2    
+# [13] raster_3.5-15        sp_1.4-6             tidyselect_1.1.1    
+# [16] compiler_4.1.2       cli_3.1.1            rvest_1.0.2         
+# [19] animation_2.7        xml2_1.3.3           microbenchmark_1.4.9
+# [22] sandwich_3.0-1       scales_1.1.1         classInt_0.4-3      
+# [25] mvtnorm_1.1-3        proxy_0.4-26         systemfonts_1.0.3   
+# [28] stringr_1.4.0        digest_0.6.29        rmarkdown_2.11      
+# [31] svglite_2.1.0        pkgconfig_2.0.3      jpeg_0.1-9          
+# [34] htmltools_0.5.2      parallelly_1.30.0    fastmap_1.1.0       
+# [37] highr_0.9            rlang_1.0.1          rstudioapi_0.13     
+# [40] generics_0.1.2       shape_1.4.6          jquerylib_0.1.4     
+# [43] zoo_1.8-9            gtools_3.9.2         spdep_1.2-2         
+# [46] magrittr_2.0.2       modeltools_0.2-23    s2_1.0.7            
+# [49] fansi_1.0.2          Rcpp_1.0.8           munsell_0.5.0       
+# [52] lifecycle_1.0.1      terra_1.5-17         stringi_1.7.6       
+# [55] multcomp_1.4-18      yaml_2.2.2           MASS_7.3-55         
+# [58] grid_4.1.2           parallel_4.1.2       listenv_0.8.0       
+# [61] crayon_1.4.2         deldir_1.0-6         fortunes_1.5-4      
+# [64] splines_4.1.2        pillar_1.7.0         codetools_0.2-18    
+# [67] stats4_4.1.2         wk_0.6.0             glue_1.6.1          
+# [70] evaluate_0.14        renv_0.15.2-7        vctrs_0.3.8         
+# [73] png_0.1-7            purrr_0.3.4          diagram_1.6.5       
+# [76] xfun_0.29            libcoin_1.0-9        e1071_1.7-9         
+# [79] class_7.3-20         viridisLite_0.4.0    tibble_3.1.6        
+# [82] units_0.8-0          globals_0.14.0       ellipsis_0.3.2      
+# [85] TH.data_1.1-0</code></pre>
 </div>
 
 <center>
@@ -1710,6 +1713,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

@@ -14,7 +14,7 @@
 
 <title>Métodos de Monte Carlo via Cadeias de Markov</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -678,7 +678,7 @@ plot.ts(x[5000:5200], main = &quot;Metropolis-Hastings&quot;)
 par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="MH_sampler_beta_unif.html" width="80%" height="735px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="MH_sampler_beta_unif.html" width="80%" height="735px" data-external="1" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <!-- Tem o outro exemplo da beta: MH_sampler_beta_beta -->
 </div>
@@ -913,10 +913,10 @@ par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-28-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento com:</p>
 <p><strong><span class="math inline">\(\delta = 0.5\)</span></strong></p>
-<iframe src="MH_RW_normal_unif_05.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="MH_RW_normal_unif_05.html" width="80%" height="715px" data-external="1" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p><strong><span class="math inline">\(\delta = 2\)</span></strong></p>
-<iframe src="MH_RW_normal_unif_2.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="MH_RW_normal_unif_2.html" width="80%" height="715px" data-external="1" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <!-- Ver MH_RW_normal_mixture.R -->
 </div>
@@ -1045,7 +1045,7 @@ plot(ecdf(x))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-35-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="MH_IID_beta_unif.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="MH_IID_beta_unif.html" width="80%" height="715px" data-external="1" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Outro exemplo:</p>
 <pre class="r"><code>## Distribuição alvo: X ~ Beta(2, 3)
@@ -1083,7 +1083,7 @@ plot(ecdf(x2))
 curve(pbeta(x, 2, 3), add = TRUE, col = 2)</code></pre>
 <p><img src="figures/08_MCMC/unnamed-chunk-38-3.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Veja como fica uma animação com o método em funcionamento:</p>
-<iframe src="MH_IID_beta_normal.html" width="80%" height="715px" style="display:block; margin: auto;" frameborder="0">
+<iframe src="MH_IID_beta_normal.html" width="80%" height="715px" data-external="1" style="display:block; margin: auto;" frameborder="0">
 </iframe>
 <p>Comparando as cadeias geradas com as duas diferentes propostas:</p>
 <pre class="r"><code>par(mfrow = c(2, 2))
@@ -1555,6 +1555,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
