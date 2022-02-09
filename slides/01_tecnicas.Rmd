@@ -748,3 +748,9 @@ class: center, middle, inverse
 
 - Use também a função `microbenchmark()` para avaliar suas alternativas
   propostas.
+
+
+```{r, include=FALSE, eval=FALSE}
+## Para gerar o PDF
+xaringanBuilder::build_pdf("01_tecnicas.Rmd")
+```
