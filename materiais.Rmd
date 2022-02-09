@@ -6,9 +6,8 @@ output:
 ---
 
 <div class="alert alert-danger" role="alert">
-Para salvar os slides e páginas em PDF, abra no Google Chrome (ou
-Chromium), aperte <kbd>Ctrl</kbd> <kbd>p</kbd> e selecione "Imprimir para
-PDF".
+Para salvar os slides e páginas em PDF, abra no Google Chrome, aperte
+<kbd>Ctrl</kbd> <kbd>p</kbd> e selecione "Imprimir para PDF".
 </div>
 
 
