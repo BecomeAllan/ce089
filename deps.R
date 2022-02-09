@@ -10,4 +10,4 @@ library(gtools)
 library(coin)
 library(perm)
 library(spdep)
-
+library(profvis)
