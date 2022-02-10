@@ -753,4 +753,5 @@ class: center, middle, inverse
 ```{r, include=FALSE, eval=FALSE}
 ## Para gerar o PDF
 xaringanBuilder::build_pdf("01_tecnicas.Rmd")
+## Nao funciona
 ```
