@@ -22,8 +22,8 @@ source("setup_knitr.R")
 - **Professor Responsável:**
   - [Fernando de Pol Mayer][], [LEG][]/DEST/UFPR
 - **Horários e Locais:**
-  - Segunda, 20:45 - 22:15h, **Teams** (sala a definir)
-  - Quarta, 19:00 - 20:30h, **Teams** (sala a definir)
+  - Segunda, 20:45 - 22:15h, **PA-06**
+  - Quarta, 19:00 - 20:30h, **PA-06**
 <!-- - **Horários de atendimento dos professores:** -->
 <!--     - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários -->
 <!--       podem ser agendados previamente por email. -->
