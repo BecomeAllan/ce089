@@ -22,10 +22,14 @@ xaringanExtra::use_xaringan_extra("tachyons")
 
 # Introdução
 
+<br>
+
 - Simulação computacional de processos estocásticos depende da
 geração de números aleatórios (GNA).
 
-- Inferência Bayesiana, jogos digitais, otimização estocástica também.
+- Inferência Bayesiana, jogos digitais, otimização estocástica...
+
+<br>
 
 Objetivos:
 
@@ -36,19 +40,21 @@ Objetivos:
 ---
 # A distribuição uniforme
 
+<br>
+
 Se uma variável aleatória $X$ tem distribuição uniforme contínua entre
 $a$ e $b$, denotamos $X \sim \text{U}(a, b)$, e sua função de
 densidade é
 
 $$
-f(x, a, b) = \frac{1}{b - a} \cdot I(a \leq x < b), \quad -\infty < a <
+f(x; a, b) = \frac{1}{b - a} \cdot I(a \leq x \leq b), \quad -\infty < a <
 b < \infty.
 $$
 
 A função de probabilidade é
 
 $$
-F(x, a, b) = \Pr(X < x) = \int_{-\infty}^{x} f(x, a, b)\, \text{d}x =
+F(x; a, b) = \Pr(X < x) = \int_{-\infty}^{x} f(x; a, b)\, \text{d}x =
 \begin{cases}
 0, & x < a \\
 \dfrac{x - a}{b - a}, & a \leq x < b\\
@@ -72,10 +78,14 @@ modelagem.
 - Porém, para simulação computacional, ela é central.
 
 - Números aleatório da Uniforme são:
+
   - O principal ingrediente para GNA de outras distribuições.
+
   - Usados em várias aplicações de Monte Carlo
   (e.g. integração MC, inf. Bayesiana por MCMC, etc.)
+
   - Utilizados em otimização estocástica.
+
   - Empregados em jogos digitais (e.g. poker online).
 
 ---
@@ -87,15 +97,17 @@ modelagem.
   - Globo de sorteio da Mega-Sena e bingos.
   - Lançamento de um dado, moeda.
   - Roleta de cassino.
+
 - Para uso em maior escala, são geralmente baseados em fenômenos
 que geram um nível baixo de rúido.
   - Ruído termal.
   - Ruído fotoelétrico.
   - Ruído acústico.
   - Movimento browniano de partículas.
+
 - Os sinais precisam ser traduzidos para números (intensidade).
-- A distribuição da v.a. pode não ter forma conhecida.
-- A v.a. pode ter correlação serial.
+- A distribuição da VA pode não ter forma conhecida.
+- A VA pode ter correlação serial.
 - São usados em criptografia.
 
 Veja:
@@ -115,8 +127,8 @@ aleatórios "reais".
 
 ```{r cache=TRUE}
 library(random)
-randomNumbers(n = 10, min=1, max = 10, col = 10, base = 10)
-randomSequence(min = 1, max = 10, col = 10)
+randomNumbers(n = 10, min = 1, max = 10, col = 10, base = 10) # com duplicação
+randomSequence(min = 1, max = 10, col = 10) # sem duplicação
 randomStrings(n = 4, len = 5, digits = TRUE, upperalpha = TRUE,
               loweralpha = TRUE, unique = TRUE)
 ```
@@ -171,7 +183,7 @@ onde:
 
 - $S$ é um conjunto **finito** de estados
 - $s_0$ é o estado incial ou **semente**
-- $f: S \rightarrow S$ é uma função de tranformação
+- $f: S \rightarrow S$ é uma função de transformação
 - $U$ é um conjunto **finito** de símbolos de saída
 - $g: S \rightarrow U$ é uma função de saída
 ]
@@ -246,43 +258,23 @@ O que faz um gerador ser bom?
 - Deve-se conhecer alguma coisa sobre as propriedades teóricas do
   gerador
 
-- A distribuição da v.a. é matematicamente conhecida
+- A distribuição da VA é matematicamente conhecida
 (e.g. distribuição Uniforme).
 
-- O gerador produz v.a. que não apresentarem correlação serial, ou
+- O gerador produz VAs que não apresentam correlação serial, ou
 seja, as realizações são independentes umas das outras.
 
 > Isso indica que geradores *ad hoc* (como o exemplo acima) devem ser
 > evitados.
 
 ---
-# GNA de von Neumann
-
-#### Artigo
-
-von Neumann, J. (1951). Various Techniques Used in Connection with
-Random Digits. In the Monte Carlo Method (ed. A.S. Householder et al.,
-36-38). **Nat. Bur. Standards Appl.** Math Ser. no. 12.
-
-#### Algorítmo
-
-- Definir um número $u_0$ de quatro digitos decimais e atribuir
-$i = 0$.
-- Calcular $u_i^2$. Agregar zeros à esquerda, quando necessário, para
-manter representação com 4 digitos: $u_i^2 = d_7 d_6... d_0$, onde cada
-$d_j$ é um inteiro entre 0 e 9.
-- Fazer $u_{i+1} = d_5 d_4 d_3 d_2$.
-- Incrementar $i$ fazendo $i = i+1$.
-- Repetir 2-4 até obter a sequência de tamanho desejado.
-
-Implemente e inspecione as propriedades deste GNA Uniformes.
-
----
 # Geração de números pseudo aleatórios: métodos
 
 - Existem vários algorítmos para GNA. No R, existem 7 opções para
 o algorítmo de GNA.
+
 - Veja `help(Random)` para consultar a respectiva documentação.
+
 - Veja a seção *Random number generators (RNG)* na
 [CRAN Task View: Probability
 Distributions](http://cran-r.c3sl.ufpr.br/web/views/Distributions.html)
@@ -290,11 +282,17 @@ Distributions](http://cran-r.c3sl.ufpr.br/web/views/Distributions.html)
 Algorítmos disponíveis no R:
 
 - Wichmann-Hill.
+
 - Marsaglia-Multicarry.
+
 - Super-Duper.
+
 - **Mersenne-Twister** (*default*).
+
 - Knuth-TAOCP-2002.
+
 - Knuth-TAOCP.
+
 - L'Ecuyer-CMRG.
 
 ---
@@ -313,6 +311,10 @@ set.seed(1)
 runif(10)
 ```
 Sempre que essa semente for usada, a mesma sequência será obtida.
+```{r}
+set.seed(1)
+runif(10)
+```
 
 ---
 # Geração de números pseudo aleatórios: métodos
@@ -469,16 +471,17 @@ Alguns outros métodos disponíveis.
 - É o método padrão implementado no R
   - Criado para gerar números uniformes: `runif()`
   - Como os métodos para gerar valores de outras distribuições também
-    depende do gerador da uniforma, funções como `rnorm()` também são
+    depende do gerador da uniforme, funções como `rnorm()` também são
     afetadas (caso o gerador seja alterado). **Detalhes no próximo
     slide**.
 
 - Atualmente é o que possui as melhores propriedades de um bom gerador
 
-- O nome vem do fato de que seu período é um número **primo de
-  Mersenne**, i.e., um primo da seuinte forma: $M_p = 2^p - 1$
+- O nome vem do fato de que seu período é um número [Primo de
+  Mersenne](https://pt.wikipedia.org/wiki/N%C3%BAmero_de_Mersenne),
+  i.e., um primo da seuinte forma: $M_p = 2^p - 1$
 
-- O gerador trabalha internamente com números binários, por isso é
+- O gerador trabalha internamente com **números binários**, por isso é
   altamente eficiente computacionalmente (por isso também, o método não
   é simples)
 
@@ -529,10 +532,12 @@ Existem diversos tipos de teste para a aleatoriedade de uma sequência.
 - [Dieharder: A Random Number Test
   Suite](http://webhome.phy.duke.edu/~rgb/General/dieharder.php): uma
   série de testes, adotado como "padrão" atualmente
+
 - Testes visuais
   - Gráfico da sequência
   - Histograma
   - ACF (autocorrelação)
+
 - Testes estatísticos
   - Teste de qui-quadrado
   - Teste não paramétrico de Kolmogorov-Smirnov
@@ -585,10 +590,14 @@ chisq.test(x = table(xc))
 ---
 # Teste de Kolmogorov-Smirnov
 
+.pull-left[
 - Teste "de aderência" não paramétrico
+
 - Compara a distribuição acumulada empírica dos dados com a acumulada de
   alguma distribuição de referência
+
 - Calcula a maior distância entre estas duas distribuições
+
 - Testa a hipótese nula de que a acumulada da distribuição empírica (dos
   dados) "adere" (é igual) à distribuição teórica
 
@@ -598,15 +607,48 @@ ks.test(x, "punif")
 
 - Não rejeita a hipótese nula de que a distribuição acumulada empírica
   segue uma uniforme
-
----
-# Teste de Kolmogorov-Smirnov
-
+]
+.pull-right[
 Visualização da distribuição acumulada empírica da sequência gerada
 (linha preta) com uma distribuição acumulada de uma uniforme gerada pela
 função `punif()` (linha vermelha - usada como referência).
 
-```{r, out.width="50%", fig.show="hold"}
+```{r, fig.show="hold"}
 plot(ecdf(x))
-plot(ecdf(punif(seq(0, 1, length.out = 1000))), add = TRUE, col = 2)
+plot(ecdf(punif(seq(0, 1, length.out = 1000))),
+     add = TRUE, col = 2)
+```
+]
+
+
+---
+class: center, middle, inverse
+# Desafio
+
+---
+# GNA de von Neumann
+
+### Artigo
+
+von Neumann, J. (1951). Various Techniques Used in Connection with
+Random Digits. In the Monte Carlo Method (ed. A.S. Householder et al.,
+36-38). **Nat. Bur. Standards Appl.** Math Ser. no. 12.
+
+### Algorítmo
+
+- Definir um número $u_0$ de quatro digitos decimais e atribuir
+$i = 0$.
+- Calcular $u_i^2$. Agregar zeros à esquerda, quando necessário, para
+manter representação com 4 digitos: $u_i^2 = d_7 d_6... d_0$, onde cada
+$d_j$ é um inteiro entre 0 e 9.
+- Fazer $u_{i+1} = d_5 d_4 d_3 d_2$.
+- Incrementar $i$ fazendo $i = i+1$.
+- Repetir 2-4 até obter a sequência de tamanho desejado.
+
+Implemente e inspecione as propriedades deste GNA Uniformes.
+
+```{r, include=FALSE, eval=FALSE}
+## Para gerar o PDF
+xaringanBuilder::build_pdf("02_RNG_uniforme.Rmd")
+## Nao funciona
 ```
