@@ -31,7 +31,7 @@ gerar números das distribuições de probabilidade mais comuns.
 - Também é importante saber gerar números de distribuições desconhecidas
   ou da qual se sabe apenas seu núcleo
 
-#### Objetivos
+### Objetivos
 
 - Mostrar a GNA de VAs contínusa e discretas
 
@@ -58,7 +58,7 @@ F(x; a, b) = \Pr(X < x) = \int_{-\infty}^{x} f(x, a, b)\, \text{d}x =
 \end{cases}
 $$
 
-#### Caso particular: $X \sim \text{U}(0, 1)$
+### Caso particular: $X \sim \text{U}(0, 1)$
 
 $$
 f(x) = 1, \quad 0 < x < 1
@@ -88,7 +88,7 @@ par(mfrow = c(1, 1))
 ---
 # Transformação integral de probabilidade
 
-#### Definição (Transformação Integral de Probabilidade)
+### Definição (Transformação Integral de Probabilidade)
 
 <!-- Mood, pg. 202; Casella e Berger, pg. 49 -->
 
@@ -104,7 +104,7 @@ $X = F_{X}^{-1}(U)$ possui função de distribuição acumulada
 $F_X(\cdot)$.
 ]
 
-#### Demonstração
+### Demonstração
 
 .pull-left[
 Parte (a)
@@ -134,7 +134,7 @@ $$
 ---
 # Transformação integral de probabilidade
 
-#### Observação
+### Observação
 
 Se $F_X$ for estritamente crescente, então $F_X^{-1}$ é bem definida
 por
@@ -180,7 +180,7 @@ $u \sim \text{U}(0,1)$ e calcule a inversa $F_X^{-1}(u)$
 
 - O método serve para gerar variáveis contínuas ou discretas.
 
-#### Resumindo:
+### Resumindo:
 
 1. Determine a função inversa $F_X^{-1}(u)$
 2. Escreva um comando ou função para calcular $F_X^{-1}(u)$
@@ -249,7 +249,7 @@ legend("left", legend = c("Empírica", "Teórica"),
 ---
 # Variáveis contínuas
 
-#### Exponencial
+### Exponencial
 
 .pull-left-70[
 Uma v.a. $X$ segue o **modelo exponencial** com parâmetro $\lambda > 0$
@@ -277,7 +277,7 @@ u &= 1 - \exp\{-\lambda x\}\\
 $$
 ]
 .pull-right-30[
-#### Implementação em R
+Implementação em R
 
 ```{r}
 randexp <- function(n, lambda) {
@@ -313,7 +313,7 @@ legend("right", legend = c("Empírica", "Teórica", "rexp"),
 ---
 # Variáveis contínuas
 
-#### Uniforme no intervalo $[a,b]$
+### Uniforme no intervalo $[a,b]$
 
 .pull-left-70[
 Se $X \sim U[a,b]$ então
@@ -344,7 +344,7 @@ randunif <- function(n, a, b) {
 ---
 # Variáveis contínuas
 
-#### Uniforme no intervalo $[a,b]$
+### Uniforme no intervalo $[a,b]$
 
 .pull-left.code80[
 ```{r}
@@ -367,9 +367,10 @@ legend("right", legend = c("Empírica", "Teórica", "runif"),
 ]
 
 ---
+exclude: true
 # Variáveis contínuas
 
-#### Gama
+### Gama
 
 .pull-left[
 Se $X \sim G[r,\lambda]$ então
@@ -405,7 +406,7 @@ randgama <- function(n, r, lambda) {
 exclude: true
 # Variáveis contínuas
 
-#### Gama
+### Gama
 
 .pull-left.code80[
 ```{r}
@@ -467,12 +468,12 @@ Portanto, para cada valor:
 ---
 # Variáveis discretas
 
-#### Bernoulli
+### Bernoulli
 
 .pull-left[
 Se $X \sim Ber(p)$ então
 $$
-P(X=x) = p^x (1-p)^{n-x}, \quad  x=0,1
+P(X=x) = p^x (1-p)^{1-x}, \quad  x=0,1
 $$
 Sua função de distribuição é
 $$
@@ -503,7 +504,7 @@ plot(ecdf(x), verticals = TRUE, col.vert = "red")
 ---
 # Variáveis discretas
 
-#### Bernoulli
+### Bernoulli
 
 .pull-left[
 ```{r}
@@ -550,7 +551,7 @@ sample(c(0, 1), size = n, replace = TRUE,
 ---
 # Variáveis discretas
 
-#### Bernoulli
+### Bernoulli
 
 .pull-left.code80[
 ```{r, out.width='75%'}
@@ -575,7 +576,7 @@ legend("right", legend = c("Empírica", "Teórica", "rbinom"),
 ---
 # Variáveis discretas
 
-#### Uniforme discreta
+### Uniforme discreta
 
 .pull-left[
 Se $X$ tem distribuição uniforme discreta com $k$ valores, o seu
@@ -614,7 +615,7 @@ plot(ecdf(x), verticals = TRUE, col.vert = "red")
 ---
 # Variáveis discretas
 
-#### Uniforme discreta
+### Uniforme discreta
 
 Uma implementação "ingênua" seria
 
@@ -640,7 +641,7 @@ x <- as.integer(xc) #<<
 ---
 # Variáveis discretas
 
-#### Uniforme discreta
+### Uniforme discreta
 
 .pull-left.code80[
 ```{r, out.width='75%'}
@@ -783,7 +784,7 @@ legend("left", legend = c("Empírica", "Teórica"),
 ---
 # Variáveis discretas
 
-#### Algoritmo de busca sequencial - Poisson
+### Algoritmo de busca sequencial - Poisson
 
 .pull-left[
 - No caso de uma distribuição como a Poisson, a aplicação direta deste
@@ -822,7 +823,7 @@ recursiva** no algoritmo de busca sequencial.
 ---
 # Variáveis discretas
 
-#### Algoritmo de busca sequêncial - Poisson
+### Algoritmo de busca sequêncial - Poisson
 
 Uma adaptação do algoritmo geral para a Poisson seria então
 
