@@ -13,8 +13,8 @@ library(dplyr)
 library(tidyr)
 ```
 
-Abaixo está o cronograma inicial planejado para a disciplina. (Pode
-sofrer alterações).
+Abaixo está o cronograma inicial planejado para a disciplina. (**Revisado
+em 2022-02-19**).
 
 ```{r, eval=FALSE, include=FALSE}
 ## Gera a lista com as datas de todas as aulas. O resultado do último
@@ -30,7 +30,7 @@ cat(paste0("- **", datas1, " (Ter)", "**:\n", "- **",
 ```
 
 ```{r echo=FALSE, results='hide'}
-dd <- read.table("misc/crono.csv", header = TRUE, sep = ",")
+dd <- read.table("misc/crono_rev.csv", header = TRUE, sep = ",")
 str(dd)
 ```
 
@@ -40,5 +40,5 @@ dd |>
     kable(align = "cccl") |>
     kable_styling(bootstrap_options = c("striped", "bordered")) |>
     column_spec(1, bold = TRUE) |>
-    row_spec(c(8, 16, 23, 26, 27, 28), background = "lightgray")
+    row_spec(c(11, 17, 24, 26, 27, 28), background = "lightgray")
 ```
