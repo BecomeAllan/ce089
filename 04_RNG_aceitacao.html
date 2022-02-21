@@ -378,8 +378,8 @@ div.tocify {
 <h1><span class="header-section-number">1</span> Introdução</h1>
 <p>Quando se deseja gerar números aleatórios de distribuições de probabilidade, nem sempre é possível aplicar o método da transformação integral da probabilidade. Alguns situação são:</p>
 <ul>
-<li>Casos em que não se tem expressão para a função de densidade acumulada, <span class="math inline">\(F\)</span>, como é o caso da distribuição gaussiana e gama.</li>
-<li>Casos em que mesmo que se conheça <span class="math inline">\(F(x)\)</span> não possível chegar à uma expressão para a função <span class="math inline">\(F^{-1}\)</span>.</li>
+<li>Casos em que não se tem expressão para a função de densidade acumulada <span class="math inline">\(F(x)\)</span></li>
+<li>Casos em que mesmo que se conheça <span class="math inline">\(F(x)\)</span> não possível chegar à uma expressão para a função <span class="math inline">\(F^{-1}(x)\)</span>.</li>
 </ul>
 </div>
 <div id="método-de-aceitação-e-rejeição" class="section level1">
@@ -411,14 +411,14 @@ M \geq \max_x \frac{f(x)}{g(x)}
 </ol>
 <div id="exemplo-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Exemplo 1</h2>
-<p>Seja <span class="math inline">\(X\)</span> uma VA com <span class="math inline">\(f(x) = 1.5 x^2, -1 &lt; x &lt; 1\)</span>. Simular valores desta.</p>
-<pre class="r"><code>## Gráfico da f.d.p da v.a. X, f(x).
+<p>Seja <span class="math inline">\(X\)</span> uma VA com <span class="math inline">\(f(x) = 1.5 x^2, -1 &lt; x &lt; 1\)</span>. Simular valores desta distribuição.</p>
+<pre class="r"><code>## Gráfico da fdp da VA X, f(x).
 curve(1.5 * (x ^ 2), -1, 1)</code></pre>
 <p><img src="figures/04_RNG_aceitacao/fdp-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Tem integral 1?
 integrate(function(x) 1.5 * (x^2), lower = -1, upper = 1)</code></pre>
 <pre><code># 1 with absolute error &lt; 1.1e-14</code></pre>
-<p>Vamos considerar como <span class="math inline">\(g\)</span> (a distribuição proposta) a densidade de uma uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para ter produto 1, assim <span class="math inline">\(g(y) = 0.5, -1 &lt; y &lt; 1\)</span>. Qual deve ser um valor de <span class="math inline">\(M\)</span> para garantir que <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> dentro do intervalo <span class="math inline">\([-1, 1]\)</span>? Pela definição acima, temos que: <span class="math display">\[
+<p>Vamos considerar como <span class="math inline">\(g\)</span> (a distribuição proposta) a densidade de uma uniforme entre -1 e 1. Então se a base é 2, a altura deve ser 0.5 para ter produto 1, assim <span class="math inline">\(g(y) = 0.5, -1 &lt; y &lt; 1\)</span>. Qual deve ser um valor de <span class="math inline">\(M\)</span> para garantir que <span class="math inline">\(f(x) \leq M g(x)\)</span> para todo <span class="math inline">\(x\)</span> dentro do intervalo <span class="math inline">\([-1, 1]\)</span>? Pela definição acima, temos que: <span class="math display">\[
 M \geq \max_x \frac{f(x)}{g(x)} = \frac{1.5}{0.5} = 3
 \]</span> Portanto, fazemos <span class="math inline">\(M = 3\)</span>, pois esse é o valor mínimo necessário para satisfazer <span class="math inline">\(f(x) \leq M g(x)\)</span> (e queremos o valor de <span class="math inline">\(M\)</span> menor possível para mais eficiência computacional).</p>
 <p>No gráfico abaixo, vemos a função <span class="math inline">\(f(x)\)</span>, a proposta <span class="math inline">\(g(x)\)</span>, e a que iremos de fato utilizar no algoritmo, a <span class="math inline">\(M g(x)\)</span></p>
@@ -433,7 +433,7 @@ legend(&quot;bottomright&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &
 f &lt;- function(x) 1.5 * x^2
 g &lt;- function(x) 0.5 + 0 * x
 M &lt;- 3
-x &lt;- NULL
+x &lt;- numeric(1)
 
 ## 1. Gerar y cuja densidade é g()
 set.seed(1)
@@ -456,20 +456,20 @@ if (u &lt; r) {
 <p>Verifica os pontos no gráfico:</p>
 <pre class="r"><code>curve(1.5 * (x^2), -1, 1, col = 4)
 curve(3 * 0.5 + 0 * x, add = TRUE, lty = 2, lwd = 2)
-legend(&quot;bottomright&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
-       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)
+legend(&quot;bottomright&quot;, legend = c(&quot;f(x)&quot;, &quot;M g(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), lwd = c(1, 2), bty = &quot;n&quot;)
+points(y, 0, pch = 19, col = 5)
+text(y, 0, bquote(y == .(round(y, 3))), pos = 4, col = 5)
 points(y, f(y), pch = 19, col = 4)
-text(y, f(y), &quot;f(y)&quot;, pos = 4, col = 4)
+text(y, f(y), bquote(f(y) == .(round(f(y), 3))), pos = 4, col = 4)
 points(y, M * g(y), pch = 19, col = 1)
-text(y, M * g(y), &quot;M g(y)&quot;, pos = 1, col = 1)
+text(y, M * g(y), bquote(M %.% g(y) == .(M * g(y))), pos = 1, col = 1)
 points(y, u * M * g(y), pch = 19, col = 2)
-text(y, u * M * g(y), &quot;u&quot;, pos = 4, col = 2)</code></pre>
+text(y, u * M * g(y), bquote(u == .(round(u, 3))), pos = 4, col = 2)
+text(.15, 1, bquote(f(y) / M %.% g(y) == .(round(r, 3))), pos = 4)</code></pre>
 <p><img src="figures/04_RNG_aceitacao/proposalpoints-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Note que o valor sorteado de <span class="math inline">\(y\)</span> (da proposta <span class="math inline">\(\text{U}[-1,1]\)</span>) foi -0.469. Os pontos azul e preto são as densidades da <span class="math inline">\(f\)</span> e da <span class="math inline">\(g\)</span> avaliadas nesse ponto. Como o valor sorteado <span class="math inline">\(u\)</span> (da <span class="math inline">\(\text{U}[0,1]\)</span>) foi <span class="math inline">\(0.372 &gt; 0.22 = f(y)/Mg(y)\)</span>, então o valor de <span class="math inline">\(y\)</span> é rejeitado. Isso fica claro pelo gráfico, pois esse ponto está em uma área acima da densidade de <span class="math inline">\(f\)</span>, portanto não deve fazer parte de uma amostra dessa distribuição.</p>
 <p>Veja também que o valor de <span class="math inline">\(u\)</span> é comparável com a razão <span class="math inline">\(f(y)/Mg(y)\)</span>, pois esta razão sempre será algum valor entre 0 e 1. Portanto o valor de <span class="math inline">\(u\)</span> é sempre relativo à essa razão (i.e., não está na mesma escala das densidades de <span class="math inline">\(f\)</span> e <span class="math inline">\(g\)</span>).</p>
-<div class="alert alert-warning">
-<p>Para uma ilustração animada veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html">este exemplo</a> da geração de números de uma distribuição normal, a partir de uma Cauchy (distribuição proposta). Para os detalhes da implementação veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html">este link</a>.</p>
-</div>
 <p>Agora, podemos definir um algoritmo que repete esse processo para um número fixo de amostras da distribuição proposta.</p>
 <pre class="r"><code>## Simula de uma única vez, com um valor fixo de simulações
 Nsim &lt;- 2500
@@ -668,6 +668,85 @@ legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;
        lty = 1, col = 1:2, bty = &quot;n&quot;)
 par(mfrow = c(1, 1))</code></pre>
 <p><img src="figures/04_RNG_aceitacao/betaconf-1.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="exemplo-3" class="section level2">
+<h2><span class="header-section-number">2.3</span> Exemplo 3</h2>
+<p>Suponha que deseja-se gerar valores de uma VA <span class="math inline">\(X \sim \text{N}(0, 1)\)</span> a partir de uma VA <span class="math inline">\(Y \sim \text{Cauchy}(0, 1)\)</span>.</p>
+<pre class="r"><code>## Verifica as distribuições
+curve(dnorm(x), -6, 6)
+curve(dcauchy(x), add = TRUE, lty = 2)
+legend(&quot;topright&quot;, legend = c(&quot;Normal&quot;, &quot;Cauchy&quot;),
+       lty = c(1, 2))</code></pre>
+<p><img src="figures/04_RNG_aceitacao/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Obtém valor de M por otimização
+(M &lt;- optimize(f = function(x) {dnorm(x)/dcauchy(x)},
+               interval = c(-6, 6), maximum = TRUE)$objective)</code></pre>
+<pre><code># [1] 1.520347</code></pre>
+<pre class="r"><code>## Verifica as relações
+curve(M * dcauchy(x), lty = 2, lwd = 2, -6, 6,
+      ylim = c(0, M * dcauchy(0)))
+curve(dnorm(x), add = TRUE)
+curve(dcauchy(x), add = TRUE, lty = 2)
+legend(&quot;topright&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
+       lty = c(1, 2, 2), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/04_RNG_aceitacao/unnamed-chunk-14-2.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Cria as funções
+f &lt;- function(x) dnorm(x, 0, 1)
+g &lt;- function(x) dcauchy(x, 0, 1)
+
+## Simula
+Nsim &lt;- 2500
+## Amostra da proposta
+y &lt;- rcauchy(Nsim)
+## Amostra da U(0,1)
+u &lt;- runif(Nsim)
+r &lt;- f(y)/(M * g(y))
+x &lt;- y[u &lt; r]
+ua &lt;- u[u &lt; r]
+ur &lt;- u[u &gt;= r]
+
+## Gráfico de aceitação
+curve(dnorm(x), from = -6, to = 6, col = 4, ylim = c(0, .5))
+curve(M * dcauchy(x), add = TRUE, lty = 2, lwd = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u &gt;= r], ur * M * g(y[u &gt;= r]), col = 2)</code></pre>
+<p><img src="figures/04_RNG_aceitacao/unnamed-chunk-14-3.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>##----------------------------------------------------------------------
+## Aplicação direta do método para N valores
+n &lt;- 1    # Contador de valores aceitos
+l &lt;- 1    # Contador de ciclos
+N &lt;- 1000 # Total de número à gerar
+x &lt;- numeric(N)
+while (n &lt; N) {
+    y &lt;- rcauchy(1)
+    u &lt;- runif(1)
+    r &lt;- f(y)/(M * g(y))
+    if (u &lt; r) {
+        x[n] &lt;- y
+        n &lt;- n + 1
+    }
+    l &lt;- l + 1
+}
+
+## Verifica distribuição
+par(mfrow = c(1, 2))
+hist(x)
+plot(ecdf(x))
+curve(pnorm(x), add = TRUE, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/04_RNG_aceitacao/unnamed-chunk-14-4.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))
+
+## Taxa de aceitação observada
+n/l</code></pre>
+<pre><code># [1] 0.6459948</code></pre>
+<pre class="r"><code>## Taxa de aceitação teórica
+1/M</code></pre>
+<pre><code># [1] 0.6577446</code></pre>
+<div class="alert alert-warning">
+<p>Para uma ilustração animada veja <a href="http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html">este exemplo</a></p>
+</div>
 </div>
 </div>
 <div id="exercícios" class="section level1">

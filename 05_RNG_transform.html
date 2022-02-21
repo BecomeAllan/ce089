@@ -455,14 +455,15 @@ k &lt;- 1:max(x)
 p &lt;- -1/log(1 - theta) * theta^k/k
 ## Compara a proporção de valores gerados com a prob. teórica
 cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p)</code></pre>
-<pre><code>#   Gerado     Teórico
-# 1  0.738 0.721347520
-# 2  0.155 0.180336880
-# 3  0.062 0.060112293
-# 4  0.023 0.022542110
-# 5  0.012 0.009016844
-# 6  0.008 0.003757018
-# 7  0.002 0.001610151</code></pre>
+<pre><code>#   Gerado      Teórico
+# 1  0.736 0.7213475204
+# 2  0.168 0.1803368801
+# 3  0.060 0.0601122934
+# 4  0.023 0.0225421100
+# 5  0.009 0.0090168440
+# 6  0.001 0.0037570183
+# 7  0.002 0.0016101507
+# 8  0.001 0.0007044409</code></pre>
 <pre class="r"><code>## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = &quot;X&quot;, ylab = &quot;P[X]&quot;)
@@ -544,13 +545,13 @@ p &lt;- dbinom(k, size = size, prob = prob)
 ## Compara a proporção de valores gerados com a prob. teórica
 round(cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p), 3)</code></pre>
 <pre><code>#   Gerado Teórico
-# 0  0.009   0.016
-# 1  0.100   0.094
-# 2  0.211   0.234
-# 3  0.330   0.312
-# 4  0.243   0.234
-# 5  0.096   0.094
-# 6  0.011   0.016</code></pre>
+# 0  0.010   0.016
+# 1  0.097   0.094
+# 2  0.209   0.234
+# 3  0.320   0.312
+# 4  0.236   0.234
+# 5  0.111   0.094
+# 6  0.017   0.016</code></pre>
 <pre class="r"><code>## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = &quot;X&quot;, ylab = &quot;P[X]&quot;)
@@ -755,13 +756,13 @@ boxmuller &lt;- function(n) {
     if (n %% 2 == 0) x else x[-1]
 }
 boxmuller(2)</code></pre>
-<pre><code># [1] 0.9234418 1.0826671</code></pre>
+<pre><code># [1] -1.6290155  0.6969178</code></pre>
 <pre class="r"><code>boxmuller(3)</code></pre>
-<pre><code># [1]  0.66055651  0.07799255 -1.80340422</code></pre>
+<pre><code># [1]  0.8034338 -0.7334233  0.3519718</code></pre>
 <pre class="r"><code>boxmuller(4)</code></pre>
-<pre><code># [1]  0.6975372 -0.3609859 -0.1677477 -0.4755585</code></pre>
+<pre><code># [1] -0.2283081 -1.9509366 -0.3770668  0.2954680</code></pre>
 <pre class="r"><code>boxmuller(5)</code></pre>
-<pre><code># [1] 1.0071460 1.0662797 0.1684460 0.1523806 0.3098626</code></pre>
+<pre><code># [1]  0.1846864  0.1709469  0.6878064 -0.8404593  0.9862879</code></pre>
 </div>
 <div id="método-de-coordenadas-polares" class="section level2">
 <h2><span class="header-section-number">4.3</span> Método de coordenadas polares</h2>
@@ -794,7 +795,7 @@ points(u1[!ac], u2[!ac], pch = 1, col = 2)</code></pre>
 \]</span></p>
 <p>A taxa de aceitação da simulação foi</p>
 <pre class="r"><code>sum(ac)/Nsim</code></pre>
-<pre><code># [1] 0.7912</code></pre>
+<pre><code># [1] 0.8032</code></pre>
 <div class="panel panel-primary">
 <div class="panel-heading">
 Aproximando o valor de <span class="math inline">\(\pi\)</span>
@@ -806,7 +807,7 @@ Aproximando o valor de <span class="math inline">\(\pi\)</span>
 \pi = \frac{4A_c}{A_q} \approx \frac{4 \text{ #circulo}}{\text{ #quadrado}}
 \]</span> para obter uma estimativa do valor de <span class="math inline">\(\pi\)</span></p>
 <pre class="r"><code>(4 * sum(ac))/Nsim</code></pre>
-<pre><code># [1] 3.1648</code></pre>
+<pre><code># [1] 3.2128</code></pre>
 </div>
 </div>
 <p>Conferindo os valores gerados:</p>
@@ -839,19 +840,19 @@ par(mfrow = c(1, 1))</code></pre>
     if (n %% 2 == 0) x else x[-1]
 }
 polarmethod(2)</code></pre>
-<pre><code># [1]  0.8877987 -0.9400620</code></pre>
+<pre><code># [1] 0.3925723 0.9865242</code></pre>
 <pre class="r"><code>polarmethod(3)</code></pre>
-<pre><code># [1] -0.5380968 -0.2598577 -0.9556475</code></pre>
+<pre><code># [1] -0.3265732  0.5116819  0.2362791</code></pre>
 <pre class="r"><code>polarmethod(4)</code></pre>
-<pre><code># [1] 0.1673346 0.9279059 1.1766460 1.7330495</code></pre>
+<pre><code># [1]  0.5076860  0.8425125 -0.8518986  0.7577005</code></pre>
 <pre class="r"><code>polarmethod(5)</code></pre>
-<pre><code># [1] -1.0159191 -1.4593440  1.1055767 -0.9991863 -1.2083035</code></pre>
+<pre><code># [1]  0.5641546  0.1920185  0.2441716 -1.0407564  0.7668041</code></pre>
 <p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
 <pre class="r"><code>microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))</code></pre>
 <pre><code># Unit: microseconds
 #               expr    min      lq     mean median      uq    max neval cld
-#    boxmuller(1000)   63.9   66.00   68.039   67.7   69.55   81.8   100  a 
-#  polarmethod(1000) 2518.0 2617.55 2875.013 2673.9 2720.75 7171.2   100   b</code></pre>
+#    boxmuller(1000)   63.8   66.00   67.854   66.9   68.55  107.1   100  a 
+#  polarmethod(1000) 2604.3 2647.05 2912.675 2683.8 2740.35 7375.5   100   b</code></pre>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
