@@ -20,9 +20,9 @@ probabilidade, nem sempre é possível aplicar o método da transformação
 integral da probabilidade. Alguns situação são:
 
 - Casos em que não se tem expressão para a função de densidade
-acumulada, $F$, como é o caso da distribuição gaussiana e gama.
+acumulada $F(x)$
 - Casos em que mesmo que se conheça $F(x)$ não possível chegar à uma
-expressão para a função $F^{-1}$.
+expressão para a função $F^{-1}(x)$.
 
 # Método de aceitação e rejeição
 
@@ -74,17 +74,17 @@ Alguns pontos que devem ser levados em consideração:
 ## Exemplo 1
 
 Seja $X$ uma VA com $f(x) = 1.5 x^2, -1 < x < 1$. Simular valores
-desta.
+desta distribuição.
 
 ```{r fdp}
-## Gráfico da f.d.p da v.a. X, f(x).
+## Gráfico da fdp da VA X, f(x).
 curve(1.5 * (x ^ 2), -1, 1)
 ## Tem integral 1?
 integrate(function(x) 1.5 * (x^2), lower = -1, upper = 1)
 ```
 
 Vamos considerar como $g$ (a distribuição proposta) a densidade de uma
-uniforme entre -1 e 1. Então se a base é 2, o altura deve ser 0.5 para
+uniforme entre -1 e 1. Então se a base é 2, a altura deve ser 0.5 para
 ter produto 1, assim $g(y) = 0.5, -1 < y < 1$. Qual deve ser um valor de
 $M$ para garantir que $f(x) \leq M g(x)$ para todo $x$ dentro do
 intervalo $[-1, 1]$? Pela definição acima, temos que:
@@ -113,7 +113,7 @@ Agora podemos prosseguir com o algoritmo:
 f <- function(x) 1.5 * x^2
 g <- function(x) 0.5 + 0 * x
 M <- 3
-x <- NULL
+x <- numeric(1)
 
 ## 1. Gerar y cuja densidade é g()
 set.seed(1)
@@ -139,14 +139,17 @@ Verifica os pontos no gráfico:
 ```{r proposalpoints}
 curve(1.5 * (x^2), -1, 1, col = 4)
 curve(3 * 0.5 + 0 * x, add = TRUE, lty = 2, lwd = 2)
-legend("bottomright", legend = c("f(x)", "g(x)", "M g(x)"),
-       lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = "n")
+legend("bottomright", legend = c("f(x)", "M g(x)"),
+       lty = c(1, 2), col = c(4, 1), lwd = c(1, 2), bty = "n")
+points(y, 0, pch = 19, col = 5)
+text(y, 0, bquote(y == .(round(y, 3))), pos = 4, col = 5)
 points(y, f(y), pch = 19, col = 4)
-text(y, f(y), "f(y)", pos = 4, col = 4)
+text(y, f(y), bquote(f(y) == .(round(f(y), 3))), pos = 4, col = 4)
 points(y, M * g(y), pch = 19, col = 1)
-text(y, M * g(y), "M g(y)", pos = 1, col = 1)
+text(y, M * g(y), bquote(M %.% g(y) == .(M * g(y))), pos = 1, col = 1)
 points(y, u * M * g(y), pch = 19, col = 2)
-text(y, u * M * g(y), "u", pos = 4, col = 2)
+text(y, u * M * g(y), bquote(u == .(round(u, 3))), pos = 4, col = 2)
+text(.15, 1, bquote(f(y) / M %.% g(y) == .(round(r, 3))), pos = 4)
 ```
 
 Note que o valor sorteado de $y$ (da proposta $\text{U}[-1,1]$) foi
@@ -161,14 +164,6 @@ Veja também que o valor de $u$ é comparável com a razão $f(y)/Mg(y)$,
 pois esta razão sempre será algum valor entre 0 e 1. Portanto o valor de
 $u$ é sempre relativo à essa razão (i.e., não está na mesma escala das
 densidades de $f$ e $g$).
-
-<div class="alert alert-warning">
-Para uma ilustração animada veja [este
-exemplo](http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html)
-da geração de números de uma distribuição normal, a partir de uma Cauchy
-(distribuição proposta). Para os detalhes da implementação veja [este
-link](http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/06-met-ac-rej.html).
-</div>
 
 Agora, podemos definir um algoritmo que repete esse processo para um
 número fixo de amostras da distribuição proposta.
@@ -488,6 +483,88 @@ legend("right", legend = c("Empírica", "Teórica"),
        lty = 1, col = 1:2, bty = "n")
 par(mfrow = c(1, 1))
 ```
+
+## Exemplo 3
+
+Suponha que deseja-se gerar valores de uma VA $X \sim \text{N}(0, 1)$ a
+partir de uma VA $Y \sim \text{Cauchy}(0, 1)$.
+
+```{r}
+## Verifica as distribuições
+curve(dnorm(x), -6, 6)
+curve(dcauchy(x), add = TRUE, lty = 2)
+legend("topright", legend = c("Normal", "Cauchy"),
+       lty = c(1, 2))
+
+## Obtém valor de M por otimização
+(M <- optimize(f = function(x) {dnorm(x)/dcauchy(x)},
+               interval = c(-6, 6), maximum = TRUE)$objective)
+
+## Verifica as relações
+curve(M * dcauchy(x), lty = 2, lwd = 2, -6, 6,
+      ylim = c(0, M * dcauchy(0)))
+curve(dnorm(x), add = TRUE)
+curve(dcauchy(x), add = TRUE, lty = 2)
+legend("topright", legend = c("f(x)", "g(x)", "M g(x)"),
+       lty = c(1, 2, 2), lwd = c(1, 1, 2), bty = "n")
+
+## Cria as funções
+f <- function(x) dnorm(x, 0, 1)
+g <- function(x) dcauchy(x, 0, 1)
+
+## Simula
+Nsim <- 2500
+## Amostra da proposta
+y <- rcauchy(Nsim)
+## Amostra da U(0,1)
+u <- runif(Nsim)
+r <- f(y)/(M * g(y))
+x <- y[u < r]
+ua <- u[u < r]
+ur <- u[u >= r]
+
+## Gráfico de aceitação
+curve(dnorm(x), from = -6, to = 6, col = 4, ylim = c(0, .5))
+curve(M * dcauchy(x), add = TRUE, lty = 2, lwd = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u >= r], ur * M * g(y[u >= r]), col = 2)
+
+##----------------------------------------------------------------------
+## Aplicação direta do método para N valores
+n <- 1    # Contador de valores aceitos
+l <- 1    # Contador de ciclos
+N <- 1000 # Total de número à gerar
+x <- numeric(N)
+while (n < N) {
+    y <- rcauchy(1)
+    u <- runif(1)
+    r <- f(y)/(M * g(y))
+    if (u < r) {
+        x[n] <- y
+        n <- n + 1
+    }
+    l <- l + 1
+}
+
+## Verifica distribuição
+par(mfrow = c(1, 2))
+hist(x)
+plot(ecdf(x))
+curve(pnorm(x), add = TRUE, col = 2)
+legend("right", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+par(mfrow = c(1, 1))
+
+## Taxa de aceitação observada
+n/l
+## Taxa de aceitação teórica
+1/M
+```
+
+<div class="alert alert-warning">
+Para uma ilustração animada veja [este
+exemplo](http://leg.ufpr.br/~walmes/ensino/EC2/tutoriais/met-ac-rej.html)
+</div>
 
 # Exercícios
 
