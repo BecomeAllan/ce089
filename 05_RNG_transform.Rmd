@@ -140,7 +140,8 @@ x <- floor(1 + log(v) / log(1 - (1 - theta)^u))
 k <- 1:max(x)
 p <- -1/log(1 - theta) * theta^k/k
 ## Compara a proporção de valores gerados com a prob. teórica
-cbind("Gerado" = prop.table(table(x)), "Teórico" = p)
+(tab <- cbind("Gerado" = prop.table(table(x)), "Teórico" = p))
+apply(tab, 2, sum)
 ## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = "X", ylab = "P[X]")
@@ -245,7 +246,8 @@ x <- rowSums(X)
 k <- 0:max(x)
 p <- dbinom(k, size = size, prob = prob)
 ## Compara a proporção de valores gerados com a prob. teórica
-round(cbind("Gerado" = prop.table(table(x)), "Teórico" = p), 3)
+(tab <- round(cbind("Gerado" = prop.table(table(x)), "Teórico" = p), 3))
+apply(tab, 2, sum)
 ## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = "X", ylab = "P[X]")
@@ -528,6 +530,16 @@ abline(0, 1, col = 2)
 par(mfrow = c(1, 1))
 ```
 
+```{r, eval=FALSE, include=FALSE}
+uu <- runif(1000)
+rr <- sqrt(-2 * log(uu))
+plot(rr)
+hist(rr)
+plot(ecdf(rr))
+FFr <- function(r) {1 - exp(-r^2/2)}
+curve(FFr(x), 0, 4, add = TRUE, col = 2)
+```
+
 Note que sempre serão geradas duas normais padrão, `x1` e `x2`. Com
 isso, o resultado final será sempre o dobro do valor requerido. Assim,
 para gerar $n$ valores (e não $2n$), temos duas opções:
@@ -558,7 +570,7 @@ boxmuller(5)
 
 O método de coordenadas polares (ou simplemente método polar) é uma
 variação do método de Box-Muller. A motivação do método foi a de evitar
-o uso de funções transcendentais como seno e cossseno.
+o uso de funções transcendentais como seno e cosseno.
 
 1. Gere valores $u_1, u_2 \sim \text{U}(-1, 1)$
 2. Calcule $r^2 = u_1^2 + u_2^2$.
@@ -639,16 +651,16 @@ polarmethod <- function(n) {
     m <- ceiling(n/2)
     x1 <- numeric(m)
     x2 <- numeric(m)
-    i <- 1
-    while (i <= m) {
+    i <- 0
+    while (i < m) {
         u1 <- runif(1, -1, 1)
         u2 <- runif(1, -1, 1)
         R2 <- u1^2 + u2^2
         if (R2 <= 1) {
+            i <- i + 1
             z <- sqrt((-2 * log(R2))/R2)
             x1[i] <- u1 * z
             x2[i] <- u2 * z
-            i <- i + 1
         }
     }
     x <- c(x1, x2)
@@ -662,7 +674,7 @@ polarmethod(5)
 
 Comparando os dois métodos vemos que, apesar do método polar não usar
 funções seno e cosseno, é necessário usar o `while()`, o que "encarece"
-o algoritmo computacionalemnte.
+o algoritmo computacionalmente.
 
 ```{r}
 microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
@@ -671,7 +683,7 @@ microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))
 ## A função `rnorm()`
 
 No R, sabemos que a função `rnorm()` serve para gerar valores aleatórios
-da distribuição normal. Esta função usa um algoritmo chamadpo de
+da distribuição normal. Esta função usa um algoritmo chamado de
 "inversão", cujos detalhes estão descritos em `help(qnorm)`.
 
 No entanto, assim como no caso da Uniforme, também estão implementados
@@ -696,6 +708,8 @@ set.seed(1, normal.kind = "Inversion")
 RNGkind()
 ## Gera valores com o algoritmo padrão
 zz <- rnorm(1000)
+## Usando o método polar implementado aqui
+kk <- polarmethod(1000)
 ```
 
 Comparando todo mundo:
@@ -704,11 +718,13 @@ Comparando todo mundo:
 plot(ecdf(xx), main = "")
 plot(ecdf(yy), col = 3, add = TRUE)
 plot(ecdf(zz), col = 4, add = TRUE)
+plot(ecdf(kk), col = 5, add = TRUE)
 curve(pnorm(x), add = TRUE, col = 2)
 legend("right",
        legend = c("Box-Muller (R)", "Box-Muller (Implementado)",
-                  "Inversion", "Teórica"), cex = 0.8,
-       col = c(1, 3, 4, 2), lty = 1, bty = "n")
+                  "Inversion", "Polar (Implementado)",
+                  "Teórica"), cex = 0.8,
+       col = c(1, 3, 4, 5, 2), lty = 1, bty = "n")
 ```
 
 ```{r, eval=FALSE, include=FALSE}
