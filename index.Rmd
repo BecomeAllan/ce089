@@ -11,8 +11,9 @@ source("setup_knitr.R")
 
 [![deploy](https://github.com/leg-ufpr/ce089/actions/workflows/run.yml/badge.svg)](https://github.com/leg-ufpr/ce089/actions/workflows/run.yml)
 
-<!-- <div class="alert alert-danger" role="alert"> -->
-<!-- </div> -->
+<div class="alert alert-danger" role="alert">
+**ATENÇÃO:** a partir de 23/02, as aulas serão no **LAB. A**
+</div>
 
 # Detalhes da oferta da disciplina
 
@@ -22,8 +23,8 @@ source("setup_knitr.R")
 - **Professor Responsável:**
   - [Fernando de Pol Mayer][], [LEG][]/DEST/UFPR
 - **Horários e Locais:**
-  - Segunda, 20:45 - 22:15h, **PA-06**
-  - Quarta, 19:00 - 20:30h, **PA-06**
+  - Segunda, 20:45 - 22:15h, **Lab. A**
+  - Quarta, 19:00 - 20:30h, **Lab. A**
 <!-- - **Horários de atendimento dos professores:** -->
 <!--     - Quartas e quintas, 14:00 - 19:00 (preferenciais). Outros horários -->
 <!--       podem ser agendados previamente por email. -->
