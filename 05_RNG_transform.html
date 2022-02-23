@@ -454,7 +454,7 @@ x &lt;- floor(1 + log(v) / log(1 - (1 - theta)^u))
 k &lt;- 1:max(x)
 p &lt;- -1/log(1 - theta) * theta^k/k
 ## Compara a proporção de valores gerados com a prob. teórica
-cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p)</code></pre>
+(tab &lt;- cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p))</code></pre>
 <pre><code>#   Gerado      Teórico
 # 1  0.736 0.7213475204
 # 2  0.168 0.1803368801
@@ -464,6 +464,9 @@ cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p)</code
 # 6  0.001 0.0037570183
 # 7  0.002 0.0016101507
 # 8  0.001 0.0007044409</code></pre>
+<pre class="r"><code>apply(tab, 2, sum)</code></pre>
+<pre><code>#    Gerado   Teórico 
+# 1.0000000 0.9994273</code></pre>
 <pre class="r"><code>## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = &quot;X&quot;, ylab = &quot;P[X]&quot;)
@@ -543,7 +546,7 @@ x &lt;- rowSums(X)
 k &lt;- 0:max(x)
 p &lt;- dbinom(k, size = size, prob = prob)
 ## Compara a proporção de valores gerados com a prob. teórica
-round(cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p), 3)</code></pre>
+(tab &lt;- round(cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p), 3))</code></pre>
 <pre><code>#   Gerado Teórico
 # 0  0.010   0.016
 # 1  0.097   0.094
@@ -552,6 +555,9 @@ round(cbind(&quot;Gerado&quot; = prop.table(table(x)), &quot;Teórico&quot; = p)
 # 4  0.236   0.234
 # 5  0.111   0.094
 # 6  0.017   0.016</code></pre>
+<pre class="r"><code>apply(tab, 2, sum)</code></pre>
+<pre><code>#  Gerado Teórico 
+#       1       1</code></pre>
 <pre class="r"><code>## Comparação gráfica
 par(mfrow = c(1, 2))
 plot(prop.table(table(x)), xlab = &quot;X&quot;, ylab = &quot;P[X]&quot;)
@@ -766,7 +772,7 @@ boxmuller(2)</code></pre>
 </div>
 <div id="método-de-coordenadas-polares" class="section level2">
 <h2><span class="header-section-number">4.3</span> Método de coordenadas polares</h2>
-<p>O método de coordenadas polares (ou simplemente método polar) é uma variação do método de Box-Muller. A motivação do método foi a de evitar o uso de funções transcendentais como seno e cossseno.</p>
+<p>O método de coordenadas polares (ou simplemente método polar) é uma variação do método de Box-Muller. A motivação do método foi a de evitar o uso de funções transcendentais como seno e cosseno.</p>
 <ol style="list-style-type: decimal">
 <li>Gere valores <span class="math inline">\(u_1, u_2 \sim \text{U}(-1, 1)\)</span></li>
 <li>Calcule <span class="math inline">\(r^2 = u_1^2 + u_2^2\)</span>.</li>
@@ -789,7 +795,7 @@ x2 &lt;- u2[ac] * z
 plotcirc()
 points(u1[ac], u2[ac], pch = 1, col = 3)
 points(u1[!ac], u2[!ac], pch = 1, col = 2)</code></pre>
-<p><img src="figures/05_RNG_transform/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/05_RNG_transform/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Note que a taxa de aceitação será sempre a razão entre a área do círculo e a área do quadrado. A área do cículo é <span class="math inline">\(A_c = \pi r^2 = \pi\)</span>. A área do quadrado é <span class="math inline">\(A_q = l^2 = (2r)^2 = 4\)</span>. Portanto, a taxa de aceitação (teórica) será <span class="math display">\[
 \frac{A_c}{A_q} = \frac{\pi}{4} \approx 0.785
 \]</span></p>
@@ -818,22 +824,22 @@ q &lt;- qnorm(ppoints(Nsim))
 qqplot(q, c(x1, x2))
 abline(0, 1, col = 2)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/05_RNG_transform/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/05_RNG_transform/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Podemos também defnir uma função gernérica para gerar <span class="math inline">\(n\)</span> valores:</p>
 <pre class="r"><code>polarmethod &lt;- function(n) {
     m &lt;- ceiling(n/2)
     x1 &lt;- numeric(m)
     x2 &lt;- numeric(m)
-    i &lt;- 1
-    while (i &lt;= m) {
+    i &lt;- 0
+    while (i &lt; m) {
         u1 &lt;- runif(1, -1, 1)
         u2 &lt;- runif(1, -1, 1)
         R2 &lt;- u1^2 + u2^2
         if (R2 &lt;= 1) {
+            i &lt;- i + 1
             z &lt;- sqrt((-2 * log(R2))/R2)
             x1[i] &lt;- u1 * z
             x2[i] &lt;- u2 * z
-            i &lt;- i + 1
         }
     }
     x &lt;- c(x1, x2)
@@ -847,16 +853,16 @@ polarmethod(2)</code></pre>
 <pre><code># [1]  0.5076860  0.8425125 -0.8518986  0.7577005</code></pre>
 <pre class="r"><code>polarmethod(5)</code></pre>
 <pre><code># [1]  0.5641546  0.1920185  0.2441716 -1.0407564  0.7668041</code></pre>
-<p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalemnte.</p>
+<p>Comparando os dois métodos vemos que, apesar do método polar não usar funções seno e cosseno, é necessário usar o <code>while()</code>, o que “encarece” o algoritmo computacionalmente.</p>
 <pre class="r"><code>microbenchmark::microbenchmark(boxmuller(1000), polarmethod(1000))</code></pre>
 <pre><code># Unit: microseconds
 #               expr    min      lq     mean median      uq    max neval cld
-#    boxmuller(1000)   63.8   66.00   67.854   66.9   68.55  107.1   100  a 
-#  polarmethod(1000) 2604.3 2647.05 2912.675 2683.8 2740.35 7375.5   100   b</code></pre>
+#    boxmuller(1000)   64.2   66.45   71.215   68.8   74.25  143.6   100  a 
+#  polarmethod(1000) 2594.5 2681.80 2976.056 2714.5 2771.10 7887.5   100   b</code></pre>
 </div>
 <div id="a-função-rnorm" class="section level2">
 <h2><span class="header-section-number">4.4</span> A função <code>rnorm()</code></h2>
-<p>No R, sabemos que a função <code>rnorm()</code> serve para gerar valores aleatórios da distribuição normal. Esta função usa um algoritmo chamadpo de “inversão”, cujos detalhes estão descritos em <code>help(qnorm)</code>.</p>
+<p>No R, sabemos que a função <code>rnorm()</code> serve para gerar valores aleatórios da distribuição normal. Esta função usa um algoritmo chamado de “inversão”, cujos detalhes estão descritos em <code>help(qnorm)</code>.</p>
 <p>No entanto, assim como no caso da Uniforme, também estão implementados outros algoritmos para gerar valores da Normal, incluindo o algoritmo de Box-Muller.</p>
 <pre class="r"><code>## Confere os métodos padrão para a geração de valores aleatórios. O
 ## primeiro algoritmo é da Uniforme, o segundo é o da Normal e o
@@ -877,17 +883,21 @@ set.seed(1, normal.kind = &quot;Inversion&quot;)
 RNGkind()</code></pre>
 <pre><code># [1] &quot;Mersenne-Twister&quot; &quot;Inversion&quot;        &quot;Rejection&quot;</code></pre>
 <pre class="r"><code>## Gera valores com o algoritmo padrão
-zz &lt;- rnorm(1000)</code></pre>
+zz &lt;- rnorm(1000)
+## Usando o método polar implementado aqui
+kk &lt;- polarmethod(1000)</code></pre>
 <p>Comparando todo mundo:</p>
 <pre class="r"><code>plot(ecdf(xx), main = &quot;&quot;)
 plot(ecdf(yy), col = 3, add = TRUE)
 plot(ecdf(zz), col = 4, add = TRUE)
+plot(ecdf(kk), col = 5, add = TRUE)
 curve(pnorm(x), add = TRUE, col = 2)
 legend(&quot;right&quot;,
        legend = c(&quot;Box-Muller (R)&quot;, &quot;Box-Muller (Implementado)&quot;,
-                  &quot;Inversion&quot;, &quot;Teórica&quot;), cex = 0.8,
-       col = c(1, 3, 4, 2), lty = 1, bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/05_RNG_transform/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
+                  &quot;Inversion&quot;, &quot;Polar (Implementado)&quot;,
+                  &quot;Teórica&quot;), cex = 0.8,
+       col = c(1, 3, 4, 5, 2), lty = 1, bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/05_RNG_transform/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="funções" class="section level1">

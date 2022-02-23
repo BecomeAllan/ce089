@@ -451,7 +451,7 @@ x &lt;- runif(m)
 theta.hat &lt;- exp(-x)
 ## Calcula a média
 (m.theta.hat &lt;- sum(theta.hat)/m)</code></pre>
-<pre><code># [1] 0.6313544</code></pre>
+<pre><code># [1] 0.6311937</code></pre>
 <p>Nesse caso, podemos obter a solução analítica e integração numérica no R para comparar as estimativas</p>
 <pre class="r"><code>## Solução analítica
 (theta &lt;- 1 - exp(-1))</code></pre>
@@ -488,7 +488,7 @@ x &lt;- runif(m, min = a, max = b)
 theta.hat &lt;- exp(-x)
 ## Calcula a média * (b - a)
 (m.theta.hat &lt;- (sum(theta.hat)/m) * (b - a))</code></pre>
-<pre><code># [1] 0.1171233</code></pre>
+<pre><code># [1] 0.1173324</code></pre>
 <p>Nesse caso, podemos obter a solução analítica e integração numérica no R para comparar as estimativas</p>
 <pre class="r"><code>## Solução analítica
 (theta &lt;- exp(-2) - exp(-4))</code></pre>
@@ -509,14 +509,14 @@ integrate(function(x) exp(-x), lower = 2, upper = 4)</code></pre>
 \]</span></p>
 <p>Seguindo o exemplo anterior, vimos que a estimativa da integral é</p>
 <pre class="r"><code>m.theta.hat</code></pre>
-<pre><code># [1] 0.1171233</code></pre>
+<pre><code># [1] 0.1173324</code></pre>
 <p>e a variância relacionada ao estimador pode então ser calculada como</p>
 <pre class="r"><code>## Variancia
 (v.theta.hat &lt;- sum((theta.hat - m.theta.hat)^2)/m^2)</code></pre>
-<pre><code># [1] 4.499182e-07</code></pre>
+<pre><code># [1] 4.515315e-07</code></pre>
 <pre class="r"><code>## Erro padrão
 (se.theta.hat &lt;- sqrt(v.theta.hat))</code></pre>
-<pre><code># [1] 0.0006707594</code></pre>
+<pre><code># [1] 0.0006719609</code></pre>
 <p>Pelo Teorema do Limite Central, temos que</p>
 <p><span class="math display">\[
 \frac{\hat\theta - \text{E}(\hat\theta)}{\sqrt{\hat{V}(\hat\theta)}}
@@ -530,10 +530,10 @@ hist(m.theta.sim); abline(v = theta, col = 2)</code></pre>
 <p>Com esse resultado, podemos inclusive fornecer um intervalo de confiança associado à nossa estimativa</p>
 <pre class="r"><code>## Media e variancia
 c(m.theta.hat, v.theta.hat, se.theta.hat)</code></pre>
-<pre><code># [1] 1.171233e-01 4.499182e-07 6.707594e-04</code></pre>
+<pre><code># [1] 1.173324e-01 4.515315e-07 6.719609e-04</code></pre>
 <pre class="r"><code>## Intervalo de confiança (95%)
 c(m.theta.hat - 1.96 * se.theta.hat, m.theta.hat + 1.96 * se.theta.hat)</code></pre>
-<pre><code># [1] 0.1158086 0.1184380</code></pre>
+<pre><code># [1] 0.1160154 0.1186495</code></pre>
 <p>Veja que assintoticamente, i.e., conforme aumentamos o tamanho da amostra, o valor da integral se aproxima cada vez mais do valor verdadeiro (que nesse caso sabemos calcular analiticamente, apenas para comparação).</p>
 <pre class="r"><code>## Simula a convergência para o verdadeiro valor conforme aumenta o
 ## tamanho da amostra
