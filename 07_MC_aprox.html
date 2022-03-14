@@ -532,7 +532,27 @@ curve(M * dexp(x, .5), add = TRUE, lty = 2, lwd = 2)
 legend(&quot;topright&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
        lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
 <p><img src="figures/07_MC_aprox/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Agora podemos prosseguir com o algoritmo da seguinte forma:</p>
+<p>Usando um valor fixo apenas para ver o gráfico</p>
+<pre class="r"><code>## Criando os elementos necessários
+f &lt;- function(x) dexp(x, 1)
+g &lt;- function(x) dexp(x, 0.5)
+## Simula
+Nsim &lt;- 2500
+## Amostra da proposta
+y &lt;- rexp(Nsim, 0.5)
+## Amostra da U(0,1)
+u &lt;- runif(Nsim)
+r &lt;- f(y)/(M * g(y))
+x &lt;- y[u &lt; r]
+ua &lt;- u[u &lt; r]
+ur &lt;- u[u &gt;= r]
+## Gráfico de aceitação
+curve(dexp(x, 1), from = 0, to = 10, col = 4)
+curve(M * dexp(x, 0.5), add = TRUE, lty = 2, lwd = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u &gt;= r], ur * M * g(y[u &gt;= r]), col = 2)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Agora podemos prosseguir com o algoritmo mais geral da seguinte forma:</p>
 <pre class="r"><code>## Criando os elementos necessários
 f &lt;- function(x) dexp(x, 1)
 g &lt;- function(x) dexp(x, 0.5)
@@ -561,21 +581,23 @@ curve(pexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
 legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
        lty = 1, col = 1:2, bty = &quot;n&quot;)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Como agora temos a distribuição completa da <span class="math inline">\(\text{Exp}(1)\)</span>, podemos obter qualquer probabilidade (ou integral) aproximada, simplesmente através das contagens de valores no intervalo especificado. Note que a integral da distribuição, ou seja, <span class="math inline">\(\int_0^{\infty} f(x) dx\)</span> deve fechar em <strong>aproximadamente</strong> 1:</p>
-<pre class="r"><code>sum(x &gt; 0 &amp; x &lt;= max(x))/N</code></pre>
+<pre class="r"><code>sum(x &gt;= 0)/N</code></pre>
 <pre><code># [1] 1</code></pre>
+<pre class="r"><code>mean(x)</code></pre>
+<pre><code># [1] 0.9983143</code></pre>
 <p>Agora, por exemplo, a <span class="math inline">\(P[2&lt;X&lt;4]\)</span> pode ser calculada como</p>
 <pre class="r"><code>## Probabilidade empírica
 sum(x &gt;= 2 &amp; x &lt;= 4)/N</code></pre>
-<pre><code># [1] 0.117</code></pre>
+<pre><code># [1] 0.11714</code></pre>
 <pre class="r"><code>## Teórica
 pexp(4, 1) - pexp(2, 1)</code></pre>
 <pre><code># [1] 0.1170196</code></pre>
 <p>Agora se quisermos calcular <span class="math inline">\(P[X&gt;2]\)</span>, temos condições de fazer através de</p>
 <pre class="r"><code>## Probabilidade empírica
 sum(x &gt;= 2)/N</code></pre>
-<pre><code># [1] 0.13488</code></pre>
+<pre><code># [1] 0.13503</code></pre>
 <pre class="r"><code>## Teórica
 pexp(2, 1, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.1353353</code></pre>
@@ -603,7 +625,7 @@ curve(dunif(x), from = 0, to = 1, add = TRUE, lty = 2)
 curve(M * dunif(x), add = TRUE, lty = 2, lwd = 2)
 legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;, &quot;M g(x)&quot;),
        lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Seguindo o mesmo algoritmo anterior, temos então:</p>
 <pre class="r"><code>## Criando os elementos necessários
 f &lt;- function(x, a, b) dbeta(x, a, b)
@@ -636,16 +658,16 @@ curve(pbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
 legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
        lty = 1, col = 1:2, bty = &quot;n&quot;)
 par(mfrow = c(1, 1))</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Agora, podemos calcular qualquer probabilidade. Por exemplo:</p>
 <pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
 sum(x &gt; 0.3 &amp; x &lt; 0.5)/N</code></pre>
-<pre><code># [1] 0.10234</code></pre>
+<pre><code># [1] 0.10235</code></pre>
 <pre class="r"><code>pbeta(0.5, a, b) - pbeta(0.3, a, b)</code></pre>
 <pre><code># [1] 0.1018369</code></pre>
 <pre class="r"><code>## P[X &gt; 0.2]
 sum(x &gt; 0.2)/N</code></pre>
-<pre><code># [1] 0.58714</code></pre>
+<pre><code># [1] 0.58745</code></pre>
 <pre class="r"><code>pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.5876479</code></pre>
 </div>
@@ -681,7 +703,7 @@ m &lt;- 1e5
 x &lt;- rexp(m, 0.5)
 ## 2. Calcula a média da razão
 mean(g(x)/f(x))</code></pre>
-<pre><code># [1] 0.1358222</code></pre>
+<pre><code># [1] 0.1358546</code></pre>
 <pre class="r"><code>## Teórico
 pexp(2, 1, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.1353353</code></pre>
@@ -706,7 +728,7 @@ w^*(x_i) = \frac{w(x_i)}{\sum_{i=1}^m w(x_i)}
 curve(dexp(x,  0.5), from = 0, to = 10, add = TRUE, lty = 2)
 legend(&quot;right&quot;, legend = c(&quot;g(x)&quot;, &quot;f(x)&quot;),
        lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Define funções
 g &lt;- function(x) exp(-x) * (x &gt;= 0)
 f &lt;- function(x) dexp(x, 0.5)
@@ -724,8 +746,8 @@ g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
 length(g.sample)</code></pre>
 <pre><code># [1] 10000</code></pre>
 <pre class="r"><code>## Integral
-sum(g.sample &gt; 0 &amp; g.sample &lt; max(g.sample))/k</code></pre>
-<pre><code># [1] 0.9999</code></pre>
+sum(g.sample &gt; 0)/k</code></pre>
+<pre><code># [1] 1</code></pre>
 <pre class="r"><code>## Visualização da amostra
 par(mfrow = c(1, 2))
 hist(g.sample, freq = FALSE)
@@ -734,7 +756,7 @@ plot(ecdf(g.sample))
 curve(pexp(x, 1), add = TRUE, from = 0, to = 10, col = 2)
 legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
        lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 <p>É possível ver porque o método funciona quando vemos um gráfico dos valoreas amostrados de <span class="math inline">\(X\)</span> com seus respectivos pesos:</p>
 <pre class="r"><code>curve(dexp(x, 1), from = 0, to = 10, col = 4,  ylim = c(0, 2))
@@ -742,17 +764,17 @@ curve(dexp(x,  0.5), from = 0, to = 10, add = TRUE, lty = 2)
 legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;),
        lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)
 points(x, w)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Com uma amostra completa da distribuição, podemos então calcular qualquer tipo de probabilidades:</p>
 <pre class="r"><code>## P[2 &lt; X &lt; 4]
 sum(g.sample &gt;= 2 &amp; g.sample &lt;= 4)/k</code></pre>
-<pre><code># [1] 0.1204</code></pre>
+<pre><code># [1] 0.1166</code></pre>
 <pre class="r"><code>## Teórica
 pexp(4, 1) - pexp(2, 1)</code></pre>
 <pre><code># [1] 0.1170196</code></pre>
 <pre class="r"><code>## P[X &gt; 2]
 sum(g.sample &gt; 2)/k</code></pre>
-<pre><code># [1] 0.1361</code></pre>
+<pre><code># [1] 0.1355</code></pre>
 <pre class="r"><code>pexp(2, 1, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.1353353</code></pre>
 </div>
@@ -764,7 +786,7 @@ curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
 curve(dunif(x, 0, 1), from = 0, to = 1, add = TRUE, lty = 2)
 legend(&quot;right&quot;, legend = c(&quot;g(x)&quot;, &quot;f(x)&quot;),
        lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>## Define funções
 g &lt;- function(x, a, b) dbeta(x, a, b)
 f &lt;- function(x) dunif(x) # usando U(0,1)
@@ -782,7 +804,7 @@ g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
 length(g.sample)</code></pre>
 <pre><code># [1] 10000</code></pre>
 <pre class="r"><code>## Integral
-sum(g.sample &gt; 0 &amp; g.sample &lt; 1)/k</code></pre>
+sum(g.sample &gt;= 0)/k</code></pre>
 <pre><code># [1] 1</code></pre>
 <pre class="r"><code>## Visualização da amostra
 par(mfrow = c(1, 2))
@@ -792,7 +814,7 @@ plot(ecdf(g.sample))
 curve(pbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
 legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
        lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
 <p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
 <pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
@@ -801,26 +823,81 @@ curve(dunif(x, 0, 1), from = 0, to = 1, add = TRUE, lty = 2)
 legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;),
        lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)
 points(x, w)</code></pre>
-<p><img src="figures/07_MC_aprox/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-26-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Calcula probabilidades:</p>
 <pre class="r"><code>## P[0.3 &lt; X &lt; 0.5]
 sum(g.sample &gt; 0.3 &amp; g.sample &lt; 0.5)/k</code></pre>
-<pre><code># [1] 0.102</code></pre>
+<pre><code># [1] 0.1028</code></pre>
 <pre class="r"><code>pbeta(0.5, a, b) - pbeta(0.3, a, b)</code></pre>
 <pre><code># [1] 0.1018369</code></pre>
 <pre class="r"><code>## P[X &gt; 0.2]
 sum(g.sample &gt; 0.2)/k</code></pre>
-<pre><code># [1] 0.584</code></pre>
+<pre><code># [1] 0.5935</code></pre>
 <pre class="r"><code>pbeta(0.2, a, b, lower.tail = FALSE)</code></pre>
 <pre><code># [1] 0.5876479</code></pre>
+<p>A avaliação da proximidade entre a distribuição alvo <span class="math inline">\(f\)</span>, e a função geradora (ou de importância) <span class="math inline">\(g\)</span> ainda é um tema de estudo em aberto. West (1993) propôs a medida chamada <em>Entropia Relativa à Uniformidade</em> (ERU), definida por</p>
+<p><span class="math display">\[
+\text{ERU} = -\frac{\sum w^*(x_i) \log{w^*(x_i)}}{\log{m}}
+\]</span></p>
+<p>Quando a distribuição alvo e a proposta são idênticas, então os pesos serão constantes e iguais a <span class="math inline">\(1/m\)</span>, fazendo com que <span class="math inline">\(\text{ERU}=1\)</span> seja o valolr máximo. À medida que a <em>entropia</em> entre os <span class="math inline">\(w^*(x_i)\)</span> aumenta, <span class="math inline">\(\text{ERU} &lt; 1\)</span>.</p>
+<p>Para distribuições unidimensionais, valores de <span class="math inline">\(\text{ERU} &gt; 0.9\)</span> são recomendados. Em casos multidimensionais, valores mais baixos são aceitáveis. Nesse caso, usando a Uniforme, esse valor foi</p>
+<pre class="r"><code>-sum(w.norm * log(w.norm))/log(m)</code></pre>
+<pre><code># [1] 0.8803643</code></pre>
+<p>Usando agora uma <span class="math inline">\(\text{Beta}(2, 3)\)</span> como função de importância.</p>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dbeta(x, 2, 3), from = 0, to = 1, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;g(x)&quot;, &quot;f(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-30-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Define funções
+g &lt;- function(x, a, b) dbeta(x, a, b)
+f &lt;- function(x) dbeta(x, 2, 3) # usando Beta(2, 3)
+## 1. Amostragem
+m &lt;- 1e5
+x &lt;- rbeta(m, 2, 3)
+## 2. Calcula pesos
+w &lt;- g(x, a, b)/f(x)
+w.norm &lt;- w/sum(w)
+## 3. Re-amostragem por importância
+k &lt;- 1e4
+## Amostra considerando os pesos normalizados para cada X
+g.sample &lt;- sample(x, size = k, replace = TRUE, prob = w.norm)
+## Tamanho da amostra
+length(g.sample)</code></pre>
+<pre><code># [1] 10000</code></pre>
+<pre class="r"><code>## Integral
+sum(g.sample &gt;= 0)/k</code></pre>
+<pre><code># [1] 1</code></pre>
+<pre class="r"><code>## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(g.sample, freq = FALSE,  ylim = c(0, 7))
+curve(dbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
+plot(ecdf(g.sample))
+curve(pbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
+legend(&quot;right&quot;, legend = c(&quot;Empírica&quot;, &quot;Teórica&quot;),
+       lty = 1, col = 1:2, bty = &quot;n&quot;)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-31-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<p>Novamente podemos conferir a relação entre os valores amostrados de <span class="math inline">\(X\)</span> e seus respectivos pesos calculados:</p>
+<pre class="r"><code>a &lt;- 9.39; b &lt;- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dbeta(x, 2, 3), from = 0, to = 1, add = TRUE, lty = 2)
+legend(&quot;right&quot;, legend = c(&quot;f(x)&quot;, &quot;g(x)&quot;),
+       lty = c(1, 2), col = c(4, 1), bty = &quot;n&quot;)
+points(x, w)</code></pre>
+<p><img src="figures/07_MC_aprox/unnamed-chunk-32-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>O <span class="math inline">\(\text{ERU}\)</span> nesse caso foi</p>
+<pre class="r"><code>-sum(w.norm * log(w.norm))/log(m)</code></pre>
+<pre><code># [1] 0.9167702</code></pre>
 <p>A obtenção de uma amostra da distribuição completa da VA de interesse possui diversas finalidades. Por exemplo, no caso da beta, podemos obter um resumo</p>
 <pre class="r"><code>summary(g.sample)</code></pre>
 <pre><code>#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 0.03969 0.17313 0.21344 0.21780 0.25754 0.50699</code></pre>
+# 0.04989 0.17346 0.21306 0.21829 0.25810 0.61300</code></pre>
 <p>ou, por exemplo, saber o intervalo onde se encontram 95% dos dados:</p>
 <pre class="r"><code>quantile(g.sample, probs = c(.025, .975))</code></pre>
 <pre><code>#      2.5%     97.5% 
-# 0.1094833 0.3526790</code></pre>
+# 0.1098042 0.3555192</code></pre>
 <p>Esse tipo de resumo será utilizado nos métodos de inferência que veremos mais adiante.</p>
 <p>No contexto de inferência bayesiana, as distribuições geradas por estes métodos se referem às <strong>distribuições posteriores dos parâmetros</strong> objetos da inferência. Dessa forma, o intervalo acima, por exemplo, nos forneceria diretamente um “intervalo de credibilidade” de 95% para os valores do parâmetro.</p>
 </div>
