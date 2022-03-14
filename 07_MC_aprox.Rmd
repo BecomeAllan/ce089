@@ -270,7 +270,30 @@ legend("topright", legend = c("f(x)", "g(x)", "M g(x)"),
        lty = c(1, 2, 2), col = c(4, 1, 1), lwd = c(1, 1, 2), bty = "n")
 ```
 
-Agora podemos prosseguir com o algoritmo da seguinte forma:
+Usando um valor fixo apenas para ver o gráfico
+
+```{r}
+## Criando os elementos necessários
+f <- function(x) dexp(x, 1)
+g <- function(x) dexp(x, 0.5)
+## Simula
+Nsim <- 2500
+## Amostra da proposta
+y <- rexp(Nsim, 0.5)
+## Amostra da U(0,1)
+u <- runif(Nsim)
+r <- f(y)/(M * g(y))
+x <- y[u < r]
+ua <- u[u < r]
+ur <- u[u >= r]
+## Gráfico de aceitação
+curve(dexp(x, 1), from = 0, to = 10, col = 4)
+curve(M * dexp(x, 0.5), add = TRUE, lty = 2, lwd = 2)
+points(x, ua * M * g(x), col = 3)
+points(y[u >= r], ur * M * g(y[u >= r]), col = 2)
+```
+
+Agora podemos prosseguir com o algoritmo mais geral da seguinte forma:
 
 ```{r, fig.show='hold'}
 ## Criando os elementos necessários
@@ -310,7 +333,8 @@ integral da distribuição, ou seja, $\int_0^{\infty} f(x) dx$ deve fechar
 em **aproximadamente** 1:
 
 ```{r}
-sum(x > 0 & x <= max(x))/N
+sum(x >= 0)/N
+mean(x)
 ```
 
 Agora, por exemplo, a $P[2<X<4]$ pode ser calculada como
@@ -539,7 +563,7 @@ g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
 ## Tamanho da amostra
 length(g.sample)
 ## Integral
-sum(g.sample > 0 & g.sample < max(g.sample))/k
+sum(g.sample > 0)/k
 
 ## Visualização da amostra
 par(mfrow = c(1, 2))
@@ -615,7 +639,6 @@ legend("right", legend = c("g(x)", "f(x)"),
        lty = c(1, 2), col = c(4, 1), bty = "n")
 ```
 
-
 ```{r}
 ## Define funções
 g <- function(x, a, b) dbeta(x, a, b)
@@ -633,7 +656,7 @@ g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
 ## Tamanho da amostra
 length(g.sample)
 ## Integral
-sum(g.sample > 0 & g.sample < 1)/k
+sum(g.sample >= 0)/k
 
 ## Visualização da amostra
 par(mfrow = c(1, 2))
@@ -691,6 +714,86 @@ teta.sir <- sample(u, size = k, replace = TRUE, prob = w)
 hist(teta.sir)
 sum(teta.sir > 0.3 & teta.sir < 0.5)/k
 pbeta(0.5, a, b) - pbeta(0.3, a, b)
+```
+
+A avaliação da proximidade entre a distribuição alvo $f$, e a função
+geradora (ou de importância) $g$ ainda é um tema de estudo em aberto.
+West (1993) propôs a medida chamada *Entropia Relativa à Uniformidade*
+(ERU), definida por
+
+$$
+\text{ERU} = -\frac{\sum w^*(x_i) \log{w^*(x_i)}}{\log{m}}
+$$
+
+Quando a distribuição alvo e a proposta são idênticas, então os pesos
+serão constantes e iguais a $1/m$, fazendo com que $\text{ERU}=1$ seja o
+valolr máximo. À medida que a *entropia* entre os $w^*(x_i)$ aumenta,
+$\text{ERU} < 1$.
+
+Para distribuições unidimensionais, valores de $\text{ERU} > 0.9$ são
+recomendados. Em casos multidimensionais, valores mais baixos são
+aceitáveis. Nesse caso, usando a Uniforme, esse valor foi
+
+```{r}
+-sum(w.norm * log(w.norm))/log(m)
+```
+
+Usando agora uma $\text{Beta}(2, 3)$ como função de importância.
+
+```{r}
+a <- 9.39; b <- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dbeta(x, 2, 3), from = 0, to = 1, add = TRUE, lty = 2)
+legend("right", legend = c("g(x)", "f(x)"),
+       lty = c(1, 2), col = c(4, 1), bty = "n")
+```
+
+```{r}
+## Define funções
+g <- function(x, a, b) dbeta(x, a, b)
+f <- function(x) dbeta(x, 2, 3) # usando Beta(2, 3)
+## 1. Amostragem
+m <- 1e5
+x <- rbeta(m, 2, 3)
+## 2. Calcula pesos
+w <- g(x, a, b)/f(x)
+w.norm <- w/sum(w)
+## 3. Re-amostragem por importância
+k <- 1e4
+## Amostra considerando os pesos normalizados para cada X
+g.sample <- sample(x, size = k, replace = TRUE, prob = w.norm)
+## Tamanho da amostra
+length(g.sample)
+## Integral
+sum(g.sample >= 0)/k
+
+## Visualização da amostra
+par(mfrow = c(1, 2))
+hist(g.sample, freq = FALSE,  ylim = c(0, 7))
+curve(dbeta(x, a,  b), add = TRUE, from = 0, to = 1, col = 2)
+plot(ecdf(g.sample))
+curve(pbeta(x, a, b), add = TRUE, from = 0, to = 1, col = 2)
+legend("right", legend = c("Empírica", "Teórica"),
+       lty = 1, col = 1:2, bty = "n")
+par(mfrow = c(1, 1))
+```
+
+Novamente podemos conferir a relação entre os valores amostrados de $X$
+e seus respectivos pesos calculados:
+
+```{r}
+a <- 9.39; b <- 33.67
+curve(dbeta(x, a,  b), from = 0, to = 1, col = 4)
+curve(dbeta(x, 2, 3), from = 0, to = 1, add = TRUE, lty = 2)
+legend("right", legend = c("f(x)", "g(x)"),
+       lty = c(1, 2), col = c(4, 1), bty = "n")
+points(x, w)
+```
+
+O $\text{ERU}$ nesse caso foi
+
+```{r}
+-sum(w.norm * log(w.norm))/log(m)
 ```
 
 A obtenção de uma amostra da distribuição completa da VA de interesse

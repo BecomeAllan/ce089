@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.1.2",
+    "Version": "4.1.3",
     "Repositories": [
       {
         "Name": "http://cran-r.c3sl.ufpr.br",
@@ -1183,10 +1183,10 @@
     },
     "survival": {
       "Package": "survival",
-      "Version": "3.2-13",
+      "Version": "3.3-1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6f0a0fadc63bc6570fe172770f15bbc4",
+      "Hash": "f6189c70451d3d68e0d571235576e833",
       "Requirements": [
         "Matrix"
       ]
@@ -1403,7 +1403,7 @@
       "RemoteRef": "master",
       "RemoteSha": "235c8c41d9e720fa48171fa8567839d2e042660d",
       "Remotes": "gadenbuie/xaringanExtra, rstudio/chromote, rstudio/webshot2",
-      "Hash": "67ab8b9d3032c428ef22467ceca634ce",
+      "Hash": "0d89f2ef7ba92bb337ae844588132f1d",
       "Requirements": [
         "cli",
         "digest",
